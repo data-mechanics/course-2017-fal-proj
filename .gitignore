@@ -1,12 +1,19 @@
-# Byte-compiled / optimized / DLL files
+# Directories.
+data/
+
+# Common operating system files.
+.DS_Store
+.Rhistory
+
+# Byte-compiled / optimized / DLL files.
 __pycache__/
 *.py[cod]
 *$py.class
 
-# C extensions
+# C extensions.
 *.so
 
-# Distribution / packaging
+# Distribution / packaging.
 .Python
 env/
 build/
@@ -25,17 +32,17 @@ wheels/
 .installed.cfg
 *.egg
 
-# PyInstaller
+# PyInstaller:
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
 
-# Installer logs
+# Installer logs.
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Unit test / coverage reports
+# Unit test / coverage reports.
 htmlcov/
 .tox/
 .coverage
@@ -43,31 +50,31 @@ htmlcov/
 .cache
 nosetests.xml
 coverage.xml
-*.cover
+*,cover
 .hypothesis/
 
-# Translations
+# Translations.
 *.mo
 *.pot
 
-# Django stuff:
+# Django stuff.
 *.log
 local_settings.py
 
-# Flask stuff:
+# Flask stuff.
 instance/
 .webassets-cache
 
-# Scrapy stuff:
+# Scrapy stuff.
 .scrapy
 
-# Sphinx documentation
+# Sphinx documentation.
 docs/_build/
 
-# PyBuilder
+# PyBuilder.
 target/
 
-# Jupyter Notebook
+# Jupyter Notebook.
 .ipynb_checkpoints
 
 # pyenv
@@ -99,3 +106,11 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# Files specific to this project.
+auth.json
+*.iml
+*.xml
+
+# exclude node_modules
+node_modules/
