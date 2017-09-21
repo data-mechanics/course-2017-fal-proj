@@ -1,5 +1,7 @@
-Taylor Potye: tpotye Jennifer Liang: jliang24   We are going to use the
-data sets to see if the hourly precipitation in Boston, New York City,
+Taylor Potye: tpotye 
+Jennifer Liang: jliang24 
+
+We are going to use the data sets to see if the hourly precipitation in Boston, New York City,
 and Washington DC correlate with the frequency of taxi activity. Our
 main question is whether or not taxi companies should deploy more
 drivers on days that it forecasts rain and how many drivers they should
