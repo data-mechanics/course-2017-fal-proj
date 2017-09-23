@@ -1,5 +1,6 @@
 import urllib.request
 import json
+import pandas as pd
 import dml
 import prov.model
 import datetime
@@ -24,33 +25,34 @@ class boston_opendata_extraction(dml.Algorithm):
         repo.authenticate('esaracin', 'esaracin')
 
         # Where we have to request and parse our dataset.
-        url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/e5a0066d38ac4e2abbc7918197a4f6af_6.geojson'
-        response = urllib.request.urlopen(url).read().decode("utf-8")
-        r = json.loads(response)
-        s = json.dumps(r, sort_keys=True, indent=2)
-        
-        for each in r:
-            print(each)
-            print()
-
-        sys.exit(0)
+        url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/e5a0066d38ac4e2abbc7918197a4f6af_6.csv'
+        dataset = pd.read_csv(url)
+        json_set = dataset.to_json(orient='records')
+        r = json.loads(json_set)
 
         # Add a collection to store our data, and store it.
         repo.dropCollection("police_stations")
         repo.createCollection("police_stations")
-        repo['esaracin.police_stations'].insert_many([r])
+        repo['esaracin.police_stations'].insert_many(r)
         repo['esaracin.police_stations'].metadata({'complete':True})
         print(repo['esaracin.police_stations'].metadata())
 
-        #url = 'http://cs-people.bu.edu/lapets/591/examples/found.json'
-        #response = urllib.request.urlopen(url).read().decode("utf-8")
-        #r = json.loads(response)
-        #s = json.dumps(r, sort_keys=True, indent=2)
-        #repo.dropCollection("found")
-        #repo.createCollection("found")
-        #repo['alice_bob.found'].insert_many(r)
 
-        #repo.logout()
+
+        # Do the same as above for our other dataset.
+        url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/9a3a8c427add450eaf45a470245680fc_5.csv'
+        dataset = pd.read_csv(url)
+        json_set = dataset.to_json(orient='records')
+        r = json.loads(json_set)
+
+        # Add a collection to store our data, and store it.
+        repo.dropCollection("police_districts")
+        repo.createCollection("police_districts")
+        repo['esaracin.police_districts'].insert_many(r)
+        repo['esaracin.police_districts'].metadata({'complete':True})
+        print(repo['esaracin.police_districts'].metadata())
+
+        repo.logout()
 
         endTime = datetime.datetime.now()
 
