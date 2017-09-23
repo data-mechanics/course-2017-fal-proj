@@ -6,11 +6,15 @@ In this project, you will implement platform components that can obtain a some d
 **This project description will be updated as we continue work on the infrastructure.**
 
 ## Datasets
-Crime.csv from Analyze Boston
-streetlight-locations.csv from Analyze Boston
-Land_Use_Map.csv from data.cambridge.gov
-2010_Neighborhood_Population_Density.csv from data.cambridge.gov
-Open_Space.csv from BostonMaps: Open Data;
+**Crime.csv from Analyze Boston**
+
+**streetlight-locations.csv from Analyze Boston**
+
+**Land_Use_Map.csv from data.cambridge.gov**
+
+**2010_Neighborhood_Population_Density.csv from data.cambridge.gov**
+
+**Open_Space.csv from BostonMaps: Open Data;**
 
 ## Narrative 
 We are looking to answer questions about crime and how it is correlated to various factors within the cities of Boston and Cambridge.  For example, how much are crime incidents correlated to the positioning of street lights within the city of Boston, open spaces such as parks and other community spaces. Additionally we are looking at land use, and population density within neighborhoods in Cambridge to look for indicators of hot spots within a city. Through the combination  of the various datasets from our three sources, we can answer several questions by observing the intersections and patters in our data. Answering these questions can help improve police patrol routes, emergency box placements, response time, and various other factors. The data we generated can also be used by the city as an indicator of what streets need to be revamped in order to reduce crime. Moreover, it suggests areas that need to be improved economically by developing and repurposing areas of real estate throughout the city to reduce crime.
