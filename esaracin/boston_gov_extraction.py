@@ -37,7 +37,6 @@ class boston_gov_extraction(dml.Algorithm):
         repo['esaracin.crime_incidents'].insert_many(r)
         repo['esaracin.crime_incidents'].metadata({'complete':True})
 
-        print('half way there!')
 
 
         # Do the same as above for our gun dataset
