@@ -18,7 +18,7 @@ class fzjr_algorithms(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('alice_bob', 'alice_bob')
+        repo.authenticate('francisz_jrashaan')
 
         url = 'https://data.boston.gov/api/action/datastore_search?resource_id=12cb3883-56f5-47de-afa5-3b1cf61b257b&limit=1000'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -30,56 +30,44 @@ class fzjr_algorithms(dml.Algorithm):
         repo['francisz_jrashaan.crime'].metadata({'complete':True})
         print(repo['francisz_jrashaan.crime'].metadata())
         
-        url = 'http://cs-people.bu.edu/lapets/591/examples/lost.json'
+        url = 'https://data.boston.gov/api/action/datastore_search?resource_id=c2fcc1e3-c38f-44ad-a0cf-e5ea2a6585b5&limit=1000'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("copopulation")
-        repo.createCollection("copopulation")
-        repo['francisz_jrashaan.cpopultation'].insert_many(r)
-        repo['francisz_jrashaan.crime'].metadata({'complete':True})
-        print(repo['francisz_jrashaan.lost'].metadata())
+        repo.dropCollection("streetlights")
+        repo.createCollection("streetlights")
+        repo['francisz_jrashaan.streetlights'].insert_many(r)
+        repo['francisz_jrashaan.streetlights'].metadata({'complete':True})
+        print(repo['francisz_jrashaan.streetlights'].metadata())
 
 
-        url = 'http://cs-people.bu.edu/lapets/591/examples/lost.json'
+        url = 'https://data.cambridgema.gov/api/views/srp4-fhjz/rows.json?'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("crime")
-        repo.createCollection("crime")
-        repo['francisz_jrashaan.crime'].insert_many(r)
-        repo['francisz_jrashaan.crime'].metadata({'complete':True})
-        print(repo['francisz_jrashaan.lost'].metadata())
+        repo.dropCollection("landuse")
+        repo.createCollection("landuse")
+        repo['francisz_jrashaan.landuse'].insert_many(r)
+        repo['francisz_jrashaan.landuse'].metadata({'complete':True})
+        print(repo['francisz_jrashaan.landuse'].metadata())
         
-        url = 'http://cs-people.bu.edu/lapets/591/examples/lost.json'
+        url = 'https://data.cambridgema.gov/api/views/r4pm-qqje/rows.json?'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("crime")
-        repo.createCollection("crime")
-        repo['francisz_jrashaan.crime'].insert_many(r)
-        repo['francisz_jrashaan.crime'].metadata({'complete':True})
-        print(repo['francisz_jrashaan.lost'].metadata())
+        repo.dropCollection("capopulation")
+        repo.createCollection("capopulation")
+        repo['francisz_jrashaan.capopulation'].insert_many(r)
+        repo['francisz_jrashaan.capopulation'].metadata({'complete':True})
+        print(repo['francisz_jrashaan.capopulation'].metadata())
         
-        url = 'http://cs-people.bu.edu/lapets/591/examples/lost.json'
+        url = 'https://data.boston.gov/api/action/datastore_search?resource_id=769c0a21-9e35-48de-a7b0-2b7dfdefd35e'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("crime")
-        repo.createCollection("crime")
-        repo['francisz_jrashaan.crime'].insert_many(r)
-        repo['francisz_jrashaan.crime'].metadata({'complete':True})
-        print(repo['francisz_jrashaan.lost'].metadata())
-
-
-
-        url = 'http://cs-people.bu.edu/lapets/591/examples/found.json'
-        response = urllib.request.urlopen(url).read().decode("utf-8")
-        r = json.loads(response)
-        s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("found")
-        repo.createCollection("found")
-        repo['alice_bob.found'].insert_many(r)
+        repo.dropCollection("openspace")
+        repo.createCollection("openspace")
+        repo['francisz_jrashaan'.found'].insert_many(r)
 
         repo.logout()
 
