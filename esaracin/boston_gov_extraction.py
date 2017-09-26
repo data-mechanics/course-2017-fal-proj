@@ -37,6 +37,7 @@ class boston_gov_extraction(dml.Algorithm):
         repo['esaracin.crime_incidents'].insert_many(r)
         repo['esaracin.crime_incidents'].metadata({'complete':True})
 
+        print('half way there!')
 
 
         # Do the same as above for our gun dataset
@@ -48,7 +49,7 @@ class boston_gov_extraction(dml.Algorithm):
         repo.dropCollection("gun_data")
         repo.createCollection("gun_data")
         repo['esaracin.gun_data'].insert_many(r)
-        repo['esaracin.gun_data'].metadata({'cmplete':True})
+        repo['esaracin.gun_data'].metadata({'complete':True})
 
         repo.logout()
 
