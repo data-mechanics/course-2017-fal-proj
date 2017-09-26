@@ -55,4 +55,18 @@ class readfile(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate('bkin18_cjoe', 'bkin18_cjoe')
-        return 
+
+        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
+        doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
+        doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
+        doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
+        doc.add_namespace('bdp', 'http://bostonopendata-boston.opendata.arcgis.com/datasets/')
+
+
+        resource = doc.entity('4f3e4492e36f4907bcd307b131afe4a5_0"',
+            {'prov:label':'311, Service Requests',
+            prov.model.PROV_TYPE:'ont:DataResource', 'bdp:Extension':'json'})
+
+        return doc
+
+
