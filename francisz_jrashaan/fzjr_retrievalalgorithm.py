@@ -18,7 +18,7 @@ class fzjr_retrievalgorithm(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('francisz_jrashaan')
+        repo.authenticate('francisz_jrashaan', 'francisz_jrashaan')
 
         url = 'https://data.boston.gov/api/action/datastore_search?resource_id=12cb3883-56f5-47de-afa5-3b1cf61b257b&limit=1000'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -67,7 +67,7 @@ class fzjr_retrievalgorithm(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("openspace")
         repo.createCollection("openspace")
-        repo['francisz_jrashaan'.found'].insert_many(r)
+        repo['francisz_jrashaan'.openspace'].insert_many(r)
 
         repo.logout()
 
@@ -86,7 +86,7 @@ class fzjr_retrievalgorithm(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('alice_bob', 'alice_bob')
+        repo.authenticate('francisz_jrashaan', 'francisz_jrashaan')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
