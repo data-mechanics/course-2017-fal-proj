@@ -5,7 +5,7 @@ import prov.model
 import datetime
 import uuid
 
-class fzjr_algorithms(dml.Algorithm):
+class fzjr_retrievalgorithm(dml.Algorithm):
     contributor = 'francisz_jrashaan'
     reads = []
     writes = ['francisz_jrashaan.crime', 'francisz_jrashaan.cambridgepopulation']
@@ -124,8 +124,8 @@ class fzjr_algorithms(dml.Algorithm):
                   
         return doc
 
-fzjr_algorithms.execute()
-doc = fzjr_algorithms.provenance()
+fzjr_retrievalgorithm.execute()
+doc = fzjr_retrievalgorithm.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
 
