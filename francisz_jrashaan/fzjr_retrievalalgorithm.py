@@ -67,7 +67,7 @@ class fzjr_retrievalgorithm(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("openspace")
         repo.createCollection("openspace")
-        repo['francisz_jrashaan'.openspace'].insert_many(r)
+        repo['francisz_jrashaan.openspace'].insert_many(r)
 
         repo.logout()
 
@@ -93,32 +93,72 @@ class fzjr_retrievalgorithm(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
-        this_script = doc.agent('alg:alice_bob#example', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:francisz_jrashaan#example', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        get_found = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        get_lost = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_found, this_script)
-        doc.wasAssociatedWith(get_lost, this_script)
-        doc.usage(get_found, resource, startTime, None,
+        get_crime = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        get_streetlights = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        get_landuse = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        get_capopulation = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        get_openspace = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(get_crime, this_script)
+        doc.wasAssociatedWith(get_streetlights, this_script)
+        doc.wasAssociatedWith(get_landuse, this_script)
+        doc.wasAssociatedWith(get_capopulation, this_script)
+        doc.wasAssociatedWith(get_openspace, this_script)
+        doc.usage(get_crime, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'
+                  'ont:Query':'?type=crime&$select=type,latitude,longitude,OPEN_DT'
                   }
                   )
-        doc.usage(get_lost, resource, startTime, None,
+        doc.usage(get_streetlights, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Animal+Lost&$select=type,latitude,longitude,OPEN_DT'
+                  'ont:Query':'?type=streetlights&$select=type,latitude,longitude,OPEN_DT'
                   }
                   )
+        doc.usage(get_streetlights, resource, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Retrieval',
+                  'ont:Query':'?type=streetlights&$select=type,latitude,longitude,OPEN_DT'
+                  }
+                  )
+        doc.usage(get_landuse, resource, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Retrieval',
+                  'ont:Query':'?type=landuse&$select=type,latitude,longitude,OPEN_DT'
+                  }
+                  )
+        doc.usage(get_capopulation, resource, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Retrieval',
+                  'ont:Query':'?type=capopulation&$select=type,latitude,longitude,OPEN_DT'
+                  }
+                  )
+        doc.usage(get_openspace, resource, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Retrieval',
+                  'ont:Query':'?type=openspace&$select=type,latitude,longitude,OPEN_DT'
+                  }
+                  )
+        crime = doc.entity('dat:francisz_jrashaan#crime', {prov.model.PROV_LABEL:'crime', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(crime, this_script)
+        doc.wasGeneratedBy(crime, get_crime, endTime)
+        doc.wasDerivedFrom(crime, resource, get_crime, get_crime, get_crime)
 
-        lost = doc.entity('dat:alice_bob#lost', {prov.model.PROV_LABEL:'Animals Lost', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(lost, this_script)
-        doc.wasGeneratedBy(lost, get_lost, endTime)
-        doc.wasDerivedFrom(lost, resource, get_lost, get_lost, get_lost)
-
-        found = doc.entity('dat:alice_bob#found', {prov.model.PROV_LABEL:'Animals Found', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(found, this_script)
-        doc.wasGeneratedBy(found, get_found, endTime)
-        doc.wasDerivedFrom(found, resource, get_found, get_found, get_found)
+        streetlights = doc.entity('dat:francisz_jrashaan#streetlights', {prov.model.PROV_LABEL:'streetlights', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(streetlights, this_script)
+        doc.wasGeneratedBy(streetlights, get_found, endTime)
+        doc.wasDerivedFrom(streetlights, resource, get_streetlights, get_streetlights, get_streetlights)
+        
+        landuse = doc.entity('dat:francisz_jrashaan#landuse', {prov.model.PROV_LABEL:'landuse', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(landuse, this_script)
+        doc.wasGeneratedBy(landuse, get_found, endTime)
+        doc.wasDerivedFrom(landuse, resource, get_landuse, get_landuse, get_landuse)
+        
+        capopulation = doc.entity('dat:francisz_jrashaan#capopulation', {prov.model.PROV_LABEL:'capopulation', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(capopulation, this_script)
+        doc.wasGeneratedBy(capopulation, get_found, endTime)
+        doc.wasDerivedFrom(capopulation, resource, get_capopulation, get_capopulation, get_capopulation)
+        
+        openspace = doc.entity('dat:francisz_jrashaan#openspace', {prov.model.PROV_LABEL:'openspace', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(openspace, this_script)
+        doc.wasGeneratedBy(openspace, get_found, endTime)
+        doc.wasDerivedFrom(openspace, resource, get_openspace, get_openspace, get_openspace)
 
         repo.logout()
                   
