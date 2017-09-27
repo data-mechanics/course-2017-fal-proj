@@ -5,7 +5,7 @@ import prov.model
 import datetime
 import uuid
 
-class hubway():
+class trafficSignal():
     # contributor = 'test'
     # reads = []
     # writes = ['test.trafficSignal']
@@ -23,17 +23,18 @@ class hubway():
         repo = client.repo
         repo.authenticate('test', 'test')
 
-        url = 'https://secure.thehubway.com/data/stations.json'
+        url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/de08c6fe69c942509089e6db98c716a3_0.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
+        features=r['features']
         print(type(r))
         s = json.dumps(r, sort_keys=True, indent=2)
         print(type(s))
-        repo.dropCollection("hubway")
-        repo.createCollection("hubway")
-        repo['test.hubway'].insert_many(r)
-        repo['test.hubway'].metadata({'complete':True})
-        print(repo['test.hubway'].metadata())
+        repo.dropCollection("trafficSignal")
+        repo.createCollection("trafficSignal")
+        repo['test.trafficSignal'].insert_many(features)
+        repo['test.trafficSignal'].metadata({'complete':True})
+        print(repo['test.trafficSignal'].metadata())
 
     
 
@@ -43,4 +44,4 @@ class hubway():
 
         return {"start":startTime, "end":endTime}
 
-hubway.execute()
+trafficSignal.execute()
