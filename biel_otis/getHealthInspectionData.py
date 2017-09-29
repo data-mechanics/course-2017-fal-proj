@@ -1,14 +1,16 @@
-import urllib.request
+from urllib.request import urlopen
 import json
 import dml
 import prov.model
 import datetime
 import uuid
+import time
 
-class example(dml.Algorithm):
-    contributor = 'alice_bob'
+
+class getHealthInspection(dml.Algorithm):
+    contributor = 'biel_otis'
     reads = []
-    writes = ['alice_bob.lost', 'alice_bob.found']
+    writes = ['biel_otis_db.HealthInspection']
 
     @staticmethod
     def execute(trial = False):
@@ -17,27 +19,33 @@ class example(dml.Algorithm):
 
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
-        repo = client.repo
-        repo.authenticate('alice_bob', 'alice_bob')
+        repo = client['biel_otis_db']
+        repo.authenticate('biel_otis', 'biel_otis')
+        url = 'https://data.boston.gov/export/458/2be/4582bec6-2b4f-4f9e-bc55-cbaa73117f4c.json'
+        response = urlopen(url).read().decode("utf-8")
+        response = response.replace(']', '')
+        response = response.replace('[', '')
+        response = '[' + response + ']'
 
-        url = 'http://cs-people.bu.edu/lapets/591/examples/lost.json'
-        response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
-        s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("lost")
-        repo.createCollection("lost")
-        repo['alice_bob.lost'].insert_many(r)
-        repo['alice_bob.lost'].metadata({'complete':True})
-        print(repo['alice_bob.lost'].metadata())
 
+        #s = json.dumps(r, sort_keys=True, indent=2)
+        print(type(r))
+        repo.dropCollection("HealthInspection")
+        repo.createCollection("HealthInspection")
+        repo['biel_otis_db.HealthInspection'].insert_many(response)
+        repo['biel_otis_db.HealthInspection'].metadata({'complete':True})
+        print(repo['HealthInspection'].metadata())
+
+        """
         url = 'http://cs-people.bu.edu/lapets/591/examples/found.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("found")
         repo.createCollection("found")
-        repo['alice_bob.found'].insert_many(r)
-
+        repo['biel_otis.found'].insert_many(r)
+        """
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -51,18 +59,18 @@ class example(dml.Algorithm):
             in this script. Each run of the script will generate a new
             document describing that invocation event.
             '''
-
+        """
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('alice_bob', 'alice_bob')
+        repo.authenticate('biel_otis', 'biel_otis')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
-        this_script = doc.agent('alg:alice_bob#example', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:biel_otis#example', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_found = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         get_lost = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
@@ -79,22 +87,22 @@ class example(dml.Algorithm):
                   }
                   )
 
-        lost = doc.entity('dat:alice_bob#lost', {prov.model.PROV_LABEL:'Animals Lost', prov.model.PROV_TYPE:'ont:DataSet'})
+        lost = doc.entity('dat:biel_otis#lost', {prov.model.PROV_LABEL:'Animals Lost', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(lost, this_script)
         doc.wasGeneratedBy(lost, get_lost, endTime)
         doc.wasDerivedFrom(lost, resource, get_lost, get_lost, get_lost)
 
-        found = doc.entity('dat:alice_bob#found', {prov.model.PROV_LABEL:'Animals Found', prov.model.PROV_TYPE:'ont:DataSet'})
+        found = doc.entity('dat:biel_otis#found', {prov.model.PROV_LABEL:'Animals Found', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(found, this_script)
         doc.wasGeneratedBy(found, get_found, endTime)
         doc.wasDerivedFrom(found, resource, get_found, get_found, get_found)
 
         repo.logout()
-                  
+        """  
         return doc
 
-example.execute()
-doc = example.provenance()
+getHealthInspection.execute()
+doc = getHealthInspection.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
 
