@@ -8,6 +8,9 @@ from urllib.request import urlopen
 from uszipcode import ZipcodeSearchEngine
 
 class mbta(dml.Algorithm):
+
+	
+
 	contributor = 'nathansw_sbajwa'
 	reads = []
 	writes = ['nathansw_sbajwa.mbta']
@@ -15,12 +18,18 @@ class mbta(dml.Algorithm):
 	@staticmethod
 	def execute(trial = False):
 
+		# text file to hold all longitude and latitude coordinates that are collected
+		f = open('geo_coords.txt', 'w')
+
+
 		startTime = datetime.datetime.now()
 
 		client = dml.pymongo.MongoClient()
 		repo = clinet.repo
 		repo.authenticate('nathansw_sbajwa','nathansw_sbajwa')
 
+
+		# central coordinates for neighborhoods in Boston
 		locs = {'Allston':[42.3539038, -71.1337112], 'Back Bay':[42.3475975, -71.0753291], \
 		'Beacon Hill':[42.3588, -71.0707], 'Brighton':[42.3464, -71.1627], \
 		'Charlestown':[42.3782, -71.0602], 'Dorchester':[42.3016, -71.0676], \
@@ -42,22 +51,26 @@ class mbta(dml.Algorithm):
 		data = {}
 
 		search = ZipcodeSearchEngine()
+
+		# get all other zip codes in Boston
 		zips = [("0" + str(x)) for x in range(2108, 2138)]
 		others = ['02163', '02196', '02199', '02201', '02203', '02204', '02205', '02206', '02210', '02211', '02212', '02215',\
 		 '02217', '02222', '02126', '02228', '02241', '02266', '02283', '02284', '02293', '02295', '02297', '02298', '02467']
 		zips += others
+
 		coords = []
+
+		# zipcode module returns three different pairs of coordinates that encompass given zipcode
 		for i in zips:
 			zipcode = search.by_zipcode(i)
-			lat = zipcode['Latitude']
-			lon = zipcode['Longitude']
-			NElat = zipcode['NEBoundLatitude']
-			NElon = zipcode['NEBoundLongitude']
-			SWlat = zipcode['SWBoundLatitude']
-			SWlon = zipcode['SWBoungLongitude']
-			if (lat == None) or (lon == None):
+			lat = str(zipcode['Latitude'])
+			lon = str(zipcode['Longitude'])
+			NElat = str(zipcode['NEBoundLatitude'])
+			NElon = str(zipcode['NEBoundLongitude'])
+			SWlat = str(zipcode['SWBoundLatitude'])
+			SWlon = str(zipcode['SWBoungLongitude'])
+			if (lat == 'None') or (lon == 'None'):
 				continue
-
 			coords.append([lat,lon])
 			coords.append([NElat,NElon])
 			coords.append([SWlat,SWlon])
@@ -68,20 +81,31 @@ class mbta(dml.Algorithm):
 			coords.append([lat,lon])
 
 		for loc in coords:
+			# write all coordinates collected to a text file separated by a newline
+			f.write(str(loc) + "\n")
+
+			# create url to make API call to MBTA portal
 		    lat = "&lat=" + str(loc[0])
 		    lon = "&lon=" + str(loc[1])
 		    url = url_base + api_key + lat + lon + form
 		    temp = json.loads(urlopen(url).read().decode('utf-8'))
 
-		    # makes every key in json dictionary the town name
+		    # makes every key in json dictionary the coordinates
 		    key_name = "(" + str(loc[0]) + "," + str(loc[1]) + ")"
 		    data[key_name] = temp.pop('stop')
+
+		f.close()
 
 		s = json.dumps(data, indent=4)
 		repo.dropCollection("mbta")
 		repo.createCollection("mbta")
 		repo['nathansw_sbajwa.mbta'].insert_many(data)
 
+		repo.logout()
+		endTime = datetime.datetime.now()
+
+
+		return {"start":startTime, "end":endTime}
 		## Sameena's code to generate JSON file
 		# with open('testMBTA.json', 'a') as outfile:
 		# 	json.dump(data, outfile, indent=4)
@@ -98,7 +122,7 @@ class mbta(dml.Algorithm):
 			doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
 			doc.add_namespace('mbta', 'http://realtime.mbta.com/developer/')
 
-			this.script = doc.agent('alg:nathansw_sbajwa#mbta_execute', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+			this.script = doc.agent('alg:nathansw_sbajwa#mbta', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 			resource = doc.entity('mbta:api/v2/stopsbylocation?', {'prov:label':'MBTA Stops By Location', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 			get_mbta = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 			doc.wasAssociatedWith(get_mbta, this_script)
