@@ -25,9 +25,14 @@ class getHealthInspection(dml.Algorithm):
         response = urlopen(url).read().decode("utf-8")
         response = response.replace(']', '')
         response = response.replace('[', '')
-        response = '[' + response + ']'
+        #response = '[' + response + ']'
+
+
 
         r = json.loads(response)
+
+        print(r)
+        exit()
 
         #s = json.dumps(r, sort_keys=True, indent=2)
         print(type(r))
