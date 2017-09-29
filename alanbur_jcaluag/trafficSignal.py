@@ -21,7 +21,7 @@ class trafficSignal():
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('test', 'test')
+        repo.authenticate('alanbur_jcaluag', 'alanbur_jcaluag')
 
         url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/de08c6fe69c942509089e6db98c716a3_0.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -32,9 +32,9 @@ class trafficSignal():
         print(type(s))
         repo.dropCollection("trafficSignal")
         repo.createCollection("trafficSignal")
-        repo['test.trafficSignal'].insert_many(features)
-        repo['test.trafficSignal'].metadata({'complete':True})
-        print(repo['test.trafficSignal'].metadata())
+        repo['alanbur_jcaluag.trafficSignal'].insert_many(features)
+        repo['alanbur_jcaluag.trafficSignal'].metadata({'complete':True})
+        print(repo['alanbur_jcaluag.trafficSignal'].metadata())
 
     
 

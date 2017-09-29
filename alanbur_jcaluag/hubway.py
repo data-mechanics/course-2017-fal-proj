@@ -21,7 +21,7 @@ class hubway():
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('test', 'test')
+        repo.authenticate('alanbur_jcaluag', 'alanbur_jcaluag')
 
         url = 'https://secure.thehubway.com/data/stations.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -34,9 +34,9 @@ class hubway():
         print(type(s))
         repo.dropCollection("hubway")
         repo.createCollection("hubway")
-        repo['test.hubway'].insert_many(stations)
-        repo['test.hubway'].metadata({'complete':True})
-        print(repo['test.hubway'].metadata())
+        repo['alanbur_jcaluag.hubway'].insert_many(stations)
+        repo['alanbur_jcaluag.hubway'].metadata({'complete':True})
+        print(repo['alanbur_jcaluag.hubway'].metadata())
 
     
 
