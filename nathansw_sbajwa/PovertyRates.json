@@ -1,0 +1,152 @@
+{
+   "Massachusetts": {
+      "Total population for whom\npoverty status is determined": "6,424,688",
+      "Total in poverty": "742,784",
+      "Poverty rate": "11.60%",
+      "Percent of Boston's\nimpoverished": "-"
+   },
+   "Boston": {
+      "Total population for whom\npoverty status is determined": "597,942",
+      "Total in poverty": "131,241",
+      "Poverty rate": "21.90%",
+      "Percent of Boston's\nimpoverished": "-"
+   },
+   "Allston": {
+      "Total population for whom\npoverty status is determined": "14,743",
+      "Total in poverty": "5,143",
+      "Poverty rate": "34.90%",
+      "Percent of Boston's\nimpoverished": "3.90%"
+   },
+   "Back Bay": {
+      "Total population for whom\npoverty status is determined": "16,212",
+      "Total in poverty": "2,206",
+      "Poverty rate": "13.60%",
+      "Percent of Boston's\nimpoverished": "1.70%"
+   },
+   "Beacon Hill": {
+      "Total population for whom\npoverty status is determined": "9,097",
+      "Total in poverty": "970",
+      "Poverty rate": "10.70%",
+      "Percent of Boston's\nimpoverished": "0.70%"
+   },
+   "Brighton": {
+      "Total population for whom\npoverty status is determined": "41,418",
+      "Total in poverty": "10,114",
+      "Poverty rate": "24.40%",
+      "Percent of Boston's\nimpoverished": "7.70%"
+   },
+   "Charlestown": {
+      "Total population for whom\npoverty status is determined": "17,815",
+      "Total in poverty": "3,417",
+      "Poverty rate": "19.20%",
+      "Percent of Boston's\nimpoverished": "2.60%"
+   },
+   "Dorchester": {
+      "Total population for whom\npoverty status is determined": "121,994",
+      "Total in poverty": "29,438",
+      "Poverty rate": "24.10%",
+      "Percent of Boston's\nimpoverished": "22.40%"
+   },
+   "Downtown": {
+      "Total population for whom\npoverty status is determined": "13,263",
+      "Total in poverty": "3,231",
+      "Poverty rate": "24.40%",
+      "Percent of Boston's\nimpoverished": "2.50%"
+   },
+   "East Boston": {
+      "Total population for whom\npoverty status is determined": "44,344",
+      "Total in poverty": "8,947",
+      "Poverty rate": "20.20%",
+      "Percent of Boston's\nimpoverished": "6.80%"
+   },
+   "Fenway": {
+      "Total population for whom\npoverty status is determined": "18,893",
+      "Total in poverty": "8,283",
+      "Poverty rate": "43.80%",
+      "Percent of Boston's\nimpoverished": "6.30%"
+   },
+   "Harbor Islands": {
+      "Total population for whom\npoverty status is determined": "329",
+      "Total in poverty": "289",
+      "Poverty rate": "87.80%",
+      "Percent of Boston's\nimpoverished": "0.20%"
+   },
+   "Hyde Park": {
+      "Total population for whom\npoverty status is determined": "35,060",
+      "Total in poverty": "3,641",
+      "Poverty rate": "10.40%",
+      "Percent of Boston's\nimpoverished": "2.80%"
+   },
+   "Jamaica Plain": {
+      "Total population for whom\npoverty status is determined": "37,798",
+      "Total in poverty": "7,216",
+      "Poverty rate": "19.10%",
+      "Percent of Boston's\nimpoverished": "5.50%"
+   },
+   "Longwood": {
+      "Total population for whom\npoverty status is determined": "444",
+      "Total in poverty": "122",
+      "Poverty rate": "27.50%",
+      "Percent of Boston's\nimpoverished": "0.10%"
+   },
+   "Mattapan": {
+      "Total population for whom\npoverty status is determined": "23,679",
+      "Total in poverty": "5,329",
+      "Poverty rate": "22.50%",
+      "Percent of Boston's\nimpoverished": "4.10%"
+   },
+   "Mission Hill": {
+      "Total population for whom\npoverty status is determined": "15,215",
+      "Total in poverty": "5,934",
+      "Poverty rate": "39.00%",
+      "Percent of Boston's\nimpoverished": "4.50%"
+   },
+   "North End": {
+      "Total population for whom\npoverty status is determined": "9,176",
+      "Total in poverty": "1,108",
+      "Poverty rate": "12.10%",
+      "Percent of Boston's\nimpoverished": "0.80%"
+   },
+   "Roslindale": {
+      "Total population for whom\npoverty status is determined": "28,238",
+      "Total in poverty": "3,472",
+      "Poverty rate": "12.30%",
+      "Percent of Boston's\nimpoverished": "2.60%"
+   },
+   "Roxbury": {
+      "Total population for whom\npoverty status is determined": "45,517",
+      "Total in poverty": "17,120",
+      "Poverty rate": "37.60%",
+      "Percent of Boston's\nimpoverished": "13.00%"
+   },
+   "South Boston": {
+      "Total population for whom\npoverty status is determined": "33,527",
+      "Total in poverty": "5,972",
+      "Poverty rate": "17.80%",
+      "Percent of Boston's\nimpoverished": "4.60%"
+   },
+   "South Boston Waterfront": {
+      "Total population for whom\npoverty status is determined": "2,538",
+      "Total in poverty": "125",
+      "Poverty rate": "4.90%",
+      "Percent of Boston's\nimpoverished": "0.10%"
+   },
+   "South End": {
+      "Total population for whom\npoverty status is determined": "31,522",
+      "Total in poverty": "6,429",
+      "Poverty rate": "20.40%",
+      "Percent of Boston's\nimpoverished": "4.90%"
+   },
+   "West End": {
+      "Total population for whom\npoverty status is determined": "5,427",
+      "Total in poverty": "840",
+      "Poverty rate": "15.50%",
+      "Percent of Boston's\nimpoverished": "0.60%"
+   },
+   "West Roxbury": {
+      "Total population for whom\npoverty status is determined": "31,693",
+      "Total in poverty": "1,895",
+      "Poverty rate": "6.00%",
+      "Percent of Boston's\nimpoverished": "1.40%"
+   }
+}
