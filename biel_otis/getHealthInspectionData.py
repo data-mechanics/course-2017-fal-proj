@@ -5,12 +5,14 @@ import prov.model
 import datetime
 import uuid
 import time
+import ssl
 
 
 class getHealthInspection(dml.Algorithm):
     contributor = 'biel_otis'
     reads = []
-    writes = ['biel_otis_db.HealthInspection']
+    writes = ['biel_otis.HealthInspection']
+    ssl._create_default_https_context = ssl._create_unverified_context
 
     @staticmethod
     def execute(trial = False):
@@ -19,28 +21,23 @@ class getHealthInspection(dml.Algorithm):
 
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
-        repo = client['biel_otis_db']
+        repo = client['biel_otis']
         repo.authenticate('biel_otis', 'biel_otis')
         url = 'https://data.boston.gov/export/458/2be/4582bec6-2b4f-4f9e-bc55-cbaa73117f4c.json'
         response = urlopen(url).read().decode("utf-8")
         response = response.replace(']', '')
         response = response.replace('[', '')
-        #response = '[' + response + ']'
-
-
+        response = '[' + response + ']'
 
         r = json.loads(response)
-
-        print(r)
-        exit()
 
         #s = json.dumps(r, sort_keys=True, indent=2)
         print(type(r))
         repo.dropCollection("HealthInspection")
         repo.createCollection("HealthInspection")
-        repo['biel_otis_db.HealthInspection'].insert_many(response)
-        repo['biel_otis_db.HealthInspection'].metadata({'complete':True})
-        print(repo['HealthInspection'].metadata())
+        repo['biel_otis.HealthInspection'].insert_many(r)
+        repo['biel_otis.HealthInspection'].metadata({'complete':True})
+        print(repo['biel_otis.HealthInspection'].metadata())
 
         """
         url = 'http://cs-people.bu.edu/lapets/591/examples/found.json'
@@ -64,46 +61,31 @@ class getHealthInspection(dml.Algorithm):
             in this script. Each run of the script will generate a new
             document describing that invocation event.
             '''
-        """
+        
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate('biel_otis', 'biel_otis')
-        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
-        doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
-        doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
-        doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
+        doc.add_namespace('alg', 'http://datamechanics.io/biel_otis/algorithm/') # The scripts are in <folder>#<filename> format.
+        doc.add_namespace('dat', 'http://datamechanics.io/biel_otis/data/') # The data sets are in <user>#<collection> format.
+        doc.add_namespace('ont', 'http://datamechanics.io/biel_otis/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
+        doc.add_namespace('log', 'http://datamechanics.io/biel_otis/log/') # The event log.
+        doc.add_namespace('health', 'https://data.boston.gov/export/') # Health Inspection dataset from data.boston.gov
 
-        this_script = doc.agent('alg:biel_otis#example', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        get_found = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        get_lost = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_found, this_script)
-        doc.wasAssociatedWith(get_lost, this_script)
-        doc.usage(get_found, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'
-                  }
-                  )
-        doc.usage(get_lost, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Animal+Lost&$select=type,latitude,longitude,OPEN_DT'
-                  }
-                  )
+        this_script = doc.agent('alg:biel_otis#getHealthInspectionData', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource = doc.entity('health:458/2be/4582bec6-2b4f-4f9e-bc55-cbaa73117f4c', {'prov:label':'Health Inspections in City of Boston', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        get_health = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(get_health, this_script)
+        
+        doc.usage(get_health, resource, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Retrieval'})
 
-        lost = doc.entity('dat:biel_otis#lost', {prov.model.PROV_LABEL:'Animals Lost', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(lost, this_script)
-        doc.wasGeneratedBy(lost, get_lost, endTime)
-        doc.wasDerivedFrom(lost, resource, get_lost, get_lost, get_lost)
-
-        found = doc.entity('dat:biel_otis#found', {prov.model.PROV_LABEL:'Animals Found', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(found, this_script)
-        doc.wasGeneratedBy(found, get_found, endTime)
-        doc.wasDerivedFrom(found, resource, get_found, get_found, get_found)
-
+        health = doc.entity('dat:biel_otis#health', {prov.model.PROV_LABEL:'Health Inspections in City of Boston', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(health, this_script)
+        doc.wasGeneratedBy(health, get_health, endTime)
+        doc.wasDerivedFrom(health, resource, get_health, get_health, get_health)
         repo.logout()
-        """  
+          
         return doc
 
 getHealthInspection.execute()
