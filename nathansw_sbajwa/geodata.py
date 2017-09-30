@@ -8,15 +8,12 @@ from urllib.request import urlopen
 
 class geodata(dml.Algorithm):
 
-	
-
 	contributor = 'nathansw_sbajwa'
 	reads = []
 	writes = ['nathansw_sbajwa.geodata']
 
 	@staticmethod
 	def execute(trial = False):
-
 
 		startTime = datetime.datetime.now()
 
@@ -57,7 +54,6 @@ class geodata(dml.Algorithm):
 		repo.logout()
 		endTime = datetime.datetime.now()
 
-
 		return {"start":startTime, "end":endTime}
 
 	@staticmethod
@@ -74,15 +70,16 @@ class geodata(dml.Algorithm):
 
 		this.script = doc.agent('alg:nathansw_sbajwa#geodata', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 		resource = doc.entity('geodata:GeoDataService.svc/GetUSDemographics?', {'prov:label':'Lifestyle Data By Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-		get_mbta = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+		
+		get_geodata = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 		doc.wasAssociatedWith(get_geodata, this_script)
 		doc.usage(get_geodata, resource, startTime, None,
               {prov.model.PROV_TYPE:'ont:Retrieval',
-#                  'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'
+                  'ont:Query':'?type=Geodata&$select=type,latitude,longitude,OPEN_DT'
               }
               )
 
-        mbta = doc.entity('dat:nathansw_sbajwa#geodata', {prov.model.PROV_LABEL:'Lifestyle Data by Neighborhood', prov.model.PROV_TYPE:'ont:DataSet'})
+        geodata = doc.entity('dat:nathansw_sbajwa#geodata', {prov.model.PROV_LABEL:'Lifestyle Data by Neighborhood', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(geodata, this_script)
         doc.wasGeneratedBy(geodata, get_geodata, endTime)
         doc.wasDerivedFrom(geodata, resource, get_geodata, get_geodata, get_geodata)			
@@ -91,7 +88,7 @@ class geodata(dml.Algorithm):
 
 		return doc
 
-gepdata.execute()
+geodata.execute()
 doc = geodata.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
