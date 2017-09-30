@@ -4,6 +4,7 @@ import dml
 import prov.model
 import datetime
 import uuid
+import pdb
 
 class readfile(dml.Algorithm):
     contributor = 'bkin18_cjoe'
@@ -24,17 +25,50 @@ class readfile(dml.Algorithm):
         repo = client.repo
         repo.authenticate('bkin18_cjoe', 'bkin18_cjoe') # should probably move this to auth
 
-        # Opening up json
+
+        # Add Snow Emergecy Routes
+        url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/4f3e4492e36f4907bcd307b131afe4a5_0.geojson'
+        response = urllib.request.urlopen(url).read().decode("utf-8")
+        r = json.loads(response)
+        s = json.dumps(r, sort_keys=True, indent=2)
+
+        repo.dropCollection("emergency_routes")
+        repo.createCollection("emergency_routes")
+        repo['bkin18_cjoe.emergency_routes'].insert_many(r['features'])
+
+
+        # Add Traffic Signals
+        url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/de08c6fe69c942509089e6db98c716a3_0.geojson'
+        response = urllib.request.urlopen(url).read().decode("utf-8")
+        r = json.loads(response)
+        s = json.dumps(r, sort_keys=True, indent=2)
+
+        repo.dropCollection("traffic_signals")
+        repo.createCollection("traffic_signals")
+        repo['bkin18_cjoe.traffic_signals'].insert_many(r['features'])
+
+        
+
+        # Add City Building Data
+#        url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/492746f09dde475285b01ae7fc95950e_1.geojson' 
+#        response = urllib.request.urlopen(url).read().decode("utf-8")
+#        r = json.loads(response)
+#        s = json.dumps(r, sort_keys=True, indent=2)
+#
+#        repo.dropCollection("buildings")
+#        repo.createCollection("buildings")
+#        repo['bkin18_cjoe.buildings'].insert_many(r['features'])
+
+
+         # Add Neighborhoods
         url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/3525b0ee6e6b427f9aab5d0a1d0a1a28_0.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
 
-        print(type(r), type(s))
-        # print("jaefoijefoai")
-        repo.dropCollection("neighborhood")
-        repo.createCollection("neighborhood")
-        repo['bkin18_cjoe.neighborhood'].insert_many(r)
+        repo.dropCollection("neighborhoods")
+        repo.createCollection("neighborhoods")
+        repo['bkin18_cjoe.neighborhoods'].insert_many(r['features'])
 
         repo.logout()
 
@@ -63,10 +97,30 @@ class readfile(dml.Algorithm):
         doc.add_namespace('bdp', 'http://bostonopendata-boston.opendata.arcgis.com/datasets/')
 
 
-        resource = doc.entity('4f3e4492e36f4907bcd307b131afe4a5_0"',
+        this_script = doc.agent('alg:bkin18_cjoe#readfile', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+
+
+        emergency_routes = doc.entity('bdp:4f3e4492e36f4907bcd307b131afe4a5_0',
             {'prov:label':'311, Service Requests',
-            prov.model.PROV_TYPE:'ont:DataResource', 'bdp:Extension':'json'})
+            prov.model.PROV_TYPE:'ont:DataResource', 'bdp:Extension':'geojson'})
+
+
+        traffic_signals = doc.entity('bdp:de08c6fe69c942509089e6db98c716a3_0',
+            {'prov:label':'311, Service Requests',
+            prov.model.PROV_TYPE:'ont:DataResource', 'bdp:Extension':'geojson'})
+
+
+        neighborhoods = doc.entity('bdp:3525b0ee6e6b427f9aab5d0a1d0a1a28_0.',
+            {'prov:label':'311, Service Requests',
+            prov.model.PROV_TYPE:'ont:DataResource', 'bdp:Extension':'geojson'})
+        
+
+        repo.logout()
+
 
         return doc
 
+
+data_adder = readfile()
+readfile.execute()
 
