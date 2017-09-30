@@ -93,7 +93,7 @@ class fzjr_retrievalgorithm(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
-        this_script = doc.agent('alg:francisz_jrashaan#example', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:francisz_jrashaan#fzjr_retrievalalgorithm', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_crime = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         get_streetlights = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
@@ -142,22 +142,22 @@ class fzjr_retrievalgorithm(dml.Algorithm):
 
         streetlights = doc.entity('dat:francisz_jrashaan#streetlights', {prov.model.PROV_LABEL:'streetlights', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(streetlights, this_script)
-        doc.wasGeneratedBy(streetlights, get_found, endTime)
+        doc.wasGeneratedBy(streetlights, get_streetlights, endTime)
         doc.wasDerivedFrom(streetlights, resource, get_streetlights, get_streetlights, get_streetlights)
         
         landuse = doc.entity('dat:francisz_jrashaan#landuse', {prov.model.PROV_LABEL:'landuse', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(landuse, this_script)
-        doc.wasGeneratedBy(landuse, get_found, endTime)
+        doc.wasGeneratedBy(landuse, get_landuse, endTime)
         doc.wasDerivedFrom(landuse, resource, get_landuse, get_landuse, get_landuse)
         
         capopulation = doc.entity('dat:francisz_jrashaan#capopulation', {prov.model.PROV_LABEL:'capopulation', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(capopulation, this_script)
-        doc.wasGeneratedBy(capopulation, get_found, endTime)
+        doc.wasGeneratedBy(capopulation, get_capopulation, endTime)
         doc.wasDerivedFrom(capopulation, resource, get_capopulation, get_capopulation, get_capopulation)
         
         openspace = doc.entity('dat:francisz_jrashaan#openspace', {prov.model.PROV_LABEL:'openspace', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(openspace, this_script)
-        doc.wasGeneratedBy(openspace, get_found, endTime)
+        doc.wasGeneratedBy(openspace, get_openspace, endTime)
         doc.wasDerivedFrom(openspace, resource, get_openspace, get_openspace, get_openspace)
 
         repo.logout()
