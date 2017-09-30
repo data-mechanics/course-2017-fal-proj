@@ -9,8 +9,6 @@ from uszipcode import ZipcodeSearchEngine
 
 class mbta(dml.Algorithm):
 
-	
-
 	contributor = 'nathansw_sbajwa'
 	reads = []
 	writes = ['nathansw_sbajwa.mbta']
@@ -20,7 +18,6 @@ class mbta(dml.Algorithm):
 
 		# text file to hold all longitude and latitude coordinates that are collected
 		f = open('geo_coords.txt', 'w')
-
 
 		startTime = datetime.datetime.now()
 
@@ -104,42 +101,41 @@ class mbta(dml.Algorithm):
 		repo.logout()
 		endTime = datetime.datetime.now()
 
-
 		return {"start":startTime, "end":endTime}
 		## Sameena's code to generate JSON file
 		# with open('testMBTA.json', 'a') as outfile:
 		# 	json.dump(data, outfile, indent=4)
 
-		@staticmethod
-		def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
+	@staticmethod
+	def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
 
-			client = dml.pymongo.MongoClient()
-			repo = client.repo
-			repo.authenticate("nathansw_sbajwa","nathansw_sbajwa")
-			doc.add_namespace('alg', 'http://datamechanics.io/algorithm/sbajwa_nathansw/') # The scripts in / format.
-			doc.add_namespace('dat', 'http://datamechanics.io/data/sbajwa_nathansw/') # The data sets in / format.
-			doc.add_namespace('ont', 'http://datamechanics.io/ontology#')
-			doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
-			doc.add_namespace('mbta', 'http://realtime.mbta.com/developer/')
+		client = dml.pymongo.MongoClient()
+		repo = client.repo
+		repo.authenticate("nathansw_sbajwa","nathansw_sbajwa")
+		doc.add_namespace('alg', 'http://datamechanics.io/algorithm/sbajwa_nathansw/') # The scripts in / format.
+		doc.add_namespace('dat', 'http://datamechanics.io/data/sbajwa_nathansw/') # The data sets in / format.
+		doc.add_namespace('ont', 'http://datamechanics.io/ontology#')
+		doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
+		doc.add_namespace('mbta', 'http://realtime.mbta.com/developer/')
 
-			this.script = doc.agent('alg:nathansw_sbajwa#mbta', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-			resource = doc.entity('mbta:api/v2/stopsbylocation?', {'prov:label':'MBTA Stops By Location', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-			get_mbta = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-			doc.wasAssociatedWith(get_mbta, this_script)
-			doc.usage(get_mbta, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-#                  'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'
-                  }
-                  )
+		this.script = doc.agent('alg:nathansw_sbajwa#mbta', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+		resource = doc.entity('mbta:api/v2/stopsbylocation?', {'prov:label':'MBTA Stops By Location', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+		get_mbta = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+		doc.wasAssociatedWith(get_mbta, this_script)
+		doc.usage(get_mbta, resource, startTime, None,
+              {prov.model.PROV_TYPE:'ont:Retrieval',
+              'ont:Query':'?type=MBTA+Stop&$select=type,latitude,longitude,OPEN_DT'
+              }
+              )
 
-	        mbta = doc.entity('dat:nathansw_sbajwa#mbta', {prov.model.PROV_LABEL:'MBTA Stops', prov.model.PROV_TYPE:'ont:DataSet'})
-	        doc.wasAttributedTo(mbta, this_script)
-	        doc.wasGeneratedBy(mbta, get_mbta, endTime)
-	        doc.wasDerivedFrom(mbta, resource, get_mbta, get_mbta, get_mbta)			
+        mbta = doc.entity('dat:nathansw_sbajwa#mbta', {prov.model.PROV_LABEL:'MBTA Stops', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(mbta, this_script)
+        doc.wasGeneratedBy(mbta, get_mbta, endTime)
+        doc.wasDerivedFrom(mbta, resource, get_mbta, get_mbta, get_mbta)			
 
-	        repo.logout()
+        repo.logout()
 
-			return doc
+		return doc
 
 mbta.execute()
 doc = mbta.provenance()

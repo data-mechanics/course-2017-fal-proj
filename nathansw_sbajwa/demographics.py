@@ -67,33 +67,45 @@ class demographics(dml.Algorithm):
 			doc.add_namespace('dat', 'http://datamechanics.io/data/sbajwa_nathansw/') # The data sets in / format.
 			doc.add_namespace('ont', 'http://datamechanics.io/ontology#')
 			doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
-			doc.add_namespace('mbta', 'http://realtime.mbta.com/developer/')
+
+#			doc.add_namespace('race', ) 
+#			doc.add_namespace('povertyrates', )
+#			doc.add_namespace('householdincome', )
+#			doc.add_namespace('commuting', )
 
 			this.script = doc.agent('alg:nathansw_sbajwa#demographics', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-			resource = doc.entity('mbta:api/v2/stopsbylocation?', {'prov:label':'MBTA Stops By Location', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-			get_mbta = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+#			resource = doc.entity('race: ', {'prov:label':'', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+#			resource = doc.entity('povertyrates: ', {'prov:label':'', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+#			resource = doc.entity('householdincome: ', {'prov:label':'', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+#			resource = doc.entity('commuting: ', {'prov:label':'', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+
+			get_race = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+			get_povertyrates = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+			get_householdincome = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+			get_commuting = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+
 			doc.wasAssociatedWith(get_race, this_script)
-			doc.wasAssociatedWith(get_povertyrates, this_script)
-			doc.wasAssociatedWith(get_householdincome, this_script)
-			doc.wasAssociatedWith(get_commuting, this_script)
 			doc.usage(get_race, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-#                  'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'
+                  'ont:Query':'?type=Race&$select=type,latitude,longitude,OPEN_DT'
                   }
                   )
+			doc.wasAssociatedWith(get_povertyrates, this_script)
 			doc.usage(get_povertyrates, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-#                  'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'
+                  'ont:Query':'?type=Poverty+Rate&$select=type,latitude,longitude,OPEN_DT'
                   }
                   )
+			doc.wasAssociatedWith(get_householdincome, this_script)
 			doc.usage(get_householdincome, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-#                  'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'
+                  'ont:Query':'?type=Household+Income&$select=type,latitude,longitude,OPEN_DT'
                   }
                   )
+			doc.wasAssociatedWith(get_commuting, this_script)
 			doc.usage(get_commuting, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-#                  'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'
+                  'ont:Query':'?type=Commuting&$select=type,latitude,longitude,OPEN_DT'
                   }
                   )
 
@@ -116,6 +128,7 @@ class demographics(dml.Algorithm):
 	        doc.wasAttributedTo(commuting, this_script)
 	        doc.wasGeneratedBy(commuting, get_commuting, endTime)
 	        doc.wasDerivedFrom(commuting, resource, get_commuting, get_commuting, get_commuting)		
+	        
 	        repo.logout()
 
 			return doc
