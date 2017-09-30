@@ -20,7 +20,7 @@ class fzjr_retrievalgorithm(dml.Algorithm):
         repo = client.repo
         repo.authenticate('francisz_jrashaan', 'francisz_jrashaan')
 
-        url = 'https://data.boston.gov/api/action/datastore_search?resource_id=12cb3883-56f5-47de-afa5-3b1cf61b257b&limit=1000'
+        url = 'https://data.boston.gov/api/action/datastore_search?resource_id=12cb3883-56f5-47de-afa5-3b1cf61b257b&q=homicide'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
