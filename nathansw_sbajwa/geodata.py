@@ -18,7 +18,7 @@ class geodata(dml.Algorithm):
 		startTime = datetime.datetime.now()
 
 		client = dml.pymongo.MongoClient()
-		repo = clinet.repo
+		repo = client.repo
 		repo.authenticate('nathansw_sbajwa','nathansw_sbajwa')
 
 
@@ -79,12 +79,12 @@ class geodata(dml.Algorithm):
               }
               )
 
-        geodata = doc.entity('dat:nathansw_sbajwa#geodata', {prov.model.PROV_LABEL:'Lifestyle Data by Neighborhood', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(geodata, this_script)
-        doc.wasGeneratedBy(geodata, get_geodata, endTime)
-        doc.wasDerivedFrom(geodata, resource, get_geodata, get_geodata, get_geodata)			
+		geodata = doc.entity('dat:nathansw_sbajwa#geodata', {prov.model.PROV_LABEL:'Lifestyle Data by Neighborhood', prov.model.PROV_TYPE:'ont:DataSet'})
+		doc.wasAttributedTo(geodata, this_script)
+		doc.wasGeneratedBy(geodata, get_geodata, endTime)
+		doc.wasDerivedFrom(geodata, resource, get_geodata, get_geodata, get_geodata)			
 
-        repo.logout()
+		repo.logout()
 
 		return doc
 

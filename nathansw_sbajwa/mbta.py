@@ -22,7 +22,7 @@ class mbta(dml.Algorithm):
 		startTime = datetime.datetime.now()
 
 		client = dml.pymongo.MongoClient()
-		repo = clinet.repo
+		repo = client.repo
 		repo.authenticate('nathansw_sbajwa','nathansw_sbajwa')
 
 
@@ -82,16 +82,16 @@ class mbta(dml.Algorithm):
 			f.write(str(loc) + "\n")
 
 			# create url to make API call to MBTA portal
-		    lat = "&lat=" + str(loc[0])
-		    lon = "&lon=" + str(loc[1])
-		    url = url_base + api_key + lat + lon + form
-		    temp = json.loads(urlopen(url).read().decode('utf-8'))
+			lat = "&lat=" + str(loc[0])
+			lon = "&lon=" + str(loc[1])
+			url = url_base + api_key + lat + lon + form
+			temp = json.loads(urlopen(url).read().decode('utf-8'))
 
 		    # makes every key in json dictionary the coordinates
-		    key_name = "(" + str(loc[0]) + "," + str(loc[1]) + ")"
-		    data[key_name] = temp.pop('stop')
+			key_name = "(" + str(loc[0]) + "," + str(loc[1]) + ")"
+			data[key_name] = temp.pop('stop')
 
-		f.close()
+			f.close()
 
 		s = json.dumps(data, indent=4)
 		repo.dropCollection("mbta")
@@ -127,13 +127,12 @@ class mbta(dml.Algorithm):
               'ont:Query':'?type=MBTA+Stop&$select=type,latitude,longitude,OPEN_DT'
               }
               )
+		mbta = doc.entity('dat:nathansw_sbajwa#mbta', {prov.model.PROV_LABEL:'MBTA Stops',prov.model.PROV_TYPE:'ont:DataSet'})
+		doc.wasAttributedTo(mbta, this_script)
+		doc.wasGeneratedBy(mbta, get_mbta, endTime)
+		doc.wasDerivedFrom(mbta, resource, get_mbta, get_mbta, get_mbta)			
 
-        mbta = doc.entity('dat:nathansw_sbajwa#mbta', {prov.model.PROV_LABEL:'MBTA Stops', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(mbta, this_script)
-        doc.wasGeneratedBy(mbta, get_mbta, endTime)
-        doc.wasDerivedFrom(mbta, resource, get_mbta, get_mbta, get_mbta)			
-
-        repo.logout()
+		repo.logout()
 
 		return doc
 
