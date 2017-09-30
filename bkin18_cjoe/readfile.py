@@ -9,7 +9,7 @@ import pdb
 class readfile(dml.Algorithm):
     contributor = 'bkin18_cjoe'
     reads = []
-    writes = ['bkin18_cjoe.neighborhood'] # can add more if need be (e.g. lost, found)
+    writes = ['bkin18_cjoe.emergency_routes', 'bkin18_cjoe.traffic_signals', 'bkin18_cjoe.neighborhoods'] 
 
     # Set up the database connection.
     client = dml.pymongo.MongoClient()
@@ -121,6 +121,10 @@ class readfile(dml.Algorithm):
         return doc
 
 
-data_adder = readfile()
 readfile.execute()
+doc = readfile.provenance()
+print(doc.get_provn())
+print(json.dumps(json.loads(doc.serialize()), indent=4))
+
+## eof
 
