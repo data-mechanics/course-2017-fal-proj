@@ -3,7 +3,7 @@ import dml
 import prov.model
 import datetime
 import uuid
-
+import os 
 
 class demographics(dml.Algorithm):
 
@@ -23,28 +23,31 @@ class demographics(dml.Algorithm):
 		repo = client.repo
 		repo.authenticate('nathansw_sbajwa','nathansw_sbajwa')
 
-		with open('Race.json') as race_json:
+		curr_dir = os.getcwd()
+		new_dir = curr_dir + "\\nathansw_sbajwa\\" 
+
+		with open(new_dir + 'Race.json') as race_json:
 			r = json.load(race_json)
 		s = json.dumps(r, indent=4)
 		repo.dropCollection("race")
 		repo.createCollection("race")
 		repo['nathansw_sbajwa.race'].insert_many(r)
 
-		with open('MeansOfCommuting.json') as commuting_json:
+		with open(new_dir + 'MeansOfCommuting.json') as commuting_json:
 			r = json.load(commuting_json)
 		s = json.dumps(r, indent=4)
 		repo.dropCollection("commuting")
 		repo.createCollection("commuting")
 		repo['nathansw_sbajwa.commuting'].insert_many(r)
 
-		with open('PovertyRates.json') as poverty_json:
+		with open(new_dir + 'PovertyRates.json') as poverty_json:
 			r = json.load(poverty_json)
 		s = json.dumps(r, indent=4)
 		repo.dropCollection("povertyrates")
 		repo.createCollection("povertyrates")
 		repo['nathansw_sbajwa.povertyrates'].insert_many(r)
 
-		with open('HouseholdIncome.json') as income_json:
+		with open(new_dir + 'HouseholdIncome.json') as income_json:
 			r = json.load(income_json)
 		s = json.dumps(r, indent=4)
 		repo.dropCollection("householdincome")

@@ -4,6 +4,7 @@ import dml
 import prov.model
 import datetime
 import uuid
+import os
 from urllib.request import urlopen
 from uszipcode import ZipcodeSearchEngine
 
@@ -16,8 +17,10 @@ class mbta(dml.Algorithm):
 	@staticmethod
 	def execute(trial = False):
 
+		curr_dir = os.getcwd()
+		new_dir = curr_dir + "\\nathansw_sbajwa\\"
 		# text file to hold all longitude and latitude coordinates that are collected
-		f = open('geo_coords.txt', 'w')
+		f = open(new_dir + 'geo_coords.txt', 'w')
 
 		startTime = datetime.datetime.now()
 

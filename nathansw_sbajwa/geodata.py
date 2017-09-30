@@ -5,6 +5,7 @@ import prov.model
 import datetime
 import uuid
 from urllib.request import urlopen
+import os
 
 class geodata(dml.Algorithm):
 
@@ -21,8 +22,9 @@ class geodata(dml.Algorithm):
 		repo = client.repo
 		repo.authenticate('nathansw_sbajwa','nathansw_sbajwa')
 
-
-		temp_f = open('geo_coords.txt', 'r')
+		curr_dir = os.getcwd()
+		new_dir = curr_dir + "\\nathansw_sbajwa\\"
+		temp_f = open(new_dir + 'geo_coords.txt', 'r')
 		loc_coords = temp_f.readlines()
 
 		base_url = "https://azure.geodataservice.net/GeoDataService.svc/GetUSDemographics?"
