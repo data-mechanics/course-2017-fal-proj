@@ -68,16 +68,16 @@ class demographics(dml.Algorithm):
 			doc.add_namespace('ont', 'http://datamechanics.io/ontology#')
 			doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
 
-#			doc.add_namespace('race', ) 
-#			doc.add_namespace('povertyrates', )
-#			doc.add_namespace('householdincome', )
-#			doc.add_namespace('commuting', )
+			doc.add_namespace('race', 'goo.gl/V3hgSW') 
+			doc.add_namespace('povertyrates', 'goo.gl/V3hgSW')
+			doc.add_namespace('householdincome', 'goo.gl/V3hgSW')
+			doc.add_namespace('commuting', 'goo.gl/V3hgSW')
 
 			this.script = doc.agent('alg:nathansw_sbajwa#demographics', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-#			resource = doc.entity('race: ', {'prov:label':'', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-#			resource = doc.entity('povertyrates: ', {'prov:label':'', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-#			resource = doc.entity('householdincome: ', {'prov:label':'', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-#			resource = doc.entity('commuting: ', {'prov:label':'', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+			resource = doc.entity('race: goo.gl/V3hgSW', {'prov:label':'Race by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+			resource = doc.entity('povertyrates: goo.gl/V3hgSW', {'prov:label':'Poverty Rates by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+			resource = doc.entity('householdincome: goo.gl/V3hgSW', {'prov:label':'Household Income by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+			resource = doc.entity('commuting: goo.gl/V3hgSW', {'prov:label':'Means of Commuting by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 
 			get_race = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 			get_povertyrates = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
