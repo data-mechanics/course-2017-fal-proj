@@ -5,6 +5,7 @@ import prov.model
 import datetime
 import uuid
 import pdb
+import csv
 
 class readfile(dml.Algorithm):
     contributor = 'bkin18_cjoe'
@@ -47,18 +48,6 @@ class readfile(dml.Algorithm):
         repo.createCollection("traffic_signals")
         repo['bkin18_cjoe.traffic_signals'].insert_many(r['features'])
 
-        
-
-        # Add City Building Data
-#        url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/492746f09dde475285b01ae7fc95950e_1.geojson' 
-#        response = urllib.request.urlopen(url).read().decode("utf-8")
-#        r = json.loads(response)
-#        s = json.dumps(r, sort_keys=True, indent=2)
-#
-#        repo.dropCollection("buildings")
-#        repo.createCollection("buildings")
-#        repo['bkin18_cjoe.buildings'].insert_many(r['features'])
-
 
          # Add Neighborhoods
         url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/3525b0ee6e6b427f9aab5d0a1d0a1a28_0.geojson'
@@ -70,6 +59,17 @@ class readfile(dml.Algorithm):
         repo.createCollection("neighborhoods")
         repo['bkin18_cjoe.neighborhoods'].insert_many(r['features'])
 
+
+        # Add Roads
+        url ='https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/OV5PXF#&key=$a3fe090a-ebc4-4c6d-b8db-f41b86d8c9c9'
+        response = urllib.request.urlopen(url).read().decode("utf-8")
+        pdb.set_trace()
+        r = json.loads(response)
+        s = json.dumps(r, sort_keys=True, indent=2)
+
+        repo.dropCollection("roads")
+        repo.createCollection("roads")
+        repo['bkin18_cjoe.roads'].insert_many(r['features'])
         repo.logout()
 
         endTime = datetime.datetime.now()
