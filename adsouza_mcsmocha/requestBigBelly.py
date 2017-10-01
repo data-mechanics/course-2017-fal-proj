@@ -75,7 +75,7 @@ class requestBigBelly(dml.Algorithm):
 
         return doc
 
- requestBigBelly.execute()
- doc = requestBigBelly.provenance()
- print(doc.get_provn())
- print(json.dumps(json.loads(doc.serialize()), indent=4))
+requestBigBelly.execute()
+doc = requestBigBelly.provenance()
+print(doc.get_provn())
+print(json.dumps(json.loads(doc.serialize()), indent=4))

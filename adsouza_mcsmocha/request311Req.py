@@ -75,7 +75,7 @@ class request311Req(dml.Algorithm):
 
         return doc
 
- request311Req.execute()
- doc = request311Req.provenance()
- print(doc.get_provn())
- print(json.dumps(json.loads(doc.serialize()), indent=4))
+request311Req.execute()
+doc = request311Req.provenance()
+print(doc.get_provn())
+print(json.dumps(json.loads(doc.serialize()), indent=4))
