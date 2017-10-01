@@ -21,22 +21,22 @@ class getData(dml.Algorithm):
         repo.authenticate('jdbrawn_slarbi', 'jdbrawn_slarbi')
 
         # Get college data
-        url = 'https://data.boston.gov/datastore/odata3.0/208dc980-a278-49e3-b95b-e193bb7bb6e4?$top=65&$format=json'
+        url = 'https://data.boston.gov/api/action/datastore_search?resource_id=208dc980-a278-49e3-b95b-e193bb7bb6e4&limit=10000'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("colleges")
         repo.createCollection("colleges")
-        repo['jdbrawn_slarbi.colleges'].insert_many(r)
+        repo['jdbrawn_slarbi.colleges'].insert_many(r['result']['records'])
 
         # Get crime data
-        url = 'https://data.boston.gov/datastore/odata3.0/12cb3883-56f5-47de-afa5-3b1cf61b257b?$top=10000&$format=json'
+        url = 'https://data.boston.gov/api/action/datastore_search?resource_id=12cb3883-56f5-47de-afa5-3b1cf61b257b&limit=70'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("crime")
         repo.createCollection("crime")
-        repo['jdbrawn_slarbi.crime'].insert_many(r)
+        repo['jdbrawn_slarbi.crime'].insert_many(r['result']['records'])
 
         repo.logout()
 
@@ -66,12 +66,8 @@ class getData(dml.Algorithm):
         this_script = doc.agent('alg:jdbrawn_slarbi#getData',
                                 {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
 
-        resource_colleges = doc.entity('208dc980-a278-49e3-b95b-e193bb7bb6e4',
-                              {'prov:label': 'Boston Universities and Colleges', prov.model.PROV_TYPE: 'ont:DataResource',
-                               'ont:Extension': 'json'})
-        resource_crime = doc.entity('12cb3883-56f5-47de-afa5-3b1cf61b257b',
-                              {'prov:label': 'Boston Crime', prov.model.PROV_TYPE: 'ont:DataResource',
-                               'ont:Extension': 'json'})
+        resource_colleges = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_crime = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 
         get_colleges = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
         get_crime = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
