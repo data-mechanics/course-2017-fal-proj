@@ -37,6 +37,8 @@ class neighborhood_code(dml.Algorithm):
         repo.createCollection("neighborhoods")
         repo['bkin18_cjoe.neighborhoods'].insert_many(r['features'])
 
+        # print(r['features'])
+
         endTime = datetime.datetime.now()
 
         return {"start":startTime, "end":endTime}
