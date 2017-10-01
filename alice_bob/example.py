@@ -6,9 +6,9 @@ import datetime
 import uuid
 
 class example(dml.Algorithm):
-    contributor = 'alice_bob'
+    contributor = 'medinad'
     reads = []
-    writes = ['alice_bob.lost', 'alice_bob.found']
+    writes = ['medinad.lost', 'medinad.found']
 
     @staticmethod
     def execute(trial = False):
@@ -18,7 +18,7 @@ class example(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('alice_bob', 'alice_bob')
+        repo.authenticate('medinad', 'medinad')
 
         url = 'http://cs-people.bu.edu/lapets/591/examples/lost.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -26,9 +26,9 @@ class example(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("lost")
         repo.createCollection("lost")
-        repo['alice_bob.lost'].insert_many(r)
-        repo['alice_bob.lost'].metadata({'complete':True})
-        print(repo['alice_bob.lost'].metadata())
+        repo['medinad.lost'].insert_many(r)
+        repo['medinad.lost'].metadata({'complete':True})
+        print(repo['medinad.lost'].metadata())
 
         url = 'http://cs-people.bu.edu/lapets/591/examples/found.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -36,7 +36,7 @@ class example(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("found")
         repo.createCollection("found")
-        repo['alice_bob.found'].insert_many(r)
+        repo['medinad.found'].insert_many(r)
 
         repo.logout()
 
