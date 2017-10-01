@@ -10,8 +10,8 @@ from vincenty import vincenty
 
 class transformation1(dml.Algorithm):
     contributor = 'htw93_tscheung'
-    reads = ['htw93_tscheung.BostonCrime','htw93_tscheung.BostonSchools']
-    writes = ['htw93_tscheung.BostonSchoolCrime']
+    reads = ['htw93_tscheung.BostonCrime', 'htw93_tscheung.NewYorkCityCrime','htw93_tscheung.BostonSchools', 'htw93_tscheung.NewYorkCitySchools']
+    writes = ['htw93_tscheung.BostonSchoolCrime', 'htw93_tscheung.NewYorkCitySchoolCrime']
 
     @staticmethod
     def execute(trial = False):
@@ -24,29 +24,55 @@ class transformation1(dml.Algorithm):
         repo.authenticate('htw93_tscheung', 'htw93_tscheung')
 
         bostonCrime = repo.htw93_tscheung.BostonCrime
+        newYorkCityCrime = repo.htw93_tscheung.NewYorkCityCrime
         bostonSchools = repo.htw93_tscheung.BostonSchools
+        newYorkCitySchools = repo.htw93_tscheung.NewYorkCitySchools
 
-        crime = bostonCrime.find()
-        school = bostonSchools.find()
+        bosCrime = bostonCrime.find()
+        bosSchool = bostonSchools.find()
+        nycCrime = newYorkCityCrime.find()
+        nycSchool = newYorkCitySchools.find()
         bostonSchoolCrime = []
-
+        newYorkCitySchoolCrime = []
+        
+        # Combine boston crime and boston schools.
         count = 0
-        for c in crime:
-            for s in school:
+        for c in bosCrime:
+            for s in bosSchool:
                 count += 1
-                cLoc = (float(c['lat']),float(c['long']))
-                sLoc = (float(s['properties']['Latitude']),float(s['properties']['Longitude']))
-                dis = vincenty(cLoc,sLoc,miles=True)
-                print("distance:*******"+str(dis))
-                if dis < 3:
-                    bostonSchoolCrime.append({'school':s['properties']['Name'],'crime_description':c['offense_description'],'distance':dis,'day_of_week':c['day_of_week'],'hour':c['hour']})
+                if 'lat' in c and 'long' in c:
+                    cLoc = (float(c['lat']),float(c['long']))
+                    sLoc = (float(s['properties']['Latitude']),float(s['properties']['Longitude']))
+                    dis = vincenty(cLoc,sLoc,miles=True)
+                    if dis < 0.5:
+                        bostonSchoolCrime.append({'school':s['properties']['Name'],'crime_description':c['offense_description'],'distance':dis,'day_of_week':c['day_of_week'],'hour':c['hour']})
+            bosSchool.rewind()
         print(count)
 
         repo.dropCollection("BostonSchoolCrime")
         repo.createCollection("BostonSchoolCrime")
         repo['htw93_tscheung.BostonSchoolCrime'].insert_many(bostonSchoolCrime)
-        print('Finished rectrieving htw93_tscheung.BostonSchoolCrime')
+        print('Finished creating collection htw93_tscheung.BostonSchoolCrime')
         
+        # Combine nyc crime and nyc schools.
+        count = 0
+        for c in nycCrime:
+            for s in nycSchool:
+                count += 1
+                if 'latitude' in c and 'longitude' in c:
+                    cLoc = (float(c['latitude']),float(c['longitude']))
+                    sLoc = (float(s['the_geom']['coordinates'][1]),float(s['the_geom']['coordinates'][0]))
+                    dis = vincenty(cLoc,sLoc,miles=True)
+                    if dis < 1:
+                        newYorkCitySchoolCrime.append({'school':s['name'],'crime_description':c['ofns_desc'],'distance':dis,'time':c['cmplnt_fr_tm']})
+
+            nycSchool.rewind()
+        print(count)
+
+        repo.dropCollection("NewYorkCitySchoolCrime")
+        repo.createCollection("NewYorkCitySchoolCrime")
+        repo['htw93_tscheung.NewYorkCitySchoolCrime'].insert_many(newYorkCitySchoolCrime)
+        print('Finished creating collection htw93_tscheung.NewYorkCitySchoolCrime')
 
         repo.logout()
 

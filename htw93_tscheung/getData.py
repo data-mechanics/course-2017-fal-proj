@@ -10,9 +10,9 @@ import geojson
 class getData(dml.Algorithm):
     contributor = 'htw93_tscheung'
     reads = []
-    writes = ['htw93_tscheung.BostonCrime', 'htw93_tscheung.CambridgeCrime',
-              'htw93_tscheung.BostonSchools', 'htw93_tscheung.CambridgeSchools',
-              'htw93_tscheung.BostonRestaurants', 'htw93_tscheung.CambridgeRestaurants']
+    writes = ['htw93_tscheung.BostonCrime', 'htw93_tscheung.NewYorkCityCrime',
+              'htw93_tscheung.BostonSchools', 'htw93_tscheung.NewYorkCitySchools',
+              'htw93_tscheung.BostonRestaurants', 'htw93_tscheung.NewYorkCityRestaurants']
 
     @staticmethod
     def execute(trial = False):
@@ -34,14 +34,14 @@ class getData(dml.Algorithm):
         #repo['htw93_tscheung.BostonCrime'].metadata({'complete':True})
         print('Finished rectrieving htw93_tscheung.BostonCrime')
 
-        url = 'https://data.cambridgema.gov/resource/dypy-nwuz.json'
+        url = 'https://data.cityofnewyork.us/resource/qgea-i56i.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("CambridgeCrime")
-        repo.createCollection("CambridgeCrime")
-        repo['htw93_tscheung.CambridgeCrime'].insert_many(r)
-        print('Finished rectrieving htw93_tscheung.CambridgeCrime')
+        repo.dropCollection("NewYorkCityCrime")
+        repo.createCollection("NewYorkCityCrime")
+        repo['htw93_tscheung.NewYorkCityCrime'].insert_many(r)
+        print('Finished rectrieving htw93_tscheung.NewYorkCityCrime')
         
         url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/cbf14bb032ef4bd38e20429f71acb61a_2.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -53,15 +53,15 @@ class getData(dml.Algorithm):
         repo['htw93_tscheung.BostonSchools'].insert_many(s_r)
         print('Finished rectrieving htw93_tscheung.BostonSchools')
         
-        url = 'https://data.cambridgema.gov/resource/fmjd-dgre.json'
+        url = 'https://data.cityofnewyork.us/resource/8pnn-kkif.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("CambridgeSchools")
-        repo.createCollection("CambridgeSchools")
-        repo['htw93_tscheung.CambridgeSchools'].insert_many(r)
+        repo.dropCollection("NewYorkCitySchools")
+        repo.createCollection("NewYorkCitySchools")
+        repo['htw93_tscheung.NewYorkCitySchools'].insert_many(r)
         #repo['htw93_tscheung.BostonCrime'].metadata({'complete':True})
-        print('Finished rectrieving htw93_tscheung.CambridgeSchools')
+        print('Finished rectrieving htw93_tscheung.NewYorkCitySchools')
 
         repo.logout()
 
