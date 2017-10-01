@@ -46,6 +46,43 @@ class city_of_boston_extraction(dml.Algorithm):
 
     @staticmethod
     def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
-        return 
+        '''Creates the provenance document describing the collection of data
+        occuring within this script.'''
+        
+        # Set up the database connection
+        client = dml.pymongo.MongoClient()
+        repo = client.repo
+        repo.authenticate('esaracin', 'esaracin')
+
+        # Add useful namespaces for this prov doc
+        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/')
+        doc.add_namespace('dat', 'http://datamechanics.io/data/')
+        doc.add_namespace('ont', 'http://datamechanics/io/ontology/')
+        doc.add_namespace('log', 'http://datamechanics.io/log/')
+        doc.add_namespace('cit', 'https://data.cityofboston.gov/') # Namespace specific to this script
+
+        # Add this script as a provenance agent to our document
+        this_script = doc.agent('alg:esaracin#city_of_boston_extraction', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource_shootings = doc.entity('cit:api/views/w4k7-yvrq/rows', {'prov:label':'311, Service Requests',
+                    prov.model.PROV_TYPE:'ont:DataResource','ont:Extension':'csv'})
+
+        get_shootings = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+
+        doc.wasAssociatedWith(get_shootings, this_script)
+        doc.usage(get_shootings, resource_shootings, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
+
+        shootings = doc.entity('dat:esaracin#boston_shootings',
+                              {prov.model.PROV_LABEL:'Shootings in Boston', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(shootings, this_script)
+        doc.wasGeneratedBy(shootings, get_shootings, endTime)
+        doc.wasDerivedFrom(shootings, resource_shootings, get_shootings,
+                           get_shootings, get_shootings)
+
+
+        repo.logout()
+
+
+        return doc
 
 city_of_boston_extraction.execute()
+city_of_boston_extraction.provenance()

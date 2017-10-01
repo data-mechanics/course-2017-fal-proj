@@ -59,7 +59,56 @@ class boston_opendata_extraction(dml.Algorithm):
         return {"start":startTime, "end":endTime}
 
     @staticmethod
-    def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
-        return 
+    def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None): 
+        '''Creates the provenance document describing the collection of data
+        occuring within this script.'''
+        
+        # Set up the database connection
+        client = dml.pymongo.MongoClient()
+        repo = client.repo
+        repo.authenticate('esaracin', 'esaracin')
+
+        # Add useful namespaces for this prov doc
+        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/')
+        doc.add_namespace('dat', 'http://datamechanics.io/data/')
+        doc.add_namespace('ont', 'http://datamechanics/io/ontology/')
+        doc.add_namespace('log', 'http://datamechanics.io/log/')
+        doc.add_namespace('bos', 'http://bostonopendata-boston.opendata.arcgis.com/datasets/') # Namespace specific to this script
+
+        # Add this script as a provenance agent to our document
+        this_script = doc.agent('alg:esaracin#boston_opendata_extraction', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource_stations = doc.entity('bos:e5a0066d38ac4e2abbc7918197a4f6af_6', {'prov:label':'311, Service Requests',
+                    prov.model.PROV_TYPE:'ont:DataResource','ont:Extension':'csv'})
+
+        resource_districts = doc.entity('bos:9a3a8c427add450eaf45a470245680fc_5', {'prov:label':'311, Service Requests',
+                    prov.model.PROV_TYPE:'ont:DataResource','ont:Extension':'csv'})
+        get_stations = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        get_districts = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+
+        doc.wasAssociatedWith(get_stations, this_script)
+        doc.wasAssociatedWith(get_districts, this_script)
+        doc.usage(get_stations, resource_stations, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
+        doc.usage(get_districts, resource_districts, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
+
+
+        stations = doc.entity('dat:esaracin#police_stations',
+                              {prov.model.PROV_LABEL:'Police Stations', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(stations, this_script)
+        doc.wasGeneratedBy(stations, get_stations, endTime)
+        doc.wasDerivedFrom(stations, resource_stations, get_stations,
+                           get_stations, get_stations)
+
+        districts = doc.entity('dat:esaracin#police_districts',
+                               {prov.model.PROV_LABEL:'Police Districts',prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(districts, this_script)
+        doc.wasGeneratedBy(districts, get_districts, endTime)
+        doc.wasDerivedFrom(districts, resource_districts, get_districts,
+                           get_districts, get_districts)
+
+        repo.logout()
+
+
+        return doc
 
 boston_opendata_extraction.execute()
+boston_opendata_extraction.provenance()

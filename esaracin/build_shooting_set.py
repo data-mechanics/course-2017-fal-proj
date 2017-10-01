@@ -30,7 +30,6 @@ class build_shooting_set(dml.Algorithm):
         dataset = repo['esaracin.boston_shootings'].find()
         df_shootings = pd.DataFrame(list(dataset))
 
-
         crime_types = df_shootings['INCIDENT_TYPE_DESCRIPTION'].unique()
         police_districts = df_shootings['REPTDISTRICT'].unique()
 
@@ -45,13 +44,13 @@ class build_shooting_set(dml.Algorithm):
         # necessary. Use a nested structure to find the correct index to
         # increment each shooting at.
         for index, row, in df_shootings.iterrows():
-            index = 0
+            ind = 0
             for district in police_districts:
                 if(row['REPTDISTRICT'] == district):
-                    data[row['INCIDENT_TYPE_DESCRIPTION']][index] += 1
+                    data[row['INCIDENT_TYPE_DESCRIPTION']][ind] += 1
                     break
 
-                index += 1
+                ind += 1
 
         
 
