@@ -5,10 +5,10 @@ import prov.model
 import datetime
 import uuid
 
-class Station_Path(dml.Algorithm):
+class Station_Node(dml.Algorithm):
     contributor = 'yjunchoi_yzhang71'
     reads = []
-    writes = ['yjunchoi_yzhang71.Station_Path']
+    writes = ['yjunchoi_yzhang71.Station_Node']
 
     @staticmethod
     def execute(trial = False):
@@ -20,18 +20,18 @@ class Station_Path(dml.Algorithm):
         repo = client.repo
         repo.authenticate('yjunchoi_yzhang71', 'yjunchoi_yzhang71')
 
-        url = 'https://raw.githubusercontent.com/mbtaviz/mbtaviz.github.io/master/data/station-paths.json'
+        url = 'https://raw.githubusercontent.com/WHYjun/course-2017-fal-proj/master/local_data/Station_Node.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("Station_Path")
-        repo.createCollection("Station_Path")
+        repo.dropCollection("Station_Node")
+        repo.createCollection("Station_Node")
         
 
         for key in r:
-            paths = {}
-            paths[key] = r[key]
-            repo['yjunchoi_yzhang71.Station_Path'].insert(paths)
+            Node = {}
+            Node[key] = r[key]
+            repo['yjunchoi_yzhang71.Station_Node'].insert(Node)
 
         repo.logout()
 
@@ -55,29 +55,29 @@ class Station_Path(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/yjunchoi_yzhang71') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('mbtaviz', 'https://github.com/yzhang71/mbtaviz.github.io/blob/master/data/')
+        doc.add_namespace('git', 'https://github.com/WHYjun/course-2017-fal-proj/blob/master/local_data/')
 
-        this_script = doc.agent('alg:yjunchoi_yzhang71#Station_Path', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('mbtaviz:Station_Path', {'prov:label':'Station_Path', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        get_Station_Path = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_Station_Path, this_script)
-        doc.usage(get_Station_Path, resource, startTime, None,
+        this_script = doc.agent('alg:yjunchoi_yzhang71#Station_Node', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource = doc.entity('git:Station_Node', {'prov:label':'Station_Node', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        get_Station_Node = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(get_Station_Node, this_script)
+        doc.usage(get_Station_Node, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'
+                  'ont:Query':'?type=Station + Node& $ select = id , name'
                   }
                   )
 
-        Station_Path = doc.entity('dat:yjunchoi_yzhang71#Station_Path', {prov.model.PROV_LABEL:'Station_Path in Boston', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(Station_Path, this_script)
-        doc.wasGeneratedBy(Station_Path, get_Station_Path, endTime)
-        doc.wasDerivedFrom(Station_Path, resource, get_Station_Path, get_Station_Path, get_Station_Path)
+        Station_Node = doc.entity('dat:yjunchoi_yzhang71#Station_Node', {prov.model.PROV_LABEL:'Station_Node in Boston', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(Station_Node, this_script)
+        doc.wasGeneratedBy(Station_Node, get_Station_Node, endTime)
+        doc.wasDerivedFrom(Station_Node, resource, get_Station_Node, get_Station_Node, get_Station_Node)
 
         repo.logout()
 
         return doc
 
-Station_Path.execute()
-doc = Station_Path.provenance()
+Station_Node.execute()
+doc = Station_Node.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
 
