@@ -26,11 +26,12 @@ class Station_Path(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("Station_Path")
         repo.createCollection("Station_Path")
+        
 
-        """for key in r:
-            delay = {}
-            delay[key] = r[key]
-            repo['yjunchoi_yzhang71.Station_Path'].insert(delay)"""
+        for key in r:
+            paths = {}
+            paths[key] = r[key]
+            repo['yjunchoi_yzhang71.Station_Path'].insert(paths)
 
         repo.logout()
 

@@ -26,11 +26,11 @@ class Station_Network(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("Station_Network")
         repo.createCollection("Station_Network")
-
-        """for key in r:
-            delay = {}
+        for key in r:
+            print(r[key])
+            '''delay = {}
             delay[key] = r[key]
-            repo['yjunchoi_yzhang71.Station_Network'].insert(delay)"""
+            repo['yjunchoi_yzhang71.Station_Network'].insert(delay)'''
 
         repo.logout()
 
