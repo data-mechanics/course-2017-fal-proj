@@ -29,9 +29,11 @@ class demographics(dml.Algorithm):
 		with open(new_dir + 'Race.json') as race_json:
 			r = json.load(race_json)
 		s = json.dumps(r, indent=4)
+		test_r = json.loads(s)
 		repo.dropCollection("race")
 		repo.createCollection("race")
-		repo['nathansw_sbajwa.race'].insert_many(r)
+		repo['nathansw_sbajwa.race'].insert_many(test_r)
+		repo['nathansw_sbajwa.race'].metadata({'complete':True})
 
 		with open(new_dir + 'MeansOfCommuting.json') as commuting_json:
 			r = json.load(commuting_json)
@@ -39,6 +41,8 @@ class demographics(dml.Algorithm):
 		repo.dropCollection("commuting")
 		repo.createCollection("commuting")
 		repo['nathansw_sbajwa.commuting'].insert_many(r)
+		repo['nathansw_sbajwa.commuting'].metadata({'complete':True})
+
 
 		with open(new_dir + 'PovertyRates.json') as poverty_json:
 			r = json.load(poverty_json)
@@ -46,6 +50,8 @@ class demographics(dml.Algorithm):
 		repo.dropCollection("povertyrates")
 		repo.createCollection("povertyrates")
 		repo['nathansw_sbajwa.povertyrates'].insert_many(r)
+		repo['nathansw_sbajwa.povertyrates'].metadata({'complete':True})
+
 
 		with open(new_dir + 'HouseholdIncome.json') as income_json:
 			r = json.load(income_json)
@@ -53,6 +59,8 @@ class demographics(dml.Algorithm):
 		repo.dropCollection("householdincome")
 		repo.createCollection("householdincome")
 		repo['nathansw_sbajwa.householdincome'].insert_many(r)
+		repo['nathansw_sbajwa.householdincome'].metadata({'complete':True})
+
 
 		repo.logout()
 		endTime = datetime.datetime.now()
