@@ -31,28 +31,28 @@ class demographics(dml.Algorithm):
 		s = json.dumps(r, indent=4)
 		repo.dropCollection("race")
 		repo.createCollection("race")
-		repo['nathansw_sbajwa.race'].insert_many(r)
+		repo['nathansw_sbajwa.race'].insert_one(r)
 
 		with open(new_dir + 'MeansOfCommuting.json') as commuting_json:
 			r = json.load(commuting_json)
 		s = json.dumps(r, indent=4)
 		repo.dropCollection("commuting")
 		repo.createCollection("commuting")
-		repo['nathansw_sbajwa.commuting'].insert_many(r)
+		repo['nathansw_sbajwa.commuting'].insert_one(r)
 
 		with open(new_dir + 'PovertyRates.json') as poverty_json:
 			r = json.load(poverty_json)
 		s = json.dumps(r, indent=4)
 		repo.dropCollection("povertyrates")
 		repo.createCollection("povertyrates")
-		repo['nathansw_sbajwa.povertyrates'].insert_many(r)
+		repo['nathansw_sbajwa.povertyrates'].insert_one(r)
 
 		with open(new_dir + 'HouseholdIncome.json') as income_json:
 			r = json.load(income_json)
 		s = json.dumps(r, indent=4)
 		repo.dropCollection("householdincome")
 		repo.createCollection("householdincome")
-		repo['nathansw_sbajwa.householdincome'].insert_many(r)
+		repo['nathansw_sbajwa.householdincome'].insert_one(r)
 
 		repo.logout()
 		endTime = datetime.datetime.now()
