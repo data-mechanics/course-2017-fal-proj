@@ -1,18 +1,17 @@
-import urllib.request
-from bson import json_util
 import dml
 import prov.model
 import datetime
 import uuid
 
 
-class retrievePropertyAssessmentData(dml.Algorithm):
+class selectAddresses(dml.Algorithm):
     contributor = 'sbrz_nedg'
-    reads = []
-    writes = ['sbrz_nedg.property_assessment']
+    reads = ['sbrz_nedg.property_assessment']
+    writes = ['sbrz_nedg.property_assessment_addresses', 'sbrz_nedg.property_assessment']
+
     @staticmethod
-    def execute(trial = False):
-        '''Retrieve Boston property assessment data set.'''
+    def execute(trial=False):
+        '''Select all of the addresses from the Property Assessment data set'''
         startTime = datetime.datetime.now()
 
         # Set up the database connection.
@@ -20,25 +19,26 @@ class retrievePropertyAssessmentData(dml.Algorithm):
         repo = client.repo
         repo.authenticate('sbrz_nedg', 'sbrz_nedg')
 
-        # Property Assessment Data Set
-        property_assessment_url = urllib.request.Request(
-            "https://data.boston.gov/api/action/datastore_search?resource_id=062fc6fa-b5ff-4270-86cf-202225e40858&limit=200000")
-        property_assessment_response = urllib.request.urlopen(property_assessment_url).read().decode("utf-8")
-        property_assessment_json = json_util.loads(property_assessment_response)
+        db = client.repo
+        collection = db['sbrz_nedg.property_assessment']
+        x = []
+        addresses = collection.find({}, {'MAIL_ADDRESS': 1, 'MAIL CS': 1, 'ZIPCODE': 1})
+        for address in addresses:
+            address['ZIPCODE'] = address['ZIPCODE'].strip('_') # strip off trailing underline
+            if 'PO BOX' not in address['MAIL_ADDRESS']:  # filter out PO Boxes
+                x.append(address)
 
-        property_assessment_json = property_assessment_json['result']['records']
-
-        repo.dropCollection("property_assessment")
-        repo.createCollection("property_assessment")
-        repo['sbrz_nedg.property_assessment'].insert_many(property_assessment_json)
-        repo['sbrz_nedg.property_assessment'].metadata({'complete':True})
-        print(repo['sbrz_nedg.property_assessment'].metadata())
+        repo.dropCollection('sbrz_nedg.property_assessment_addresses')
+        repo.createCollection('sbrz_nedg.property_assessment_addresses')
+        repo['sbrz_nedg.property_assessment_addresses'].insert_many(x)
+        repo['sbrz_nedg.property_assessment_addresses'].metadata({'complete': True})
+        repo.dropCollection('sbrz_nedg.property_assessment')
 
         repo.logout()
 
         endTime = datetime.datetime.now()
 
-        return {"start":startTime, "end":endTime}
+        return {"start": startTime, "end": endTime}
 
     @staticmethod
     def provenance(doc=prov.model.ProvDocument(), startTime=None, endTime=None):
@@ -95,4 +95,5 @@ class retrievePropertyAssessmentData(dml.Algorithm):
 
         return doc
 
-retrievePropertyAssessmentData.execute()
+
+selectAddresses.execute()

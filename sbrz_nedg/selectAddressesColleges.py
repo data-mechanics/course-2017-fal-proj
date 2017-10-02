@@ -1,5 +1,3 @@
-import urllib.request
-from bson import json_util
 import dml
 import prov.model
 import datetime
@@ -9,7 +7,7 @@ import uuid
 class selectAddressesColleges(dml.Algorithm):
     contributor = 'sbrz_nedg'
     reads = ['sbrz_nedg.college_university']
-    writes = ['sbrz_nedg.college_university']
+    writes = ['sbrz_nedg.college_university_addresses', 'sbrz_nedg.college_university']
 
     @staticmethod
     def execute(trial=False):
@@ -24,14 +22,16 @@ class selectAddressesColleges(dml.Algorithm):
         db = client.repo
         collection = db['sbrz_nedg.college_university']
         x = []
-        cur = collection.find({},{'properties.Name':1, 'properties.Address':1})
-        for i in cur:
-            x.append(i)
+        colleges = collection.find({}, {'properties.Name': 1, 'properties.Address': 1, 'properties.Zipcode': 1})
+        for college in colleges:
+            if college['properties']['Zipcode'] != '0':
+                x.append(college)
 
         repo.dropCollection('sbrz_nedg.college_university_addresses')
         repo.createCollection('sbrz_nedg.college_university_addresses')
         repo['sbrz_nedg.college_university_addresses'].insert_many(x)
         repo['sbrz_nedg.college_university_addresses'].metadata({'complete': True})
+        repo.dropCollection('sbrz_nedg.college_university')
 
         repo.logout()
 

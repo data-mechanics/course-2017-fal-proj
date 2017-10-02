@@ -1,15 +1,13 @@
-import urllib.request
-from bson import json_util
 import dml
 import prov.model
 import datetime
 import uuid
 
 
-class retrievePropertyAssessmentData(dml.Algorithm):
+class unionAddressesColleges(dml.Algorithm):
     contributor = 'sbrz_nedg'
-    reads = []
-    writes = ['sbrz_nedg.property_assessment']
+    reads = ['sbrz_nedg.property_assessment_addresses', 'sbrz_nedg.college_university_addresses']
+    writes = ['sbrz_nedg.union_addresses_colleges']
     @staticmethod
     def execute(trial = False):
         '''Retrieve Boston property assessment data set.'''
@@ -20,25 +18,33 @@ class retrievePropertyAssessmentData(dml.Algorithm):
         repo = client.repo
         repo.authenticate('sbrz_nedg', 'sbrz_nedg')
 
-        # Property Assessment Data Set
-        property_assessment_url = urllib.request.Request(
-            "https://data.boston.gov/api/action/datastore_search?resource_id=062fc6fa-b5ff-4270-86cf-202225e40858&limit=200000")
-        property_assessment_response = urllib.request.urlopen(property_assessment_url).read().decode("utf-8")
-        property_assessment_json = json_util.loads(property_assessment_response)
+        db = client.repo
+        college_address_collection = db['sbrz_nedg.college_university_addresses']
+        property_assessment_address_collection = db['sbrz_nedg.property_assessment_addresses']
 
-        property_assessment_json = property_assessment_json['result']['records']
+        college_addresses = college_address_collection.find()
+        property_addresses = property_assessment_address_collection.find()
 
-        repo.dropCollection("property_assessment")
-        repo.createCollection("property_assessment")
-        repo['sbrz_nedg.property_assessment'].insert_many(property_assessment_json)
-        repo['sbrz_nedg.property_assessment'].metadata({'complete':True})
-        print(repo['sbrz_nedg.property_assessment'].metadata())
+        x = []
+        count = 0
+        for property_address in property_addresses:
+            property_address['num_schools'] = 0
+            college_addresses = college_address_collection.find()
+            for college_address in college_addresses:
+                if property_address['ZIPCODE'] == college_address['properties']['Zipcode']:
+                    property_address['num_schools'] += 1
+            x.append(property_address)
+
+        repo.dropCollection('sbrz_nedg.union_addresses_colleges')
+        repo.createCollection('sbrz_nedg.union_addresses_colleges')
+        repo['sbrz_nedg.union_addresses_colleges'].insert_many(x)
+        repo['sbrz_nedg.union_addresses_colleges'].metadata({'complete': True})
 
         repo.logout()
 
         endTime = datetime.datetime.now()
 
-        return {"start":startTime, "end":endTime}
+        return {"start": startTime, "end": endTime}
 
     @staticmethod
     def provenance(doc=prov.model.ProvDocument(), startTime=None, endTime=None):
@@ -95,4 +101,4 @@ class retrievePropertyAssessmentData(dml.Algorithm):
 
         return doc
 
-retrievePropertyAssessmentData.execute()
+unionAddressesColleges.execute()

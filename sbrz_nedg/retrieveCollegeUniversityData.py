@@ -26,8 +26,6 @@ class retrieveCollegeUniversityData(dml.Algorithm):
         college_university_response = urllib.request.urlopen(college_university_url).read().decode("utf-8")
         college_university_json = json.loads(college_university_response)['features']
 
-        print(college_university_json)
-
         repo.dropCollection("sbrz_nedg.college_university")
         repo.createCollection("sbrz_nedg.college_university")
         repo['sbrz_nedg.college_university'].insert_many(college_university_json)
@@ -38,7 +36,7 @@ class retrieveCollegeUniversityData(dml.Algorithm):
 
         endTime = datetime.datetime.now()
 
-        return {"start":startTime, "end":endTime}
+        return {"start": startTime, "end": endTime}
 
     @staticmethod
     def provenance(doc=prov.model.ProvDocument(), startTime=None, endTime=None):
