@@ -19,32 +19,41 @@ class example(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate('sbrz_nedg', 'sbrz_nedg')
-
+        """
         # Property Assessment Data Set
         property_assessment_url = urllib.request.Request(
             "https://data.boston.gov/export/062/fc6/062fc6fa-b5ff-4270-86cf-202225e40858.json")
         property_assessment_response = urllib.request.urlopen(property_assessment_url).read().decode("utf-8")
         property_assessment_json = json.loads(property_assessment_response)
 
+        print(property_assessment_json)
+
         # Alcohol Licences Data Set
         alcohol_license_url = urllib.request.Request(
             "https://data.boston.gov/export/9e1/5f4/9e15f457-1923-4c12-9992-43ba2f0dd5e5.json")
         alcohol_license_response = urllib.request.urlopen(alcohol_license_url).read().decode("utf-8")
         alcohol_license_json = json.loads(alcohol_license_response)
-
+        """
         # Boston Colleges & Universities Data Set
         colleges_and_univ_url = urllib.request.Request(
             "http://bostonopendata-boston.opendata.arcgis.com/datasets/cbf14bb032ef4bd38e20429f71acb61a_2.geojson")
         colleges_and_univ_response = urllib.request.urlopen(colleges_and_univ_url).read().decode("utf-8")
         colleges_and_univ_json = json.loads(colleges_and_univ_response)
 
+        print(colleges_and_univ_json)
+        """
         # Boston 311 Service Requests Data Set
         three_one_one_req_url = urllib.request.Request(
             "https://data.boston.gov/export/296/8e2/2968e2c0-d479-49ba-a884-4ef523ada3c0.json")
         three_one_one_req_response = urllib.request.urlopen(three_one_one_req_url).read().decode("utf-8")
         three_one_one_req_json = json.loads(three_one_one_req_response)
 
-
+        # Boston Fire Incident Data Set
+        fire_incident_url = three_one_one_req_url = urllib.request.Request(
+            "https://data.boston.gov/dataset/fire-incident-reporting/resource/f9a21363-aff6-4840-a2d0-c738cb1c30a1")
+        fire_incident_response = urllib.request.urlopen(fire_incident_url).read().decode("utf-8")
+        fire_incident_json = json.loads(fire_incident_response)
+        """
         url = 'http://cs-people.bu.edu/lapets/591/examples/lost.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
@@ -68,7 +77,7 @@ class example(dml.Algorithm):
         endTime = datetime.datetime.now()
 
         return {"start":startTime, "end":endTime}
-    
+
     @staticmethod
     def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
         '''
@@ -115,7 +124,7 @@ class example(dml.Algorithm):
         doc.wasDerivedFrom(found, resource, get_found, get_found, get_found)
 
         repo.logout()
-                  
+
         return doc
 
 example.execute()
@@ -124,3 +133,5 @@ print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof
+
+
