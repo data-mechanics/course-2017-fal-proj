@@ -4,7 +4,7 @@ import dml
 import prov.model
 import datetime
 import uuid
-import ast
+import requests
 
 
 
@@ -24,23 +24,27 @@ class getData(dml.Algorithm):
         repo.authenticate('jdbrawn_slarbi', 'jdbrawn_slarbi')
     
 
-        cred = dml.auth
-        
-        dataSets = {
-            "entertain": 'https://data.cityofboston.gov/resource/cz6t-w69j.json',
-            "food":'https://data.cityofboston.gov/resource/fdxy-gydq.json'
-        }
+        #ENTERTAINMENT DATA
+        url = 'https://data.cityofboston.gov/resource/cz6t-w69j.json'
+        buf = requests.get(url).text
+        r = json.loads(buf)
+        s = json.dumps(r, sort_keys=True, indent=2)
+        repo.dropCollection("entertain")
+        repo.createCollection("entertain")
+        repo['jdbrawn_slarbi.entertain'].insert_many(r)
 
-        for key in dataSets:  
-            url = dataSets[key]
-            response = urllib.request.urlopen(url).read().decode("utf-8")
-            r = json.loads(response) 
 
-            repo.dropCollection(key)
-            repo.createCollection(key)
-            repo['jdbrawn_slarbi.'+key].insert_many(r)
-            repo['jdbrawn_slarbi.'+key].metadata({'complete':True})
-        
+        #FOOD LICENSE DATA
+        url = 'https://data.cityofboston.gov/resource/fdxy-gydq.json'
+        buf = requests.get(url).text
+        a = json.loads(buf)
+        b = json.dumps(a, sort_keys=True, indent=2)
+        repo.dropCollection("food")
+        repo.createCollection("food")
+        repo['jdbrawn_slarbi.food'].insert_many(a)
+
+
+        print('DONE!')
     
         repo.logout()
         endTime = datetime.datetime.now()
@@ -65,7 +69,7 @@ class getData(dml.Algorithm):
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
-        doc.add_namespace('bdp1', 'https://data.cityofboston.gov/resource/')
+      
 
 
         this_script = doc.agent('alg:jdbrawn_slarbi#getData', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
@@ -75,16 +79,16 @@ class getData(dml.Algorithm):
         doc.wasAssociatedWith(get_entertainment_data, this_script)
         doc.usage(get_entertainment_data, resource1, startTime, None,
                 {prov.model.PROV_TYPE:'ont:Retrieval',
-                #'ont:Query':''
+                
                 }
                 )
         
-        resource2 = doc.entity('bdp1:fdxy-gydq', {'prov:label':'Food License Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource2 = doc.entity('bdp:fdxy-gydq', {'prov:label':'Food License Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_food_license = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_food_license, this_script)
         doc.usage(get_food_license, resource2, startTime, None,
                 {prov.model.PROV_TYPE:'ont:Retrieval'
-                #'ont:Query':''
+                
                 }
                 )
 
@@ -110,4 +114,5 @@ getData.execute()
 doc = getData.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
+
 
