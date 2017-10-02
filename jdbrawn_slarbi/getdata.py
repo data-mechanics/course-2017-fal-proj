@@ -8,7 +8,7 @@ import requests
 
 
 
-class getData(dml.Algorithm):
+class getdata(dml.Algorithm):
 
     contributor = 'jdbrawn_slarbi'
     reads = []
@@ -44,7 +44,7 @@ class getData(dml.Algorithm):
         repo['jdbrawn_slarbi.food'].insert_many(a)
 
 
-        print('DONE!')
+        #print('DONE!')
     
         repo.logout()
         endTime = datetime.datetime.now()
@@ -110,9 +110,9 @@ class getData(dml.Algorithm):
 
         return doc
 
-getData.execute()
-doc = getData.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+# getData.execute()
+# doc = getData.provenance()
+# print(doc.get_provn())
+# print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 

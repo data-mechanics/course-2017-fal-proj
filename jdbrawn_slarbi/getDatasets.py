@@ -5,7 +5,7 @@ import prov.model
 import datetime
 import uuid
 
-class getData(dml.Algorithm):
+class getDatasets(dml.Algorithm):
     contributor = 'jdbrawn_slarbi'
     reads = []
     writes = ['jdbrawn_slarbi.colleges', 'jdbrawn_slarbi.crime', 'jdbrawn_slarbi.crash']
@@ -21,7 +21,7 @@ class getData(dml.Algorithm):
         repo.authenticate('jdbrawn_slarbi', 'jdbrawn_slarbi')
 
         # Get college data
-        url = 'https://data.boston.gov/api/action/datastore_search?resource_id=208dc980-a278-49e3-b95b-e193bb7bb6e4&limit=10000'
+        url = 'https://data.boston.gov/api/action/datastore_search?resource_id=208dc980-a278-49e3-b95b-e193bb7bb6e4&limit=80'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
@@ -30,7 +30,7 @@ class getData(dml.Algorithm):
         repo['jdbrawn_slarbi.colleges'].insert_many(r['result']['records'])
 
         # Get crime data
-        url = 'https://data.boston.gov/api/action/datastore_search?resource_id=12cb3883-56f5-47de-afa5-3b1cf61b257b&limit=70'
+        url = 'https://data.boston.gov/api/action/datastore_search?resource_id=12cb3883-56f5-47de-afa5-3b1cf61b257b&limit=10000'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
