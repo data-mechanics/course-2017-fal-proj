@@ -4,11 +4,12 @@ import dml
 import prov.model
 import datetime
 import uuid
+import requests
 
 class fzjr_retrievalgorithm(dml.Algorithm):
     contributor = 'francisz_jrashaan'
     reads = []
-    writes = ['francisz_jrashaan.crime', 'francisz_jrashaan.cambridgepopulation']
+    writes = ['francisz_jrashaan.crime', 'francisz_jrashaan.streetlights', 'francisz_jrashaan.landuse', 'francisz_jrashaan.openspace', 'francisz_jrashaan.capopulation' ]
 
     @staticmethod
     def execute(trial = False):
@@ -21,53 +22,53 @@ class fzjr_retrievalgorithm(dml.Algorithm):
         repo.authenticate('francisz_jrashaan', 'francisz_jrashaan')
 
         url = 'https://data.boston.gov/api/action/datastore_search?resource_id=12cb3883-56f5-47de-afa5-3b1cf61b257b&q=homicide'
-        response = urllib.request.urlopen(url).read().decode("utf-8")
+        response = request.get(url).text
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("crime")
         repo.createCollection("crime")
         repo['francisz_jrashaan.crime'].insert_many(r)
-        repo['francisz_jrashaan.crime'].metadata({'complete':True})
-        print(repo['francisz_jrashaan.crime'].metadata())
+        # repo['francisz_jrashaan.crime'].metadata({'complete':True})
+        # print(repo['francisz_jrashaan.crime'].metadata())
         
-        url = 'https://data.boston.gov/api/action/datastore_search?resource_id=c2fcc1e3-c38f-44ad-a0cf-e5ea2a6585b5&limit=1000'
-        response = urllib.request.urlopen(url).read().decode("utf-8")
-        r = json.loads(response)
-        s = json.dumps(r, sort_keys=True, indent=2)
+        url = 'https://data.boston.gov/export/c2f/cc1/c2fcc1e3-c38f-44ad-a0cf-e5ea2a6585b5.json'
+        response = request.get(url).text
+        a = json.loads(response)
+        b = json.dumps(a, sort_keys=True, indent=2)
         repo.dropCollection("streetlights")
         repo.createCollection("streetlights")
-        repo['francisz_jrashaan.streetlights'].insert_many(r)
-        repo['francisz_jrashaan.streetlights'].metadata({'complete':True})
-        print(repo['francisz_jrashaan.streetlights'].metadata())
+        repo['francisz_jrashaan.streetlights'].insert_many(a)
+        # repo['francisz_jrashaan.streetlights'].metadata({'complete':True})
+        #print(repo['francisz_jrashaan.streetlights'].metadata())
 
 
         url = 'https://data.cambridgema.gov/api/views/srp4-fhjz/rows.json?'
-        response = urllib.request.urlopen(url).read().decode("utf-8")
-        r = json.loads(response)
-        s = json.dumps(r, sort_keys=True, indent=2)
+        response = request.get(url).text
+        c = json.loads(response)
+        d = json.dumps(c, sort_keys=True, indent=2)
         repo.dropCollection("landuse")
         repo.createCollection("landuse")
-        repo['francisz_jrashaan.landuse'].insert_many(r)
-        repo['francisz_jrashaan.landuse'].metadata({'complete':True})
-        print(repo['francisz_jrashaan.landuse'].metadata())
+        repo['francisz_jrashaan.landuse'].insert_many(c)
+        #repo['francisz_jrashaan.landuse'].metadata({'complete':True})
+        #print(repo['francisz_jrashaan.landuse'].metadata())
         
         url = 'https://data.cambridgema.gov/api/views/r4pm-qqje/rows.json?'
-        response = urllib.request.urlopen(url).read().decode("utf-8")
-        r = json.loads(response)
-        s = json.dumps(r, sort_keys=True, indent=2)
+        response = request.get(url).text
+        e = json.loads(response)
+        f = json.dumps(e, sort_keys=True, indent=2)
         repo.dropCollection("capopulation")
         repo.createCollection("capopulation")
-        repo['francisz_jrashaan.capopulation'].insert_many(r)
-        repo['francisz_jrashaan.capopulation'].metadata({'complete':True})
-        print(repo['francisz_jrashaan.capopulation'].metadata())
+        repo['francisz_jrashaan.capopulation'].insert_many(e)
+        # repo['francisz_jrashaan.capopulation'].metadata({'complete':True})
+        #print(repo['francisz_jrashaan.capopulation'].metadata())
         
-        url = 'https://data.boston.gov/api/action/datastore_search?resource_id=769c0a21-9e35-48de-a7b0-2b7dfdefd35e'
-        response = urllib.request.urlopen(url).read().decode("utf-8")
-        r = json.loads(response)
-        s = json.dumps(r, sort_keys=True, indent=2)
+        response = request.get(url, auth=('francisz_jrashaan','francisz_jrashaan'))
+        response = request.get(url).text
+        g = json.loads(response)
+        h = json.dumps(g, sort_keys=True, indent=2)
         repo.dropCollection("openspace")
         repo.createCollection("openspace")
-        repo['francisz_jrashaan.openspace'].insert_many(r)
+        repo['francisz_jrashaan.openspace'].insert_many(g)
 
         repo.logout()
 
