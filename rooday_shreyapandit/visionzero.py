@@ -6,10 +6,10 @@ import datetime
 import uuid
 import requests
 
-class weather(dml.Algorithm):
+class visionzero(dml.Algorithm):
     contributor = 'rooday_shreyapandit'
     reads = []
-    writes = ['rooday_shreyapandit.weather']
+    writes = ['rooday_shreyapandit.visionzero']
 
     @staticmethod
     def execute(trial = False):
@@ -21,18 +21,18 @@ class weather(dml.Algorithm):
         repo = client.repo
         repo.authenticate('rooday_shreyapandit', 'rooday_shreyapandit')
 
-        url = 'http://datamechanics.io/data/rooday_shreyapandit/storm_data_search_results.json'
+        url = 'http://datamechanics.io/data/rooday_shreyapandit/Vision_Zero_Entry.json'
         resp = requests.get(url).json()
 
         print("response has come, inserting....")
 
-        repo.dropCollection("weather")
-        repo.createCollection("weather")
-        repo['rooday_shreyapandit.weather'].insert_many(resp)
-        repo['rooday_shreyapandit.weather'].metadata({'complete':True})
+        repo.dropCollection("visionzero")
+        repo.createCollection("visionzero")
+        repo['rooday_shreyapandit.visionzero'].insert_many(resp)
+        repo['rooday_shreyapandit.visionzero'].metadata({'complete':True})
 
         print("response has been inserted")
-        print(repo['rooday_shreyapandit.weather'].metadata())
+        print(repo['rooday_shreyapandit.visionzero'].metadata())
 
         repo.logout()
 
@@ -89,7 +89,7 @@ class weather(dml.Algorithm):
                   
         # return doc
 
-weather.execute()
+visionzero.execute()
 # doc = example.provenance()
 # print(doc.get_provn())
 # print(json.dumps(json.loads(doc.serialize()), indent=4))
