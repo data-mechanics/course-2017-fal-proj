@@ -20,7 +20,7 @@ class requestBigBelly(dml.Algorithm):
         repo = client.repo
         repo.authenticate('adsouza_mcsmocha', 'adsouza_mcsmocha')
 
-        url = 'https://data.boston.gov/export/15e/7fa/15e7fa44-b9a8-42da-82e1-304e43460095.json'
+        url = 'https://data.boston.gov/export/c8c/54c/c8c54c49-3097-40fc-b3f2-c9508b8d393a.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
@@ -57,16 +57,16 @@ class requestBigBelly(dml.Algorithm):
         doc.add_namespace('anb', 'https://data.boston.gov/')
 
         this_script = doc.agent('alg:adsouza_mcsmocha#requestBigBelly', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('anb:15e7fa44-b9a8-42da-82e1-304e43460095', {'prov:label':'Big Belly Locations, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource = doc.entity('anb:c8c54c49-3097-40fc-b3f2-c9508b8d393a', {'prov:label':'Big Belly Alerts, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_bb = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_bb, this_script)
         doc.usage(get_bb, resource, startTime, None,
         	{prov.model.PROV_TYPE:'ont:Retrieval',
-        	'ont:Query':'?type=Big+Belly+Locations&$description,location'
+        	'ont:Query':'?type=Big+Belly+Alerts&$description,timestamp,fullness,collection,location'
         	}
         	)
 
-        big_belly = doc.entity('dat:adsouza_mcsmocha#BigBelly', {prov.model.PROV_LABEL:'Big Belly Locations', prov.model.PROV_TYPE:'ont:DataSet'})
+        big_belly = doc.entity('dat:adsouza_mcsmocha#BigBelly', {prov.model.PROV_LABEL:'Big Belly Alerts', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(big_belly, this_script)
         doc.wasGeneratedBy(big_belly, get_bb, endTime)
         doc.wasDerivedFrom(big_belly, resource, get_bb, get_bb, get_bb)
