@@ -5,10 +5,10 @@ import prov.model
 import datetime
 import uuid
 
-class Station_Network(dml.Algorithm):
+class Station_Links(dml.Algorithm):
     contributor = 'yjunchoi_yzhang71'
     reads = []
-    writes = ['yjunchoi_yzhang71.Station_Network']
+    writes = ['yjunchoi_yzhang71.Station_Links']
 
     @staticmethod
     def execute(trial = False):
@@ -20,17 +20,22 @@ class Station_Network(dml.Algorithm):
         repo = client.repo
         repo.authenticate('yjunchoi_yzhang71', 'yjunchoi_yzhang71')
 
-        url = 'https://raw.githubusercontent.com/mbtaviz/mbtaviz.github.io/master/data/station-network.json'
+        url = 'https://raw.githubusercontent.com/WHYjun/course-2017-fal-proj/master/local_data/Station_Links.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("Station_Network")
-        repo.createCollection("Station_Network")
+        repo.dropCollection("Station_Links")
+        repo.createCollection("Station_Links")
+
+        
         for key in r:
-            print(r[key])
-            '''delay = {}
-            delay[key] = r[key]
-            repo['yjunchoi_yzhang71.Station_Network'].insert(delay)'''
+            repo['yjunchoi_yzhang71.Station_Links'].insert_many(r[key])
+         #   for key in r[row]: 
+          #      print(r[row][key])
+           #     print("hi")
+            #Node = {}
+            #Node[key] = r[key]
+            #repo['yjunchoi_yzhang71.Station_Links'].insert(Node)
 
         repo.logout()
 
@@ -54,29 +59,29 @@ class Station_Network(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/yjunchoi_yzhang71') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('mbtaviz', 'https://github.com/yzhang71/mbtaviz.github.io/blob/master/data/')
+        doc.add_namespace('git', 'https://github.com/WHYjun/course-2017-fal-proj/blob/master/local_data/')
 
-        this_script = doc.agent('alg:yjunchoi_yzhang71#Station_Network', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('mbtaviz:Station_Network', {'prov:label':'Station_Network', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        get_Station_Network = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_Station_Network, this_script)
-        doc.usage(get_Station_Network, resource, startTime, None,
+        this_script = doc.agent('alg:yjunchoi_yzhang71#Station_Links', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource = doc.entity('git:Station_Links', {'prov:label':'Station_Links', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        get_Station_Links = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(get_Station_Links, this_script)
+        doc.usage(get_Station_Links, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'
+                  'ont:Query':'?type=Station + Links& $ select = source, target, line, color'
                   }
                   )
 
-        Station_Network = doc.entity('dat:yjunchoi_yzhang71#Station_Network', {prov.model.PROV_LABEL:'Station_Network in Boston', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(Station_Network, this_script)
-        doc.wasGeneratedBy(Station_Network, get_Station_Network, endTime)
-        doc.wasDerivedFrom(Station_Network, resource, get_Station_Network, get_Station_Network, get_Station_Network)
+        Station_Links = doc.entity('dat:yjunchoi_yzhang71#Station_Links', {prov.model.PROV_LABEL:'Station_Links in Boston', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(Station_Links, this_script)
+        doc.wasGeneratedBy(Station_Links, get_Station_Links, endTime)
+        doc.wasDerivedFrom(Station_Links, resource, get_Station_Links, get_Station_Links, get_Station_Links)
 
         repo.logout()
 
         return doc
 
-Station_Network.execute()
-doc = Station_Network.provenance()
+Station_Links.execute()
+doc = Station_Links.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
 

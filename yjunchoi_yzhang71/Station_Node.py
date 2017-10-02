@@ -26,12 +26,16 @@ class Station_Node(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("Station_Node")
         repo.createCollection("Station_Node")
-        
 
+        
         for key in r:
-            Node = {}
-            Node[key] = r[key]
-            repo['yjunchoi_yzhang71.Station_Node'].insert(Node)
+            repo['yjunchoi_yzhang71.Station_Node'].insert_many(r[key])
+         #   for key in r[row]: 
+          #      print(r[row][key])
+           #     print("hi")
+            #Node = {}
+            #Node[key] = r[key]
+            #repo['yjunchoi_yzhang71.Station_Node'].insert(Node)
 
         repo.logout()
 
