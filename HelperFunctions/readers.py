@@ -76,9 +76,11 @@ class excel:
 
 
 
-testSheet = excel('rmsoffensecodes.xlsx')
+testSheet = CSV('/Users/jmbiel/Downloads/Vegetables.csv')
 testSheet.setKeys()
-print(testSheet.readIntoDict())
+fileobj = open("/Users/jmbiel/Desktop/food_prices.json", "w+")
+fileobj.write(str(testSheet.readIntoDict()))
+fileobj.close()
 
 
 #testCSV = CSV('crime.csv')
