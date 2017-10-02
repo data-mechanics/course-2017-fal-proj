@@ -29,16 +29,9 @@ class presidentElectionByPrecinct(dml.Algorithm):
         url = 'https://raw.githubusercontent.com/WHYjun/course-2017-fal-proj/master/local_data/presidentElectionByPrecinct.csv'
         #Originally from 'http://electionstats.state.ma.us/elections/download/40060/precincts_include:1/'
         # Code for csv read with sth
-        url = 'http://winterolympicsmedals.com/medals.csv'
-        df = pd.read_csv(url)
-        print(df)
-        #response = urllib.request.urlopen(url)
-        #reader = csv.reader(response)
-
-        print(reader)
-        for row in reader:
-            print(row)
-
+        urllib.request.urlretrieve(url, 'vote.csv')
+        vote_df = pd.read_csv('vote.csv')
+        repo['yjunchoi_yzhang71.presidentElectionByPrecinct'].insert_many(vote_df.to_dict('records'))
         repo.logout()
 
         endTime = datetime.datetime.now()
