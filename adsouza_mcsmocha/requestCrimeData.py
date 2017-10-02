@@ -20,7 +20,7 @@ class requestCrimeData(dml.Algorithm):
         repo = client.repo
         repo.authenticate('adsouza_mcsmocha', 'adsouza_mcsmocha')
 
-        url = 'https://data.boston.gov/export/12c/b38/12cb3883-56f5-47de-afa5-3b1cf61b257b.json'
+        url = 'https://data.opendatasoft.com/api/records/1.0/search/?dataset=crime-incident-reports-2017%40boston&facet=occurred_on_date&facet=offense_description&facet=street&facet=shooting&facet=offense_code_group&facet=district&facet=reporting_area&facet=location'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
@@ -54,15 +54,15 @@ class requestCrimeData(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         
         # Additional resource
-        doc.add_namespace('anb', 'https://data.boston.gov/')
+        doc.add_namespace('ods', 'https://data.opendatasoft.com/')
 
         this_script = doc.agent('alg:adsouza_mcsmocha#requestCrimeData', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('anb:12cb3883-56f5-47de-afa5-3b1cf61b257b', {'prov:label':'Crime Data, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource = doc.entity('anb:crime-incident-reports-2017@boston', {'prov:label':'Crime Data, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_crime = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_crime, this_script)
         doc.usage(get_crime, resource, startTime, None,
         	{prov.model.PROV_TYPE:'ont:Retrieval',
-        	'ont:Query':'?type=Crime+Data&$INCIDENT_NUMBER,OFFENSE_CODE,OFFENSE_CODE_GROUP,OFFENSE_DESCRIPTION,DISTRICT,REPORTING_AREA,SHOOTING,OCCURRED_ON_DATE,YEAR,MONTH,NAY_OF_WEEK,HOUR,UCR_PART,STREET,Lat,Long,Location'
+        	'ont:Query':'?type=Crime+Data&$occured_on_date,offense_description,street,ahooting,offense_code_group,district,reporting_area,location'
         	}
         	)
 
