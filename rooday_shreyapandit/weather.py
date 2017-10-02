@@ -13,7 +13,6 @@ class weather(dml.Algorithm):
 
     @staticmethod
     def execute(trial = False):
-        '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
         startTime = datetime.datetime.now()
 
         # Set up the database connection.
@@ -21,31 +20,18 @@ class weather(dml.Algorithm):
         repo = client.repo
         repo.authenticate('rooday_shreyapandit', 'rooday_shreyapandit')
 
-        #Get 311 data
-#        url = 'https://data.boston.gov/export/296/8e2/2968e2c0-d479-49ba-a884-4ef523ada3c0.json'
         url = 'http://datamechanics.io/data/rooday_shreyapandit/storm_data_search_results.json'
+        resp = requests.get(url).json()
 
-        # response = urllib.request.urlopen(url).read().decode("utf-8")
-        r = requests.get(url).json()#.read().decode("utf-8")
-#        print(response)
         print("response has come, inserting....")
-        print(r[1:100])
-        #r = json.loads(response)
-        s = json.dumps(r, sort_keys=True, indent=2)
+
         repo.dropCollection("weather")
         repo.createCollection("weather")
-        repo['rooday_shreyapandit.weather'].insert_many(r)
+        repo['rooday_shreyapandit.weather'].insert_many(resp)
         repo['rooday_shreyapandit.weather'].metadata({'complete':True})
+
         print("response has been inserted")
         print(repo['rooday_shreyapandit.weather'].metadata())
-
-        # url = 'http://cs-people.bu.edu/lapets/591/examples/found.json'
-        # response = urllib.request.urlopen(url).read().decode("utf-8")
-        # r = json.loads(response)
-        # s = json.dumps(r, sort_keys=True, indent=2)
-        # repo.dropCollection("found")
-        # repo.createCollection("found")
-        # repo['rooday_shreyapandit.found'].insert_many(r)
 
         repo.logout()
 
@@ -102,7 +88,9 @@ class weather(dml.Algorithm):
                   
         # return doc
 
-getData.execute()
+weather.execute()
 # doc = example.provenance()
 # print(doc.get_provn())
 # print(json.dumps(json.loads(doc.serialize()), indent=4))
+
+## eof
