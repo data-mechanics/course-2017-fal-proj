@@ -62,7 +62,7 @@ class presidentElectionByPrecinct(dml.Algorithm):
         doc.wasAssociatedWith(get_presidentElection, this_script)
         doc.usage(get_presidentElection, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=President+Election&$select=type,latitude,longitude,OPEN_DT'
+                  'ont:Query':'?type=President+Election&$select=city/town,ward,pct,totalvotecast'
                   }
                   )
 
