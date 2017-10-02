@@ -6,7 +6,7 @@ import datetime
 import uuid
 import requests
 
-class fzjr_retrievalgorithm(dml.Algorithm):
+class fzjr_retrievalalgorithm(dml.Algorithm):
     contributor = 'francisz_jrashaan'
     reads = []
     writes = ['francisz_jrashaan.crime', 'francisz_jrashaan.streetlights', 'francisz_jrashaan.landuse', 'francisz_jrashaan.openspace', 'francisz_jrashaan.capopulation' ]
@@ -21,9 +21,9 @@ class fzjr_retrievalgorithm(dml.Algorithm):
         repo = client.repo
         repo.authenticate('francisz_jrashaan', 'francisz_jrashaan')
 
-        url = 'https://data.boston.gov/api/action/datastore_search?resource_id=12cb3883-56f5-47de-afa5-3b1cf61b257b&q=homicide'
-        response = request.get(url).text
-        r = json.loads(response)
+        url = 'https://data.boston.gov/export/c2f/cc1/c2fcc1e3-c38f-44ad-a0cf-e5ea2a6585b5.json'
+        buf = requests.get(url).text
+        r = json.loads(buf)
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("crime")
         repo.createCollection("crime")
@@ -31,8 +31,8 @@ class fzjr_retrievalgorithm(dml.Algorithm):
         # repo['francisz_jrashaan.crime'].metadata({'complete':True})
         # print(repo['francisz_jrashaan.crime'].metadata())
         
-        url = 'https://data.boston.gov/export/c2f/cc1/c2fcc1e3-c38f-44ad-a0cf-e5ea2a6585b5.json'
-        response = request.get(url).text
+        url = 'https://data.cityofboston.gov/resource/cz6t-w69j.json'
+        response = requests.get(url).text
         a = json.loads(response)
         b = json.dumps(a, sort_keys=True, indent=2)
         repo.dropCollection("streetlights")
@@ -42,8 +42,8 @@ class fzjr_retrievalgorithm(dml.Algorithm):
         #print(repo['francisz_jrashaan.streetlights'].metadata())
 
 
-        url = 'https://data.cambridgema.gov/api/views/srp4-fhjz/rows.json?'
-        response = request.get(url).text
+        url = 'https://data.cityofboston.gov/resource/cz6t-w69j.json'
+        response = requests.get(url).text
         c = json.loads(response)
         d = json.dumps(c, sort_keys=True, indent=2)
         repo.dropCollection("landuse")
@@ -52,8 +52,8 @@ class fzjr_retrievalgorithm(dml.Algorithm):
         #repo['francisz_jrashaan.landuse'].metadata({'complete':True})
         #print(repo['francisz_jrashaan.landuse'].metadata())
         
-        url = 'https://data.cambridgema.gov/api/views/r4pm-qqje/rows.json?'
-        response = request.get(url).text
+        url = 'https://data.cityofboston.gov/resource/cz6t-w69j.json'
+        response = requests.get(url).text
         e = json.loads(response)
         f = json.dumps(e, sort_keys=True, indent=2)
         repo.dropCollection("capopulation")
@@ -62,8 +62,8 @@ class fzjr_retrievalgorithm(dml.Algorithm):
         # repo['francisz_jrashaan.capopulation'].metadata({'complete':True})
         #print(repo['francisz_jrashaan.capopulation'].metadata())
         
-        response = request.get(url, auth=('francisz_jrashaan','francisz_jrashaan'))
-        response = request.get(url).text
+        url = 'https://data.cityofboston.gov/resource/cz6t-w69j.json'
+        response = requests.get(url).text
         g = json.loads(response)
         h = json.dumps(g, sort_keys=True, indent=2)
         repo.dropCollection("openspace")
@@ -95,7 +95,12 @@ class fzjr_retrievalgorithm(dml.Algorithm):
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
         this_script = doc.agent('alg:francisz_jrashaan#fzjr_retrievalalgorithm', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_crime = doc.entity('bdp:wc8w-nujj', {'prov:label':'Crime', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_streetlights = doc.entity('bdp:wc8w-nujj', {'prov:label':'Streetlights', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_landuse = doc.entity('bdp:wc8w-nujj', {'prov:label':'Landuse', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_capopulation = doc.entity('bdp:wc8w-nujj', {'prov:label':'Cambridge Population Density', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_openspace = doc.entity('bdp:wc8w-nujj', {'prov:label':'Openspace', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+
         get_crime = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         get_streetlights = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         get_landuse = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
@@ -106,67 +111,58 @@ class fzjr_retrievalgorithm(dml.Algorithm):
         doc.wasAssociatedWith(get_landuse, this_script)
         doc.wasAssociatedWith(get_capopulation, this_script)
         doc.wasAssociatedWith(get_openspace, this_script)
-        doc.usage(get_crime, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=crime&$select=type,latitude,longitude,OPEN_DT'
+        doc.usage(get_crime, resource_crime, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Retrieval'})
+        doc.usage(get_streetlights, resource_streelights, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Retrieval'
+                 
                   }
                   )
-        doc.usage(get_streetlights, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=streetlights&$select=type,latitude,longitude,OPEN_DT'
+        
+        doc.usage(get_landuse, resource_landuse, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Retrieval'
+                                   }
+                  )
+        doc.usage(get_capopulation, resource_capopulation, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Retrieval'
                   }
                   )
-        doc.usage(get_streetlights, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=streetlights&$select=type,latitude,longitude,OPEN_DT'
-                  }
-                  )
-        doc.usage(get_landuse, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=landuse&$select=type,latitude,longitude,OPEN_DT'
-                  }
-                  )
-        doc.usage(get_capopulation, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=capopulation&$select=type,latitude,longitude,OPEN_DT'
-                  }
-                  )
-        doc.usage(get_openspace, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=openspace&$select=type,latitude,longitude,OPEN_DT'
+        doc.usage(get_openspace, resource_openspace, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Retrieval'
                   }
                   )
         crime = doc.entity('dat:francisz_jrashaan#crime', {prov.model.PROV_LABEL:'crime', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(crime, this_script)
         doc.wasGeneratedBy(crime, get_crime, endTime)
-        doc.wasDerivedFrom(crime, resource, get_crime, get_crime, get_crime)
+        doc.wasDerivedFrom(crime, resource_crime, get_crime, get_crime, get_crime)
 
         streetlights = doc.entity('dat:francisz_jrashaan#streetlights', {prov.model.PROV_LABEL:'streetlights', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(streetlights, this_script)
         doc.wasGeneratedBy(streetlights, get_streetlights, endTime)
-        doc.wasDerivedFrom(streetlights, resource, get_streetlights, get_streetlights, get_streetlights)
+        doc.wasDerivedFrom(streetlights, resource_streelights, get_streetlights, get_streetlights, get_streetlights)
         
         landuse = doc.entity('dat:francisz_jrashaan#landuse', {prov.model.PROV_LABEL:'landuse', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(landuse, this_script)
         doc.wasGeneratedBy(landuse, get_landuse, endTime)
-        doc.wasDerivedFrom(landuse, resource, get_landuse, get_landuse, get_landuse)
+        doc.wasDerivedFrom(landuse, resource_landuse, get_landuse, get_landuse, get_landuse)
         
         capopulation = doc.entity('dat:francisz_jrashaan#capopulation', {prov.model.PROV_LABEL:'capopulation', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(capopulation, this_script)
         doc.wasGeneratedBy(capopulation, get_capopulation, endTime)
-        doc.wasDerivedFrom(capopulation, resource, get_capopulation, get_capopulation, get_capopulation)
+        doc.wasDerivedFrom(capopulation, resource_capopulation, get_capopulation, get_capopulation, get_capopulation)
         
         openspace = doc.entity('dat:francisz_jrashaan#openspace', {prov.model.PROV_LABEL:'openspace', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(openspace, this_script)
         doc.wasGeneratedBy(openspace, get_openspace, endTime)
-        doc.wasDerivedFrom(openspace, resource, get_openspace, get_openspace, get_openspace)
+        doc.wasDerivedFrom(openspace, resource_openspace, get_openspace, get_openspace, get_openspace)
 
         repo.logout()
                   
         return doc
 
-fzjr_retrievalgorithm.execute()
-doc = fzjr_retrievalgorithm.provenance()
+fzjr_retrievalalgorithm.execute()
+
+doc = fzjr_retrievalalgorithm.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
 
