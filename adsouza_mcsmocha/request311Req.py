@@ -8,7 +8,7 @@ import uuid
 class request311Req(dml.Algorithm):
     contributor = 'adsouza_mcsmocha'
     reads = []
-    writes = ['adsouza_mcsmocha.311Req']
+    writes = ['adsouza_mcsmocha.ThreeReq']
 
     @staticmethod
     def execute(trial = False):
@@ -24,11 +24,11 @@ class request311Req(dml.Algorithm):
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("311Req")
-        repo.createCollection("311Req")
-        repo['adsouza_mcsmocha.311Req'].insert_many(r)
-        repo['adsouza_mcsmocha.311Req'].metadata({'complete':True})
-        print(repo['adsouza_mcsmocha.311Req'].metadata())
+        repo.dropCollection("ThreeReq")
+        repo.createCollection("ThreeReq")
+        repo['adsouza_mcsmocha.ThreeReq'].insert_many(r)
+        repo['adsouza_mcsmocha.ThreeReq'].metadata({'complete':True})
+        print(repo['adsouza_mcsmocha.ThreeReq'].metadata())
 
         repo.logout()
 
@@ -66,7 +66,7 @@ class request311Req(dml.Algorithm):
         	}
         	)
 
-        req_311 = doc.entity('dat:adsouza_mcsmocha#311Req', {prov.model.PROV_LABEL:'311 Requests', prov.model.PROV_TYPE:'ont:DataSet'})
+        req_311 = doc.entity('dat:adsouza_mcsmocha#ThreeReq', {prov.model.PROV_LABEL:'311 Requests', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(req_311, this_script)
         doc.wasGeneratedBy(req_311, get_311, endTime)
         doc.wasDerivedFrom(req_311, resource, get_311, get_311, get_311)
