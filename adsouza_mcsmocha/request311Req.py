@@ -67,7 +67,7 @@ class request311Req(dml.Algorithm):
         doc.wasAssociatedWith(get_311, this_script)
         doc.usage(get_311, resource, startTime, None,
         	{prov.model.PROV_TYPE:'ont:Retrieval',
-        	'ont:Query':'?type=311+Requests&$open_dt,target_dt,closed_dt,OnTime_Status,CASE_STATUS,CASE_TITLE,SUBJECT,REASON,TYPE,QUEUE,Department,Location,pwd_district,city_council_district,police_district,neighborhood,neighborhood_services_district,ward,precinct,LOCATION_STREET_NAME,LOCATION_ZIPCODE,Latitude,Longitude,Source'
+        	'ont:Query':'?type=311+Requests&$CASE_TITLE,TYPE,QUEUE,Department,Location,pwd_district,neighborhood,neighborhood_services_district,LOCATION_STREET_NAME,LOCATION_ZIPCODE'
         	}
         	)
 
