@@ -53,15 +53,49 @@ class demographics(dml.Algorithm):
 
 		## removes $ in all of the nested keys within the JSON file 
 		for town in r.keys():
+
+			# Preps variables to alter dict with
+			toReplace = {}
+			toDelete = []
+
 			for old_key in r[town]:
     			# ex: '$25,000-34,999' -> '25,000-34,999'
 				new_key = old_key.replace('$', '')
         		# only continue if the original key had a $ that needed to be removed
 				if new_key != old_key:
-					r[town][new_key] = r[town][old_key]
-           			# remove the old nested key from the JSON object
-					del r[town][old_key]
-				
+					# puts new key in seperate dict
+					toReplace[new_key] = r[town][old_key]
+					# adds old key to list of keys to be deleted
+					toDelete += [old_key]
+			# merges two dicts i.e. r[town] contains both old and new keys ($ and no $)
+			r[town].update(toReplace)
+			# deletes old keys from r[town] leaving only kys with no $
+			for key in toDelete:
+				del r[town][key]
+
+		# # original code in case mine doesn't actually work #
+
+		# ## removes $ in all of the nested keys within the JSON file 
+		# for town in r.keys():
+		# 	print('Town: ' + str(town))
+		# 	for old_key in r[town]:
+		# 		print("old key = " + str(old_key))
+  #   			# ex: '$25,000-34,999' -> '25,000-34,999'
+		# 		new_key = old_key.replace('$', '')
+  #       		# only continue if the original key had a $ that needed to be removed
+		# 		if new_key != old_key:
+		# 			print("new key = " + str(new_key))
+		# 			print("r[town][old_key] = " + str(r[town][old_key]))
+
+		# 			r[town][new_key] = r[town][old_key]
+
+		# 			print("r[town][new_key] = " + str(r[town][new_key]))
+  #          			# remove the old nested key from the JSON object
+		# 			del r[town][old_key]
+		# 			print("KEY REPLACED")
+
+		print(r)
+
 		s = json.dumps(r, indent=4)
 		repo.dropCollection("householdincome")
 		repo.createCollection("householdincome")
@@ -89,7 +123,7 @@ class demographics(dml.Algorithm):
 		doc.add_namespace('householdincome', 'goo.gl/V3hgSW')
 		doc.add_namespace('commuting', 'goo.gl/V3hgSW')
 
-		this.script = doc.agent('alg:nathansw_sbajwa#demographics', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+		this_script = doc.agent('alg:nathansw_sbajwa#demographics', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 		resource = doc.entity('race: goo.gl/V3hgSW', {'prov:label':'Race by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 		resource = doc.entity('povertyrates: goo.gl/V3hgSW', {'prov:label':'Poverty Rates by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 		resource = doc.entity('householdincome: goo.gl/V3hgSW', {'prov:label':'Household Income by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
