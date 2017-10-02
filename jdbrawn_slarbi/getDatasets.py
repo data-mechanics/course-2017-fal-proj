@@ -4,11 +4,12 @@ import dml
 import prov.model
 import datetime
 import uuid
+import pandas as pd
 
 class getData(dml.Algorithm):
     contributor = 'jdbrawn_slarbi'
     reads = []
-    writes = ['jdbrawn_slarbi.colleges', 'jdbrawn_slarbi.crime']
+    writes = ['jdbrawn_slarbi.colleges', 'jdbrawn_slarbi.crime', 'jdbrawn_slarbi.crash']
 
     @staticmethod
     def execute(trial = False):
@@ -37,6 +38,15 @@ class getData(dml.Algorithm):
         repo.dropCollection("crime")
         repo.createCollection("crime")
         repo['jdbrawn_slarbi.crime'].insert_many(r['result']['records'])
+
+        # Get crash data
+        url = 'http://datamechanics.io/data/jdbrawn_slarbi/CrashData.csv'
+        csv_data = pd.read_csv(url)
+        json_data = csv_data.to_json(orient='records')
+        r = json.loads(json_data)
+        repo.dropCollection("crash")
+        repo.createCollection("crash")
+        repo['jdbrawn_slarbi.crash'].insert_many(r)
 
         repo.logout()
 
