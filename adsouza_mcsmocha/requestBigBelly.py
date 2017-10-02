@@ -4,6 +4,7 @@ import dml
 import prov.model
 import datetime
 import uuid
+# import pdb
 
 class requestBigBelly(dml.Algorithm):
     contributor = 'adsouza_mcsmocha'
@@ -22,8 +23,14 @@ class requestBigBelly(dml.Algorithm):
 
         url = 'https://data.boston.gov/export/c8c/54c/c8c54c49-3097-40fc-b3f2-c9508b8d393a.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
+        response = response.replace("]", "")
+        response += "]"
+        # print(type(response))
+        # pdb.set_trace()
         r = json.loads(response)
-        s = json.dumps(r, sort_keys=True, indent=2)
+        # print(type(r))
+        s = json.dumps(response, sort_keys=True, indent=2)
+        # print(type(s))
         repo.dropCollection("BigBelly")
         repo.createCollection("BigBelly")
         repo['adsouza_mcsmocha.BigBelly'].insert_many(r)

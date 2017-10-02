@@ -22,11 +22,14 @@ class requestCrimeData(dml.Algorithm):
 
         url = 'https://data.opendatasoft.com/api/records/1.0/search/?dataset=crime-incident-reports-2017%40boston&facet=occurred_on_date&facet=offense_description&facet=street&facet=shooting&facet=offense_code_group&facet=district&facet=reporting_area&facet=location'
         response = urllib.request.urlopen(url).read().decode("utf-8")
+        # print(type(response))
         r = json.loads(response)
+        # print(type(r))
         s = json.dumps(r, sort_keys=True, indent=2)
+        # print(type(s))
         repo.dropCollection("CrimeData")
         repo.createCollection("CrimeData")
-        repo['adsouza_mcsmocha.CrimeData'].insert_many(r)
+        repo['adsouza_mcsmocha.CrimeData'].insert_one(r)
         repo['adsouza_mcsmocha.CrimeData'].metadata({'complete':True})
         print(repo['adsouza_mcsmocha.CrimeData'].metadata())
 
@@ -57,7 +60,7 @@ class requestCrimeData(dml.Algorithm):
         doc.add_namespace('ods', 'https://data.opendatasoft.com/')
 
         this_script = doc.agent('alg:adsouza_mcsmocha#requestCrimeData', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('anb:crime-incident-reports-2017@boston', {'prov:label':'Crime Data, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource = doc.entity('ods:crime-incident-reports-2017@boston', {'prov:label':'Crime Data, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_crime = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_crime, this_script)
         doc.usage(get_crime, resource, startTime, None,

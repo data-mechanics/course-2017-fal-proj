@@ -22,8 +22,13 @@ class requestCityScore(dml.Algorithm):
 
         url = 'https://data.boston.gov/export/5bc/e8e/5bce8e71-5192-48c0-ab13-8faff8fef4d7.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
+        response = response.replace("]", "")
+        response += "]"
+        # print(type(response))
         r = json.loads(response)
+        # print(type(r))
         s = json.dumps(r, sort_keys=True, indent=2)
+        # print(type(s))
         repo.dropCollection("CityScore")
         repo.createCollection("CityScore")
         repo['adsouza_mcsmocha.CityScore'].insert_many(r)

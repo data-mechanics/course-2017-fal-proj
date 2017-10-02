@@ -22,11 +22,14 @@ class requestPWD(dml.Algorithm):
 
         url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/4b0f71af07664337975119c526f5a3a8_2.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
+        # print(type(response))
         r = json.loads(response)
+        # print(type(r))
         s = json.dumps(r, sort_keys=True, indent=2)
+        # print(type(s))
         repo.dropCollection("PWD")
         repo.createCollection("PWD")
-        repo['adsouza_mcsmocha.PWD'].insert_many(r)
+        repo['adsouza_mcsmocha.PWD'].insert_one(r)
         repo['adsouza_mcsmocha.PWD'].metadata({'complete':True})
         print(repo['adsouza_mcsmocha.PWD'].metadata())
 
@@ -59,8 +62,8 @@ class requestPWD(dml.Algorithm):
         this_script = doc.agent('alg:adsouza_mcsmocha#requestPWD', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bod:4b0f71af07664337975119c526f5a3a8_2', {'prov:label':'Public Works Districts, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_pwd = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_bb, this_script)
-        doc.usage(get_bb, resource, startTime, None,
+        doc.wasAssociatedWith(get_pwd, this_script)
+        doc.usage(get_pwd, resource, startTime, None,
             {prov.model.PROV_TYPE:'ont:Retrieval',
             'ont:Query':'?type=Public+Works+Districts&$PWD,NAME,COMBO,DIST,OBJECTID'
             }
@@ -78,4 +81,4 @@ class requestPWD(dml.Algorithm):
 requestPWD.execute()
 doc = requestPWD.provenance()
 print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))import urllib.request
+print(json.dumps(json.loads(doc.serialize()), indent=4))

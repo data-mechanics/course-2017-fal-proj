@@ -22,8 +22,13 @@ class request311Req(dml.Algorithm):
 
         url = 'https://data.boston.gov/export/296/8e2/2968e2c0-d479-49ba-a884-4ef523ada3c0.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
+        response = response.replace("]", "")
+        response += "]"
+        # print(type(response))
         r = json.loads(response)
+        # print(type(r))
         s = json.dumps(r, sort_keys=True, indent=2)
+        # print(type(s))
         repo.dropCollection("ThreeReq")
         repo.createCollection("ThreeReq")
         repo['adsouza_mcsmocha.ThreeReq'].insert_many(r)
@@ -62,7 +67,7 @@ class request311Req(dml.Algorithm):
         doc.wasAssociatedWith(get_311, this_script)
         doc.usage(get_311, resource, startTime, None,
         	{prov.model.PROV_TYPE:'ont:Retrieval',
-        	'ont:Query':'?type=311+Requests&$CASE_INQUIRY_ID,open_dt,target_dt,closed_dt,OnTime_Status,CASE_STATUS,CLOSURE_REASON,CASE_TITLE,SUBJECT,REASON,TYPE,QUEUE,Department,SubmittedPhoto,ClosedPhoto,Location,Fire_district,pwd_district,city_council_district,police_district,neighborhood,neighborhood_services_district,ward,precinct,LOCATION_STREET_NAME,LOCATION_ZIPCODE,Latitude,Longitude,Source'
+        	'ont:Query':'?type=311+Requests&$open_dt,target_dt,closed_dt,OnTime_Status,CASE_STATUS,CASE_TITLE,SUBJECT,REASON,TYPE,QUEUE,Department,Location,pwd_district,city_council_district,police_district,neighborhood,neighborhood_services_district,ward,precinct,LOCATION_STREET_NAME,LOCATION_ZIPCODE,Latitude,Longitude,Source'
         	}
         	)
 
