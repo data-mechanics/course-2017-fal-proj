@@ -70,8 +70,48 @@ class merge_police_sets(dml.Algorithm):
         return {"start":startTime, "end":endTime}
 
     @staticmethod
-    def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
-        return 
+    def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):    
+        '''Creates the provenance document describing the merging of data
+        occuring within this script.'''
+         
+        # Set up the database connection
+        client = dml.pymongo.MongoClient()
+        repo = client.repo
+        repo.authenticate('esaracin', 'esaracin')
+
+        # Add useful namespaces for this prov doc
+        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/')
+        doc.add_namespace('dat', 'http://datamechanics.io/data/')
+        doc.add_namespace('ont', 'http://datamechanics/io/ontology/')
+        doc.add_namespace('log', 'http://datamechanics.io/log/')
+        doc.add_namespace('bos', 'http://bostonopendata-boston.opendata.arcgis.com/datasets/') # Namespace specific to this script
+
+        # Add this script as a provenance agent to our document
+        this_script = doc.agent('alg:esaracin#merge_police_sets', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+
+        resource_districts = doc.entity('dat:esaracin#police_districts',{'prov:label':'MongoDB Set',prov.model.PROV_TYPE:'ont:DataResource'})
+        resource_crime = doc.entity('dat:esaracin#crime_incidents', {'prov:label': 'MongoDB Set', prov.model.PROV_TYPE:'ont:DataResource'})
+        
+        merge_sets = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+
+        doc.wasAssociatedWith(merge_sets, this_script)
+        doc.usage(merge_sets, resource_districts, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
+        doc.usage(merge_sets, resource_crime, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
+
+
+        merged = doc.entity('dat:esaracin#police_stats', {prov.model.PROV_LABEL:'Merged Set',
+                            prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(merged, this_script)
+        doc.wasGeneratedBy(merged, merge_sets, endTime)
+        doc.wasDerivedFrom(merged, resource_districts, merge_sets, merge_sets,
+                          merge_sets)
+        doc.wasDerivedFrom(merged, resource_crime, merge_sets, merge_sets,
+                           merge_sets)
+
+
+        repo.logout()
+        return doc
 
 
 merge_police_sets.execute()
+merge_police_sets.provenance()
