@@ -6,7 +6,7 @@ import datetime
 import uuid
 
 
-class example(dml.Algorithm):
+class retrievePropertyAssessmentData(dml.Algorithm):
     contributor = 'sbrz_nedg'
     reads = []
     writes = ['sbrz_nedg.property_assessment']
@@ -96,4 +96,4 @@ class example(dml.Algorithm):
 
         return doc
 
-example.execute()
+retrievePropertyAssessmentData.execute()
