@@ -21,7 +21,7 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         repo = client.repo
         repo.authenticate('francisz_jrashaan', 'francisz_jrashaan')
 
-        url = 'http://datamechanics.io/data/jw0208/medicare.json'
+        url = 'https://data.boston.gov/export/12c/b38/12cb3883-56f5-47de-afa5-3b1cf61b257b.json'
         buf = requests.get(url).text
         r = json.loads(buf)
         s = json.dumps(r, sort_keys=True, indent=2)
@@ -30,7 +30,7 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         repo['francisz_jrashaan.crime'].insert_many(r)
         # repo['francisz_jrashaan.crime'].metadata({'complete':True})
         # print(repo['francisz_jrashaan.crime'].metadata())
-        
+
         url = 'https://data.cityofboston.gov/resource/cz6t-w69j.json'
         response = requests.get(url).text
         a = json.loads(response)
@@ -42,7 +42,7 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         #print(repo['francisz_jrashaan.streetlights'].metadata())
 
 
-        url = 'https://data.cityofboston.gov/resource/cz6t-w69j.json'
+        url = 'https://data.cambridgema.gov/api/views/srp4-fhjz/rows.json?accessType=DOWNLOAD'
         response = requests.get(url).text
         c = json.loads(response)
         d = json.dumps(c, sort_keys=True, indent=2)
@@ -51,7 +51,7 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         repo['francisz_jrashaan.landuse'].insert_many(c)
         #repo['francisz_jrashaan.landuse'].metadata({'complete':True})
         #print(repo['francisz_jrashaan.landuse'].metadata())
-        
+
         url = 'https://data.cityofboston.gov/resource/cz6t-w69j.json'
         response = requests.get(url).text
         e = json.loads(response)
@@ -61,7 +61,7 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         repo['francisz_jrashaan.capopulation'].insert_many(e)
         # repo['francisz_jrashaan.capopulation'].metadata({'complete':True})
         #print(repo['francisz_jrashaan.capopulation'].metadata())
-        
+
         url = 'https://data.cityofboston.gov/resource/cz6t-w69j.json'
         response = requests.get(url).text
         g = json.loads(response)
@@ -75,7 +75,7 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         endTime = datetime.datetime.now()
 
         return {"start":startTime, "end":endTime}
-    
+
     @staticmethod
     def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
         '''
@@ -118,7 +118,7 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
                   {prov.model.PROV_TYPE:'ont:Retrieval'
                   }
                   )
-        
+
         doc.usage(get_landuse, resource_landuse, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval'}
                   )
@@ -138,24 +138,24 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         doc.wasAttributedTo(streetlights, this_script)
         doc.wasGeneratedBy(streetlights, get_streetlights, endTime)
         doc.wasDerivedFrom(streetlights, resource_streetlights, get_streetlights, get_streetlights, get_streetlights)
-        
+
         landuse = doc.entity('dat:francisz_jrashaan#landuse', {prov.model.PROV_LABEL:'landuse', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(landuse, this_script)
         doc.wasGeneratedBy(landuse, get_landuse, endTime)
         doc.wasDerivedFrom(landuse, resource_landuse, get_landuse, get_landuse, get_landuse)
-        
+
         capopulation = doc.entity('dat:francisz_jrashaan#capopulation', {prov.model.PROV_LABEL:'capopulation', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(capopulation, this_script)
         doc.wasGeneratedBy(capopulation, get_capopulation, endTime)
         doc.wasDerivedFrom(capopulation, resource_capopulation, get_capopulation, get_capopulation, get_capopulation)
-        
+
         openspace = doc.entity('dat:francisz_jrashaan#openspace', {prov.model.PROV_LABEL:'openspace', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(openspace, this_script)
         doc.wasGeneratedBy(openspace, get_openspace, endTime)
         doc.wasDerivedFrom(openspace, resource_openspace, get_openspace, get_openspace, get_openspace)
 
         repo.logout()
-                  
+
         return doc
 
 fzjr_retrievalalgorithm.execute()
