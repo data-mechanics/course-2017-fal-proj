@@ -102,45 +102,28 @@ class transformation1(dml.Algorithm):
 
         this_script = doc.agent('alg:jdbrawn_slarbi#transformation1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
-        resource1 = doc.entity('bdp:cz6t-w69j', {'prov:label':'Entertainment Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        get_entertainment_data = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_entertainment_data, this_script)
-        doc.usage(get_entertainment_data, resource1, startTime, None,
-                {prov.model.PROV_TYPE:'ont:Retrieval',
-                
-                }
-                )
+        resource_entertain = doc.entity('dat:jdbrawn_slarbi#entertain', {'prov:label':'Entertainment Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_food = doc.entity('dat:jdbrawn_slarbi#food', {'prov:label': 'Food Data', prov.model.PROV_TYPE: 'ont:DataSet'})
+
+        get_socialAnalysis = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
         
-        resource2 = doc.entity('bdp:fdxy-gydq', {'prov:label':'Food License Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        get_food_license = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_food_license, this_script)
-        doc.usage(get_food_license, resource2, startTime, None,
-                {prov.model.PROV_TYPE:'ont:Retrieval'
-                
-                }
-                )
+        doc.wasAssociatedWith(get_socialAnalysis, this_script)
 
+        doc.usage(get_socialAnalysis, resource_entertain, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
+        doc.usage(get_socialAnalysis, resource_food, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
 
-
-        entertainment_data = doc.entity('dat:jdbrawn_slarbi#entertain', {prov.model.PROV_LABEL:'Entertainment Data', prov.model.PROV_TYPE:'ont:DataSet', 'ont:Extension':'json'})
-        doc.wasAttributedTo(entertainment_data, this_script)
-        doc.wasGeneratedBy(entertainment_data, get_entertainment_data, endTime)
-        doc.wasDerivedFrom(entertainment_data, resource1, get_entertainment_data, get_entertainment_data, get_entertainment_data)
-
-        food_license = doc.entity('dat:jdbrawn_slarbi#food', {prov.model.PROV_LABEL:'Food License Data', prov.model.PROV_TYPE:'ont:DataSet', 'ont:Extension':'json'})
-        doc.wasAttributedTo(food_license, this_script)
-        doc.wasGeneratedBy(food_license, get_food_license, endTime)
-        doc.wasDerivedFrom(food_license, resource2, get_food_license, get_food_license, get_food_license)
-
-
-
+        social = doc.entity('dat:jdbrawn_slarbi#socialAnalysis', {prov.model.PROV_LABEL: 'Social Analysis', prov.model.PROV_TYPE: 'ont:DataSet'})
+        doc.wasAttributedTo(social, this_script)
+        doc.wasGeneratedBy(social, get_socialAnalysis, endTime)
+        doc.wasDerivedFrom(social, resource_entertain, get_socialAnalysis, get_socialAnalysis, get_socialAnalysis)
+        doc.wasDerivedFrom(social, resource_food, get_socialAnalysis, get_socialAnalysis, get_socialAnalysis)
         repo.logout()
 
         return doc
 
-# transformation1.execute()
-# doc = transformation1.provenance()
-# print(doc.get_provn())
-# print(json.dumps(json.loads(doc.serialize()), indent=4))
+transformation1.execute()
+doc = transformation1.provenance()
+print(doc.get_provn())
+print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 
