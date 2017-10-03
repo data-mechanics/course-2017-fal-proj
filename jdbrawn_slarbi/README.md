@@ -8,13 +8,18 @@ at three categories of interest that can be rated and compared school to school:
 To do this we have used the data sets listed below, and performed transformations that make this data useful for analysis.
 
 ### Datasets
-Boston Colleges and Universities <br />
-Boston Crime Data <br />
-Boston Car Crash Data <br />
-MBTA Bus Station Location Data <br />
-Boston Food Lisences <br />
-Boston Entertainment Lisences 
-
+###### Boston Colleges and Universities <br />
+https://data.boston.gov/dataset/colleges-and-universities
+###### Boston Crime Incident Reports <br />
+https://data.boston.gov/dataset/crime-incident-reports-august-2015-to-date-source-new-system
+###### MassDOT Car Crash Data <br />
+http://www.massdot.state.ma.us/highway/Departments/TrafficandSafetyEngineering/CrashData.aspx
+###### MBTA Bus Station Location Data <br />
+http://realtime.mbta.com/portal
+###### Boston Food Establishment Lisences <br />
+https://data.boston.gov/dataset/active-food-establishment-licenses
+###### Boston Entertainment Lisences 
+https://data.boston.gov/dataset/entertainment-licenses-legacy
 ### Required Python Libraries
 
 ###### gpxpy - https://pypi.python.org/pypi/gpxpy
