@@ -8,71 +8,76 @@ from geopy.distance import vincenty
 from collections import defaultdict
 
 class threeBigBellies(dml.Algorithm):
-    contributor = 'adsouza_mcsmocha'
-    reads = ['adsouza_mcsmocha.ThreeReq', 'adsouza_mcsmocha.BigBelly']
-    writes = ['adsouza_mcsmocha.ThreeBigBellies']
+	contributor = 'adsouza_mcsmocha'
+	reads = ['adsouza_mcsmocha.ThreeReq', 'adsouza_mcsmocha.BigBelly']
+	writes = ['adsouza_mcsmocha.ThreeBigBellies']
 
-    @staticmethod
-    def execute(trial = False):
-        '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
-        startTime = datetime.datetime.now()
+	@staticmethod
+	def execute(trial = False):
+		'''Retrieve some data sets (not using the API here for the sake of simplicity).'''
+		startTime = datetime.datetime.now()
 
-        # Set up the database connection.
-        client = dml.pymongo.MongoClient()
-        repo = client.repo
-        repo.authenticate('adsouza_mcsmocha', 'adsouza_mcsmocha')
+    	# Set up the database connection.
+    	client = dml.pymongo.MongoClient()
+    	repo = client.repo
+    	repo.authenticate('adsouza_mcsmocha', 'adsouza_mcsmocha')
+    	repo.dropCollection('BigBellyandThreeTypes')
+    	repo.createCollection('BigBellyandThreeTypes')
 
-        repo.dropCollection('BigBellyandThreeTypes')
-        repo.createCollection('BigBellyandThreeTypes')
+    	bigBelly = repo['adsouza_mcsmocha.BigBelly'].find()
+    	threeReq = repo['adsouza_mcsmocha.ThreeReq'].find()
 
-        bigBelly = repo['adsouza_mcsmocha.BigBelly'].find()
-        threeReq = repo['adsouza_mcsmocha.ThreeReq'].find()
+    	# Select entries in 311Requests that pertain to Trash violations using list comprehension
+    	select311Trash = [e for e in threeReq if "Trash" in e["TYPE"]]
 
-        # Select entries in 311Requests that pertain to Trash violations using list comprehension
-        select311Trash = [e for e in threeReq if "Trash" in e["TYPE"]]
+    	# Selectively take out entries we don't need for comparison 
+    	def select311TrashDel(dictList):
+    		newDictList = []
+    		for each_dict in dictList:
+    			adict = {each_dict["neighborhood"], each_dict["Latitude"], each_dict["Longitude"]}
+    			newDictList.append[adict]
 
-        # Selectively take out entries we don't need for comparison 
-        def select311TrashDel(dictList):
-            newDictList = []
-            for each_dict in dictList:
-                adict = {each_dict["neighborhood"], each_dict["Latitude"], each_dict["Longitude"]}
-                newDictList.append[adict]
+    		return newDictList
 
-        select311TrashReduced = select311TrashDel(select311Trash)
+    	select311TrashReduced = select311TrashDel(select311Trash)
 
-        # Get latitudes and longitudes for 311Requests that pertain to trash and rounds them up for comparison
-        select311Lats = [round(e, 3) for e in select311Trash["Latitude"]]
-        select311Longs = [round(e, 3) for e in select311Trash["Longitude"]]
+    	# Get latitudes and longitudes for 311Requests that pertain to trash and rounds them up for comparison
+    	select311Lats = [round(e, 3) for e in select311Trash["Latitude"]]
+    	select311Longs = [round(e, 3) for e in select311Trash["Longitude"]]
 
-        # Projecting lats and longs into tuples into the 311 dataset
-        def zip311coords(dictList):
-            # Put lats, longs into the tuples 
-            # Big Belly uses the same tuple format so we can compare them using geopy later
-            coordinates = zip(select311Lats, select311Longs)
-            i = 0
-            # Appends them to corresponding dict
-            for each_dict in dictList:
-                each_dict["Coordinates"].append(coordinates[i])
-                i += 1
+    	# Projecting lats and longs into tuples into the 311 dataset
+    	def zip311coords(dictList):
+    		# Put lats, longs into the tuples 
+    		# Big Belly uses the same tuple format so we can compare them using geopy later
+    		coordinates = zip(select311Lats, select311Longs)
+    		i = 0
+    		# Appends them to corresponding dict
+    		for each_dict in dictList:
+    			each_dict["Coordinates"].append(coordinates[i])
+    			i += 1
 
-        select311TrashNew = zip311coords(select311Trash)
+    		return dictList
+    	
+    	select311TrashNew = zip311coords(select311Trash)
 
-        # Get gps coordinates for BigBelly and round them up for comparison
-        selectBigBellyGPS = [round(e, 3) for e in bigBelly["Location"]]
+    	# Get gps coordinates for BigBelly and round them up for comparison
+    	selectBigBellyGPS = [round(e, 3) for e in bigBelly["Location"]]
 
-        # Selectively take out entries we don't need for comparison 
-        def selectBigBellyDel(dictList):
-            newDictList = []
-            for each_dict in dictList:
-                adict = {each_dict["fullness"], each_dict["collection"], each_dict["Location"]}
-                newDictList.append[adict]
+    	# Selectively take out entries we don't need for comparison 
+    	def selectBigBellyDel(dictList):
+    		newDictList = []
+    		for each_dict in dictList:
+    			adict = {each_dict["fullness"], each_dict["collection"], each_dict["Location"]}
+    			newDictList.append[adict]
 
-        selectBigBellyReduced = selectBigBellyDel(bigBelly)
+    		return newDictList
 
-        def aggregateScore(dictList1, dictList2):
+    	selectBigBellyReduced = selectBigBellyDel(bigBelly)
+
+    	def aggregateScore(dictList1, dictList2):
         	neighborhood_scores_dataset = []
         	neighborhoods_list = []
-			
+
 			# Create template for neighborhood_scores (list of dictionaries)
 			for each_dict in dictList2:
 				if each_dict["neighborhood"] not in neighborhoods_list:
@@ -82,29 +87,31 @@ class threeBigBellies(dml.Algorithm):
 				neighborhood_scores_dataset.append(dict)
 
 			# Aggregates neighborhoods with 311's coordinates and BigBelly's locations
-        	for each_dict1 in dictList1:
-        		for each_dict2 in dictList2:
-        			distance = vincenty(each_dict1["Location"], each_dict2["Coordinates"]).miles
-        			if (distance <= 0.5):
-        				neighborhood_scores_dataset[dictList2["neighborhood"]] += 1
+			for each_dict1 in dictList1:
+				for each_dict2 in dictList2:
+					distance = vincenty(each_dict1["Location"], each_dict2["Coordinates"]).miles
+					if (distance <= 0.5):
+						neighborhood_scores_dataset[dictList2["neighborhood"]] += 1
 
-        	return neighborhood_scores_dataset
+			return neighborhood_scores_dataset
 
-        repo['adsouza_mcsmocha.ThreeBigBellies'].insert_many(neighborhood_scores_dataset)
+		final_result = aggregateScore(select311TrashNew, selectBigBellyReduced)
 
-        repo.logout()
+		repo['adsouza_mcsmocha.ThreeBigBellies'].insert_many(neighborhood_scores_dataset)
 
-        endTime = datetime.datetime.now()
+		repo.logout()
 
-        return {"start": startTime, "end": endTime}
+		endTime = datetime.datetime.now()
 
-    @staticmethod
-    def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
-        '''
-            Create the provenance document describing everything happening
+	return {"start": startTime, "end": endTime}
+
+	@staticmethod
+	def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
+		'''
+			Create the provenance document describing everything happening
             in this script. Each run of the script will generate a new
             document describing that invocation event.
-            '''
+        '''
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
