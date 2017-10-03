@@ -10,17 +10,16 @@ import datetime
 
 import uuid
 
-import numpy as np
 
 
 
 class crimeTransformation(dml.Algorithm):
 
-    contributor = 'francisz_jrashaan'
+     contributor = 'francisz_jrashaan'
 
-    reads = ['francisz_jrashaan.crime']
+     reads = ['francisz_jrashaan.crime']
 
-    writes = ['francisz_jrashaan.crimeData']
+     writes = ['francisz_jrashaan.crimeData']
 
 
 
@@ -30,70 +29,78 @@ class crimeTransformation(dml.Algorithm):
 
      def execute(trial = False):
 
-     '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
+         '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
 
-     startTime = datetime.datetime.now()
-
-
-
-     # Set up the database connection.
-
-     client = dml.pymongo.MongoClient()
-
-     repo = client.repo
-
-     repo.authenticate('francisz_jrashaan','francisz_jrashaan')
+         startTime = datetime.datetime.now()
 
 
 
-     repo.dropPermanent("crimeData")
+         # Set up the database connection.
 
-     repo.createPermanent("crimeData")
+         client = dml.pymongo.MongoClient()
 
+         repo = client.repo
 
-
-     homicides = []
-
-     homicideCount = 0
+         repo.authenticate('francisz_jrashaan','francisz_jrashaan')
 
 
 
+         repo.dropPermanent("crimeData")
 
-     #select
-     for entry in repo.francisz_jrashaan.crime.find():
-
-        if "OFFENSE_CODE_GROUP" == "homicide" in entry:
-             homicides+=(entry)
-             homicideCount+= 1
-                 #if "STREET" in entry:
-                 #street += [(entry["STREET"],1)]
-                 #if "Long" in entry:
-                 #long+= [(entry["LONG"])]
-                 #if "Lat" in entry:
-                 #Lat+= [(entry["Lat"])]
-                 #if "OCCURED_ON_DATE" in entry:
-                 #Date+= [(date["OCCURED_ON_DATE"])]
+         repo.createPermanent("crimeData")
 
 
-     #project
-     homicideCrimes = project(homicides,lambda t:(t[0],t[6],t[10],t[12]))
+
+         homicides = []
+
+         homicideCount = 0
 
 
 
 
-     print("homicides", homicideCrimes)
+        #select
+        # for entry in repo.francisz_jrashaan.crime.find():
+             #print(entry['OFFENSE_CODE_GROUP'])
+         
+         for entry in repo.francisz_jrashaan.crime.find():
+
+            if entry['OFFENSE_CODE_GROUP'] == 'Homicide':
+                 homicides.append(entry)
+                 homicideCount+= 1
+                     #if "STREET" in entry:
+                     #street += [(entry["STREET"],1)]
+                     #if "Long" in entry:
+                     #long+= [(entry["LONG"])]
+                     #if "Lat" in entry:
+                     #Lat+= [(entry["Lat"])]
+                     #if "OCCURED_ON_DATE" in entry:
+                     #Date+= [(date["OCCURED_ON_DATE"])]
+
+
+         #project
+         homicideCrimes = []
+         for entry in homicides:
+             x = lambda t: (t['STREET'],t['OFFENSE_DESCRIPTION'],t['OCCURRED_ON_DATE'],t['Long'],t['Lat'])
+             y = x(entry)
+             homicideCrimes.append(y)
+         
+        
+         print("homicide crimes with street, offense, date, lat, and long",homicideCrimes)
 
 
 
-     repo.logout()
+
+    
+
+         repo.logout()
 
 
 
-     endTime = datetime.datetime.now()
+         endTime = datetime.datetime.now()
 
 
 
-     return {"start":startTime, "end":endTime}
+         return {"start":startTime, "end":endTime}
 
 
 
@@ -101,65 +108,51 @@ class crimeTransformation(dml.Algorithm):
 
      def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
 
-     '''
-
-         Create the provenance document describing everything happening
-
-         in this script. Each run of the script will generate a new
-
-         document describing that invocation event.
-
          '''
 
+             Create the provenance document describing everything happening
 
+             in this script. Each run of the script will generate a new
 
-     # Set up the database connection.
+             document describing that invocation event.
 
-     client = dml.pymongo.MongoClient()
-
-     repo = client.repo
-
-     repo.authenticate('francisz_jrashaan', 'francisz_jrashaan')
-
-     doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
-
-     doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
-
-     doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
-
-     doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-
-     doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
+             '''
 
 
 
-     this_script = doc.agent('francisz_jrashaan#crimeTransformation', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+         # Set up the database connection.
+
+         client = dml.pymongo.MongoClient()
+
+         repo = client.repo
+
+         repo.authenticate('francisz_jrashaan', 'francisz_jrashaan')
+
+         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
+
+         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
+
+         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
+
+         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
+
+         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
 
-     #add url on doc.entity
-     resource_selectProject = doc.entity('bdp:wc8w-nujj', {'prov:label':'Crime Data Set', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 
-     get_selectProject = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-
-     doc.wasAssociatedWith(get_selectProject, this_script)
-
-     doc.usage(get_selectProject, resource_selectProject, startTime, None,
-
-               {prov.model.PROV_TYPE:'ont:Retrieval'})
+         this_script = doc.agent('alg:francisz_jrashaan#crimeTransformation', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
 
+         #add url on doc.entity
+         resource_selectProject = doc.entity('bdp:12cb3883-56f5-47de-afa5-3b1cf61b257b', {'prov:label':'Crime Data Set', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 
+         get_selectProject = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 
+         doc.wasAssociatedWith(get_selectProject, this_script)
 
+         doc.usage(get_selectProject, resource_selectProject, startTime, None,
 
-
-     selectProject = doc.entity('dat:francisz_jrashaan#crime', {prov.model.PROV_LABEL:'Select and Project', prov.model.PROV_TYPE:'ont:DataSet'})
-
-     doc.wasAttributedTo(selectProject, this_script)
-
-     doc.wasGeneratedBy(selectProject, get_selectProject, endTime)
-
-     doc.wasDerivedFrom(selectProject, resource_selectProject, get_selectProject, get_selectProject, get_selectProject)
+                   {prov.model.PROV_TYPE:'ont:Retrieval'})
 
 
 
@@ -167,18 +160,31 @@ class crimeTransformation(dml.Algorithm):
 
 
 
-     repo.logout()
+         selectProject = doc.entity('dat:francisz_jrashaan#crime', {prov.model.PROV_LABEL:'Data set to Select and Project', prov.model.PROV_TYPE:'ont:DataSet'})
+
+         doc.wasAttributedTo(selectProject, this_script)
+
+         doc.wasGeneratedBy(selectProject, get_selectProject, endTime)
+
+         doc.wasDerivedFrom(selectProject, resource_selectProject, get_selectProject, get_selectProject, get_selectProject)
 
 
 
-     return doc
 
 
 
-     crimeTransformation.execute()
 
-     doc = crimeTransformation.provenance()
+         repo.logout()
 
-     print(doc.get_provn())
 
-     print(json.dumps(json.loads(doc.serialize()), indent=4))
+
+         return doc
+
+
+crimeTransformation.execute()
+
+doc = crimeTransformation.provenance()
+
+print(doc.get_provn())
+
+print(json.dumps(json.loads(doc.serialize()), indent=4))

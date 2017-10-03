@@ -106,7 +106,7 @@ class lightTransformation(dml.Algorithm):
 
 
 
-     this_script = doc.agent('francisz_jrashaan#lightTransformation', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+     this_script = doc.agent('alg:francisz_jrashaan#lightTransformation', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
 
 

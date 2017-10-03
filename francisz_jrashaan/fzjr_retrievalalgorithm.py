@@ -21,7 +21,7 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         repo = client.repo
         repo.authenticate('francisz_jrashaan', 'francisz_jrashaan')
 
-        url = 'https://data.boston.gov/datastore/odata3.0/12cb3883-56f5-47de-afa5-3b1cf61b257b?$top=20000&$format=json'
+        url = 'https://data.boston.gov/datastore/odata3.0/12cb3883-56f5-47de-afa5-3b1cf61b257b?$top=100000&$format=json'
         buf = requests.get(url).text
         r = json.loads(buf)
         print(r)
