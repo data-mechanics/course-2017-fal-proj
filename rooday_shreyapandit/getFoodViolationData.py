@@ -54,12 +54,12 @@ class getFoodViolationData(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('foodviolations', 'https://data.boston.gov/dataset/food-establishment-inspections/resource/')
 
-        this_script = doc.agent('alg:rooday_shreyapandit#getFoodViolationData', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:#getFoodViolationData', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('foodviolations:4582bec6-2b4f-4f9e-bc55-cbaa73117f4c', {'prov:label':'Food Inspection Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_food_violation_data = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_food_violation_data, this_script)
         doc.usage(get_food_violation_data, resource, startTime, None,{prov.model.PROV_TYPE:'ont:Retrieval'})
-        food_violations = doc.entity('dat:rooday_shreyapandit#foodviolations', {prov.model.PROV_LABEL:'Food Inspection Data', prov.model.PROV_TYPE:'ont:DataSet'})
+        food_violations = doc.entity('dat:#foodviolations', {prov.model.PROV_LABEL:'Food Inspection Data', prov.model.PROV_TYPE:'ont:DataSet'})
 
         doc.wasAttributedTo(food_violations, this_script)
         doc.wasGeneratedBy(food_violations, get_food_violation_data, endTime)

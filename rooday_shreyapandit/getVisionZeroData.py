@@ -50,14 +50,14 @@ class getVisionZeroData(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/rooday_shreyapandit') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('visionzero', 'http://bostonopendata-boston.opendata.arcgis.com/datasets/5bed19f1f9cb41329adbafbd8ad260e5_0')
+        doc.add_namespace('visionzero', 'http://bostonopendata-boston.opendata.arcgis.com/datasets/')
 
-        this_script = doc.agent('alg:rooday_shreyapandit#getVisionZeroData', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('visionzero:REPLACE_ME_WITH_REAL_VALUE', {'prov:label':'VisionZero Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
+        this_script = doc.agent('alg:#getVisionZeroData', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource = doc.entity('visionzero:5bed19f1f9cb41329adbafbd8ad260e5_0', {'prov:label':'VisionZero Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
         get_visionzero_data = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_visionzero_data, this_script)
         doc.usage(get_visionzero_data, resource, startTime, None,{prov.model.PROV_TYPE:'ont:Retrieval'})
-        visionzero_data = doc.entity('dat:rooday_shreyapandit#visionzero', {prov.model.PROV_LABEL:'VisionZero Data', prov.model.PROV_TYPE:'ont:DataSet'})
+        visionzero_data = doc.entity('dat:#visionzero', {prov.model.PROV_LABEL:'VisionZero Data', prov.model.PROV_TYPE:'ont:DataSet'})
 
         doc.wasAttributedTo(visionzero_data, this_script)
         doc.wasGeneratedBy(visionzero_data, get_visionzero_data, endTime)

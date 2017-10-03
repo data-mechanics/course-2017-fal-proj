@@ -62,12 +62,12 @@ class getCrimeData(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('crime', 'https://data.boston.gov/dataset/crime-incident-reports-august-2015-to-date-source-new-system/resource/')
 
-        this_script = doc.agent('alg:rooday_shreyapandit#getCrimeData', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:#getCrimeData', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('crime:12cb3883-56f5-47de-afa5-3b1cf61b257b', {'prov:label':'Crime Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_crime_data = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_crime_data, this_script)
         doc.usage(get_crime_data, resource, startTime, None,{prov.model.PROV_TYPE:'ont:Retrieval'})
-        crime = doc.entity('dat:rooday_shreyapandit#crime', {prov.model.PROV_LABEL:'Crime Data', prov.model.PROV_TYPE:'ont:DataSet'})
+        crime = doc.entity('dat:#crime', {prov.model.PROV_LABEL:'Crime Data', prov.model.PROV_TYPE:'ont:DataSet'})
 
         doc.wasAttributedTo(crime, this_script)
         doc.wasGeneratedBy(crime, get_crime_data, endTime)
