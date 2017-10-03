@@ -8,10 +8,10 @@ import os
 from urllib.request import urlopen
 from uszipcode import ZipcodeSearchEngine
 
-class entire_mbta(dml.Algorithm):
+class mbta(dml.Algorithm):
 
 	contributor = 'nathansw_sbajwa'
-	reads = []
+	reads = ['nathansw_sbajwa.geodata']
 	writes = ['nathansw_sbajwa.mbta']
 
 	@staticmethod
@@ -91,7 +91,11 @@ class entire_mbta(dml.Algorithm):
 			temp = json.loads(urlopen(url).read().decode('utf-8'))
 
 		    # makes every key in json dictionary the coordinates
-			key_name = "(" + str(loc[0]) + "," + str(loc[1]) + ")"
+		    # with '.' char replaced with '+' due to mongodb restrictions
+			loc0 = str(loc[0]).replace('.','+')
+			loc1 = str(loc[1]).replace('.','+')
+
+			key_name = "(" + loc0 + "," + loc1 + ")"
 			data[key_name] = temp.pop('stop')
 
 		f.close()
@@ -99,12 +103,13 @@ class entire_mbta(dml.Algorithm):
 		s = json.dumps(data, indent=4)
 		repo.dropCollection("mbta")
 		repo.createCollection("mbta")
-#		repo['nathansw_sbajwa.mbta'].insert_one(data)
+		repo['nathansw_sbajwa.mbta'].insert_one(data)
 
 		repo.logout()
 		endTime = datetime.datetime.now()
 
 		return {"start":startTime, "end":endTime}
+
 		## Sameena's code to generate JSON file
 		# with open('testMBTA.json', 'a') as outfile:
 		# 	json.dump(data, outfile, indent=4)
@@ -119,10 +124,10 @@ class entire_mbta(dml.Algorithm):
 		doc.add_namespace('dat', 'http://datamechanics.io/data/sbajwa_nathansw/') # The data sets in / format.
 		doc.add_namespace('ont', 'http://datamechanics.io/ontology#')
 		doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
-		doc.add_namespace('mbta', 'http://realtime.mbta.com/developer/')
+		doc.add_namespace('mbta', 'http://realtime.mbta.com/developer/api/v2/')
 
 		this_script = doc.agent('alg:nathansw_sbajwa#mbta', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-		resource = doc.entity('mbta:api/v2/stopsbylocation?', {'prov:label':'MBTA Stops By Location', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+		resource = doc.entity('mbta:stopsbylocation', {'prov:label':'MBTA Stops By Location', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 		get_mbta = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 		doc.wasAssociatedWith(get_mbta, this_script)
 		doc.usage(get_mbta, resource, startTime, None,
@@ -139,7 +144,7 @@ class entire_mbta(dml.Algorithm):
 
 		return doc
 
-entire_mbta.execute()
-doc = entire_mbta.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+# mbta.execute()
+# doc = mbta.provenance()
+# print(doc.get_provn())
+# print(json.dumps(json.loads(doc.serialize()), indent=4))

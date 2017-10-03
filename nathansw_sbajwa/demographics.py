@@ -7,15 +7,12 @@ import os
 
 class demographics(dml.Algorithm):
 
-	
-
 	contributor = 'nathansw_sbajwa'
 	reads = []
 	writes = ['nathansw_sbajwa.race', 'nathansw_sbajwa.householdincome', 'nathansw_sbajwa.povertyrates', 'nathansw_sbajwa.commuting']
 
 	@staticmethod
 	def execute(trial = False):
-
 
 		startTime = datetime.datetime.now()
 
@@ -70,27 +67,6 @@ class demographics(dml.Algorithm):
 			# deletes old keys from r[town] leaving only kys with no $
 			for key in toDelete:
 				del r[town][key]
-
-		# # original code in case mine doesn't actually work #
-
-		# ## removes $ in all of the nested keys within the JSON file 
-		# for town in r.keys():
-		# 	print('Town: ' + str(town))
-		# 	for old_key in r[town]:
-		# 		print("old key = " + str(old_key))
-  #   			# ex: '$25,000-34,999' -> '25,000-34,999'
-		# 		new_key = old_key.replace('$', '')
-  #       		# only continue if the original key had a $ that needed to be removed
-		# 		if new_key != old_key:
-		# 			print("new key = " + str(new_key))
-		# 			print("r[town][old_key] = " + str(r[town][old_key]))
-
-		# 			r[town][new_key] = r[town][old_key]
-
-		# 			print("r[town][new_key] = " + str(r[town][new_key]))
-  #          			# remove the old nested key from the JSON object
-		# 			del r[town][old_key]
-		# 			print("KEY REPLACED")
 
 		s = json.dumps(r, indent=4)
 		repo.dropCollection("householdincome")

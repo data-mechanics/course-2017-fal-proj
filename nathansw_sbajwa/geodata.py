@@ -40,13 +40,16 @@ class geodata(dml.Algorithm):
 
 			url = base_url + lon + lat + form
 
+			# debug line
 			print(url)
 
 			temp = json.loads(urlopen(url).read().decode('utf-8'))
 
 			first_key = lat.strip("&latitude=")
 			second_key = lon.strip("longitude=")
-			key_name = "(" + first_key + "," + second_key + ")"
+
+			# replaces '.' with '+' due to mongodb restrictions
+			key_name = "(" + first_key.replace('.','+') + "," + second_key.replace('.','+') + ")"
 
 			data[key_name] = temp.pop('d'[0])
 
@@ -70,10 +73,10 @@ class geodata(dml.Algorithm):
 		doc.add_namespace('dat', 'http://datamechanics.io/data/sbajwa_nathansw/') # The data sets in / format.
 		doc.add_namespace('ont', 'http://datamechanics.io/ontology#')
 		doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
-		doc.add_namespace('geodata', 'http://geodataservice.net/demographicsapi.aspx')
+		doc.add_namespace('geodata', 'http://azure.geodataservice.net/GeoDataService.svc/')
 
 		this_script = doc.agent('alg:nathansw_sbajwa#geodata', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-		resource = doc.entity('geodata:GeoDataService.svc/GetUSDemographics?', {'prov:label':'Lifestyle Data By Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+		resource = doc.entity('geodata:GetUSDemographics', {'prov:label':'Lifestyle Data By Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 		
 		get_geodata = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 		doc.wasAssociatedWith(get_geodata, this_script)
@@ -92,7 +95,7 @@ class geodata(dml.Algorithm):
 
 		return doc
 
-geodata.execute()
-doc = geodata.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+# geodata.execute()
+# doc = geodata.provenance()
+# print(doc.get_provn())
+# print(json.dumps(json.loads(doc.serialize()), indent=4))
