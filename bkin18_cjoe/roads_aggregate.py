@@ -26,15 +26,17 @@ class roads_aggregate(dml.Algorithm):
 
         districts, key_names = [], []
 
+        #pdb.set_trace()
+
         for road in roads:
-            if road['BRA_PD'] not in key_names:
-                key_names.append(road['BRA_PD'])
-                districts.append({road['BRA_PD']:[]})
+            if road['"BRA_PD'] not in key_names:
+                key_names.append(road['"BRA_PD'])
+                districts.append({road['"BRA_PD']:[]})
 
         for road in roads:
             for district in districts:
-                if road['BRA_PD'] == list(district.keys())[0] and road['FULLNAME'] not in district[road['BRA_PD']]:
-                    district[road['BRA_PD']].append(road['FULLNAME'])
+                if road['"BRA_PD'] == list(district.keys())[0] and road['"FULLNAME"'] not in district[road['"BRA_PD']]:
+                    district[road['"BRA_PD']].append(road['"FULLNAME"'])
 
 
         repo.dropCollection("roads_aggregate")
