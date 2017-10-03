@@ -65,6 +65,7 @@ class getDatasets(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate('jdbrawn_slarbi', 'jdbrawn_slarbi')
+
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/')  # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/')  # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
@@ -74,8 +75,8 @@ class getDatasets(dml.Algorithm):
 
         this_script = doc.agent('alg:jdbrawn_slarbi#getData', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
 
-        resource_colleges = doc.entity('bdp:208dc980-a278-49e3-b95b-e193bb7bb6e4', {'prov:label':'Boston Universities and Colleges', prov.model.PROV_TYPE:'ont:DataResource'})
-        resource_crime = doc.entity('bdp:12cb3883-56f5-47de-afa5-3b1cf61b257b&limit=70', {'prov:label':'Boston Crime', prov.model.PROV_TYPE:'ont:DataResource'})
+        resource_colleges = doc.entity('bdp:208dc980-a278-49e3-b95b-e193bb7bb6e4&limit=80', {'prov:label':'Boston Universities and Colleges', prov.model.PROV_TYPE:'ont:DataResource'})
+        resource_crime = doc.entity('bdp:12cb3883-56f5-47de-afa5-3b1cf61b257b&limit=10000', {'prov:label':'Boston Crime', prov.model.PROV_TYPE:'ont:DataResource'})
         resource_crashes = doc.entity('car:CarCrashData', {'prov:label':'Boston Crashes', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 
         get_colleges = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
