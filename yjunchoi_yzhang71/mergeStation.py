@@ -24,18 +24,30 @@ class mergeStation(dml.Algorithm):
         # loads the collection
         AD = repo['yjunchoi_yzhang71.averageDelay'].find()
         SN = repo['yjunchoi_yzhang71.Station_Node'].find()
-
+        
         # projection
         delayTime = []
         for i in AD:
             for key in i:
-                """print(key[0:10])"""
+                if(key != "_id"):
+                    abbList = key.split("|")
+                    #print(abbList)
+                    SN = repo['yjunchoi_yzhang71.Station_Node'].find()
+                    for j in SN:
+                        if abbList[0] == j['id']:
+                            #print(j['name'])
+                            abbList[0] = j['name']
+                            #print(abbList[0])
+                        if abbList[1] == j['id']:
+                            abbList[1] = j['name']
+                        name = abbList[0] + "|" + abbList[1]           
             try:
-                delayTime.append({key:i[key]})
+                delayTime.append({name:i[key]})
 
                 
             except:
                 pass
+        #print(delayTime)
 
         stationNode = []
         for key in SN:
@@ -46,11 +58,15 @@ class mergeStation(dml.Algorithm):
 
         # aggregation
         
-        stationData = stationNode+ delayTime 
-        print(stationData)
+        stationData = delayTime
+        #print(stationData)
+        #print(stationNode)
+        #print(delayTime)
+        #print(stationData)
 
         repo.dropCollection("Station_data")
         repo.createCollection("Station_data")
+
         repo['yjunchoi_yzhang71.Station_data'].insert_many(stationData)
         repo['yjunchoi_yzhang71.Station_data'].metadata({'complete': True})
         print("Saved station_data", repo['yjunchoi_yzhang71.station_data'].metadata())
@@ -79,7 +95,7 @@ class mergeStation(dml.Algorithm):
                           'http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/')  # The event log.
 
-        this_script = doc.agent('alg:yjunchoi_yzhang71#mergeStation',
+        this_script = doc.agent('alg:#mergeStation',
                                 {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
         resource_delayTime = doc.entity('dat:yjunchoi_yzhang71#delayTime',
                                              {'prov:label': 'delayTime',
