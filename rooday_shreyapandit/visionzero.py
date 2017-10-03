@@ -21,8 +21,8 @@ class visionzero(dml.Algorithm):
         repo = client.repo
         repo.authenticate('rooday_shreyapandit', 'rooday_shreyapandit')
 
-        url = 'http://datamechanics.io/data/rooday_shreyapandit/Vision_Zero_Entry.json'
-        resp = requests.get(url).json()
+        url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/5bed19f1f9cb41329adbafbd8ad260e5_0.geojson'
+        resp = requests.get(url).json()['features']
 
         print("Vision0 response has come, inserting....")
 
