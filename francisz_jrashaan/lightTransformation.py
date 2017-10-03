@@ -148,9 +148,9 @@ class lightTransformation(dml.Algorithm):
 
 
 
-     crimeTransformation.execute()
+     lightTransformation.execute()
 
-     doc = crimeTransformation.provenance()
+     doc = lightTransformation.provenance()
 
      print(doc.get_provn())
 

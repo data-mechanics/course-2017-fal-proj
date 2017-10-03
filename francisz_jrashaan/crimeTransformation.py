@@ -18,7 +18,7 @@ class crimeTransformation(dml.Algorithm):
 
     contributor = 'francisz_jrashaan'
 
-    reads = ['francisz_jrashaan.properties']
+    reads = ['francisz_jrashaan.crime']
 
     writes = ['francisz_jrashaan.crimeData']
 
@@ -137,7 +137,7 @@ class crimeTransformation(dml.Algorithm):
 
 
 
-     resource_selectProject = doc.entity('bdp:wc8w-nujj', {'prov:label':'Select and Project', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+     resource_selectProject = doc.entity('bdp:wc8w-nujj', {'prov:label':'Selection and Projection', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 
      get_selectProject = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 
