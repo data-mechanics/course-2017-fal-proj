@@ -16,21 +16,24 @@ class demographics(dml.Algorithm):
 
 		startTime = datetime.datetime.now()
 
+		# open db client and authenticate
 		client = dml.pymongo.MongoClient()
 		repo = client.repo
 		repo.authenticate('nathansw_sbajwa','nathansw_sbajwa')
 
+		# directory navigation
 		curr_dir = os.getcwd()
 		new_dir = curr_dir + "\\nathansw_sbajwa\\" 
 
+		# opens local 'Race.json' files and inserts it into repo collection 'nathansw_sbajwa.race'
 		with open(new_dir + 'Race.json') as race_json:
 			r = json.load(race_json)
 		s = json.dumps(r, indent=4)
-		test_r = json.loads(s)
 		repo.dropCollection("race")
 		repo.createCollection("race")
 		repo['nathansw_sbajwa.race'].insert_one(r)
 
+		# opens local 'MeansOfCommuting.json' files and inserts it into repo collection 'nathansw_sbajwa.commuting'
 		with open(new_dir + 'MeansOfCommuting.json') as commuting_json:
 			r = json.load(commuting_json)
 		s = json.dumps(r, indent=4)
@@ -38,6 +41,7 @@ class demographics(dml.Algorithm):
 		repo.createCollection("commuting")
 		repo['nathansw_sbajwa.commuting'].insert_one(r)
 
+		# opens local 'PovertyRates.json' files and inserts it into repo collection 'nathansw_sbajwa.povertyrates'
 		with open(new_dir + 'PovertyRates.json') as poverty_json:
 			r = json.load(poverty_json)
 		s = json.dumps(r, indent=4)
@@ -45,10 +49,11 @@ class demographics(dml.Algorithm):
 		repo.createCollection("povertyrates")
 		repo['nathansw_sbajwa.povertyrates'].insert_one(r)
 
+		# opens local 'HouseholdIncome.json' files and inserts it into repo collection 'nathansw_sbajwa.householdincome'
 		with open(new_dir + 'HouseholdIncome.json') as income_json:
 			r = json.load(income_json)
 
-		## removes $ in all of the nested keys within the JSON file 
+		## removes $ from all of the nested keys within the JSON file (char forbidden by mongodb)
 		for town in r.keys():
 			# Preps variables to alter dict with
 			toReplace = {}
@@ -73,7 +78,9 @@ class demographics(dml.Algorithm):
 		repo.createCollection("householdincome")
 		repo['nathansw_sbajwa.householdincome'].insert_one(r)
 
+		# logs out of db
 		repo.logout()
+
 		endTime = datetime.datetime.now()
 
 		return {"start": startTime, "end": endTime}
@@ -155,7 +162,7 @@ class demographics(dml.Algorithm):
 
 		return doc
 
-demographics.execute()
-doc = demographics.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+# demographics.execute()
+# doc = demographics.provenance()
+# print(doc.get_provn())
+# print(json.dumps(json.loads(doc.serialize()), indent=4))
