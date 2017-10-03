@@ -57,7 +57,7 @@ class mbtaTransformation(dml.Algorithm):
                     school_and_stops.append((uni[0], 1))
         school_and_stops = mbtaTransformation.aggregate(school_and_stops, sum)
 
-        # combine the previous two to get (school, number of crimes, number of crashes)
+        # combine the stop data and numStudents to get (school, number of stops, number of students)
         product_select_project = mbtaTransformation.project(mbtaTransformation.select(mbtaTransformation.product(school_and_stops, numStudents), lambda t: t[0][0] == t[1][0]), lambda t: (t[0][0], t[0][1], t[1][1]))
 
         # format it for MongoDB
