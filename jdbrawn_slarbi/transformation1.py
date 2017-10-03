@@ -68,7 +68,7 @@ class transformation1(dml.Algorithm):
 
 
 
-        print('DONE!')
+        #print('DONE!')
         repo.dropCollection('socialAnalysis')
         repo.createCollection('socialAnalysis')
         repo['jdbrawn_slarbi.socialAnalysis'].insert_many(finalList)
@@ -92,12 +92,13 @@ class transformation1(dml.Algorithm):
         repo = client.repo
         repo.authenticate('jdbrawn_slarbi', 'jdbrawn_slarbi')
 
-        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/jdbrawn_slarbi') # The scripts are in <folder>#<filename> format.
-        doc.add_namespace('dat', 'http://datamechanics.io/data/jdbrawn_slarbi') # The data sets are in <user>#<collection> format.
-        doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
-        doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
-      
+        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/')  # The scripts are in <folder>#<filename> format.
+        doc.add_namespace('dat', 'http://datamechanics.io/data/')  # The data sets are in <user>#<collection> format.
+        doc.add_namespace('ont', 'http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
+        doc.add_namespace('log', 'http://datamechanics.io/log/')  # The event log.
+        doc.add_namespace('bdp', 'https://data.boston.gov/api/action/datastore_search?resource_id=')
+        doc.add_namespace('591', 'http://datamechanics.io/data/jdbrawn_slarbi/')
+        doc.add_namespace('bdp1', 'https://data.cityofboston.gov/resource/')
 
 
         this_script = doc.agent('alg:jdbrawn_slarbi#transformation1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
@@ -121,9 +122,9 @@ class transformation1(dml.Algorithm):
 
         return doc
 
-transformation1.execute()
-doc = transformation1.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+# transformation1.execute()
+# doc = transformation1.provenance()
+# print(doc.get_provn())
+# print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 

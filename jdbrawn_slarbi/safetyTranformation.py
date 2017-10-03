@@ -105,7 +105,8 @@ class safetyTranformation(dml.Algorithm):
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/')  # The event log.
         doc.add_namespace('bdp', 'https://data.boston.gov/api/action/datastore_search?resource_id=')
-        doc.add_namespace('car', 'http://datamechanics.io/data/jdbrawn_slarbi/')
+        doc.add_namespace('591', 'http://datamechanics.io/data/jdbrawn_slarbi/')
+        doc.add_namespace('bdp1', 'https://data.cityofboston.gov/resource/')
 
         this_script = doc.agent('alg:jdbrawn_slarbi#safetyTransformation', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
 
