@@ -17,6 +17,6 @@ Boston Entertainment Lisences
 
 ### Required Python Libraries
 
-gpxpy <br />
-dml <br />
-prov
+###### gpxpy - https://pypi.python.org/pypi/gpxpy
+###### dml -   https://pypi.python.org/pypi/dml
+###### prov -  https://pypi.python.org/pypi/prov
