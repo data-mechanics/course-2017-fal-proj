@@ -22,5 +22,15 @@ Jake Bloomfeld (jtbloom@bu.edu) and Ricardo Ballesteros (rfballes@bu.edu)
 #### JSON URL: https://boston.opendatasoft.com/explore/dataset/sidewalk-centerline/download/?format=geojson&timezone=America/New_York
 * Important info: geo point, geo shape, type (sidewalk, crosswalk, etc.)
 
+### Narrative
+For Project  #1, we picked data sets that revolved around a common theme: sustainability and transportation in Boston. Although at this state we don’t know what specific problem we want to solve, we went ahead to search for data sets that could potentially lead us in the right direction. The data sets we chose are:
+
+* Electrical Vehicle Charging Stations 
+* Hubway Station Locations
+* Existing Bike Network
+* Sidewalk Centerline
+
+The Electrical Vehicle Charging Stations dataset gives us the names of the stations along with their addresses and geographical coordinate points. The Hubway Station Locations dataset is pretty similar, as it also gives us the names of the stations, their addresses, geographical coordinate points, along with the number of bike docks.
+
 
  
