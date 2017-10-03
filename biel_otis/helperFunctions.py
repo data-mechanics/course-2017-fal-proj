@@ -51,10 +51,4 @@ def calculateDist(d1, d2):
     c = 2 * atan2(sqrt(a), sqrt(1 - a))
 
     distance = R * c
-    print(distance)
-    return distance <= 2.2
-
-d1 = "(42.381510000, -71.038080000)"
-d2 = "(42.352266000, -71.066497000)"
-
-print(calculateDist(d1, d2))
+    return distance <= 1

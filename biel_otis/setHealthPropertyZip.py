@@ -39,26 +39,17 @@ class getHealthInspection(dml.Algorithm):
         
         bad_str="qwertyuiop[]\asdfghjkl;zxcvbnm?><./!@#$%^&*_+"
         dist_calc = [(x, y) for x in props_extract for y in inspections_extract if (x[1] not in bad_str and y[2] not in bad_str) and calculateDist(x[1], y[2])]
-        final_set = [(x[0][0],1) for x in dist_calc]
+        near_final_set = [(x[0], 1) for x in dist_calc]
+        final_set = aggregate(near_final_set, sum)
         #Now we have Income(value, 1) figure out the sum
-        print(dist_calc[0:10])
+        mongo_input = [{str(x[0]).replace('.','_'): x[1]} for x in final_set]
+        print(mongo_input)
 
-        exit()
         repo.dropCollection("HealthPropertyZip")
         repo.createCollection("HealthPropertyZip")
-        repo['biel_otis.HealthPropertyZip'].insert_many(r)
+        repo['biel_otis.HealthPropertyZip'].insert_many(mongo_input)
         repo['biel_otis.HealthPropertyZip'].metadata({'complete':True})
         print(repo['biel_otis.HealthPropertyZip'].metadata())
-
-        """
-        url = 'http://cs-people.bu.edu/lapets/591/examples/found.json'
-        response = urllib.request.urlopen(url).read().decode("utf-8")
-        r = json.loads(response)
-        s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("found")
-        repo.createCollection("found")
-        repo['biel_otis.found'].insert_many(r)
-        """
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -77,26 +68,36 @@ class getHealthInspection(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate('biel_otis', 'biel_otis')
-        doc.add_namespace('alg', 'http://datamechanics.io/biel_otis/algorithm/') # The scripts are in <folder>#<filename> format.
-        doc.add_namespace('dat', 'http://datamechanics.io/biel_otis/data/') # The data sets are in <user>#<collection> format.
-        doc.add_namespace('ont', 'http://datamechanics.io/biel_otis/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
-        doc.add_namespace('log', 'http://datamechanics.io/biel_otis/log/') # The event log.
-        doc.add_namespace('health', 'https://data.boston.gov/export/') # Health Inspection dataset from data.boston.gov
+        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
+        doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
+        doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
+        doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
 
-        this_script = doc.agent('alg:biel_otis#getHealthInspectionData', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('health:458/2be/4582bec6-2b4f-4f9e-bc55-cbaa73117f4c', {'prov:label':'Health Inspections in City of Boston', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        get_health = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_health, this_script)
-        
-        doc.usage(get_health, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval'})
-
+        this_script = doc.agent('alg:biel_otis#setHealthPropertyZip', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        #resource = doc.entity('health:458/2be/4582bec6-2b4f-4f9e-bc55-cbaa73117f4c', {'prov:label':'Health Inspections in City of Boston', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         health = doc.entity('dat:biel_otis#health', {prov.model.PROV_LABEL:'Health Inspections in City of Boston', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(health, this_script)
-        doc.wasGeneratedBy(health, get_health, endTime)
-        doc.wasDerivedFrom(health, resource, get_health, get_health, get_health)
+        props = doc.entity('dat:biel_otis#propertys', {prov.model.PROV_LABEL:'Dataset of property values in the city of Boston', prov.model.PROV_TYPE:'ont:Dataset'})
+        zips = doc.entity('dat:biel_otis#zipcodes', {prov.model.PROV_LABEL:'Dataset containing zipcode information in the city of Boston', prov.model.PROV_TYPE:'ont:DataSet'})
+        props_failed_HI = doc.entity('dat:biel_otis#prop_vals_and_failed_health_inspects', {prov.model.PROV_LABEL:'Dataset containing key value pairs where the key is the value of some property, and the value is the number of restaurants that failed health inspections within 1 square mile.', prov.model.PROV_TYPE:'ont:DataSet'})
+
+
+        gen_HealthPropZip = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(gen_HealthPropZip, this_script)
+        
+        doc.usage(gen_HealthPropZip, health, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Transformation'})
+        doc.usage(gen_HealthPropZip, props, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Transformation'})
+        doc.usage(gen_HealthPropZip, zips, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Transformation'})
+        doc.usage(gen_HealthPropZip, props_failed_HI, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Transformation'})
+
+        doc.wasAttributedTo(props_failed_HI, this_script)
+        doc.wasGeneratedBy(props_failed_HI, gen_HealthPropZip, endTime)
+        doc.wasDerivedFrom(health, props, zips, gen_HealthPropZip, gen_HealthPropZip, gen_HealthPropZip)
         repo.logout()
-          
+        
         return doc
 
 getHealthInspection.execute()
