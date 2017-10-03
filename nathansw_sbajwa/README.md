@@ -33,5 +33,11 @@ with more employees and less accessibility to public transportation?
 ### Pandas Library
 We used the popular data analysis tool for Python, Pandas, to do our data transformations. Pandas is mainly used to find the results 
 of taking the union of several datasets. We also use Pandas to aggregate column data to find sums and averages. The library is 
-properly imported at the top of our Python files. If there is a need for installation, the command "pip instal pandas" can be run
+properly imported at the top of our Python files. If there is a need for installation, the command "pip install pandas" can be run
 from the command line. If that doesn't work, see https://pandas.pydata.org/pandas-docs/stable/install.html for more details.
+
+### Zipcode Library
+We used the uszipcode library, which acts as a zipcode search engine within Python, to get as many longitude and latitude points as we could that spanned the entire Boston area. Given a list of all postal zipcodes in Boston (information found online), the library will return a dictionary of values for each zipcode. Included in that information is three sets of longitude and latitude coordinates that cover different areas that the inputted zipcode covers. Use the command "pip install uszipcode" on the command line to install this library. See more details regarding installation and usage here https://pypi.python.org/pypi/uszipcode
+
+### Running Geodata.py
+When the API for the GeoData service is called, the url returns a large quantity of information. Because of this and the amount of calls we have to make to get all the necessary data, the file takes much longer to run. 
