@@ -75,8 +75,44 @@ class build_shooting_set(dml.Algorithm):
         return {"start":startTime, "end":endTime}
 
     @staticmethod
-    def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
-        return 
+    def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None): 
+        '''Creates the provenance document describing the merging of data
+        occuring within this script.'''
+         
+        # Set up the database connection
+        client = dml.pymongo.MongoClient()
+        repo = client.repo
+        repo.authenticate('esaracin', 'esaracin')
+
+        # Add useful namespaces for this prov doc
+        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/')
+        doc.add_namespace('dat', 'http://datamechanics.io/data/')
+        doc.add_namespace('ont', 'http://datamechanics/io/ontology/')
+        doc.add_namespace('log', 'http://datamechanics.io/log/')
+
+        # Add this script as a provenance agent to our document
+        this_script = doc.agent('alg:esaracin#build_shooting_sets', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+
+        resource_shootings = doc.entity('dat:esaracin#boston_shootings',{'prov:label':'MongoDB Set',prov.model.PROV_TYPE:'ont:DataResource'})
+        
+        transform = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+
+        doc.wasAssociatedWith(transform, this_script)
+        doc.usage(transform, resource_shootings, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
+
+
+        transformed = doc.entity('dat:esaracin#shootings_per_district',
+                                 {prov.model.PROV_LABEL:'Transformed Set',
+                            prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(transformed, this_script)
+        doc.wasGeneratedBy(transformed, transform, endTime)
+        doc.wasDerivedFrom(transformed, resource_shootings, transform, transform,
+                          transform)
+
+
+        repo.logout()
+        return doc
 
 
 build_shooting_set.execute()
+build_shooting_set.provenance()

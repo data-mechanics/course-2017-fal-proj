@@ -84,7 +84,6 @@ class merge_police_sets(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/')
         doc.add_namespace('ont', 'http://datamechanics/io/ontology/')
         doc.add_namespace('log', 'http://datamechanics.io/log/')
-        doc.add_namespace('bos', 'http://bostonopendata-boston.opendata.arcgis.com/datasets/') # Namespace specific to this script
 
         # Add this script as a provenance agent to our document
         this_script = doc.agent('alg:esaracin#merge_police_sets', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
