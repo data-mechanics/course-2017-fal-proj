@@ -6,38 +6,49 @@ import datetime
 import uuid
 import time
 import ssl
-
+from helperFunctions import *
 
 class getHealthInspection(dml.Algorithm):
     contributor = 'biel_otis'
     reads = ['biel_otis.HealthInspections', 'biel_otis.PropertyValues', 'biel_otis.ZipCodes']
     writes = ['biel_otis.HealthPropertyZip']
-    ssl._create_default_https_context = ssl._create_unverified_context
 
     @staticmethod
-    def execute(trial = False):
-        '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
+    def execute(trial = False):        
         startTime = datetime.datetime.now()
 
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client['biel_otis']
         repo.authenticate('biel_otis', 'biel_otis')
-        url = 'https://data.boston.gov/export/458/2be/4582bec6-2b4f-4f9e-bc55-cbaa73117f4c.json'
-        response = urlopen(url).read().decode("utf-8")
-        response = response.replace(']', '')
-        response = response.replace('[', '')
-        response = '[' + response + ']'
 
-        r = json.loads(response)
+        HealthInspections = repo['biel_otis.HealthInspection'].find()
+        PropertyValues = list(repo['biel_otis.PropertyValues'].find())
+        ZipCodes = repo['biel_otis.ZipCodes'].find()
+        Zips = ZipCodes.distinct('1')
 
-        #s = json.dumps(r, sort_keys=True, indent=2)
-        print(type(r))
-        repo.dropCollection("HealthInspection")
-        repo.createCollection("HealthInspection")
-        repo['biel_otis.HealthInspection'].insert_many(r)
-        repo['biel_otis.HealthInspection'].metadata({'complete':True})
-        print(repo['biel_otis.HealthInspection'].metadata())
+        props = [x for x in PropertyValues if x['owner_mail_zipcode'] in Zips] # Join operation on ZipCodes (had to append leading 0 to zipcode)
+        
+        props_extract = project(props, lambda x: (x['av_total'], x['location'], x['owner_mail_address'] + " " + x['owner_mail_cs'] + " " + x['owner_mail_zipcode']))
+        # returns tuple of form (av_total, location, address)
+        
+        inspections = [x for x in HealthInspections if x['DESCRIPT'] == 'Eating & Drinking' and x['ViolStatus'] == 'Fail' and x['ZIP'] in Zips]
+
+        inspections_extract = project(inspections, lambda x: (x['businessName'], x['Address'] + " " + x['CITY'] + " " + x['ZIP'], x['Location']))
+        # returns tuples of form (businessName, Address, location)
+        
+        bad_str="qwertyuiop[]\asdfghjkl;zxcvbnm?><./!@#$%^&*_+"
+        dist_calc = [(x, y) for x in props_extract for y in inspections_extract if (x[1] not in bad_str and y[2] not in bad_str) and calculateDist(x[1], y[2])]
+        final_set = [(x[0][0],1) for x in dist_calc]
+        #Now we have Income(value, 1) figure out the sum
+        print(dist_calc[0:10])
+
+        exit()
+        repo.dropCollection("HealthPropertyZip")
+        repo.createCollection("HealthPropertyZip")
+        repo['biel_otis.HealthPropertyZip'].insert_many(r)
+        repo['biel_otis.HealthPropertyZip'].metadata({'complete':True})
+        print(repo['biel_otis.HealthPropertyZip'].metadata())
 
         """
         url = 'http://cs-people.bu.edu/lapets/591/examples/found.json'

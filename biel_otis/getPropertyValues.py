@@ -23,7 +23,7 @@ class getPropertyValues(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client['biel_otis']
         repo.authenticate('biel_otis', 'biel_otis')
-        url = 'http://datamechanics.io/data/biel_otis/income.json'
+        url = 'https://data.cityofboston.gov/resource/n7za-nsjh.json'
         response = urlopen(url).read().decode("utf-8")
 
         r = json.loads(response)
@@ -54,10 +54,10 @@ class getPropertyValues(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/biel_otis/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/biel_otis/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/biel_otis/log/') # The event log.
-        doc.add_namespace('property', 'http://datamechanics.io/data/biel_otis') # Health Inspection dataset from data.boston.gov
+        doc.add_namespace('property', 'https://data.cityofboston.gov/resource/') # Property values in city of Boston
 
         this_script = doc.agent('alg:biel_otis#getPropertyValues', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('property:income.json', {'prov:label':'Health Inspections in City of Boston', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource = doc.entity('property:n7za-nsjh', {'prov:label':'Property values in city of Boston', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_property = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_property, this_script)
         

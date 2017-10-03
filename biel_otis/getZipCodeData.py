@@ -30,9 +30,11 @@ class getObesityData(dml.Algorithm):
         #response = '[' + response + ']'
 
         r = json.loads(response)
-        myList = []
+        myDict = {}
+        myDict['1'] = []
+        myList = [myDict]
         for i in r:
-            myList.append({i: 1})
+            myList[0]['1'].append(i)
         
         #s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("ZipCodes")
