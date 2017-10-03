@@ -1,2 +1,0 @@
-Test
-Simple Changes Made to see if Git works with Eclipse
