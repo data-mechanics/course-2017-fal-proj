@@ -6,12 +6,9 @@ import datetime
 import uuid
 
 class mbta():
-    # contributor = 'test'
-    # reads = []
-    # writes = ['test.trafficSignal']
-    # contributor = 'alice_bob'
-    # reads = []
-    # writes = ['alice_bob.lost', 'alice_bob.found']
+    contributor = 'alanbur_jcaluag'
+    reads = []
+    writes = ['alanbur_jcaluag.mbta']
 
     @staticmethod
     def execute(trial = False):
