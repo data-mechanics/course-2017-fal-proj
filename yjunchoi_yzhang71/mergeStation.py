@@ -49,14 +49,6 @@ class mergeStation(dml.Algorithm):
                 pass
         #print(delayTime)
 
-        stationNode = []
-        for key in SN:
-            try:
-                stationNode.append({key['id']: key['name']})
-            except:
-                pass
-
-        print(stationNode)
 
         # aggregation
         
