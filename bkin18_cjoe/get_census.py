@@ -10,27 +10,32 @@ import pdb
 import csv
 
 def convert_census_csv():
-    csvfile = open('Blocks_Boston_2010_BARI CSV.csv', 'r')
-    jsonfile = open('Census 2010.json', 'w')
+    url = 'http://datamechanics.io/data/bkin18_cjoe/Blocks_Boston_2010_BARI%20CSV.csv'
+    csvfile = urllib.request.urlopen(url).read().decode("utf-8")
 
-    fieldnames = ("STATEFP10","COUNTYFP10","TRACTCE10","BLOCKCE10","GEOID10","NAME10","MTFCC10","ALAND10","AWATER10","INTPTLAT10","INTPTLON10","POP100_RE","HU100_RE","BG_ID_10","CT_ID_10","BOSNA_R_ID","NSA_NAME","BRA_PD_ID","BRA_PD","ZIPCODE","City_Counc","WARD","PRECINCTS","ISD_Nbhd","Police_Dis","Fire_Distr","PWD","Blk_ID_10")
-    reader = csv.DictReader(csvfile, fieldnames)
+    dict_values = []
+
+    entries = csvfile.split('\n')
+    keys = entries[0].split(',')
+    keys[-1] = keys[-1][:-1]
+
     count = 0
-    for row in reader:
-        if count > 1:
-            count += 1
-            # print("paspaspaspaspapsaspp")
-            pass
-        json.dump(row, jsonfile)
-        jsonfile.write('\n')
+
+    for row in entries[1:-1]:
+        values = row.split(',')
+        values[-1] = values[-1][:-1]
+        dictionary = dict([(keys[i], values[i]) for i in range(len(keys))])
+        dict_values.append(dictionary)
+
+    return dict_values
 
 
 class get_census(dml.Algorithm):
     contributor = 'bkin18_cjoe'
     reads = []
-    writes = ['bkin18_cjoe.census'] 
+    writes = ['bkin18_cjoe.census']
 
-    @staticmethod 
+    @staticmethod
     def execute(trial=False):
         startTime = datetime.datetime.now()
 
@@ -39,24 +44,11 @@ class get_census(dml.Algorithm):
         repo = client.repo
         repo.authenticate('bkin18_cjoe', 'bkin18_cjoe') # should probably move this to auth
 
-        convert_census_csv()
-
-        dl = []
-        for line in open('Census 2010.json'):
-
-            dl.append(line)
-
-        for i in range(len(dl)):
-            dl[i] = json.loads(dl[i])
-
-        # print(dl[3])
-        # print(type(dl[3]))
-        # print(dl)
-        # rjson.load(dl)
+        dict_values = convert_census_csv()
 
         repo.dropCollection("census")
         repo.createCollection("census")
-        repo['bkin18_cjoe.census'].insert_many(dl)
+        repo['bkin18_cjoe.census'].insert_many(dict_values)
 
         endTime = datetime.datetime.now()
 
