@@ -5,7 +5,7 @@ Is there a correlation between neighborhood demographics and the availability an
 
 ## Datasets
 ### MBTA Developer Portal
-We make calls to the MBTA portal using a location and retrieve information on any MBTA stops that fall within a 1 mile radius. The \n
+We make calls to the MBTA portal using a location and retrieve information on any MBTA stops that fall within a 1 mile radius. The 
 locations that we use are longitude and latitude coordinates that span all of the neighborhoods in the Greater Boston Area. 
 
 ### U.S. Census Bureau - American Community Surveys
