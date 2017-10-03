@@ -57,7 +57,6 @@ class traffic_signals(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'http://bostonopendata-boston.opendata.arcgis.com/datasets/')
 
-
         this_script = doc.agent('alg:bkin18_cjoe#traffic_signals', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         
         ## Resource includes namespace and some suffix (usually use url)
@@ -72,18 +71,12 @@ class traffic_signals(dml.Algorithm):
     
         doc.wasAssociatedWith(route_activity, this_script)
         doc.usage(route_activity, resource, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
-        # doc.wasAttributedTo(found, this_script)
 
         doc.wasAttributedTo(routes, this_script)
         doc.wasGeneratedBy(routes, route_activity, endTime)
         doc.wasDerivedFrom(routes, resource, this_run, this_run, this_run)
 
-        # emergency_routes = doc.entity('bdp:4f3e4492e36f4907bcd307b131afe4a5_0',
-        #     {'prov:label':'311, Service Requests',
-        #     prov.model.PROV_TYPE:'ont:DataResource', 'bdp:Extension':'geojson'}) 
-
         repo.logout()
-
 
         return doc
 

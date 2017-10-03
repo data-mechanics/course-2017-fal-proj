@@ -91,24 +91,16 @@ class get_census(dml.Algorithm):
         ## Work on this later
         this_run = doc.activity('log:a'+str(uuid.uuid4()), startTime, endTime, { prov.model.PROV_TYPE:'ont:Retrieval'})#, 'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'})
 
-        route_activity = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-
         routes = doc.entity('dat:bkin18_cjoe#census', {prov.model.PROV_LABEL:'Census', prov.model.PROV_TYPE:'ont:DataSet'})
     
-        doc.wasAssociatedWith(route_activity, this_script)
-        doc.usage(route_activity, resource, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
-        # doc.wasAttributedTo(found, this_script)
-
+        doc.wasAssociatedWith(routes, this_script)
+        doc.usage(routes, resource, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
+ 
         doc.wasAttributedTo(routes, this_script)
-        doc.wasGeneratedBy(routes, route_activity, endTime)
+        doc.wasGeneratedBy(routes, this_run, endTime)
         doc.wasDerivedFrom(routes, resource, this_run, this_run, this_run)
 
-        # emergency_routes = doc.entity('bdp:4f3e4492e36f4907bcd307b131afe4a5_0',
-        #     {'prov:label':'311, Service Requests',
-        #     prov.model.PROV_TYPE:'ont:DataResource', 'bdp:Extension':'geojson'}) 
-
         repo.logout()
-
 
         return doc
 

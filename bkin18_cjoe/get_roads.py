@@ -9,10 +9,6 @@ import uuid
 import pdb
 import csv
 
-## Deprecated - remove later
-def to_dict(input_ordered_dict):
-    return loads(dumps(input_ordered_dict))
-
 def convert_roads_csv():
     csvfile = open('Roads 2013.csv', 'r')
     jsonfile = open('Roads 2013.json', 'w')
@@ -23,7 +19,6 @@ def convert_roads_csv():
     for row in reader:
         if count > 1:
             count += 1
-            # print("paspaspaspaspapsaspp")
             pass
         json.dump(row, jsonfile)
         jsonfile.write('\n')
@@ -43,25 +38,6 @@ class get_roads(dml.Algorithm):
         repo = client.repo
         repo.authenticate('bkin18_cjoe', 'bkin18_cjoe') # should probably move this to auth
 
-
-        # # Add Traffic Signals
-        # url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/de08c6fe69c942509089e6db98c716a3_0.geojson'
-        # response = urllib.request.urlopen(url).read().decode("utf-8")
-        # r = json.loads(response)
-        # s = json.dumps(r, sort_keys=True, indent=2)
-        # print("===============\n" + str(type(r)) + "\n=====================")
-
-        # reader = csv.DictReader(open('Roads 2013.csv', 'r'))
-        # ordered_r = []
-        # for line in reader:
-        #     ordered_r.append(line)
-
-        # r = str(to_dict(ordered_r))
-        # r.replace(".", "")
-        # print(r)
-        # print(type(r))
-        # r = json.loads(r)
-
         convert_roads_csv()
 
         dl = []
@@ -71,11 +47,6 @@ class get_roads(dml.Algorithm):
 
         for i in range(len(dl)):
             dl[i] = json.loads(dl[i])
-
-        print(dl[3])
-        print(type(dl[3]))
-        # print(dl)
-        # rjson.load(dl)
 
         repo.dropCollection("roads")
         repo.createCollection("roads")
@@ -106,29 +77,21 @@ class get_roads(dml.Algorithm):
         doc.add_namespace('bdp', 'http://bostonopendata-boston.opendata.arcgis.com/datasets/')
 
 
-        this_script = doc.agent('alg:bkin18_cjoe#roads', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:bkin18_cjoe#get_roads', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+
+        resource = doc.entity('bdp:DVN_OV5PXF', { 'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
         
-        ## I don't actually know what the key is to this (bdp:wc8w-nujj)
-        resource = doc.entity('bdp:de08c6fe69c942509089e6db98c716a3_0', { 'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
-        
-        ## Work on this later
         this_run = doc.activity('log:a'+str(uuid.uuid4()), startTime, endTime, { prov.model.PROV_TYPE:'ont:Retrieval'})#, 'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'})
 
-        route_activity = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-
-        routes = doc.entity('dat:bkin18_cjoe#get_roads', {prov.model.PROV_LABEL:'Roads', prov.model.PROV_TYPE:'ont:DataSet'})
+        routes = doc.entity('dat:bkin18_cjoe#roads', {prov.model.PROV_LABEL:'Roads', prov.model.PROV_TYPE:'ont:DataSet'})
     
-        doc.wasAssociatedWith(route_activity, this_script)
-        doc.usage(route_activity, resource, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
+        doc.wasAssociatedWith(routes, this_script)
+        doc.usage(routes, resource, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
         # doc.wasAttributedTo(found, this_script)
 
         doc.wasAttributedTo(routes, this_script)
-        doc.wasGeneratedBy(routes, route_activity, endTime)
+        doc.wasGeneratedBy(routes, this_run, endTime)
         doc.wasDerivedFrom(routes, resource, this_run, this_run, this_run)
-
-        # emergency_routes = doc.entity('bdp:4f3e4492e36f4907bcd307b131afe4a5_0',
-        #     {'prov:label':'311, Service Requests',
-        #     prov.model.PROV_TYPE:'ont:DataResource', 'bdp:Extension':'geojson'}) 
 
         repo.logout()
 

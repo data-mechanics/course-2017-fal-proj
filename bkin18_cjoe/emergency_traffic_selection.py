@@ -78,18 +78,16 @@ class emergency_traffic_selection(dml.Algorithm):
         ## Work on this later
         this_run = doc.activity('log:a'+str(uuid.uuid4()), startTime, endTime, { prov.model.PROV_TYPE:'ont:Retrieval'})#, 'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'})
 
-        route_activity = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        # route_activity = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 
         routes = doc.entity('dat:bkin18_cjoe#emergency_traffic_selection', {prov.model.PROV_LABEL:'Emergency Traffic Selection', prov.model.PROV_TYPE:'ont:DataSet'})
 
-        doc.wasAssociatedWith(route_activity, this_script)
+        doc.wasAssociatedWith(routes, this_script)
         #doc.usage(route_activity, resource, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
-        #doc.wasAttributedTo(found, this_script)
-
+  
         doc.wasAttributedTo(routes, this_script)
-        doc.wasGeneratedBy(routes, route_activity, endTime)
+        doc.wasGeneratedBy(routes, this_run, endTime)
         #doc.wasDerivedFrom(routes, resource, this_run, this_run, this_run)
-
 
         repo.logout()
 
