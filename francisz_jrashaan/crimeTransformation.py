@@ -58,26 +58,15 @@ class crimeTransformation(dml.Algorithm):
 
 
 
-        #select
-        # for entry in repo.francisz_jrashaan.crime.find():
-             #print(entry['OFFENSE_CODE_GROUP'])
-         
+         #selection to get homicides
          for entry in repo.francisz_jrashaan.crime.find():
 
             if entry['OFFENSE_CODE_GROUP'] == 'Homicide':
                  homicides.append(entry)
                  homicideCount+= 1
-                     #if "STREET" in entry:
-                     #street += [(entry["STREET"],1)]
-                     #if "Long" in entry:
-                     #long+= [(entry["LONG"])]
-                     #if "Lat" in entry:
-                     #Lat+= [(entry["Lat"])]
-                     #if "OCCURED_ON_DATE" in entry:
-                     #Date+= [(date["OCCURED_ON_DATE"])]
+                     
 
-
-         #project
+         #projection to simplify data to obtain street, lat, long, and date
          homicideCrimes = []
          for entry in homicides:
              x = lambda t: (t['STREET'],t['OFFENSE_DESCRIPTION'],t['OCCURRED_ON_DATE'],t['Long'],t['Lat'])

@@ -46,8 +46,8 @@ class lightTransformation(dml.Algorithm):
 
 
          lights = []
-         #project
-           
+         #projection to get coordinates 
+         
          for entry in repo.francisz_jrashaan.streetlights.find():
                  x = lambda t: (t['Long'],t['Lat'])
                  y = x(entry)
