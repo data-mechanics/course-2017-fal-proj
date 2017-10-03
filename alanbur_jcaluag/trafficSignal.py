@@ -47,6 +47,7 @@ class trafficSignal():
         repo.createCollection("trafficSignal")
         repo['alanbur_jcaluag.trafficSignal'].insert_many(features)
         repo['alanbur_jcaluag.trafficSignal'].metadata({'complete':True})
+        print(repo['alanbur_jcaluag.mbta'].metadata())
         repo.logout()
 
         endTime = datetime.datetime.now()
