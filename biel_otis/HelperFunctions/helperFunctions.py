@@ -3,6 +3,7 @@
 Helper Functions courtesy of Andrei Lapets - CS591 BU
 """
 from math import sin, cos, sqrt, atan2, radians
+import math
 
 # approximate radius of earth in km
 
@@ -52,3 +53,28 @@ def calculateDist(d1, d2):
 
     distance = R * c
     return distance <= 1
+
+
+def dist(p, q):
+    (x1,y1) = p
+    (x2,y2) = q
+    return (x1-x2)**2 + (y1-y2)**2
+
+def plus(args):
+    p = [0,0]
+    for (x,y) in args:
+        p[0] += x
+        p[1] += y
+    return tuple(p)
+
+def scale(p, c):
+    (x,y) = p
+    return (x/c, y/c)
+
+def compTuples(t1, t2):
+    if(t1 == []):
+        return 100000000000000
+    comp = [abs(x[0] - y[0]) + abs(x[1] - y[1]) for x in t1 for y in t2]
+    return sum(comp)
+
+#print(compTuples([(50, 50), (60,60), (70,70), (80,80), (90,90), (100,100), (110,110), (120,120), (130,130), (140,140), (150,150)], [(51, 51), (61,61), (71,71), (81,81), (91,91), (101,101), (111,111), (121,121), (131,131), (141,141), (151,151)]))

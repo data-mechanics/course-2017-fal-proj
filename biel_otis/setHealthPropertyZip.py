@@ -6,9 +6,9 @@ import datetime
 import uuid
 import time
 import ssl
-from helperFunctions import *
+from biel_otis.HelperFunctions.helperFunctions import *
 
-class getHealthInspection(dml.Algorithm):
+class setHealthPropertyZip(dml.Algorithm):
     contributor = 'biel_otis'
     reads = ['biel_otis.HealthInspections', 'biel_otis.PropertyValues', 'biel_otis.ZipCodes']
     writes = ['biel_otis.HealthPropertyZip']
@@ -43,7 +43,6 @@ class getHealthInspection(dml.Algorithm):
         final_set = aggregate(near_final_set, sum)
         #Now we have Income(value, 1) figure out the sum
         mongo_input = [{str(x[0]).replace('.','_'): x[1]} for x in final_set]
-        print(mongo_input)
 
         repo.dropCollection("HealthPropertyZip")
         repo.createCollection("HealthPropertyZip")
@@ -66,7 +65,7 @@ class getHealthInspection(dml.Algorithm):
         
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
-        repo = client.repo
+        repo = client['biel_otis']
         repo.authenticate('biel_otis', 'biel_otis')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
@@ -100,8 +99,8 @@ class getHealthInspection(dml.Algorithm):
         
         return doc
 
-getHealthInspection.execute()
-doc = getHealthInspection.provenance()
+setHealthPropertyZip.execute()
+doc = setHealthPropertyZip.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
 

@@ -8,7 +8,7 @@ import time
 import ssl
 
 
-class getObesityData(dml.Algorithm):
+class getZipCodeData(dml.Algorithm):
     contributor = 'biel_otis'
     reads = []
     writes = ['biel_otis.ZipCodes']
@@ -25,10 +25,7 @@ class getObesityData(dml.Algorithm):
         repo.authenticate('biel_otis', 'biel_otis')
         url = 'http://datamechanics.io/data/biel_otis/zipcodes.json'
         response = urlopen(url).read().decode("utf-8")
-        #response = response.replace(' a2,', ',')
-        #response = response.replace('[', '')
-        #response = '[' + response + ']'
-
+        
         r = json.loads(response)
         myDict = {}
         myDict['1'] = []
@@ -68,7 +65,7 @@ class getObesityData(dml.Algorithm):
         
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
-        repo = client.repo
+        repo = client['biel_otis']
         repo.authenticate('biel_otis', 'biel_otis')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
@@ -92,8 +89,8 @@ class getObesityData(dml.Algorithm):
         
         return doc
 
-getObesityData.execute()
-doc = getObesityData.provenance()
+getZipCodeData.execute()
+doc = getZipCodeData.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
 

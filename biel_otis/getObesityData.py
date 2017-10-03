@@ -23,31 +23,17 @@ class getObesityData(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client['biel_otis']
         repo.authenticate('biel_otis', 'biel_otis')
-        url = 'https://chronicdata.cdc.gov/resource/ahrt-wk9b.json?$offset=13908&$limit=5000'
+        url = 'https://chronicdata.cdc.gov/resource/ahrt-wk9b.json?$offset=13908&$limit=16000'
         response = urlopen(url).read().decode("utf-8")
-        #response = response.replace(']', '')
-        #response = response.replace('[', '')
-        #response = '[' + response + ']'
 
         r = json.loads(response)
 
-        #s = json.dumps(r, sort_keys=True, indent=2)
-        print(type(r))
         repo.dropCollection("ObesityData")
         repo.createCollection("ObesityData")
         repo['biel_otis.ObesityData'].insert_many(r)
         repo['biel_otis.ObesityData'].metadata({'complete':True})
         print(repo['biel_otis.ObesityData'].metadata())
 
-        """
-        url = 'http://cs-people.bu.edu/lapets/591/examples/found.json'
-        response = urllib.request.urlopen(url).read().decode("utf-8")
-        r = json.loads(response)
-        s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("found")
-        repo.createCollection("found")
-        repo['biel_otis.found'].insert_many(r)
-        """
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -64,7 +50,7 @@ class getObesityData(dml.Algorithm):
         
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
-        repo = client.repo
+        repo = client['biel_otis']
         repo.authenticate('biel_otis', 'biel_otis')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
