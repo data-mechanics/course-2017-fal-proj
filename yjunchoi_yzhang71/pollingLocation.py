@@ -8,10 +8,10 @@ import csv
 import pandas as pd
 
 
-class bostonPopulation(dml.Algorithm):
+class pollingLocation(dml.Algorithm):
     contributor = 'yjunchoi_yzhang71'
     reads = []
-    writes = ['yjunchoi_yzhang71.presidentElectionByPrecinct']
+    writes = ['yjunchoi_yzhang71.pollingLocation']
 
     @staticmethod
     def execute(trial = False):
@@ -23,15 +23,15 @@ class bostonPopulation(dml.Algorithm):
         repo = client.repo
         repo.authenticate('yjunchoi_yzhang71', 'yjunchoi_yzhang71')
 
-        repo.dropCollection("bostonPopulation")
-        repo.createCollection("bostonPopulation")
+        repo.dropCollection("pollingLocation")
+        repo.createCollection("pollingLocation")
 
-        url = 'http://datamechanics.io/data/yjunchoi_yzhang71/BostonPopulation.csv'
+        url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/f7c6dc9eb6b14463a3dd87451beba13f_5.csv'
         #Originally from 'https://www.census.gov/quickfacts/fact/map/brooklinecdpmassachusetts,bostoncitymassachusetts/PST045216#viewtop'
         #Code for csv read with sth
         urllib.request.urlretrieve(url, 'population.csv')
         vote_df = pd.read_csv('population.csv')
-        repo['yjunchoi_yzhang71.bostonPopulation'].insert_many(vote_df.to_dict('records'))
+        repo['yjunchoi_yzhang71.pollingLocation'].insert_many(vote_df.to_dict('records'))
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -55,28 +55,28 @@ class bostonPopulation(dml.Algorithm):
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
 
-        this_script = doc.agent('alg:yjunchoi_yzhang71#bostonPopulation', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('dat:BostonPopulation.csv', {'prov:label':'Boston Population Estimates 2016', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'csv'})
-        get_bostonPopulation = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_bostonPopulation, this_script)
-        doc.usage(get_bostonPopulation, resource, startTime, None,
+        this_script = doc.agent('alg:yjunchoi_yzhang71#pollingLocation', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource = doc.entity('dat:pollingLocation.csv', {'prov:label':'Boston Population Estimates 2016', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'csv'})
+        get_pollingLocation = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(get_pollingLocation, this_script)
+        doc.usage(get_pollingLocation, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
                   'ont:Query':'?type=Boston+Population&$select=Fact,Boston'
                   }
                   )
 
-        bostonPopulation = doc.entity('dat:yjunchoi_yzhang71#bostonPopulation', {prov.model.PROV_LABEL:'Boston Population', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(bostonPopulation, this_script)
-        doc.wasGeneratedBy(bostonPopulation, get_bostonPopulation, endTime)
-        doc.wasDerivedFrom(bostonPopulation, resource, get_bostonPopulation, get_bostonPopulation, get_bostonPopulation)
+        pollingLocation = doc.entity('dat:yjunchoi_yzhang71#pollingLocation', {prov.model.PROV_LABEL:'Boston Population', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(pollingLocation, this_script)
+        doc.wasGeneratedBy(pollingLocation, get_pollingLocation, endTime)
+        doc.wasDerivedFrom(pollingLocation, resource, get_pollingLocation, get_pollingLocation, get_pollingLocation)
 
         repo.logout()
 
         return doc
 
-#bostonPopulation.execute()
-#doc = bostonPopulation.provenance()
-#print(doc.get_provn())
-#print(json.dumps(json.loads(doc.serialize()), indent=4))
+pollingLocation.execute()
+doc = pollingLocation.provenance()
+print(doc.get_provn())
+print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof

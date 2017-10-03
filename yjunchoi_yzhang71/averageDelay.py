@@ -75,9 +75,9 @@ class averageDelay(dml.Algorithm):
 
         return doc
 
-averageDelay.execute()
-doc = averageDelay.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+#averageDelay.execute()
+#doc = averageDelay.provenance()
+#print(doc.get_provn())
+#print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof

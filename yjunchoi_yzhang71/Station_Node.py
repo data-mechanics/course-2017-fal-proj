@@ -20,7 +20,7 @@ class Station_Node(dml.Algorithm):
         repo = client.repo
         repo.authenticate('yjunchoi_yzhang71', 'yjunchoi_yzhang71')
 
-        url = 'https://raw.githubusercontent.com/WHYjun/course-2017-fal-proj/master/local_data/Station_Node.json'
+        url = 'http://datamechanics.io/data/yjunchoi_yzhang71/Station_Node.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
@@ -59,10 +59,10 @@ class Station_Node(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/yjunchoi_yzhang71') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('git', 'https://github.com/WHYjun/course-2017-fal-proj/blob/master/local_data/')
+        doc.add_namespace('dat', 'http://datamechanics.io/data/yjunchoi_yzhang71/')
 
         this_script = doc.agent('alg:yjunchoi_yzhang71#Station_Node', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('git:Station_Node', {'prov:label':'Station_Node', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource = doc.entity('dat:Station_Node.json', {'prov:label':'Station_Node', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_Station_Node = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_Station_Node, this_script)
         doc.usage(get_Station_Node, resource, startTime, None,
@@ -80,9 +80,9 @@ class Station_Node(dml.Algorithm):
 
         return doc
 
-Station_Node.execute()
-doc = Station_Node.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+#Station_Node.execute()
+#doc = Station_Node.provenance()
+#print(doc.get_provn())
+#print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof

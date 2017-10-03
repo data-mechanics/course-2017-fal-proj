@@ -25,7 +25,7 @@ class mergeStation(dml.Algorithm):
         AD = repo['yjunchoi_yzhang71.averageDelay'].find()
         SN = repo['yjunchoi_yzhang71.Station_Node'].find()
         
-        # projection
+        # projection, aggregation, selection
         delayTime = []
         for i in AD:
             for key in i:
@@ -33,16 +33,16 @@ class mergeStation(dml.Algorithm):
                     abbList = key.split("|")
                     #print(abbList)
                     SN = repo['yjunchoi_yzhang71.Station_Node'].find()
-                    for j in SN:
-                        if abbList[0] == j['id']:
+                    for j in SN: # selection
+                        if abbList[0] == j['id']: #join
                             #print(j['name'])
                             abbList[0] = j['name']
                             #print(abbList[0])
-                        if abbList[1] == j['id']:
+                        if abbList[1] == j['id']: #join
                             abbList[1] = j['name']
                         name = abbList[0] + "|" + abbList[1]           
             try:
-                delayTime.append({name:i[key]})
+                delayTime.append({name:i[key]}) # aggregation with selected key
 
                 
             except:
@@ -50,7 +50,7 @@ class mergeStation(dml.Algorithm):
         #print(delayTime)
 
 
-        # aggregation
+        
         
         stationData = delayTime
         #print(stationData)
@@ -117,9 +117,9 @@ class mergeStation(dml.Algorithm):
 
         return doc
 
-mergeStation.execute()
-doc = mergeStation.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+#mergeStation.execute()
+#doc = mergeStation.provenance()
+#print(doc.get_provn())
+#print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof

@@ -26,7 +26,7 @@ class presidentElectionByPrecinct(dml.Algorithm):
         repo.dropCollection("presidentElectionByPrecinct")
         repo.createCollection("presidentElectionByPrecinct")
 
-        url = 'https://raw.githubusercontent.com/WHYjun/course-2017-fal-proj/master/local_data/presidentElectionByPrecinct.csv'
+        url = 'http://datamechanics.io/data/yjunchoi_yzhang71/presidentElectionByPrecinct.csv'
         #Originally from 'http://electionstats.state.ma.us/elections/download/40060/precincts_include:1/'
         # Code for csv read with sth
         urllib.request.urlretrieve(url, 'vote.csv')
@@ -57,7 +57,7 @@ class presidentElectionByPrecinct(dml.Algorithm):
         doc.add_namespace('mes', 'http://electionstats.state.ma.us/elections/download/40060/') # Massachusetts Election Statistics
 
         this_script = doc.agent('alg:yjunchoi_yzhang71#presidentElectionByPrecinct', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('mes:precincts_include:1', {'prov:label':'President General Election by Prencinct', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'csv'})
+        resource = doc.entity('dat:presidentElectionByPrecinct.csv', {'prov:label':'President General Election by Prencinct', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'csv'})
         get_presidentElection = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_presidentElection, this_script)
         doc.usage(get_presidentElection, resource, startTime, None,
@@ -75,9 +75,9 @@ class presidentElectionByPrecinct(dml.Algorithm):
 
         return doc
 
-presidentElectionByPrecinct.execute()
-doc = presidentElectionByPrecinct.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+#presidentElectionByPrecinct.execute()
+#doc = presidentElectionByPrecinct.provenance()
+#print(doc.get_provn())
+#print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof
