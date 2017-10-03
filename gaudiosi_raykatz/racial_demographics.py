@@ -5,47 +5,36 @@ import prov.model
 import datetime
 import uuid
 
-class properties(dml.Algorithm):
+class racial_makeup(dml.Algorithm):
     contributor = 'gaudiosi_raykatz'
     reads = []
-    writes = ['gaudiosi_katz.properties']
+    writes = ['gaudiosi_katz.racial_makeup_2010']
 
     @staticmethod
     def execute(trial = False):
-        '''Retrieve properties from City of Boston'''
+        '''Retrieve racial demographics from US Census'''
         startTime = datetime.datetime.now()
 
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate('gaudiosi_raykatz', 'gaudiosi_raykatz')
-        boston_url = "https://data.boston.gov"
-        url = "https://data.boston.gov/api/action/datastore_search?offset=000000&resource_id=062fc6fa-b5ff-4270-86cf-202225e40858"
+        url = "https://api.census.gov/data/2010/sf1?get=P016A001,P016B001,P016C001,P016D001,P016E001,P016H001,P0160001&for=zip+code+tabulation+area:*&in=state:25&key="
+        with open('../auth.json') as data_file:    
+                data = json.load(data_file)
+        url += data["census"]
+        
+        #Returns the ordered by population numbers of [white, black, native american, asian, pacific islander, hispanic, total, state id (25), zipcode]
         response = urllib.request.urlopen(url).read().decode("utf-8")
         
-        result = json.loads(response)
-        r = result["result"]["records"]
+        r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
-        print("type =", type(r))
-        repo.dropCollection("properties")
-        repo.createCollection("properties")
-        repo['gaudiosi_raykatz.properties'].insert_many(r)
-        
-        ''' If there are >100 results, need to query multiple pages 
-        if result["total"] > 100 and result["offset"] < result["total"] - 100:
-            total = result["total"]
-            runs = total // 100
-            for run in runs:
-                url = boston_url + result["_links"]["next"]
-                response = urllib.request.urlopen(url).read().decode("utf-8")
-                result = json.loads(response)
-                r = result["result"]["records"]
-                s = json.dumps(r, sort_keys=True, indent=2)
-                repo['gaudiosi_raykatz.properties'].insert_many(r)
-        '''
-        
-        repo['gaudiosi_raykatz.properties'].metadata({'complete':True})
-        print(repo['gaudiosi_raykatz.properties'].metadata())
+        print(s)
+        repo.dropCollection("racial_makeup_2010")
+        repo.createCollection("racial_makeup_2010")
+        repo['gaudiosi_raykatz.racial_makeup_2010'].insert_many(r)
+        repo['gaudiosi_raykatz.racial_makeup_2010'].metadata({'complete':True})
+        print(repo['gaudiosi_raykatz.racial_makeup_2010'].metadata())
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -72,26 +61,26 @@ class properties(dml.Algorithm):
 
         this_script = doc.agent('alg:gaudiosi_raykatz#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        get_properties = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_properties, this_script)
+        get_race = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(get_race, this_script)
         
-        doc.usage(get_properties, resource, startTime, None,
+        doc.usage(get_race, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
                   'ont:Query':'?type=Property&$select=MAIL_ADDRESS,OWNER'
                   }
                   )
         
-        properties = doc.entity('dat:gaudiosi_raykatz#properties', {prov.model.PROV_LABEL:'Properties', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(properties, this_script)
-        doc.wasGeneratedBy(properties, get_properties, endTime)
-        doc.wasDerivedFrom(properties, resource, get_properties, get_properties, get_properties)
+        race = doc.entity('dat:gaudiosi_raykatz#racial_makeup_2010', {prov.model.PROV_LABEL:'Racial Makeup 2010', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(race, this_script)
+        doc.wasGeneratedBy(race, get_race, endTime)
+        doc.wasDerivedFrom(race, resource, get_race, get_race, get_race)
 
         repo.logout()
                   
         return doc
 
-properties.execute()
-doc = properties.provenance()
+racial_makeup.execute()
+doc = racial_makeup.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
 
