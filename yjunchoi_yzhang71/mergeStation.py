@@ -56,6 +56,8 @@ class mergeStation(dml.Algorithm):
             except:
                 pass
 
+        print(stationNode)
+
         # aggregation
         
         stationData = delayTime
