@@ -11,23 +11,25 @@ from uszipcode import ZipcodeSearchEngine
 class mbta(dml.Algorithm):
 
 	contributor = 'nathansw_sbajwa'
-	reads = ['nathansw_sbajwa.geodata']
+	reads = []
 	writes = ['nathansw_sbajwa.mbta']
 
 	@staticmethod
 	def execute(trial = False):
 
+		# directory navigation
 		curr_dir = os.getcwd()
 		new_dir = curr_dir + "\\nathansw_sbajwa\\"
 		# text file to hold all longitude and latitude coordinates that are collected
+		# would like to eventually elimate in favor of direct db draws from mbta -> geodata
 		f = open(new_dir + 'geo_coords.txt', 'w')
 
 		startTime = datetime.datetime.now()
 
+		# open db client and authenticate
 		client = dml.pymongo.MongoClient()
 		repo = client.repo
 		repo.authenticate('nathansw_sbajwa','nathansw_sbajwa')
-
 
 		# central coordinates for neighborhoods in Boston
 		locs = {'Allston':[42.3539038, -71.1337112], 'Back Bay':[42.3475975, -71.0753291], \
@@ -82,6 +84,7 @@ class mbta(dml.Algorithm):
 
 		for loc in coords:
 			# write all coordinates collected to a text file separated by a newline
+			# would like to eventually elimate in favor of direct db draws from mbta -> geodata
 			f.write(str(loc) + "\n")
 
 			# create url to make API call to MBTA portal
@@ -106,6 +109,7 @@ class mbta(dml.Algorithm):
 		repo['nathansw_sbajwa.mbta'].insert_one(data)
 
 		repo.logout()
+
 		endTime = datetime.datetime.now()
 
 		return {"start":startTime, "end":endTime}

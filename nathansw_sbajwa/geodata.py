@@ -10,23 +10,27 @@ import os
 class geodata(dml.Algorithm):
 
 	contributor = 'nathansw_sbajwa'
-	reads = []
+	reads = ['nathansw_sbajwa.mbta']
 	writes = ['nathansw_sbajwa.geodata']
 
 	@staticmethod
 	def execute(trial = False):
 
+		# directory navigation
+		curr_dir = os.getcwd()
+		new_dir = curr_dir + "\\nathansw_sbajwa\\"
+		# would like to eventually elimate in favor of direct db draws from mbta -> geodata
+		temp_f = open(new_dir + 'geo_coords.txt', 'r')
+		loc_coords = temp_f.readlines()
+
 		startTime = datetime.datetime.now()
 
+		# open db client and authenticate
 		client = dml.pymongo.MongoClient()
 		repo = client.repo
 		repo.authenticate('nathansw_sbajwa','nathansw_sbajwa')
 
-		curr_dir = os.getcwd()
-		new_dir = curr_dir + "\\nathansw_sbajwa\\"
-		temp_f = open(new_dir + 'geo_coords.txt', 'r')
-		loc_coords = temp_f.readlines()
-
+		# initilize variables
 		base_url = "https://azure.geodataservice.net/GeoDataService.svc/GetUSDemographics?"
 		form = "&$format=json"
 		data = {}
@@ -38,10 +42,8 @@ class geodata(dml.Algorithm):
 			lon = "longitude=" + (sep_coords[1].strip(']')).strip("'")
 			lat = "&latitude=" + (sep_coords[0].strip('[')).strip("'")
 
+			# build url
 			url = base_url + lon + lat + form
-
-			# debug line
-			print(url)
 
 			temp = json.loads(urlopen(url).read().decode('utf-8'))
 
@@ -59,6 +61,7 @@ class geodata(dml.Algorithm):
 		repo['nathansw_sbajwa.geodata'].insert_one(data)
 
 		repo.logout()
+		
 		endTime = datetime.datetime.now()
 
 		return {"start":startTime, "end":endTime}
