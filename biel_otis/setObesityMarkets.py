@@ -6,7 +6,80 @@ import datetime
 import uuid
 import time
 import ssl
-from biel_otis.HelperFunctions.helperFunctions import *
+import random
+
+def union(R, S):
+    return R + S
+
+def difference(R, S):
+    return [t for t in R if t not in S]
+
+def intersect(R, S):
+    return [t for t in R if t in S]
+
+def project(R, p):
+    return [p(t) for t in R]
+
+def select(R, s):
+    return [t for t in R if s(t)]
+ 
+def product(R, S):
+    return [(t,u) for t in R for u in S]
+
+def aggregate(R, f):
+    keys = {r[0] for r in R}
+    return [(key, f([v for (k,v) in R if k == key])) for key in keys]
+
+
+def calculateDist(d1, d2):
+    R = 6373.0
+    d1 = d1.replace("(", "").replace(")", "")
+    d1 = d1.split(",")
+    d1 = (float(d1[0]), float(d1[1]))
+
+    d2 = d2.replace("(", "").replace(")", "")
+    d2 = d2.split(",")
+    d2 = (float(d2[0]), float(d2[1]))
+
+    lat1 = radians(d1[0])
+    lon1 = radians(d1[1])
+    lat2 = radians(d2[0])
+    lon2 = radians(d2[1])
+
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+
+    a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+    distance = R * c
+    return distance <= 1
+
+
+def dist(p, q):
+    (x1,y1) = p
+    (x2,y2) = q
+    return (x1-x2)**2 + (y1-y2)**2
+
+def plus(args):
+    p = [0,0]
+    for (x,y) in args:
+        p[0] += x
+        p[1] += y
+    return tuple(p)
+
+def scale(p, c):
+    (x,y) = p
+    return (x/c, y/c)
+
+def compTuples(t1, t2):
+    if(t1 == []):
+        return 100000000000000
+    comp = [abs(x[0] - y[0]) + abs(x[1] - y[1]) for x in t1 for y in t2]
+    print(sum(comp))
+    return sum(comp)
+
+
 
 class setObesityMarkets(dml.Algorithm):
     contributor = 'biel_otis'
@@ -27,11 +100,14 @@ class setObesityMarkets(dml.Algorithm):
         #selection of the geolocation of overweight individuals in Boston
         obeseLocations = [x['geolocation'] for x in obesityValues if x['measureid'] == 'OBESITY' and x['cityname'] == 'Boston']
         latAndLong = [(float(x['latitude']),float(x['longitude'])) for x in obeseLocations]
-        means = [(520.23, 50.32), (642.2,6230.1), (702.32,72.2), (832.23,8.20), (902.2,902.2), (111.1,92.2), (-123.1,23.1), (-32.1,-74.2), (30.32,-10.2), (14.2,343.2), (-2.2,15.20)]
-        #print(latAndLong)
-
+        lats = [x[0] for x in latAndLong]
+        longs = [x[1] for x in latAndLong]
+        means = [(random.uniform(min(lats), max(lats)), random.uniform(min(longs), max(longs))) for x in range(10)]
         old = []
-        while (old != means):
+        old_compVal = 0
+        new_compVal = 1
+        while (old_compVal != new_compVal):
+            old_compVal = compTuples(old, means)
             old = means
             mpd = [(m, p, dist(m, p)) for (m,p) in product(means, latAndLong)]
             pds = [(p, dist(m,p)) for (m, p, d) in mpd]
@@ -42,7 +118,9 @@ class setObesityMarkets(dml.Algorithm):
             mc = aggregate(m1, sum)
 
             means = [scale(t, c) for ((m,t), (m2,c)) in product(mt, mc) if m == m2]
-        inputs = [{'latitude': x[0], 'longitude': x[1]} for x in means]
+            new_compVal = compTuples(old, means)
+        
+        inputs = [{'optimal_market': str(x)} for x in means]
 
         repo.dropCollection("OptimalMarketLoc")
         repo.createCollection("OptimalMarketLoc")
@@ -90,8 +168,8 @@ class setObesityMarkets(dml.Algorithm):
         
         return doc
 
-getObesityMarkets.execute()
-doc = getObesityMarkets.provenance()
+setObesityMarkets.execute()
+doc = setObesityMarkets.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
 
