@@ -21,23 +21,24 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         repo = client.repo
         repo.authenticate('francisz_jrashaan', 'francisz_jrashaan')
 
-        url = 'https://data.boston.gov/export/12c/b38/12cb3883-56f5-47de-afa5-3b1cf61b257b.json'
+        url = 'https://data.boston.gov/datastore/odata3.0/12cb3883-56f5-47de-afa5-3b1cf61b257b?$top=20000&$format=json'
         buf = requests.get(url).text
         r = json.loads(buf)
+        print(r)
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("crime")
         repo.createCollection("crime")
-        repo['francisz_jrashaan.crime'].insert_many(r)
+        repo['francisz_jrashaan.crime'].insert_many(r['value'])
         # repo['francisz_jrashaan.crime'].metadata({'complete':True})
         # print(repo['francisz_jrashaan.crime'].metadata())
 
-        url = 'https://data.cityofboston.gov/resource/cz6t-w69j.json'
+        url = 'https://data.boston.gov/datastore/odata3.0/c2fcc1e3-c38f-44ad-a0cf-e5ea2a6585b5?$top=10000&$format=json'
         response = requests.get(url).text
         a = json.loads(response)
         b = json.dumps(a, sort_keys=True, indent=2)
         repo.dropCollection("streetlights")
         repo.createCollection("streetlights")
-        repo['francisz_jrashaan.streetlights'].insert_many(a)
+        repo['francisz_jrashaan.streetlights'].insert_many(a['value'])
         # repo['francisz_jrashaan.streetlights'].metadata({'complete':True})
         #print(repo['francisz_jrashaan.streetlights'].metadata())
 
@@ -48,7 +49,7 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         d = json.dumps(c, sort_keys=True, indent=2)
         repo.dropCollection("landuse")
         repo.createCollection("landuse")
-        repo['francisz_jrashaan.landuse'].insert_many(c)
+        repo['francisz_jrashaan.landuse'].insert(c)
         #repo['francisz_jrashaan.landuse'].metadata({'complete':True})
         #print(repo['francisz_jrashaan.landuse'].metadata())
 
@@ -93,7 +94,9 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
-
+        #add url in doc entity
+        # add another namespace
+        
         this_script = doc.agent('alg:francisz_jrashaan#fzjr_retrievalalgorithm', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource_crime = doc.entity('bdp:wc8w-nujj', {'prov:label':'Crime', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         resource_streetlights = doc.entity('bdp:wc8w-nujj', {'prov:label':'Streetlights', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})

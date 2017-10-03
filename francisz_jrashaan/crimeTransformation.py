@@ -133,11 +133,11 @@ class crimeTransformation(dml.Algorithm):
 
 
 
-     this_script = doc.agent('francisz_jrashaan#fzjr_retrievalalgorithm', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+     this_script = doc.agent('francisz_jrashaan#crimeTransformation', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
 
-
-     resource_selectProject = doc.entity('bdp:wc8w-nujj', {'prov:label':'Selection and Projection', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+     #add url on doc.entity
+     resource_selectProject = doc.entity('bdp:wc8w-nujj', {'prov:label':'Crime Data Set', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 
      get_selectProject = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 
