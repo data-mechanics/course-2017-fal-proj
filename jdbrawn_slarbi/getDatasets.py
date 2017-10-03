@@ -8,7 +8,7 @@ import uuid
 class getDatasets(dml.Algorithm):
     contributor = 'jdbrawn_slarbi'
     reads = []
-    writes = ['jdbrawn_slarbi.colleges', 'jdbrawn_slarbi.crime', 'jdbrawn_slarbi.crash', 'jdbrawn_slarbi.mbta']
+    writes = ['jdbrawn_slarbi.colleges', 'jdbrawn_slarbi.crime', 'jdbrawn_slarbi.crash', 'jdbrawn_slarbi.mbta', 'jdbrawn_slarbi.food', 'jdbrawn_slarbi.entertain']
 
     @staticmethod
     def execute(trial = False):
