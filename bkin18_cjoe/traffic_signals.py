@@ -60,14 +60,14 @@ class traffic_signals(dml.Algorithm):
 
         this_script = doc.agent('alg:bkin18_cjoe#traffic_signals', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         
-        ## I don't actually know what the key is to this (bdp:wc8w-nujj)
+        ## Resource includes namespace and some suffix (usually use url)
         resource = doc.entity('bdp:de08c6fe69c942509089e6db98c716a3_0', { 'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
         
-        ## Work on this later
+        ## Work on this later 
+        ## TODO: Re-add query on our selection
+        ## Only need one of these activities
         this_run = doc.activity('log:a'+str(uuid.uuid4()), startTime, endTime, { prov.model.PROV_TYPE:'ont:Retrieval'})#, 'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'})
-
         route_activity = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-
         routes = doc.entity('dat:bkin18_cjoe#traffic_signals', {prov.model.PROV_LABEL:'Traffic Signals', prov.model.PROV_TYPE:'ont:DataSet'})
     
         doc.wasAssociatedWith(route_activity, this_script)

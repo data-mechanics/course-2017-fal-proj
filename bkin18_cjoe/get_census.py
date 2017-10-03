@@ -9,15 +9,11 @@ import uuid
 import pdb
 import csv
 
-## Deprecated - remove later
-def to_dict(input_ordered_dict):
-    return loads(dumps(input_ordered_dict))
+def convert_census_csv():
+    csvfile = open('Blocks_Boston_2010_BARI CSV.csv', 'r')
+    jsonfile = open('Census 2010.json', 'w')
 
-def convert_roads_csv():
-    csvfile = open('Roads 2013.csv', 'r')
-    jsonfile = open('Roads 2013.json', 'w')
-
-    fieldnames = ("BG_ID_10", "X1", "TLID", "X", "STATEFP", "COUNTYFP", "TFIDL", "TFIDR", "MTFCC", "FULLNAME", "SMID", "LFROMADD", "LTOADD", "RFROMADD", "RTOADD", "ZIPL", "ZIPR", "Length", "CLASS", "RDTYPE", "CLUSTER", "Main", "Zoning", "CT_ID_10", "Ref_ID", "DeadEnd", "NSA_NAME", "BRA_PD")
+    fieldnames = ("STATEFP10","COUNTYFP10","TRACTCE10","BLOCKCE10","GEOID10","NAME10","MTFCC10","ALAND10","AWATER10","INTPTLAT10","INTPTLON10","POP100_RE","HU100_RE","BG_ID_10","CT_ID_10","BOSNA_R_ID","NSA_NAME","BRA_PD_ID","BRA_PD","ZIPCODE","City_Counc","WARD","PRECINCTS","ISD_Nbhd","Police_Dis","Fire_Distr","PWD","Blk_ID_10")
     reader = csv.DictReader(csvfile, fieldnames)
     count = 0
     for row in reader:
@@ -29,10 +25,10 @@ def convert_roads_csv():
         jsonfile.write('\n')
 
 
-class get_roads(dml.Algorithm):
+class get_census(dml.Algorithm):
     contributor = 'bkin18_cjoe'
     reads = []
-    writes = ['bkin18_cjoe.roads'] 
+    writes = ['bkin18_cjoe.census'] 
 
     @staticmethod 
     def execute(trial=False):
@@ -43,43 +39,24 @@ class get_roads(dml.Algorithm):
         repo = client.repo
         repo.authenticate('bkin18_cjoe', 'bkin18_cjoe') # should probably move this to auth
 
-
-        # # Add Traffic Signals
-        # url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/de08c6fe69c942509089e6db98c716a3_0.geojson'
-        # response = urllib.request.urlopen(url).read().decode("utf-8")
-        # r = json.loads(response)
-        # s = json.dumps(r, sort_keys=True, indent=2)
-        # print("===============\n" + str(type(r)) + "\n=====================")
-
-        # reader = csv.DictReader(open('Roads 2013.csv', 'r'))
-        # ordered_r = []
-        # for line in reader:
-        #     ordered_r.append(line)
-
-        # r = str(to_dict(ordered_r))
-        # r.replace(".", "")
-        # print(r)
-        # print(type(r))
-        # r = json.loads(r)
-
-        convert_roads_csv()
+        convert_census_csv()
 
         dl = []
-        for line in open('Roads 2013.json'):
+        for line in open('Census 2010.json'):
 
             dl.append(line)
 
         for i in range(len(dl)):
             dl[i] = json.loads(dl[i])
 
-        print(dl[3])
-        print(type(dl[3]))
+        # print(dl[3])
+        # print(type(dl[3]))
         # print(dl)
         # rjson.load(dl)
 
-        repo.dropCollection("roads")
-        repo.createCollection("roads")
-        repo['bkin18_cjoe.roads'].insert_many(dl)
+        repo.dropCollection("census")
+        repo.createCollection("census")
+        repo['bkin18_cjoe.census'].insert_many(dl)
 
         endTime = datetime.datetime.now()
 
@@ -106,17 +83,17 @@ class get_roads(dml.Algorithm):
         doc.add_namespace('bdp', 'http://bostonopendata-boston.opendata.arcgis.com/datasets/')
 
 
-        this_script = doc.agent('alg:bkin18_cjoe#roads', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:bkin18_cjoe#get_census', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         
         ## I don't actually know what the key is to this (bdp:wc8w-nujj)
-        resource = doc.entity('bdp:de08c6fe69c942509089e6db98c716a3_0', { 'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
+        resource = doc.entity('bdp:DVN_FI1YED', { 'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'csv'})
         
         ## Work on this later
         this_run = doc.activity('log:a'+str(uuid.uuid4()), startTime, endTime, { prov.model.PROV_TYPE:'ont:Retrieval'})#, 'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'})
 
         route_activity = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 
-        routes = doc.entity('dat:bkin18_cjoe#get_roads', {prov.model.PROV_LABEL:'Roads', prov.model.PROV_TYPE:'ont:DataSet'})
+        routes = doc.entity('dat:bkin18_cjoe#census', {prov.model.PROV_LABEL:'Census', prov.model.PROV_TYPE:'ont:DataSet'})
     
         doc.wasAssociatedWith(route_activity, this_script)
         doc.usage(route_activity, resource, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
@@ -136,8 +113,8 @@ class get_roads(dml.Algorithm):
         return doc
 
 
-get_roads.execute()
-doc = get_roads.provenance()
+get_census.execute()
+doc = get_census.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
 
