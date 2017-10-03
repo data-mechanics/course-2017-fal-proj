@@ -5,7 +5,7 @@ import prov.model
 import datetime
 import uuid
 
-class request311Req(dml.Algorithm):
+class threeCityPWD(dml.Algorithm):
     contributor = 'adsouza_mcsmocha'
     reads = ['adsouza_mcsmocha.ThreeReq', 'adsouza_mcsmocha.CityScore', 'adsouza_mcsmocha.PWD']
     writes = ['adsouza_mcsmocha.threeCityPWD']
