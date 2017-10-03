@@ -6,8 +6,18 @@ import datetime
 import uuid
 import time
 import ssl
+<<<<<<< HEAD
 #Uses Helpers
 from math import sin, cos, sqrt, atan2, radians
+=======
+
+"""
+Helper Functions courtesy of Andrei Lapets - CS591 BU
+"""
+from math import sin, cos, sqrt, atan2, radians
+import math
+
+>>>>>>> 46930c8bb340bc6a14bfab23565e5aacc7755096
 # approximate radius of earth in km
 
 def union(R, S):
@@ -73,8 +83,17 @@ def plus(args):
 def scale(p, c):
     (x,y) = p
     return (x/c, y/c)
+<<<<<<< HEAD
 #End Helpers
 
+=======
+
+def compTuples(t1, t2):
+    if(t1 == []):
+        return 100000000000000
+    comp = [abs(x[0] - y[0]) + abs(x[1] - y[1]) for x in t1 for y in t2]
+    return sum(comp)
+>>>>>>> 46930c8bb340bc6a14bfab23565e5aacc7755096
 
 
 class setHealthPropertyZip(dml.Algorithm):

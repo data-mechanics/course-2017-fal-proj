@@ -6,9 +6,13 @@ import datetime
 import uuid
 import time
 import ssl
+<<<<<<< HEAD
 #Uses Helpers
 from math import sin, cos, sqrt, atan2, radians
 # approximate radius of earth in km
+=======
+import random
+>>>>>>> 46930c8bb340bc6a14bfab23565e5aacc7755096
 
 def union(R, S):
     return R + S
@@ -74,7 +78,18 @@ def scale(p, c):
     (x,y) = p
     return (x/c, y/c)
 
+<<<<<<< HEAD
 #End Helpers
+=======
+def compTuples(t1, t2):
+    if(t1 == []):
+        return 100000000000000
+    comp = [abs(x[0] - y[0]) + abs(x[1] - y[1]) for x in t1 for y in t2]
+    print(sum(comp))
+    return sum(comp)
+
+
+>>>>>>> 46930c8bb340bc6a14bfab23565e5aacc7755096
 
 class setObesityMarkets(dml.Algorithm):
     contributor = 'biel_otis'
@@ -95,11 +110,14 @@ class setObesityMarkets(dml.Algorithm):
         #selection of the geolocation of overweight individuals in Boston
         obeseLocations = [x['geolocation'] for x in obesityValues if x['measureid'] == 'OBESITY' and x['cityname'] == 'Boston']
         latAndLong = [(float(x['latitude']),float(x['longitude'])) for x in obeseLocations]
-        means = [(520.23, 50.32), (642.2,6230.1), (702.32,72.2), (832.23,8.20), (902.2,902.2), (111.1,92.2), (-123.1,23.1), (-32.1,-74.2), (30.32,-10.2), (14.2,343.2), (-2.2,15.20)]
-        #print(latAndLong)
-
+        lats = [x[0] for x in latAndLong]
+        longs = [x[1] for x in latAndLong]
+        means = [(random.uniform(min(lats), max(lats)), random.uniform(min(longs), max(longs))) for x in range(10)]
         old = []
-        while (old != means):
+        old_compVal = 0
+        new_compVal = 1
+        while (old_compVal != new_compVal):
+            old_compVal = compTuples(old, means)
             old = means
             mpd = [(m, p, dist(m, p)) for (m,p) in product(means, latAndLong)]
             pds = [(p, dist(m,p)) for (m, p, d) in mpd]
@@ -110,7 +128,9 @@ class setObesityMarkets(dml.Algorithm):
             mc = aggregate(m1, sum)
 
             means = [scale(t, c) for ((m,t), (m2,c)) in product(mt, mc) if m == m2]
-        inputs = [{'latitude': x[0], 'longitude': x[1]} for x in means]
+            new_compVal = compTuples(old, means)
+        
+        inputs = [{'optimal_market': str(x)} for x in means]
 
         repo.dropCollection("OptimalMarketLoc")
         repo.createCollection("OptimalMarketLoc")
