@@ -69,35 +69,28 @@ class policeHospital(dml.Algorithm):
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
+        doc.add_namespace('bdp2', 'https://data.boston.gov/export/622/208/')
 
-        this_script = doc.agent('alg:jliang24_tpotye#getdata', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:jliang24_tpotye#policeHospital', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+
+        resource_police = doc.entity('bdp:pyxn-r3i2', {'prov:label':'Police Stations', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+
+        resource_hospital = doc.entity('bdp2:6222085d-ee88-45c6-ae40-0c7464620d64', {'prov:label':'Hospital Locations', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         
-        resource_aggpolice = doc.entity('bdp:wc8w-nujj', {'prov:label':'Aggregate Properties', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        get_aggpolice = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_aggpolice, this_script)
-        doc.usage(get_aggpolice, resource_aggpolice, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval'})
-
-
-
-        aggregatePolice = doc.entity('dat:jliang24_tpotye#police', {prov.model.PROV_LABEL:'Police', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(aggregatePolice, this_script)
-        doc.wasGeneratedBy(aggregatePolice, get_aggpolice, endTime)
-        doc.wasDerivedFrom(aggregatePolice, resource_aggpolice, get_aggpolice, get_aggpolice, get_aggpolice)
+        get_policeHospital = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         
+        doc.wasAssociatedWith(get_policeHospital, this_script)
+        
+        doc.usage(get_policeHospital, resource_police, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Computation'})
+        doc.usage(get_policeHospital, resource_hospital, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Computation'})
 
-        resource_agghospital = doc.entity('bdp:wc8w-nujj', {'prov:label':'hospital', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        get_agghospital = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_agghospital, this_script)
-        doc.usage(get_agghospital, resource_agghospital, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval'})
-
-
-
-        aggregateHospital = doc.entity('dat:jliang24_tpotye#hospital', {prov.model.PROV_LABEL:'Hospital', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(aggregateHospital, this_script)
-        doc.wasGeneratedBy(aggregateHospital, get_agghospital, endTime)
-        doc.wasDerivedFrom(aggregateHospital, resource_agghospital, get_agghospital, get_agghospital, get_agghospital)
+        policeHospitalAnalysis = doc.entity('dat:jliang24_tpotye#policeHospital', {prov.model.PROV_LABEL:'PoliceHospital Analysis', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(policeHospitalAnalysis, this_script)
+        doc.wasGeneratedBy(policeHospitalAnalysis, get_policeHospital, endTime)
+        doc.wasDerivedFrom(policeHospitalAnalysis, resource_police, get_policeHospital, get_policeHospital, get_policeHospital)
+        doc.wasDerivedFrom(policeHospitalAnalysis, resource_hospital, get_policeHospital, get_policeHospital, get_policeHospital)
 
 
 

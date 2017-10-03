@@ -88,32 +88,28 @@ class potholeAnalysis(dml.Algorithm):
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
+        doc.add_namespace('bdp1', 'https://data.nlc.org/resource/')
 
-        this_script = doc.agent('alg:jliang24_tpotye#getdata', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:jliang24_tpotye#potholeAnalysis', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
-        resource_311_analysis = doc.entity('bdp:wc8w-nujj', {'prov:label':'311 Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        get_311_analysis = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_311_analysis, this_script)
-        doc.usage(get_311_analysis, resource_311_analysis, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval'})
+        resource_311 = doc.entity('bdp:wc8w-nujj', {'prov:label':'311 Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 
+        resource_potholes = doc.entity('bdp1:5udy-aqqy', {'prov:label':'Potholes Repaired', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         
-        resource_potholes_analysis = doc.entity('bdp:wc8w-nujj', {'prov:label':'Potholes Repaired', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_potholes_analysis = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        
         doc.wasAssociatedWith(get_potholes_analysis, this_script)
-        doc.usage(get_potholes_analysis, resource_potholes_analysis, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval'})
+        
+        doc.usage(get_potholes_analysis, resource_311, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Computation'})
+        doc.usage(get_potholes_analysis, resource_potholes, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Computation'})
 
-        doc_311_analysis = doc.entity('dat:jliang24_tpotye#311', {prov.model.PROV_LABEL:'311 Requests', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(doc_311_analysis, this_script)
-        doc.wasGeneratedBy(doc_311_analysis, get_311_analysis, endTime)
-        doc.wasDerivedFrom(doc_311_analysis, resource_311_analysis, get_311_analysis, get_311_analysis, get_311_analysis)
-
-        potholes_analysis = doc.entity('dat:jliang24_tpotye#potholes', {prov.model.PROV_LABEL:'Potholes Repaired', prov.model.PROV_TYPE:'ont:DataSet'})
+        potholes_analysis = doc.entity('dat:jliang24_tpotye#potholeAnalysis', {prov.model.PROV_LABEL:'Pothole Analysis', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(potholes_analysis, this_script)
         doc.wasGeneratedBy(potholes_analysis, get_potholes_analysis, endTime)
-        doc.wasDerivedFrom(potholes_analysis, resource_potholes_analysis, get_potholes_analysis, get_potholes_analysis, get_potholes_analysis)
-
+        doc.wasDerivedFrom(potholes_analysis, resource_311, get_potholes_analysis, get_potholes_analysis, get_potholes_analysis)
+        doc.wasDerivedFrom(potholes_analysis, resource_potholes, get_potholes_analysis, get_potholes_analysis, get_potholes_analysis)
 
 
         repo.logout()

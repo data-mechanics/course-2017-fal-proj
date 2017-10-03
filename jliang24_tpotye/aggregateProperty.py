@@ -83,20 +83,19 @@ class aggregateProperty(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
-        this_script = doc.agent('alg:jliang24_tpotye#getdata', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:jliang24_tpotye#aggregateProperty', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         
-        resource_aggProp = doc.entity('bdp:wc8w-nujj', {'prov:label':'Aggregate Properties', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_properties = doc.entity('bdp:g5b5-xrwi', {'prov:label':'Property Assessments', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_aggProp = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_aggProp, this_script)
-        doc.usage(get_aggProp, resource_aggProp, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval'})
+        doc.usage(get_aggProp, resource_properties, startTime)
 
 
 
-        aggregateProperty = doc.entity('dat:jliang24_tpotye#properties', {prov.model.PROV_LABEL:'Aggregate Properties', prov.model.PROV_TYPE:'ont:DataSet'})
+        aggregateProperty = doc.entity('dat:jliang24_tpotye#aggregateProperty', {prov.model.PROV_LABEL:'Aggregate Properties', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(aggregateProperty, this_script)
         doc.wasGeneratedBy(aggregateProperty, get_aggProp, endTime)
-        doc.wasDerivedFrom(aggregateProperty, resource_aggProp, get_aggProp, get_aggProp, get_aggProp)
+        doc.wasDerivedFrom(aggregateProperty, resource_properties, get_aggProp, get_aggProp, get_aggProp)
 
 
 

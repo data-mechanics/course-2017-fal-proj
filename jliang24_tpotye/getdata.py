@@ -52,8 +52,7 @@ class getdata(dml.Algorithm):
         repo.createCollection("potholes")
         repo['jliang24_tpotye.potholes'].insert_many(e)
 
-        #url = 'https://data.boston.gov/export/622/208/6222085d-ee88-45c6-ae40-0c7464620d64.json'
-        url = 'https://data.cityofboston.gov/resource/cz6t-w69j.json'
+        url = 'https://data.boston.gov/export/622/208/6222085d-ee88-45c6-ae40-0c7464620d64.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         g = json.loads(response)
         h = json.dumps(g, sort_keys=True, indent=2)
@@ -86,17 +85,20 @@ class getdata(dml.Algorithm):
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
+        doc.add_namespace('bdp1', 'https://data.nlc.org/resource/')
+        doc.add_namespace('bdp2', 'https://data.boston.gov/export/622/208/')
+        
 
         this_script = doc.agent('alg:jliang24_tpotye#getdata', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         
-        resource_properties = doc.entity('bdp:wc8w-nujj', {'prov:label':'Property Assessments', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_properties = doc.entity('bdp:g5b5-xrwi', {'prov:label':'Property Assessments', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_properties = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_properties, this_script)
         doc.usage(get_properties, resource_properties, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval'})
 
 
-        resource_police = doc.entity('bdp:wc8w-nujj', {'prov:label':'Police Stations', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_police = doc.entity('bdp:pyxn-r3i2', {'prov:label':'Police Stations', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_police = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_police, this_script)
         doc.usage(get_police, resource_police, startTime, None,
@@ -110,13 +112,13 @@ class getdata(dml.Algorithm):
                   {prov.model.PROV_TYPE:'ont:Retrieval'})
 
         
-        resource_potholes = doc.entity('bdp:wc8w-nujj', {'prov:label':'Potholes Repaired', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_potholes = doc.entity('bdp1:5udy-aqqy', {'prov:label':'Potholes Repaired', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_potholes = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_potholes, this_script)
         doc.usage(get_potholes, resource_potholes, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval'})
 
-        resource_hospital = doc.entity('bdp:wc8w-nujj', {'prov:label':'Hospital Locations', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_hospital = doc.entity('bdp2:6222085d-ee88-45c6-ae40-0c7464620d64', {'prov:label':'Hospital Locations', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_hospital = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_hospital, this_script)
         doc.usage(get_hospital, resource_hospital, startTime, None,
