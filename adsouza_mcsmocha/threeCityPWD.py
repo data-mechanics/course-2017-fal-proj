@@ -31,7 +31,7 @@ class threeCityPWD(dml.Algorithm):
         selectCityScorePWD = [e for e in cityScore if "TRASH" in e["CTY_SCR_NAME"]]
 
         # Union all the Quarterly Trash scores within the above list
-        unionTrashScore = [e["CTY_SCR_NBR_QT_01"] for e in selectCityScorePWD]
+        unionTrashScore = [int(e["CTY_SCR_NBR_QT_01"]) for e in selectCityScorePWD]
 
         # Aggregate the average of the collective Trash score
         aggAverage = sum(unionTrashScore) / len(unionTrashScore)
