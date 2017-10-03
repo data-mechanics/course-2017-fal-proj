@@ -53,23 +53,24 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         #repo['francisz_jrashaan.landuse'].metadata({'complete':True})
         #print(repo['francisz_jrashaan.landuse'].metadata())
 
-        url = 'https://data.cityofboston.gov/resource/cz6t-w69j.json'
+        url = 'https://data.cambridgema.gov/api/views/r4pm-qqje/rows.json?'
         response = requests.get(url).text
         e = json.loads(response)
         f = json.dumps(e, sort_keys=True, indent=2)
         repo.dropCollection("capopulation")
         repo.createCollection("capopulation")
-        repo['francisz_jrashaan.capopulation'].insert_many(e)
+        repo['francisz_jrashaan.capopulation'].insert(e)
         # repo['francisz_jrashaan.capopulation'].metadata({'complete':True})
         #print(repo['francisz_jrashaan.capopulation'].metadata())
 
-        url = 'https://data.cityofboston.gov/resource/cz6t-w69j.json'
+        url = 'https://data.boston.gov/api/action/datastore_search?resource_id=769c0a21-9e35-48de-a7b0-2b7dfdefd35e'
         response = requests.get(url).text
         g = json.loads(response)
         h = json.dumps(g, sort_keys=True, indent=2)
         repo.dropCollection("openspace")
         repo.createCollection("openspace")
-        repo['francisz_jrashaan.openspace'].insert_many(g)
+        print(g['result'])
+        repo['francisz_jrashaan.openspace'].insert(g['result'])
 
         repo.logout()
 
