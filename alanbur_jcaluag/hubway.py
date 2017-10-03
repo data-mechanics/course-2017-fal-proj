@@ -27,19 +27,21 @@ class hubway():
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         stations=r['stations']
-        print(type(stations))
-        print(stations)
-        print(type(r))
+
+
+        stations = [[
+            {'Location':dict['s']},
+            {'Latitude': dict['la']},
+            {'Longitude': dict['lo']}
+           ]  for dict in stations]
+        for x in stations:
+            print (x, '\n')
+
         s = json.dumps(r, sort_keys=True, indent=2)
-        print(type(s))
         repo.dropCollection("hubway")
         repo.createCollection("hubway")
         repo['alanbur_jcaluag.hubway'].insert_many(stations)
         repo['alanbur_jcaluag.hubway'].metadata({'complete':True})
-        print(repo['alanbur_jcaluag.hubway'].metadata())
-
-    
-
         repo.logout()
 
         endTime = datetime.datetime.now()

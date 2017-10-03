@@ -27,17 +27,26 @@ class trafficSignal():
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         features=r['features']
-        print(type(r))
         s = json.dumps(r, sort_keys=True, indent=2)
-        print(type(s))
+
+        features = [
+
+            [{'Location':dict['properties']['Location']},
+             {'Latitude': dict['geometry']['coordinates'][0]},
+             {'Longitude': dict['geometry']['coordinates'][1]}
+
+             ] for dict in features
+        ]
+
+        for x in features:
+            print(x,'\n')
+
+
+
         repo.dropCollection("trafficSignal")
         repo.createCollection("trafficSignal")
         repo['alanbur_jcaluag.trafficSignal'].insert_many(features)
         repo['alanbur_jcaluag.trafficSignal'].metadata({'complete':True})
-        print(repo['alanbur_jcaluag.trafficSignal'].metadata())
-
-    
-
         repo.logout()
 
         endTime = datetime.datetime.now()
