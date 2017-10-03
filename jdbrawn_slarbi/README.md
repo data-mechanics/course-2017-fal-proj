@@ -15,7 +15,7 @@ To do this we have used the data sets listed below, and performed transformation
 ###### Boston Entertainment Lisences - https://data.boston.gov/dataset/entertainment-licenses-legacy
 
 ### Transformations
-Transformation1 - Creates a union of the zipcode and business names from the entertainment and food license datasets. Then it takes the aggregate and returns a count of the number of 'social businesses' with the zipcode corresponding to those businesses. Ultimately this could be assigned some sort of weight in regards to how social a college is given the number of entertainment and food vicinity's in its area.
+Transformation1 - Creates a union of the zipcode and business names from the entertainment and food license datasets. Then it takes the aggregate and returns a count of the number of 'social businesses' with the zipcode corresponding to those businesses. Ultimately this could be assigned some sort of weight in regards to how social a college is given the number of entertainment and food vicinities in its area.
 
 
 
