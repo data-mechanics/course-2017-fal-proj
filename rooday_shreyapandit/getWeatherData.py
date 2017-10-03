@@ -6,7 +6,7 @@ import datetime
 import uuid
 import requests
 
-class weather(dml.Algorithm):
+class getWeatherData(dml.Algorithm):
     contributor = 'rooday_shreyapandit'
     reads = []
     writes = ['rooday_shreyapandit.weather']
@@ -69,8 +69,8 @@ class weather(dml.Algorithm):
                   
         return doc
 
-weather.execute()
-print("running provenance for weather")
-doc = weather.provenance()
+getWeatherData.execute()
+print("running provenance for getWeatherData")
+doc = getWeatherData.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
