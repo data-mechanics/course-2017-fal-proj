@@ -6,10 +6,10 @@ import datetime
 import uuid
 from builtins import staticmethod
 
-class restaurantInspection(dml.Algorithm):
+class policeStations(dml.Algorithm):
     contributor = 'peterg04_yfchen'
     reads = []
-    writes = ['peterg04_yfchen.restaurants']
+    writes = ['peterg04_yfchen.policeStations']
     
     @staticmethod
     def execute(trial = False):
@@ -20,13 +20,13 @@ class restaurantInspection(dml.Algorithm):
         repo = client.repo
         repo.authenticate('peterg04_yfchen', 'peterg04_yfchen')
         
-        url = 'https://data.cityofboston.gov/resource/427a-3cn5.json'
+        url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/e5a0066d38ac4e2abbc7918197a4f6af_6.geojson'
         response = urllib.request.urlopen(url).decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("restaurants")
-        repo.createCollection("restaurants")
-        repo['peterg04_yfchen.restaurants'].insert_many(r)
+        repo.dropCollection("policeStations")
+        repo.createCollection("policeStations")
+        repo['peterg04_yfchen.policeStations'].insert_many(r)
         
         repo.logout()
         
@@ -47,6 +47,6 @@ class restaurantInspection(dml.Algorithm):
 #         repo.authenticate('peterg04_yfchen', 'peterg04_yfchen')
         
         
-
+        
     
     
