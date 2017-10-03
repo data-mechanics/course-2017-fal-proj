@@ -21,7 +21,7 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         repo = client.repo
         repo.authenticate('francisz_jrashaan', 'francisz_jrashaan')
 
-        url = 'https://data.boston.gov/export/c2f/cc1/c2fcc1e3-c38f-44ad-a0cf-e5ea2a6585b5.json'
+        url = 'http://datamechanics.io/data/jw0208/medicare.json'
         buf = requests.get(url).text
         r = json.loads(buf)
         s = json.dumps(r, sort_keys=True, indent=2)
@@ -112,20 +112,18 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         doc.wasAssociatedWith(get_capopulation, this_script)
         doc.wasAssociatedWith(get_openspace, this_script)
         doc.usage(get_crime, resource_crime, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval'})
-        doc.usage(get_streetlights, resource_streelights, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Retrieval'}
+                  )
+        doc.usage(get_streetlights, resource_streetlights, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval'
-                 
                   }
                   )
         
         doc.usage(get_landuse, resource_landuse, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval'
-                                   }
+                  {prov.model.PROV_TYPE:'ont:Retrieval'}
                   )
         doc.usage(get_capopulation, resource_capopulation, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval'
-                  }
+                  {prov.model.PROV_TYPE:'ont:Retrieval'}
                   )
         doc.usage(get_openspace, resource_openspace, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval'
@@ -139,7 +137,7 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         streetlights = doc.entity('dat:francisz_jrashaan#streetlights', {prov.model.PROV_LABEL:'streetlights', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(streetlights, this_script)
         doc.wasGeneratedBy(streetlights, get_streetlights, endTime)
-        doc.wasDerivedFrom(streetlights, resource_streelights, get_streetlights, get_streetlights, get_streetlights)
+        doc.wasDerivedFrom(streetlights, resource_streetlights, get_streetlights, get_streetlights, get_streetlights)
         
         landuse = doc.entity('dat:francisz_jrashaan#landuse', {prov.model.PROV_LABEL:'landuse', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(landuse, this_script)
@@ -161,7 +159,6 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         return doc
 
 fzjr_retrievalalgorithm.execute()
-
 doc = fzjr_retrievalalgorithm.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
