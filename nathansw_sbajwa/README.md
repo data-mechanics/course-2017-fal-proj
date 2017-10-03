@@ -1,7 +1,8 @@
 # CS591 Project 1
 
 ## Project Questions to Explore
-Is there a correlation between neighborhood demographics and the availability and accessibility to MBTA services in the Greater Boston Area? Using this information, does the MBTA enable or limit economic opportunity for low-income residents?
+Is there a correlation between neighborhood demographics and the availability and accessibility to MBTA services in the
+Greater Boston Area? Using this information, does the MBTA enable or limit economic opportunity for low-income residents?
 
 ## Datasets
 ### MBTA Developer Portal
