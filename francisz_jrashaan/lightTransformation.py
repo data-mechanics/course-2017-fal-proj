@@ -4,14 +4,13 @@ import dml
 import prov.model
 import datetime
 import uuid
-import numpy as np
 
 
 
 class lightTransformation(dml.Algorithm):
-    contributor = 'francisz_jrashaan'
-    reads = ['francisz_jrashaan.streetlights']
-    writes = ['francisz_jrashaan.newLights']
+     contributor = 'francisz_jrashaan'
+     reads = ['francisz_jrashaan.streetlights']
+     writes = ['francisz_jrashaan.newLights']
 
 
 
@@ -21,25 +20,23 @@ class lightTransformation(dml.Algorithm):
 
      def execute(trial = False):
 
-     '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
+         '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
 
-     startTime = datetime.datetime.now()
+         startTime = datetime.datetime.now()
 
-     # Set up the database connection.
+         # Set up the database connection.
 
-     client = dml.pymongo.MongoClient()
+         client = dml.pymongo.MongoClient()
 
-     repo = client.repo
+         repo = client.repo
 
-     repo.authenticate('francisz_jrashaan','francisz_jrashaan')
-
-
-
-     repo.dropPermanent("newLights")
-
-     repo.createPermanent("newLights")
+         repo.authenticate('francisz_jrashaan','francisz_jrashaan')
 
 
+
+         repo.dropPermanent("newLights")
+
+         repo.createPermanent("newLights")
 
 
 
@@ -47,26 +44,32 @@ class lightTransformation(dml.Algorithm):
 
 
 
-     #project
-     lights = project(repo.francisz_jrashaan.streetlights.find(),lambda t:(t[2],t[3]))
+
+         lights = []
+         #project
+           
+         for entry in repo.francisz_jrashaan.streetlights.find():
+                 x = lambda t: (t['Long'],t['Lat'])
+                 y = x(entry)
+                 lights.append(y)
 
 
 
 
 
-     print("light coordinates", lights)
+         print("streetlight coordinates", lights)
 
 
 
-     repo.logout()
+         repo.logout()
 
 
 
-     endTime = datetime.datetime.now()
+         endTime = datetime.datetime.now()
 
 
 
-     return {"start":startTime, "end":endTime}
+         return {"start":startTime, "end":endTime}
 
 
 
@@ -74,65 +77,51 @@ class lightTransformation(dml.Algorithm):
 
      def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
 
-     '''
-
-         Create the provenance document describing everything happening
-
-         in this script. Each run of the script will generate a new
-
-         document describing that invocation event.
-
          '''
 
+             Create the provenance document describing everything happening
 
+             in this script. Each run of the script will generate a new
 
-     # Set up the database connection.
+             document describing that invocation event.
 
-     client = dml.pymongo.MongoClient()
-
-     repo = client.repo
-
-     repo.authenticate('francisz_jrashaan', 'francisz_jrashaan')
-
-     doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
-
-     doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
-
-     doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
-
-     doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-
-     doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
+             '''
 
 
 
-     this_script = doc.agent('alg:francisz_jrashaan#lightTransformation', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+         # Set up the database connection.
+
+         client = dml.pymongo.MongoClient()
+
+         repo = client.repo
+
+         repo.authenticate('francisz_jrashaan', 'francisz_jrashaan')
+
+         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
+
+         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
+
+         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
+
+         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
+
+         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
 
 
-     resource_project = doc.entity('bdp:c2fcc1e3-c38f-44ad-a0cf-e5ea2a6585b5', {'prov:label':'Project', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-
-     get_project = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-
-     doc.wasAssociatedWith(get_project, this_script)
-
-     doc.usage(get_selectProject, resource_project, startTime, None,
-
-               {prov.model.PROV_TYPE:'ont:Retrieval'})
+         this_script = doc.agent('alg:francisz_jrashaan#lightTransformation', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
 
 
+         resource_project = doc.entity('bdp:c2fcc1e3-c38f-44ad-a0cf-e5ea2a6585b5', {'prov:label':'Project', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 
+         get_project = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 
+         doc.wasAssociatedWith(get_project, this_script)
 
+         doc.usage(get_selectProject, resource_project, startTime, None,
 
-     project = doc.entity('dat:francisz_jrashaan#streetlights', {prov.model.PROV_LABEL:'Dataset to Project', prov.model.PROV_TYPE:'ont:DataSet'})
-
-     doc.wasAttributedTo(project, this_script)
-
-     doc.wasGeneratedBy(project, get_project, endTime)
-
-     doc.wasDerivedFrom(project, resource_project, get_project, get_project, get_project)
+                   {prov.model.PROV_TYPE:'ont:Retrieval'})
 
 
 
@@ -140,18 +129,31 @@ class lightTransformation(dml.Algorithm):
 
 
 
-     repo.logout()
+         project = doc.entity('dat:francisz_jrashaan#streetlights', {prov.model.PROV_LABEL:'Dataset to Project', prov.model.PROV_TYPE:'ont:DataSet'})
+
+         doc.wasAttributedTo(project, this_script)
+
+         doc.wasGeneratedBy(project, get_project, endTime)
+
+         doc.wasDerivedFrom(project, resource_project, get_project, get_project, get_project)
 
 
 
-     return doc
 
 
 
-     lightTransformation.execute()
 
-     doc = lightTransformation.provenance()
+         repo.logout()
 
-     print(doc.get_provn())
 
-     print(json.dumps(json.loads(doc.serialize()), indent=4))
+
+         return doc
+
+
+lightTransformation.execute()
+
+doc = lightTransformation.provenance()
+
+print(doc.get_provn())
+
+print(json.dumps(json.loads(doc.serialize()), indent=4))
