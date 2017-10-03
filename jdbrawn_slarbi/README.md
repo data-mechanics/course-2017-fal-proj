@@ -14,8 +14,15 @@ To do this we have used the data sets listed below, and performed transformation
 ###### Boston Food Establishment Lisences - https://data.boston.gov/dataset/active-food-establishment-licenses
 ###### Boston Entertainment Lisences - https://data.boston.gov/dataset/entertainment-licenses-legacy
 
+### Transformations
+###### Transformation1 - Creates a union of the zipcode and business names from the entertainment and food license datasets. Then it takes the aggregate and returns a count of the number of 'social businesses' with the zipcode corresponding to those businesses. Ultimately this could be assigned some sort of weight in regards to how social a college is given the number of entertainment and food vicinity's in its area.
+
+
+
 ### Required Python Libraries
 ###### gpxpy - https://pypi.python.org/pypi/gpxpy
 ###### dml -   https://pypi.python.org/pypi/dml
 ###### prov -  https://pypi.python.org/pypi/prov
 ###### requests - https://pypi.python.org/pypi/requests
+
+
