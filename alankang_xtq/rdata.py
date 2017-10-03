@@ -4,11 +4,12 @@ import dml
 import prov.model
 import datetime
 import uuid
+import requests
 
-class example(dml.Algorithm):
+class rdata(dml.Algorithm):
     contributor = 'alankang_xtq'
     reads = []
-    writes = ['alankang_xtq.jam', 'alankang_xtq.trafficsignals']
+    writes = ['alankang_xtq.jam', 'alankang_xtq.trafficsignals','alankang_xtq.hubwaystation','alankang_xtq.crash','alankang_xtq.schools']
 
     @staticmethod
     def execute(trial = False):
@@ -20,34 +21,34 @@ class example(dml.Algorithm):
         repo = client.repo
         repo.authenticate('alankang_xtq', 'alankang_xtq')
 
-        url = 'https://data.cityofboston.gov/api/views/yqgx-2ktq/rows.json?accessType=DOWNLOAD'
-        response = urllib.request.urlopen(url).read().decode("utf-8")
-        r = json.loads(response)
-        s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("jam")
-        repo.createCollection("jam")
-        repo['alankang_xtq.jam'].insert_many(r)
-        repo['alankang_xtq.jam'].metadata({'complete':True})
-        print(repo['alankang_xtq.jam'].metadata())
+        # url = 'https://data.cityofboston.gov/api/views/yqgx-2ktq/rows.json?accessType=DOWNLOAD'
+        # response = requests.get(url).text
+        # r = json.loads(response)
+        # s = json.dumps(r, sort_keys=True, indent=2)
+        # repo.dropCollection("jam")
+        # repo.createCollection("jam")
+        # repo['alankang_xtq.jam'].insert_many(r)
+        ##repo['alankang_xtq.jam'].metadata({'complete':True})
+        ##print(repo['alankang_xtq.jam'].metadata())
 
-        url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/de08c6fe69c942509089e6db98c716a3_0.geojson'
+        url = 'http://datamechanics.io/data/Traffic_Signals.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("trafficsignals")
         repo.createCollection("trafficsignals")
-        repo['alankang_xtq.trafficsignals'].insert_many(r)
-        print(repo['alankang_xtq.trafficsignals'].metadata())
+        ##repo['alankang_xtq.trafficsignals'].insert_many(r)
+        ##print(repo['alankang_xtq.trafficsignals'].metadata())
 
-        url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/ee7474e2a0aa45cbbdfe0b747a5eb032_0.geojson'
+        url = 'http://datamechanics.io/data/Hubway_Stations%20(1).geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("hubwaystation")
         repo.createCollection("hubwaystation")
         repo['alankang_xtq.hubwaystation'].insert_many(r)
-        repo['alankang_xtq.hubwaystation'].metadata({'complete':True})
-        print(repo['alankang_xtq.hubwaystation'].metadata())
+        ##repo['alankang_xtq.hubwaystation'].metadata({'complete':True})
+        ##print(repo['alankang_xtq.hubwaystation'].metadata())
 
         url = 'http://datamechanics.io/data/crash.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -56,8 +57,8 @@ class example(dml.Algorithm):
         repo.dropCollection("crash")
         repo.createCollection("crash")
         repo['alankang_xtq.crash'].insert_many(r)
-        repo['alankang_xtq.crash'].metadata({'complete':True})
-        print(repo['alankang_xtq.crash'].metadata())
+        ##repo['alankang_xtq.crash'].metadata({'complete':True})
+        ##print(repo['alankang_xtq.crash'].metadata())
 
         url = 'http://datamechanics.io/data/Colleges_and_Universities.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -66,8 +67,8 @@ class example(dml.Algorithm):
         repo.dropCollection("schools")
         repo.createCollection("schools")
         repo['alankang_xtq.schools'].insert_many(r)
-        repo['alankang_xtq.schools'].metadata({'complete':True})
-        print(repo['alankang_xtq.schools'].metadata())
+        ##repo['alankang_xtq.schools'].metadata({'complete':True})
+        ##print(repo['alankang_xtq.schools'].metadata())
 
         repo.logout()
 
