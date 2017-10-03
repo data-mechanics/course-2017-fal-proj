@@ -26,12 +26,10 @@ class mbta():
         url1 = 'http://realtime.mbta.com/developer/api/v2/routes?api_key='+api_key+'&format=json'
         response = urllib.request.urlopen(url1).read().decode("utf-8")
         r = json.loads(response)
-        print(r)
         stops=[]
         for routeType in r['mode']:
-            print(routeType['mode_name'])
             if routeType['mode_name']=='Bus':
-                print('busses')
+                print('buses')
                 for route in routeType['route']:
                     url='http://realtime.mbta.com/developer/api/v2/stopsbyroute?api_key='+api_key+'&route='+route['route_id']+'&format=json'
                     response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -40,7 +38,11 @@ class mbta():
                     # print(r['direction'][0]['stop'])
                     stops.extend(r['direction'][0]['stop'])
                     # print(r)
-        print(stops)
+
+        stops = [{'Location':dict['stop_name'],'Latitude':dict['stop_lat'],
+                'Longitude':dict['stop_lon']} for dict in stops]
+        for x in stops:
+            print(x,'\n')
         # s = json.dumps(r, sort_keys=True, indent=2)
         # print(type(s))
         repo.dropCollection("mbta")
