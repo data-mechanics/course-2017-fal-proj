@@ -5,12 +5,12 @@ import prov.model
 import datetime
 import uuid
 
-class threeCityPWD(dml.Algorithm):
+class districtCrimeAndTrashReports(dml.Algorithm):
     contributor = 'adsouza_mcsmocha'
-    reads = ['adsouza_mcsmocha.ThreeReq', 'adsouza_mcsmocha.CityScore', 'adsouza_mcsmocha.PWD']
-    writes = ['adsouza_mcsmocha.threeCityPWD']
+    reads = ['adsouza_mcsmocha.threeCityPWD', 'adsouza_mcsmocha.CrimeData']
+    writes = ['adsouza_mcsmocha.districtCrimeAndTrashReports']
 
-    @staticmethod
+        @staticmethod
     def execute(trial = False):
         '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
         startTime = datetime.datetime.now()
@@ -20,57 +20,61 @@ class threeCityPWD(dml.Algorithm):
         repo = client.repo
         repo.authenticate('adsouza_mcsmocha', 'adsouza_mcsmocha')
 
-        repo.dropCollection('CityScoreofPWDAreas')
-        repo.createCollection('CityScoreofPWDAreas')
+        repo.dropCollection('DistrictCrimeAndTrashReports')
+        repo.createCollection('DistrictCrimeAndTrashReports')
 
-        threeReq = repo['adsouza_mcsmocha.ThreeReq'].find()
-        cityScore = repo['adsouza_mcsmocha.CityScore'].find()
-        pubWorks = repo['adsouza_mcsmocha.PWD'].find()
+        cityPWD = repo['adsouza_mcsmocha.threeCityPWD']
+        crime = repo['adsouza_mcsmocha.CrimeData']
 
-        # Select entries in CityScore that pertain to Trash using select
-        selectCityScorePWD = [e for e in cityScore if "TRASH" in e["CTY_SCR_NAME"]]
+        # collect dictionary of districts and offense code groups
+        crimeDistricts = []
+        for e in crime:
+        	crimeDict = {}
+        	crimeDict['district'] = e['district']
+        	crimeDict['offense code group'] = e['offense_code_group']
+        	crimeDistricts.append(crimeDict)
 
-        # Union all the Quarterly Trash scores within the above list
-        unionTrashScore = [e["CTY_SCR_NBR_QT_01"] for e in selectCityScorePWD]
+        # collect dictionary of districts and type of request
+        trashDistricts = []
+        for e in cityPWD:
+        	trashDict = {}
+        	trashDict['district'] = e['district']
+        	trashDict['TYPE'] = e['TYPE']
+        	trashDistricts.append(trashDict)
 
-        # Aggregate the average of the collective Trash score
-        aggAverage = sum(unionTrashScore) / len(unionTrashScore)
+        # aggregate common districts into one element, and unioning groups with a common
+        # district
 
-        # Select entries in 311 Requests that pertain to Public Works Department
-        select311Trash = [e for e in threeReq if "Trash" in e["TYPE"]]
+        # create unique list of districts
+        districtList = []
+        for e in crimeDistricts:
+        	if e['district'] not in districtList:
+        		districtList.append(e['district'])
 
-        def keyInList(keyval, dictList):
-            for e in dictList:
-                if e["NAME"] in keyval or keyval in e["NAME"]:
-                    return True
-            return False
+       	# aggregate districts with crimes occurring in that district and trash reports made in that district
+       	commonCrimes = []
+       	for v in districtList:
+       		commCrimeDict = {}
+       		commCrimeDict['district'] = v
+       		commCrimeDict['offense code group'] = []
+       		commCrimeDict['TYPE'] = []
+       		commonCrimes.append(commCrimeDict)
 
-        # Select 311 Trash entries based on existing neighborhoods in the PWD 
-        # dataset
-        selectPWDNeighborhoods = [e for e in select311Trash if keyInList(e["neighborhood"], pubWorks)]
+       	for e in commonCrimes:
+       		for k in crimeDistricts:
+       			if k['district'] == e['district'] and k['offense code group'] not in e['offense code group']:
+       				e['offense code group'].append(k['offense code group'])
+       		for k in trashDistricts:
+       			if k['district'] == e['district'] and k['TYPE'] not in e['TYPE']:
+       				e['TYPE'].append(k['TYPE'])
 
-        def findKeyInList(keyval, dictList):
-            for e in dictList:
-                if e["NAME"] in keyval or keyval in e["NAME"]:
-                    return e["DIST"]
+       	repo['adsouza_mcsmocha.districtCrimeAndTrashReports'].insert_many(commonCrimes)
 
-        # Intersect neighborhoods from the PWD dataset and the 311 Trash Requests
-        # to obtain the district numbers of the requests, then make the average score
-        # another column
-        intersect311Neighborhood = []
-        for e in selectPWDNeighborhoods:
-            dist = findKeyInList(e["neighborhood"], pubWorks)
-            e["district"] = dist
-            e["average city score"] = aggAverage
-            intersect311Neighborhood.append(e)
+       	repo.logout()
 
-        repo['adsouza_mcsmocha.ThreeCityPWD'].insert_many(intersect311Neighborhood)
+       	endTime = datetime.datetime.now()
 
-        repo.logout()
-
-        endTime = datetime.datetime.now()
-
-        return {"start": startTime, "end": endTime}
+       	return {"start": startTime, "end": endTime}
 
     @staticmethod
     def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
@@ -91,18 +95,18 @@ class threeCityPWD(dml.Algorithm):
         # Additional resource
         doc.add_namespace('anb', 'https://data.boston.gov/')
         doc.add_namespace('bod', 'http://bostonopendata-boston.opendata.arcgis.com/')
+        doc.add_namespace('ods', 'https://data.opendatasoft.com/')
 
-        this_script = doc.agent('alg:adsouza_mcsmocha#threeCityPWD', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:adsouza_mcsmocha#districtCrimeAndTrashReports', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         city_resource = doc.entity('anb:5bce8e71-5192-48c0-ab13-8faff8fef4d7', {'prov:label':'CityScore, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         three_resource = doc.entity('anb:2968e2c0-d479-49ba-a884-4ef523ada3c0', {'prov:label':'311 Requests, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         pwd_resource = doc.entity('bod:4b0f71af07664337975119c526f5a3a8_2', {'prov:label':'Public Works Districts, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        get_city = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        get_three = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        get_pwd = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        crime_resource = doc.entity('ods:crime-incident-reports-2017@boston', {'prov:label':'Crime Data, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 
         doc.wasAssociatedWith(get_city, this_script)
         doc.wasAssociatedWith(get_three, this_script)
         doc.wasAssociatedWith(get_pwd, this_script)
+        doc.wasAssociatedWith(get_crime, this_script)
 
         doc.usage(get_city, city_resource, startTime, None,
             {prov.model.PROV_TYPE:'ont:Retrieval',
@@ -119,6 +123,11 @@ class threeCityPWD(dml.Algorithm):
             'ont:Query':'?type=Public+Works+Districts&$PWD,NAME,COMBO,DIST,OBJECTID'
             }
             )
+        doc.usage(get_crime, crime_resource, startTime, None,
+        	{prov.model.PROV_TYPE:'ont:Retrieval',
+        	'ont:Query':'?type=Crime+Data&$occured_on_date,offense_description,street,ahooting,offense_code_group,district,reporting_area,location'
+        	}
+        	)
 
         city_score = doc.entity('dat:adsouza_mcsmocha#CityScore', {prov.model.PROV_LABEL:'CityScore', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(city_score, this_script)
@@ -135,11 +144,16 @@ class threeCityPWD(dml.Algorithm):
         doc.wasGeneratedBy(pwd, get_pwd, endTime)
         doc.wasDerivedFrom(pwd, pwd_resource, get_pwd, get_pwd, get_pwd)
 
+        crime = doc.entity('dat:adsouza_mcsmocha#CrimeData', {prov.model.PROV_LABEL:'Crime Data', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(crime, this_script)
+        doc.wasGeneratedBy(crime, get_crime, endTime)
+        doc.wasDerivedFrom(crime, crime_resource, get_crime, get_crime, get_crime)
+
         repo.logout()
 
         return doc
 
-threeCityPWD.execute()
-doc = threeCityPWD.provenance()
+districtCrimeAndTrashReports.execute()
+doc = districtCrimeAndTrashReports.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
