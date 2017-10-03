@@ -8,7 +8,7 @@ import uuid
 class getDatasets(dml.Algorithm):
     contributor = 'jdbrawn_slarbi'
     reads = []
-    writes = ['jdbrawn_slarbi.colleges', 'jdbrawn_slarbi.crime', 'jdbrawn_slarbi.crash']
+    writes = ['jdbrawn_slarbi.colleges', 'jdbrawn_slarbi.crime', 'jdbrawn_slarbi.crash', 'jdbrawn_slarbi.mbta']
 
     @staticmethod
     def execute(trial = False):
@@ -47,6 +47,15 @@ class getDatasets(dml.Algorithm):
         repo.createCollection("crash")
         repo['jdbrawn_slarbi.crash'].insert_many(r)
 
+        # Get MBTA bus stop data
+        url = 'http://datamechanics.io/data/jdbrawn_slarbi/MBTA_Bus_Stops.geojson'
+        response = urllib.request.urlopen(url).read().decode("utf-8")
+        r = json.loads(response)['features']
+        s = json.dumps(r, sort_keys=True, indent=2)
+        repo.dropCollection("mbta")
+        repo.createCollection("mbta")
+        repo['jdbrawn_slarbi.mbta'].insert_many(r)
+
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -71,25 +80,29 @@ class getDatasets(dml.Algorithm):
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/')  # The event log.
         doc.add_namespace('bdp', 'https://data.boston.gov/api/action/datastore_search?resource_id=')
-        doc.add_namespace('car', 'http://datamechanics.io/data/jdbrawn_slarbi/')
+        doc.add_namespace('591', 'http://datamechanics.io/data/jdbrawn_slarbi/')
 
         this_script = doc.agent('alg:jdbrawn_slarbi#getData', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
 
         resource_colleges = doc.entity('bdp:208dc980-a278-49e3-b95b-e193bb7bb6e4&limit=80', {'prov:label':'Boston Universities and Colleges', prov.model.PROV_TYPE:'ont:DataResource'})
         resource_crime = doc.entity('bdp:12cb3883-56f5-47de-afa5-3b1cf61b257b&limit=10000', {'prov:label':'Boston Crime', prov.model.PROV_TYPE:'ont:DataResource'})
-        resource_crashes = doc.entity('car:CarCrashData', {'prov:label':'Boston Crashes', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_crashes = doc.entity('591:CarCrashData', {'prov:label':'Boston Crashes', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_mbta = doc.entity('591:MBTA_Bus_Stops', {'prov:label':'MBTA Bus Stops', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
 
         get_colleges = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
         get_crime = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
         get_crashes = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
+        get_mbta = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
         doc.wasAssociatedWith(get_colleges, this_script)
         doc.wasAssociatedWith(get_crime, this_script)
         doc.wasAssociatedWith(get_crashes, this_script)
+        doc.wasAssociatedWith(get_mbta, this_script)
 
         doc.usage(get_colleges, resource_colleges, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval'})
         doc.usage(get_crime, resource_crime, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval'})
         doc.usage(get_crashes, resource_crashes, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval'})
+        doc.usage(get_mbta, resource_mbta, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval'})
 
         colleges = doc.entity('dat:jdbrawn_slarbi#colleges', {prov.model.PROV_LABEL: 'Boston Universities and Colleges', prov.model.PROV_TYPE: 'ont:DataSet'})
         doc.wasAttributedTo(colleges, this_script)
@@ -105,6 +118,11 @@ class getDatasets(dml.Algorithm):
         doc.wasAttributedTo(crash, this_script)
         doc.wasGeneratedBy(crash, get_crashes, endTime)
         doc.wasDerivedFrom(crash, resource_crashes, get_crashes, get_crashes, get_crashes)
+
+        mbta = doc.entity('dat:jdbrawn_slarbi#mbta', {prov.model.PROV_LABEL: 'MBTA Bus Stops', prov.model.PROV_TYPE: 'ont:DataSet'})
+        doc.wasAttributedTo(mbta, this_script)
+        doc.wasGeneratedBy(mbta, get_mbta, endTime)
+        doc.wasDerivedFrom(mbta, resource_mbta, get_mbta, get_mbta, get_mbta)
 
         repo.logout()
 
