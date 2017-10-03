@@ -40,6 +40,8 @@ class geodata(dml.Algorithm):
 
 			url = base_url + lon + lat + form
 
+			print(url)
+
 			temp = json.loads(urlopen(url).read().decode('utf-8'))
 
 			first_key = lat.strip("&latitude=")
@@ -51,7 +53,7 @@ class geodata(dml.Algorithm):
 		s = json.dumps(data, indent=4)
 		repo.dropCollection("geodata")
 		repo.createCollection("geodata")
-		repo['nathansw_sbajwa.geodata'].insert_many(data)
+		repo['nathansw_sbajwa.geodata'].insert_one(data)
 
 		repo.logout()
 		endTime = datetime.datetime.now()
@@ -70,7 +72,7 @@ class geodata(dml.Algorithm):
 		doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
 		doc.add_namespace('geodata', 'http://geodataservice.net/demographicsapi.aspx')
 
-		this.script = doc.agent('alg:nathansw_sbajwa#geodata', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+		this_script = doc.agent('alg:nathansw_sbajwa#geodata', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 		resource = doc.entity('geodata:GeoDataService.svc/GetUSDemographics?', {'prov:label':'Lifestyle Data By Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 		
 		get_geodata = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)

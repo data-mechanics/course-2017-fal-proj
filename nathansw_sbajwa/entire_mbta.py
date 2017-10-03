@@ -8,7 +8,7 @@ import os
 from urllib.request import urlopen
 from uszipcode import ZipcodeSearchEngine
 
-class mbta(dml.Algorithm):
+class entire_mbta(dml.Algorithm):
 
 	contributor = 'nathansw_sbajwa'
 	reads = []
@@ -46,7 +46,7 @@ class mbta(dml.Algorithm):
 		# url = "http://realtime.mbta.com/developer/api/v2/stopsbylocation?\
 		# api_key=TYDhtqF81Ua27IfG2lXEqA&lat=" + x + "&lon=" + y + "&format=json"
 		url_base = "http://realtime.mbta.com/developer/api/v2/stopsbylocation?"
-		api_key = dml.auth['services']['MBTADevelopmentPortal']['key']
+		api_key = 'api_key=' + dml.auth['services']['MBTADevelopmentPortal']['key']
 		form = "&format=json"
 		data = {}
 
@@ -94,12 +94,12 @@ class mbta(dml.Algorithm):
 			key_name = "(" + str(loc[0]) + "," + str(loc[1]) + ")"
 			data[key_name] = temp.pop('stop')
 
-			f.close()
+		f.close()
 
 		s = json.dumps(data, indent=4)
 		repo.dropCollection("mbta")
 		repo.createCollection("mbta")
-		repo['nathansw_sbajwa.mbta'].insert_many(data)
+#		repo['nathansw_sbajwa.mbta'].insert_one(data)
 
 		repo.logout()
 		endTime = datetime.datetime.now()
@@ -121,7 +121,7 @@ class mbta(dml.Algorithm):
 		doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
 		doc.add_namespace('mbta', 'http://realtime.mbta.com/developer/')
 
-		this.script = doc.agent('alg:nathansw_sbajwa#mbta', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+		this_script = doc.agent('alg:nathansw_sbajwa#mbta', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 		resource = doc.entity('mbta:api/v2/stopsbylocation?', {'prov:label':'MBTA Stops By Location', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 		get_mbta = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 		doc.wasAssociatedWith(get_mbta, this_script)
@@ -139,7 +139,7 @@ class mbta(dml.Algorithm):
 
 		return doc
 
-mbta.execute()
-doc = mbta.provenance()
+entire_mbta.execute()
+doc = entire_mbta.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
