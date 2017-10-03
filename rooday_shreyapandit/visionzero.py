@@ -24,7 +24,7 @@ class visionzero(dml.Algorithm):
         url = 'http://datamechanics.io/data/rooday_shreyapandit/Vision_Zero_Entry.json'
         resp = requests.get(url).json()
 
-        print("response has come, inserting....")
+        print("Vision0 response has come, inserting....")
 
         repo.dropCollection("visionzero")
         repo.createCollection("visionzero")

@@ -24,7 +24,7 @@ class weather(dml.Algorithm):
         url = 'http://datamechanics.io/data/rooday_shreyapandit/storm_data_search_results.json'
         resp = requests.get(url).json()
 
-        print("response has come, inserting....")
+        print("Weather response has come, inserting....")
 
         repo.dropCollection("weather")
         repo.createCollection("weather")
@@ -42,54 +42,35 @@ class weather(dml.Algorithm):
     
     @staticmethod
     def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
-        '''
-            Create the provenance document describing everything happening
-            in this script. Each run of the script will generate a new
-            document describing that invocation event.
-            '''
-
         # Set up the database connection.
-        # client = dml.pymongo.MongoClient()
-        # repo = client.repo
-        # repo.authenticate('rooday_shreyapandit', 'rooday_shreyapandit')
-        # doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
-        # doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
-        # doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
-        # doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        # doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
+        client = dml.pymongo.MongoClient()
+        repo = client.repo
+        print("***Doc is")
+        print(doc)
+        repo.authenticate('rooday_shreyapandit', 'rooday_shreyapandit')
+        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/rooday_shreyapandit') # The scripts are in <folder>#<filename> format.
+        doc.add_namespace('dat', 'http://datamechanics.io/data/rooday_shreyapandit') # The data sets are in <user>#<collection> format.
+        doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
+        doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
+        doc.add_namespace('weather', 'http://datamechanics.io/data/rooday_shreyapandit/')
 
-        # this_script = doc.agent('alg:rooday_shreyapandit#example', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        # resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        # get_found = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        # get_lost = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        # doc.wasAssociatedWith(get_found, this_script)
-        # doc.wasAssociatedWith(get_lost, this_script)
-        # doc.usage(get_found, resource, startTime, None,
-        #           {prov.model.PROV_TYPE:'ont:Retrieval',
-        #           'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'
-        #           }
-        #           )
-        # doc.usage(get_lost, resource, startTime, None,
-        #           {prov.model.PROV_TYPE:'ont:Retrieval',
-        #           'ont:Query':'?type=Animal+Lost&$select=type,latitude,longitude,OPEN_DT'
-        #           }
-        #           )
+        this_script = doc.agent('alg:rooday_shreyapandit#getWeatherData', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource = doc.entity('dat:storm_data_search_results.json', {'prov:label':'Storm Reports', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        get_weather_data = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(get_weather_data, this_script)
+        doc.usage(get_weather_data, resource, startTime, None,{prov.model.PROV_TYPE:'ont:Retrieval'})
+        weather_data = doc.entity('dat:rooday_shreyapandit#weather', {prov.model.PROV_LABEL:'Storm Reports', prov.model.PROV_TYPE:'ont:DataSet'})
 
-        # lost = doc.entity('dat:rooday_shreyapandit#lost', {prov.model.PROV_LABEL:'Animals Lost', prov.model.PROV_TYPE:'ont:DataSet'})
-        # doc.wasAttributedTo(lost, this_script)
-        # doc.wasGeneratedBy(lost, get_lost, endTime)
-        # doc.wasDerivedFrom(lost, resource, get_lost, get_lost, get_lost)
+        doc.wasAttributedTo(weather_data, this_script)
+        doc.wasGeneratedBy(weather_data, get_weather_data, endTime)
+        doc.wasDerivedFrom(weather_data, resource, get_weather_data, get_weather_data, get_weather_data)
 
-        # found = doc.entity('dat:rooday_shreyapandit#found', {prov.model.PROV_LABEL:'Animals Found', prov.model.PROV_TYPE:'ont:DataSet'})
-        # doc.wasAttributedTo(found, this_script)
-        # doc.wasGeneratedBy(found, get_found, endTime)
-        # doc.wasDerivedFrom(found, resource, get_found, get_found, get_found)
-
-        # repo.logout()
+        repo.logout()
                   
-        # return doc
+        return doc
 
 weather.execute()
-# doc = example.provenance()
-# print(doc.get_provn())
-# print(json.dumps(json.loads(doc.serialize()), indent=4))
+print("running provenance for weather")
+doc = weather.provenance()
+print(doc.get_provn())
+print(json.dumps(json.loads(doc.serialize()), indent=4))
