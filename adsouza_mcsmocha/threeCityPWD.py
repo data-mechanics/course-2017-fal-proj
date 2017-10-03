@@ -25,13 +25,15 @@ class threeCityPWD(dml.Algorithm):
 
         threeReq = repo['adsouza_mcsmocha.ThreeReq'].find()
         cityScore = repo['adsouza_mcsmocha.CityScore'].find()
-        pubWorks = repo['adsouza_mcsmocha.PWD'].find()
+        pubWorks = repo['adsouza_mcsmocha.PWD'].find_one()
+        pubWorks = pubWorks["features"]
+        pubWorks = [e["properties"] for e in pubWorks]
 
         # Select entries in CityScore that pertain to Trash using select
         selectCityScorePWD = [e for e in cityScore if "TRASH" in e["CTY_SCR_NAME"]]
 
         # Union all the Quarterly Trash scores within the above list
-        unionTrashScore = [int(e["CTY_SCR_NBR_QT_01"]) for e in selectCityScorePWD]
+        unionTrashScore = [float(e["CTY_SCR_NBR_QT_01"]) for e in selectCityScorePWD]
 
         # Aggregate the average of the collective Trash score
         aggAverage = sum(unionTrashScore) / len(unionTrashScore)
