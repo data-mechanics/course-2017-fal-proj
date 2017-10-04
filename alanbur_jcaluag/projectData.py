@@ -44,11 +44,11 @@ class projectData(dml.Algorithm):
                 'Longitude': item['lo']}
               for item in collection
         ]
-        repo.dropCollection("hubwayFiltered")
-        repo.createCollection("hubwayFiltered")
-        repo['alanbur_jcaluag.hubwayFiltered'].insert_many(DSet)
-        repo['alanbur_jcaluag.hubwayFiltered'].metadata({'complete':True})
-        print(repo['alanbur_jcaluag.hubwayFiltered'].metadata())
+         repo.dropCollection("hubwayProjected")
+        repo.createCollection("hubwayProjected")
+        repo['alanbur_jcaluag.hubwayProjected'].insert_many(DSet)
+        repo['alanbur_jcaluag.hubwayProjected'].metadata({'complete':True})
+        print(repo['alanbur_jcaluag.hubwayProjected'].metadata())
         
 
         collection=repo['alanbur_jcaluag.mbta'].find()
@@ -59,11 +59,11 @@ class projectData(dml.Algorithm):
              'Longitude':item['stop_lon']}
               for item in collection
         ]
-        repo.dropCollection("mbtaFiltered")
-        repo.createCollection("mbtaFiltered")
-        repo['alanbur_jcaluag.mbtaFiltered'].insert_many(DSet)
-        repo['alanbur_jcaluag.mbtaFiltered'].metadata({'complete':True})
-        print(repo['alanbur_jcaluag.mbtaFiltered'].metadata())
+        repo.dropCollection("mbtaProjected")
+        repo.createCollection("mbtaProjected")
+        repo['alanbur_jcaluag.mbtaProjected'].insert_many(DSet)
+        repo['alanbur_jcaluag.mbtaProjected'].metadata({'complete':True})
+        print(repo['alanbur_jcaluag.mbtaProjected'].metadata())
 
 
 
@@ -90,7 +90,7 @@ class projectData(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'http://datamechanics.io/data/')
 
-        this_script = doc.agent('alg:alanbur_jcaluag#trafficSignalFiltered', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:alanbur_jcaluag#trafficSignalProjected', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_filter = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_filter, this_script)
@@ -99,7 +99,7 @@ class projectData(dml.Algorithm):
                   }
                   )
 
-        filtered = doc.entity('dat:alanbur_jcaluag#trafficSignalFiltered', {prov.model.PROV_LABEL:'Filtered Traffic Data', prov.model.PROV_TYPE:'ont:DataSet'})
+        Projected = doc.entity('dat:alanbur_jcaluag#trafficSignalFiltered', {prov.model.PROV_LABEL:'Filtered Traffic Data', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(filtered, this_script)
         doc.wasGeneratedBy(filtered, get_filter, endTime)
         doc.wasDerivedFrom(filtered, resource, get_filter, get_filter, get_filter)

@@ -25,8 +25,10 @@ args = parser.parse_args()
 # subdirectory specified on the command line.
 path = args.contributor_folder
 algorithms = []
+print('reading files')
 for r,d,f in os.walk(path):
     for file in f:
+        print(file)
         if file.split(".")[-1] == "py":
             name_module = ".".join(file.split(".")[0:-1])
             module = importlib.import_module(path + "." + name_module)
