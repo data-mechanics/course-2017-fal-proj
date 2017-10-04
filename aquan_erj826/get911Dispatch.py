@@ -68,41 +68,38 @@ class get911Counts(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
+        #resources:
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
+        doc.add_namespace('dbe', 'https://data.boston.gov/export/245/954/')
+        doc.add_namespace('dbg', 'https://data.boston.gov/datastore/odata3.0/')
+        doc.add_namespace('cdp', 'https://data.cambridgema.gov/resource/') 
+        doc.add_namespace('svm','https://data.somervillema.gov/resource/')
 
-        this_script = doc.agent('alg:aquan_erj826#example', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        get_found = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        get_lost = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_found, this_script)
-        doc.wasAssociatedWith(get_lost, this_script)
-        doc.usage(get_found, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'
-                  }
+        #define the agent 
+        this_script = doc.agent('alg:aquan_erj826#get911Counts', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        
+        #define the input resource (entity)
+        resource = doc.entity('dbe:2459542e-7026-48e2-9128-ca29dd3bebf8.json', {'prov:label':'911 Counts', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        
+        #define the activity of grabbing the 911 counts
+        get_counts = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(get_counts, this_script)
+        doc.usage(get_counts, resource, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Retrieval'}
                   )
-        doc.usage(get_lost, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Animal+Lost&$select=type,latitude,longitude,OPEN_DT'
-                  }
-                  )
 
-        lost = doc.entity('dat:aquan_erj826#911counts', {prov.model.PROV_LABEL:'Animals Lost', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(lost, this_script)
-        doc.wasGeneratedBy(lost, get_lost, endTime)
-        doc.wasDerivedFrom(lost, resource, get_lost, get_lost, get_lost)
-
-        found = doc.entity('dat:aquan_erj826#911counts', {prov.model.PROV_LABEL:'Animals Found', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(found, this_script)
-        doc.wasGeneratedBy(found, get_found, endTime)
-        doc.wasDerivedFrom(found, resource, get_found, get_found, get_found)
+        #writeout entity def
+        dispatchData = doc.entity('dat:aquan_erj826#Counts911', {prov.model.PROV_LABEL:'911 dataset', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(dispatchData, this_script)
+        doc.wasGeneratedBy(dispatchData, get_counts, endTime)
+        doc.wasDerivedFrom(dispatchData, resource, get_counts, get_counts, get_counts)
 
         repo.logout()
                   
         return doc
 
-get911Counts.execute()
-#doc = example.provenance()
+#get911Counts.execute()
+#doc = get911Counts.provenance()
 #print(doc.get_provn())
 #print(json.dumps(json.loads(doc.serialize()), indent=4))
 

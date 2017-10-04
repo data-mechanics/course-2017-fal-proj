@@ -70,6 +70,7 @@ class getFirearms(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         #resources:
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
+        doc.add_namespace('dbe', 'https://data.boston.gov/export/245/954/')
         doc.add_namespace('dbg', 'https://data.boston.gov/datastore/odata3.0/')
         doc.add_namespace('cdp', 'https://data.cambridgema.gov/resource/') 
         doc.add_namespace('svm','https://data.somervillema.gov/resource/')
