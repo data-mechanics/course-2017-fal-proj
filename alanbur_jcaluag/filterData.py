@@ -20,14 +20,17 @@ class filterData():
         repo.authenticate('alanbur_jcaluag', 'alanbur_jcaluag')
         collection=repo['alanbur_jcaluag.hubwayProjected'].find()
 
-
+        #Boston Coordinate range
         northLat = 42.392459
         southLat = 42.243896
         eastLong = -71.03568
         westLong = -71.187272
 
-        DSet = [x for x in collection if ((southLat < x['Latitude'] < northLat))\
-                    and ((eastLong < x['Longitude'] <westLong))]
+        DSet = [x for x in collection]
+        print(len(DSet))
+        print(DSet)
+        DSet = [x for x in collection if ((southLat < x['Latitude'] < northLat)) and ((eastLong < x['Longitude'] <westLong))]
+        print(len(DSet))
 
         repo.dropCollection("hubwayFiltered")
         repo.createCollection("hubwayFiltered")

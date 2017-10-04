@@ -44,7 +44,7 @@ class projectData(dml.Algorithm):
                 'Longitude': item['lo']}
               for item in collection
         ]
-         repo.dropCollection("hubwayProjected")
+        repo.dropCollection("hubwayProjected")
         repo.createCollection("hubwayProjected")
         repo['alanbur_jcaluag.hubwayProjected'].insert_many(DSet)
         repo['alanbur_jcaluag.hubwayProjected'].metadata({'complete':True})
