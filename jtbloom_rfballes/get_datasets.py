@@ -8,7 +8,7 @@ import uuid
 class get_datasets(dml.Algorithm):
     contributor = 'jtbloom_rfballes'
     reads = []
-    writes = ['jtbloom_rfballes.lost', 'jtbloom_rfballes.found']
+    writes = ['jtbloom_rfballes.charging_stations', 'jtbloom_rfballes.hubway_stations']
 
     @staticmethod
     def execute(trial = False):
