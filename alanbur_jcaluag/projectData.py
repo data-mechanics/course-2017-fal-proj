@@ -8,7 +8,7 @@ import uuid
 class projectData(dml.Algorithm):
     contributor = 'alanbur_jcaluag'
     reads = ['alanbur_jcaluag.trafficSignal', 'alanbur_jcaluag.mbta', 'alanbur_jcaluag.hubway']
-    writes = ['alanbur_jcaluag.trafficSignalFiltered','alanbur_jcaluag.mbtaFiltered', 'alanbur_jcaluag.hubwayFiltered']
+    writes = ['alanbur_jcaluag.trafficSignalProjected','alanbur_jcaluag.mbtaProjected', 'alanbur_jcaluag.hubwayProjected']
     @staticmethod
     def execute(trial = False):
         '''Retrieve some data sets (not using the API here for the sake of simplicity).'''

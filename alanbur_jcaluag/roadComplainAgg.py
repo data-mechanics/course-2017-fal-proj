@@ -34,9 +34,9 @@ class roadComplaints(dml.Algorithm):
                 'UserType' : item['properties']['USERTYPE'],
                 'UserType' : item['properties']['COMMENTS'],
                 'Comments':item['properties']['COMMENTS'],
-                'Status': item['properties']['STATUS']
-                'Date' : item['properties']['REQUESTDATE'][:item['properties']['REQUESTDATE'].index(':')]:
-                }
+                'Status': item['properties']['STATUS'],
+                'Date' : item['properties']['REQUESTDATE'][:item['properties']['REQUESTDATE'].index(':')]
+            }
             
               for item in collection
         ]
