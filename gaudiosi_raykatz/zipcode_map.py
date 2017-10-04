@@ -5,14 +5,14 @@ import prov.model
 import datetime
 import uuid
 
-class properties(dml.Algorithm):
+class zipcode_map(dml.Algorithm):
     contributor = 'gaudiosi_raykatz'
     reads = []
-    writes = ['gaudiosi_katz.properties']
+    writes = ['gaudiosi_katz.zipcode_map']
 
     @staticmethod
     def execute(trial = False):
-        '''Retrieve properties from City of Boston'''
+        '''Retrieve zipcode_map from City of Boston'''
         startTime = datetime.datetime.now()
 
         # Set up the database connection.
@@ -20,32 +20,27 @@ class properties(dml.Algorithm):
         repo = client.repo
         repo.authenticate('gaudiosi_raykatz', 'gaudiosi_raykatz')
         boston_url = "https://data.boston.gov"
-        url = "https://data.boston.gov/api/action/datastore_search?offset=000000&resource_id=062fc6fa-b5ff-4270-86cf-202225e40858"
+        url = "http://gis.cityofboston.gov/arcgis/rest/services/Planning/OpenData/MapServer/1/query?where=1%3D1&geometryType=esriGeometryEnvelope&spatialRel=esriSpatialRelIntersects&outFields=*&returnGeometry=true&returnIdsOnly=false&returnCountOnly=false&returnZ=false&returnM=false&returnDistinctValues=false&f=pjson"
         response = urllib.request.urlopen(url).read().decode("utf-8")
         
         result = json.loads(response)
-        r = result["result"]["records"]
+        prelim_r = result["features"]
+        r = []
+        for points in prelim_r:
+            d = {}
+            d["zipcode"] = points["attributes"]["ZIP5"]
+            d["ShapeSTArea()"] = points["attributes"]["Shape.STArea()"]
+            d["ShapeSTLength()"] = points["attributes"] = ["Shape.STLength()"]
+            d["geometry"] = points["geometry"]
+            r.append(d)
+
         s = json.dumps(r, sort_keys=True, indent=2)
-        print("type =", type(r))
-        repo.dropCollection("properties")
-        repo.createCollection("properties")
-        repo['gaudiosi_raykatz.properties'].insert_many(r)
         
-        ''' If there are >100 results, need to query multiple pages 
-        if result["total"] > 100 and result["offset"] < result["total"] - 100:
-            total = result["total"]
-            runs = total // 100
-            for run in runs:
-                url = boston_url + result["_links"]["next"]
-                response = urllib.request.urlopen(url).read().decode("utf-8")
-                result = json.loads(response)
-                r = result["result"]["records"]
-                s = json.dumps(r, sort_keys=True, indent=2)
-                repo['gaudiosi_raykatz.properties'].insert_many(r)
-        '''
-        
-        repo['gaudiosi_raykatz.properties'].metadata({'complete':True})
-        print(repo['gaudiosi_raykatz.properties'].metadata())
+        repo.dropCollection("zipcode_map")
+        repo.createCollection("zipcode_map")
+        repo['gaudiosi_raykatz.zipcode_map'].insert_many(r)
+        repo['gaudiosi_raykatz.zipcode_map'].metadata({'complete':True})
+        print(repo['gaudiosi_raykatz.zipcode_map'].metadata())
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -72,27 +67,22 @@ class properties(dml.Algorithm):
 
         this_script = doc.agent('alg:gaudiosi_raykatz#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        get_properties = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_properties, this_script)
+        get_zipcode_map = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(get_zipcode_map, this_script)
         
-        doc.usage(get_properties, resource, startTime, None,
+        doc.usage(get_zipcode_map, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Property&$select=MAIL_ADDRESS,OWNER'
+                  'ont:Query':'?type=Map&$select=zipcode,lat,long'
                   }
                   )
         
-        properties = doc.entity('dat:gaudiosi_raykatz#properties', {prov.model.PROV_LABEL:'Properties', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(properties, this_script)
-        doc.wasGeneratedBy(properties, get_properties, endTime)
-        doc.wasDerivedFrom(properties, resource, get_properties, get_properties, get_properties)
+        zipcode_map = doc.entity('dat:gaudiosi_raykatz#zipcode_map', {prov.model.PROV_LABEL:'Zipcode Map', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(zipcode_map, this_script)
+        doc.wasGeneratedBy(zipcode_map, get_zipcode_map, endTime)
+        doc.wasDerivedFrom(zipcode_map, resource, get_zipcode_map, get_zipcode_map, get_zipcode_map)
 
         repo.logout()
                   
         return doc
-
-properties.execute()
-doc = properties.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof
