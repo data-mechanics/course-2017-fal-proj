@@ -7,12 +7,19 @@ at three categories of interest that can be rated and compared school to school:
 To do this we have used the data sets listed below, and performed transformations that make this data useful for analysis.
 
 ### Datasets
-###### Boston Colleges and Universities - https://data.boston.gov/dataset/colleges-and-universities
-###### Boston Crime Incident Reports - https://data.boston.gov/dataset/crime-incident-reports-august-2015-to-date-source-new-system
-###### MassDOT Car Crash Data - http://www.massdot.state.ma.us/highway/Departments/TrafficandSafetyEngineering/CrashData.aspx
-###### MBTA Bus Station Location Data - http://realtime.mbta.com/portal
-###### Boston Food Establishment Lisences - https://data.cityofboston.gov/Permitting/Active-Food-Establishment-Licenses/gb6y-34cq
-###### Boston Entertainment Lisences - https://data.cityofboston.gov/Permitting/Entertainment-Licenses/qq8y-k3gp
+**Boston Colleges and Universities** - https://data.boston.gov/dataset/colleges-and-universities
+
+**Boston Crime Incident Reports** - https://data.boston.gov/dataset/crime-incident-reports-august-2015-to-date-source-new-system
+
+**MassDOT Car Crash Data** - http://www.massdot.state.ma.us/highway/Departments/TrafficandSafetyEngineering/CrashData.aspx
+ - cleaned: http://datamechanics.io/data/jdbrawn_slarbi/CarCrashData.json
+ 
+**MBTA Bus Station Location Data** - http://realtime.mbta.com/portal
+ - cleaned: http://datamechanics.io/data/jdbrawn_slarbi/MBTA_Bus_Stops.geojson
+ 
+**Boston Food Establishment Lisences** - https://data.cityofboston.gov/Permitting/Active-Food-Establishment-Licenses/gb6y-34cq
+
+**Boston Entertainment Lisences** - https://data.cityofboston.gov/Permitting/Entertainment-Licenses/qq8y-k3gp
 
 ### Transformations
 **transformation1** - Creates a union of the zipcode and business names from the entertainment and food license datasets. Then it takes the aggregate and returns a count of the number of 'social businesses' with the zipcode corresponding to those businesses. Ultimately this could be assigned some sort of weight in regards to how social a college is given the number of entertainment and food vicinities in its area.
