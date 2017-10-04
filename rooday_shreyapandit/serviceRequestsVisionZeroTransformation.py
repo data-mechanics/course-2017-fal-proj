@@ -103,28 +103,28 @@ class serviceRequestsVisionZeroTransformation(dml.Algorithm):
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/')  # The event log.
 
-        this_script = doc.agent('alg:rooday_shreyapandit#crimeWeatherTransformation', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:rooday_shreyapandit#serviceRequestsVisionZeroTransformation', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
-        resource_weather = doc.entity('dat:rooday_shreyapandit#weather', {'prov:label': 'Inclement Weather Data for Boston and Suffolk', prov.model.PROV_TYPE: 'ont:DataSet'})
-        resource_crime = doc.entity('dat:rooday_shreyapandit#crime', {'prov:label': 'Crime Data for Boston', prov.model.PROV_TYPE: 'ont:DataSet'})
+        resource_311 = doc.entity('dat:rooday_shreyapandit#servicerequests', {'prov:label': 'Service Request Data for Boston', prov.model.PROV_TYPE: 'ont:DataSet'})
+        resource_visionzero = doc.entity('dat:rooday_shreyapandit#visionzero', {'prov:label': 'Safety Concerns Data for Boston', prov.model.PROV_TYPE: 'ont:DataSet'})
 
-        get_crimeWeatherAnalysis = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
+        get_serviceRequestsVisionZero = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
         
-        doc.wasAssociatedWith(get_crimeWeatherAnalysis, this_script)
+        doc.wasAssociatedWith(get_serviceRequestsVisionZero, this_script)
 
-        doc.usage(get_crimeWeatherAnalysis, resource_weather, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
-        doc.usage(get_crimeWeatherAnalysis, resource_crime, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
+        doc.usage(get_serviceRequestsVisionZero, resource_311, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
+        doc.usage(get_serviceRequestsVisionZero, resource_visionzero, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
 
         crime_weather = doc.entity('dat:rooday_shreyapandit#crimesByDateAndWeather', {prov.model.PROV_LABEL: 'Number of Crimes and Weather Type by Date', prov.model.PROV_TYPE: 'ont:DataSet'})
         doc.wasAttributedTo(crime_weather, this_script)
-        doc.wasGeneratedBy(crime_weather, get_crimeWeatherAnalysis, endTime)
-        doc.wasDerivedFrom(crime_weather, resource_weather, get_crimeWeatherAnalysis, get_crimeWeatherAnalysis, get_crimeWeatherAnalysis)
-        doc.wasDerivedFrom(crime_weather, resource_crime, get_crimeWeatherAnalysis, get_crimeWeatherAnalysis, get_crimeWeatherAnalysis)
+        doc.wasGeneratedBy(crime_weather, get_serviceRequestsVisionZero, endTime)
+        doc.wasDerivedFrom(crime_weather, resource_311, get_serviceRequestsVisionZero, get_serviceRequestsVisionZero, get_serviceRequestsVisionZero)
+        doc.wasDerivedFrom(crime_weather, resource_visionzero, get_serviceRequestsVisionZero, get_serviceRequestsVisionZero, get_serviceRequestsVisionZero)
         repo.logout()
 
         return doc
 
 serviceRequestsVisionZeroTransformation.execute()
-#doc = serviceRequestsVisionZeroTransformation.provenance()
-#print(doc.get_provn())
-#print(json.dumps(json.loads(doc.serialize()), indent=4))
+doc = serviceRequestsVisionZeroTransformation.provenance()
+print(doc.get_provn())
+print(json.dumps(json.loads(doc.serialize()), indent=4))
