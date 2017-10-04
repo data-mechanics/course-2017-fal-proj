@@ -23,15 +23,11 @@ class getServiceRequestsData(dml.Algorithm):
 
         # Get 311 data
         url = "https://data.boston.gov/api/action/datastore_search_sql?sql=SELECT%20*%20from%20%222968e2c0-d479-49ba-a884-4ef523ada3c0%22%20WHERE%20open_dt%20%3E%20%272016-01-01%27"
-        resp = requests.get(url)#.read().decode("utf-8")
+        resp = requests.get(url).json()
         print("response has come, inserting....")
-        r = json.loads(resp.text)
-        print('**************')
-        print(r['result']['records'][0])
-        s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("servicerequests")
         repo.createCollection("servicerequests")
-        repo['rooday_shreyapandit.servicerequests'].insert_many(r['result']['records'])
+        repo['rooday_shreyapandit.servicerequests'].insert_many(resp['result']['records'])
         repo['rooday_shreyapandit.servicerequests'].metadata({'complete':True})
         print("response has been inserted")
         print(repo['rooday_shreyapandit.servicerequests'].metadata())
@@ -74,5 +70,3 @@ print("running provenance for getServiceRequestsData")
 doc = getServiceRequestsData.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
-
-## eof

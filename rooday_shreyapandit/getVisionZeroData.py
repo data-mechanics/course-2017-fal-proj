@@ -22,13 +22,13 @@ class getVisionZeroData(dml.Algorithm):
         repo.authenticate('rooday_shreyapandit', 'rooday_shreyapandit')
 
         url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/5bed19f1f9cb41329adbafbd8ad260e5_0.geojson'
-        resp = requests.get(url).json()['features']
+        resp = requests.get(url).json()
 
         print("Vision0 response has come, inserting....")
 
         repo.dropCollection("visionzero")
         repo.createCollection("visionzero")
-        repo['rooday_shreyapandit.visionzero'].insert_many(resp)
+        repo['rooday_shreyapandit.visionzero'].insert_many(resp['features'])
         repo['rooday_shreyapandit.visionzero'].metadata({'complete':True})
 
         print("response has been inserted")

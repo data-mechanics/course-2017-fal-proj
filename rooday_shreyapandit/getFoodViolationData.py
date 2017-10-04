@@ -23,15 +23,11 @@ class getFoodViolationData(dml.Algorithm):
 
         # Get Food Inspection Violation data
         url = "https://data.boston.gov/api/3/action/datastore_search?resource_id=4582bec6-2b4f-4f9e-bc55-cbaa73117f4c&limit=40000"
-        resp = requests.get(url)
+        resp = requests.get(url).json()
         print("response has come, inserting....")
-        r = json.loads(resp.text)
-        print('************** The data look likes below:')
-        print(r['result']['records'][0])
-        s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("foodviolations")
         repo.createCollection("foodviolations")
-        repo['rooday_shreyapandit.foodviolations'].insert_many(r['result']['records'])
+        repo['rooday_shreyapandit.foodviolations'].insert_many(resp['result']['records'])
         repo['rooday_shreyapandit.foodviolations'].metadata({'complete':True})
         print("response has been inserted")
         print(repo['rooday_shreyapandit.foodviolations'].metadata())
@@ -75,5 +71,3 @@ print("running provenance for getFoodViolationData")
 doc = getFoodViolationData.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
-
-## eof

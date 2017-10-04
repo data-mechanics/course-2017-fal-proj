@@ -25,15 +25,11 @@ class getCrimeData(dml.Algorithm):
         # url = 'https://data.boston.gov/api/action/datastore_search?limit=5&q=title:jones'
         url_crime = "https://data.boston.gov/api/action/datastore_search_sql?sql=SELECT%20*%20from%20%2212cb3883-56f5-47de-afa5-3b1cf61b257b%22"
         #'http://localhost:8890/crime.json'
-        response_crime = requests.get(url_crime)
+        response_crime = requests.get(url_crime).json()
         print("crime response has come, inserting....")
-        r_crime = json.loads(response_crime.text)
-        print('**************')
-        print(len(r_crime['result']['records']))
-        s_crime = json.dumps(r_crime, sort_keys=True, indent=2)
         repo.dropCollection("crime")
         repo.createCollection("crime")
-        repo['rooday_shreyapandit.crime'].insert_many(r_crime['result']['records'])
+        repo['rooday_shreyapandit.crime'].insert_many(response_crime['result']['records'])
         repo['rooday_shreyapandit.crime'].metadata({'complete':True})
         print("crime response has been inserted")
         print(repo['rooday_shreyapandit.crime'].metadata())
@@ -82,5 +78,3 @@ print("running provenance for getCrimeData")
 doc = getCrimeData.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
-
-## eof
