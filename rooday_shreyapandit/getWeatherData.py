@@ -55,11 +55,11 @@ class getWeatherData(dml.Algorithm):
         doc.add_namespace('weather', 'http://datamechanics.io/data/rooday_shreyapandit/')
 
         this_script = doc.agent('alg:#getWeatherData', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('dat:storm_data_search_results.json', {'prov:label':'Storm Reports', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource = doc.entity('dat:storm_data_search_results.json', {'prov:label':'Inclement Weather Data for Boston and Suffolk', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_weather_data = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_weather_data, this_script)
         doc.usage(get_weather_data, resource, startTime, None,{prov.model.PROV_TYPE:'ont:Retrieval'})
-        weather_data = doc.entity('dat:#weather', {prov.model.PROV_LABEL:'Storm Reports', prov.model.PROV_TYPE:'ont:DataSet'})
+        weather_data = doc.entity('dat:#weather', {prov.model.PROV_LABEL:'Inclement Weather Data for Boston and Suffolk', prov.model.PROV_TYPE:'ont:DataSet'})
 
         doc.wasAttributedTo(weather_data, this_script)
         doc.wasGeneratedBy(weather_data, get_weather_data, endTime)
