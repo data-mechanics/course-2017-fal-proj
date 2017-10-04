@@ -44,13 +44,13 @@ class policeHospital(dml.Algorithm):
         keys = {r[0] for r in union_both}
         aggregate_both= [(key, sum([v for (k,v) in union_both if k == key])) for key in keys]
 
-        print(aggregate_both)
+        #print(aggregate_both)
 
         final3= []
         for entry in aggregate_both:
             final3.append({'zipcode:':entry[0], 'NumofPoliceHospital':entry[1]})
 
-        print("final", final3)
+        #print("final", final3)
         repo['jliang24_tpotye.policeHospitalData'].insert_many(final3)
         
         repo.logout()
@@ -76,13 +76,14 @@ class policeHospital(dml.Algorithm):
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
+        doc.add_namespace('bdp1', 'https://data.nlc.org/resource/')
         doc.add_namespace('bdp2', 'https://data.boston.gov/export/622/208/')
 
         this_script = doc.agent('alg:jliang24_tpotye#policeHospital', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
-        resource_police = doc.entity('bdp:pyxn-r3i2', {'prov:label':'Police Stations', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_police = doc.entity('dat:jliang24_tpotye#police', {'prov:label':'Police Stations', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 
-        resource_hospital = doc.entity('bdp2:6222085d-ee88-45c6-ae40-0c7464620d64', {'prov:label':'Hospital Locations', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_hospital = doc.entity('dat:jliang24_tpotye#hospital', {'prov:label':'Hospital Locations', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         
         get_policeHospital = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         
@@ -105,7 +106,7 @@ class policeHospital(dml.Algorithm):
                   
         return doc
 
-policeHospital.execute()
-doc = policeHospital.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+##policeHospital.execute()
+##doc = policeHospital.provenance()
+##print(doc.get_provn())
+##print(json.dumps(json.loads(doc.serialize()), indent=4))
