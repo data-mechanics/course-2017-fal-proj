@@ -59,6 +59,13 @@ class aggregateProperty(dml.Algorithm):
         
         print("aggregate_average", aggregate_average)
         
+        final= []
+        for entry in aggregate_average:
+            final.append({'zipcode:':entry[0], 'averagePropertyVal':entry[1]})
+
+        print("final", final)
+        repo['jliang24_tpotye.aggregatePropertyData'].insert_many(final)
+        
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -92,7 +99,7 @@ class aggregateProperty(dml.Algorithm):
 
 
 
-        aggregateProperty = doc.entity('dat:jliang24_tpotye#aggregateProperty', {prov.model.PROV_LABEL:'Aggregate Properties', prov.model.PROV_TYPE:'ont:DataSet'})
+        aggregateProperty = doc.entity('dat:jliang24_tpotye#aggregatePropertyData', {prov.model.PROV_LABEL:'Aggregate Properties', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(aggregateProperty, this_script)
         doc.wasGeneratedBy(aggregateProperty, get_aggProp, endTime)
         doc.wasDerivedFrom(aggregateProperty, resource_properties, get_aggProp, get_aggProp, get_aggProp)
