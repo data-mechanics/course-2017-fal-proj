@@ -78,6 +78,7 @@ class gunsRecovered(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         #resources:
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
+        doc.add_namespace('dbg', 'https://data.boston.gov/datastore/odata3.0/')
         doc.add_namespace('cdp', 'https://data.cambridgema.gov/resource/') 
         doc.add_namespace('svm','https://data.somervillema.gov/resource/')
         
@@ -94,6 +95,7 @@ class gunsRecovered(dml.Algorithm):
                   {prov.model.PROV_TYPE:'ont:Calculation'}
                   )
 
+        #define write entity
         gunsRecoveredNums = doc.entity('dat:aquan_erj826#gunsRecoveredNums', {prov.model.PROV_LABEL:'Guns Recovered List', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(gunsRecoveredNums, this_script)
         doc.wasGeneratedBy(gunsRecoveredNums, get_summation, endTime)
