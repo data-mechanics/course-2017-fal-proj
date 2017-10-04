@@ -30,19 +30,18 @@ class bikeNetwork():
 
         features = [
 
-            [{'Location':dict['properties']['STREET_NAM']},
-             {'Coordinates': dict['geometry']['coordinates']}
 
-             ] for dict in features
+                {'Data': 'Bike Routes','Location':dict['properties']['STREET_NAM'], 'Coordinates': dict['geometry']['coordinates']}
+
+              for dict in features
         ]
 
-        for x in features:
-            print(x,'\n')
-        repo.dropCollection("trafficSignal")
-        repo.createCollection("trafficSignal")
-        repo['alanbur_jcaluag.trafficSignal'].insert_many(features)
-        repo['alanbur_jcaluag.trafficSignal'].metadata({'complete':True})
+        repo.dropCollection("bikeNetwork")
+        repo.createCollection("bikeNetwork")
+        repo['alanbur_jcaluag.bikeNetwork'].insert_many(features)
+        repo['alanbur_jcaluag.bikeNetwork'].metadata({'complete':True})
         repo.logout()
+        print(repo['alanbur_jcaluag.bikeNetwork'].metadata())
 
         endTime = datetime.datetime.now()
 

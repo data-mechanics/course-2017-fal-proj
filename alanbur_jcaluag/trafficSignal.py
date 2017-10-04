@@ -31,23 +31,19 @@ class trafficSignal():
 
         features = [
 
-            [{'Location':dict['properties']['Location']},
-             {'Latitude': dict['geometry']['coordinates'][0]},
-             {'Longitude': dict['geometry']['coordinates'][1]}
-
-             ] for dict in features
+            {'Data': 'Traffic Signals',
+                'Location':dict['properties']['Location'],
+             'Latitude': dict['geometry']['coordinates'][0],
+             'Longitude': dict['geometry']['coordinates'][1]}
+              for dict in features
         ]
-
-        for x in features:
-            print(x,'\n')
-
 
 
         repo.dropCollection("trafficSignal")
         repo.createCollection("trafficSignal")
         repo['alanbur_jcaluag.trafficSignal'].insert_many(features)
         repo['alanbur_jcaluag.trafficSignal'].metadata({'complete':True})
-        print(repo['alanbur_jcaluag.mbta'].metadata())
+        print(repo['alanbur_jcaluag.trafficSignal'].metadata())
         repo.logout()
 
         endTime = datetime.datetime.now()
