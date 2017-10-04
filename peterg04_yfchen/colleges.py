@@ -6,10 +6,10 @@ import datetime
 import uuid
 from builtins import staticmethod
 
-class parcelData(dml.Algorithm):
+class colleges(dml.Algorithm):
     contributor = 'peterg04_yfchen'
     reads = []
-    writes = ['peterg04_yfchen.parcelData']
+    writes = ['peterg04_yfchen.colleges']
     
     @staticmethod
     def execute(trial = False):
@@ -20,15 +20,15 @@ class parcelData(dml.Algorithm):
         repo = client.repo
         repo.authenticate('peterg04_yfchen', 'peterg04_yfchen')
         
-        url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/f3d274161b4a47aa9acf48d0d04cd5d4_0.geojson'
+        url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/cbf14bb032ef4bd38e20429f71acb61a_2.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
 #         s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("parcelData")
-        repo.createCollection("parcelData")
-        repo['peterg04_yfchen.parcelData'].insert(r)
-        repo['peterg04_yfchen.parcelData'].metadata({'complete':True})
-        print(repo['peterg04_yfchen.parcelData'].metadata())
+        repo.dropCollection("colleges")
+        repo.createCollection("colleges")
+        repo['peterg04_yfchen.colleges'].insert(r)
+        repo['peterg04_yfchen.colleges'].metadata({'complete':True})
+        print(repo['peterg04_yfchen.colleges'].metadata())
         
         repo.logout()
         
@@ -53,20 +53,20 @@ class parcelData(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
-        this_script = doc.agent('alg:peterg04_yfchen#parcelData', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:peterg04_yfchen#colleges', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        get_parcelData = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_parcelData, this_script)
-        doc.usage(get_parcelData, resource, startTime, None,
+        get_colleges = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(get_colleges, this_script)
+        doc.usage(get_colleges, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
                   'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'
                   }
                   )
 
-        parcelData= doc.entity('dat:peterg04_yfchen#parcelData', {prov.model.PROV_LABEL:'Animals Found', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(parcelData, this_script)
-        doc.wasGeneratedBy(parcelData, get_parcelData, endTime)
-        doc.wasDerivedFrom(parcelData, resource, get_parcelData, get_parcelData, get_parcelData)
+        colleges= doc.entity('dat:peterg04_yfchen#colleges', {prov.model.PROV_LABEL:'Animals Found', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(colleges, this_script)
+        doc.wasGeneratedBy(colleges, get_colleges, endTime)
+        doc.wasDerivedFrom(colleges, resource, get_colleges, get_colleges, get_colleges)
 
         repo.logout()
                   
