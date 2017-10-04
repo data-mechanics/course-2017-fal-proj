@@ -2,6 +2,7 @@
 Authors:
 
   Jennifer Liang: jliang24 
+  
   Taylor Potye: tpotye 
 
 Purpose:
@@ -11,9 +12,13 @@ The city services of Boston have a wide range of area to cover, but are all the 
 DataSets:
 
   Property Assessments from 2016 from City of Boston data portal
+  
   Boston 311 Service Requests from City of Boston data portal
+  
   Pothole Repairs from National League of Cities data portal
+  
   Hospital Locations from Analyze Boston data portal
+  
   Boston Police Stations from City of Boston data portal
 
 Transformations:
@@ -25,6 +30,9 @@ potholeAnalysis- Using the Boston Police Station and Hospital location data, thr
 policeHospital- Using the Boston 311 Service Requests and Pothole Repairs data, through a series of unions and aggregations this trasformation gives the ratio of pothole service requests to pothole repairs per zip code.  
 
 Required Python Libraries:
+
   dml
+  
   prov
+  
   numpy
