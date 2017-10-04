@@ -8,7 +8,7 @@ import uuid
 class get_datasets(dml.Algorithm):
     contributor = 'jtbloom_rfballes'
     reads = []
-    writes = ['jtbloom_rfballes.charging_stations', 'jtbloom_rfballes.hubway_stations']
+    writes = ['jtbloom_rfballes.charging_stations', 'jtbloom_rfballes.hubway_stations', 'jtbloom_rfballes.bike_network']
 
     @staticmethod
     def execute(trial = False):
@@ -55,19 +55,27 @@ class get_datasets(dml.Algorithm):
         repo['jtbloom_rfballes.bike_network'].metadata({'complete':True})
         print(repo['jtbloom_rfballes.bike_network'].metadata())
 
-        # Database 4: Sidewalk Centerline
-        url = 'https://boston.opendatasoft.com/explore/dataset/sidewalk-centerline/download/?format=geojson&timezone=America/New_York'
+        # Database 4: Boston Neighborhoods
+        url = 'https://boston.opendatasoft.com/explore/dataset/boston-neighborhoods/download/?format=geojson&timezone=America/New_York'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("sidewalk_centerline")
-        repo.createCollection("sidewalk_centerline")
-        repo['jtbloom_rfballes.sidewalk_centerline'].insert_many(r)
-        #for i in r:
-          #  repo['jtbloom_rfballes.sidewalk_centerline'].insert(i)
+        repo.dropCollection("neighborhoods")
+        repo.createCollection("neighborhoods")
+        repo['jtbloom_rfballes.neighborhoods'].insert(r)
+        repo['jtbloom_rfballes.neighborhoods'].metadata({'complete':True})
+        print(repo['jtbloom_rfballes.neighborhoods'].metadata())
 
-        repo['jtbloom_rfballes.sidewalk_centerline'].metadata({'complete':True})
-        print(repo['jtbloom_rfballes.sidewalk_centerline'].metadata())
+        # Database 5: Trees
+        url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/ce863d38db284efe83555caf8a832e2a_1.geojson'
+        response = urllib.request.urlopen(url).read().decode("utf-8")
+        r = json.loads(response)
+        s = json.dumps(r, sort_keys=True, indent=2)
+        repo.dropCollection("trees")
+        repo.createCollection("trees")
+        repo['jtbloom_rfballes.trees'].insert(r)
+        repo['jtbloom_rfballes.trees'].metadata({'complete':True})
+        print(repo['jtbloom_rfballes.trees'].metadata())
 
 
         repo.logout()
@@ -103,17 +111,21 @@ class get_datasets(dml.Algorithm):
         resource_electric = doc.entity('mdot:ed1c6fb748a646ac83b210985e1069b5_0', {'prov:label':'Electric Charging Stations', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
         resource_hubway = doc.entity('bods:hubway-station-locations', {'prov:label':'Hubway Stations', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
         resource_bike = doc.entity('ab:d02c9d2003af455fbc37f550cc53d3a4_0', {'prov:label':'Bike Network', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
-        resource_sidewalk = doc.entity('bods:sidewalk-centerline', {'prov:label':'Sidewalk Centerline', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
-        
+        resource_neighborhoods = doc.entity('bods:boston-neighborhoods', {'prov:label':'Neighborhoods', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
+        resource_trees = doc.entity('ab:ce863d38db284efe83555caf8a832e2a_1', {'prov:label':'Trees', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
+
+
         get_electric = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         get_hubway = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         get_bike = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        get_sidewalk = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        get_neighborhoods = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        get_trees = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 
         doc.wasAssociatedWith(get_electric, this_script)
         doc.wasAssociatedWith(get_hubway, this_script)
         doc.wasAssociatedWith(get_bike, this_script)
-        doc.wasAssociatedWith(get_sidewalk, this_script)
+        doc.wasAssociatedWith(get_neighborhoods, this_script)
+        doc.wasAssociatedWith(get_trees, this_script)
 
         doc.usage(get_electric, resource_electric, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval'
@@ -131,9 +143,14 @@ class get_datasets(dml.Algorithm):
                   }
                   )
 
-        doc.usage(get_sidewalk, resource_sidewalk, startTime, None,
+        doc.usage(get_neighborhoods, resource_neighborhoods, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
                   'ont:Query':'/download/?format=geojson&timezone=America/New_York'
+                  }
+                  )
+
+        doc.usage(get_trees, resource_trees, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Retrieval'
                   }
                   )
 
@@ -152,18 +169,24 @@ class get_datasets(dml.Algorithm):
         doc.wasGeneratedBy(bike, get_bike, endTime)
         doc.wasDerivedFrom(bike, resource_bike, get_bike, get_bike, get_bike)
 
-        sidewalk = doc.entity('dat:jtbloom_rfballes#sidewalk', {prov.model.PROV_LABEL:'Sidewalk Centerline', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(sidewalk, this_script)
-        doc.wasGeneratedBy(sidewalk, get_sidewalk, endTime)
-        doc.wasDerivedFrom(sidewalk, resource_sidewalk, get_sidewalk, get_sidewalk, get_sidewalk)
+        neighborhoods = doc.entity('dat:jtbloom_rfballes#neighborhoods', {prov.model.PROV_LABEL:'Boston Neighborhoods', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(neighborhoods, this_script)
+        doc.wasGeneratedBy(neighborhoods, get_neighborhoods, endTime)
+        doc.wasDerivedFrom(neighborhoods, resource_neighborhoods, get_neighborhoods, get_neighborhoods, get_neighborhoods)
+
+        trees = doc.entity('dat:jtbloom_rfballes#trees', {prov.model.PROV_LABEL:'Trees', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(trees, this_script)
+        doc.wasGeneratedBy(trees, get_trees, endTime)
+        doc.wasDerivedFrom(trees, resource_trees, get_trees, get_trees, get_trees)
+
 
         repo.logout()
                   
         return doc
 
 #example.execute()
-#doc = example.provenance()
-#print(doc.get_provn())
-#print(json.dumps(json.loads(doc.serialize()), indent=4))
+doc = example.provenance()
+print(doc.get_provn())
+print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof
