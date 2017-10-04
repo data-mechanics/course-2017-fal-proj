@@ -20,7 +20,7 @@ import prov.model
 import datetime
 import uuid
 
-class get911Counts(dml.Algorithm):
+class get911Dispatch(dml.Algorithm):
     contributor = 'aquan_erj826'
     reads = []
     writes = ['aquan_erj826.Counts911']
@@ -98,8 +98,8 @@ class get911Counts(dml.Algorithm):
                   
         return doc
 
-#get911Counts.execute()
-#doc = get911Counts.provenance()
+#get911Dispatch.execute()
+#doc = get911Dispatch.provenance()
 #print(doc.get_provn())
 #print(json.dumps(json.loads(doc.serialize()), indent=4))
 
