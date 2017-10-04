@@ -49,8 +49,8 @@ class potholeAnalysis(dml.Algorithm):
         aggregate_potholes= [(key, sum([v for (k,v) in potholeRepairs if k == key])) for key in keys2]
         
         
-        print("aggregate_potholes311",aggregate_potholes311)
-        print("aggregate_potholes",aggregate_potholes)
+        #print("aggregate_potholes311",aggregate_potholes311)
+        #print("aggregate_potholes",aggregate_potholes)
 
         #Projection
 
@@ -63,14 +63,14 @@ class potholeAnalysis(dml.Algorithm):
         keys3 = {r[0] for r in both}
         ratio= [(key, np.prod([v for (k,v) in both if k == key])) for key in keys3]
 
-        print("ratio", ratio)
+        #print("ratio", ratio)
 
 
         final2= []
         for entry in ratio:
             final2.append({'zipcode:':entry[0], 'ratio':entry[1]})
 
-        print("final", final2)
+        #print("final", final2)
 
         repo['jliang24_tpotye.potholeAnalysisData'].insert_many(final2)
                             
@@ -98,12 +98,13 @@ class potholeAnalysis(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
         doc.add_namespace('bdp1', 'https://data.nlc.org/resource/')
+        doc.add_namespace('bdp2', 'https://data.boston.gov/export/622/208/')
 
         this_script = doc.agent('alg:jliang24_tpotye#potholeAnalysis', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
-        resource_311 = doc.entity('bdp:wc8w-nujj', {'prov:label':'311 Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_311 = doc.entity('dat:jliang24_tpotye#doc_311', {'prov:label':'311 Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 
-        resource_potholes = doc.entity('bdp1:5udy-aqqy', {'prov:label':'Potholes Repaired', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_potholes = doc.entity('dat:jliang24_tpotye#potholes', {'prov:label':'Potholes Repaired', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         
         get_potholes_analysis = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         
@@ -125,7 +126,7 @@ class potholeAnalysis(dml.Algorithm):
                   
         return doc
 
-potholeAnalysis.execute()
-doc = potholeAnalysis.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+##potholeAnalysis.execute()
+##doc = potholeAnalysis.provenance()
+##print(doc.get_provn())
+##print(json.dumps(json.loads(doc.serialize()), indent=4))
