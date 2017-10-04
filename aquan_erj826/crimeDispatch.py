@@ -1,17 +1,12 @@
 """
 Eric Jacobson
 erj826@bu.edu
-
 Andrew Quan
 aquan@bu.edu
-
 CS591
 Project 1
-
 3 October 2017
-
 crimeDispatch.py
-
 Transformation:
 Selection and projection on repo.aquan_erj826.Counts911, 
 and an aggregation with repo.aquan_erj826.crimes to find 
@@ -24,12 +19,12 @@ import dml
 import prov.model
 import datetime
 import uuid
-from bson.objectid import ObjectId
+#from bson.objectid import ObjectId
 
 class crimeDispatch(dml.Algorithm):
     contributor = 'erj826'
-    reads = []
-    writes = ['aquan_erj826.crimeDispatch']
+    reads = ['aquan_erj826.Counts911', 'aquan_erj826.crimes']
+    writes = ['aquan_erj826.crimeDispatchResult']
 
 
     @staticmethod
@@ -101,47 +96,52 @@ class crimeDispatch(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('alice_bob', 'alice_bob')
+        repo.authenticate('erj826', 'erj826')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
+        #resources:
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
+        doc.add_namespace('dbe', 'https://data.boston.gov/export/245/954/')
+        doc.add_namespace('dbg', 'https://data.boston.gov/datastore/odata3.0/')
+        doc.add_namespace('cdp', 'https://data.cambridgema.gov/resource/') 
+        doc.add_namespace('svm','https://data.somervillema.gov/resource/')
 
-        this_script = doc.agent('alg:alice_bob#example', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        get_found = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        get_lost = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_found, this_script)
-        doc.wasAssociatedWith(get_lost, this_script)
-        doc.usage(get_found, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'
-                  }
+        #define the agent
+        this_script = doc.agent('alg:aquan_erj826#crimeDispatch', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        
+        #define the crimeList collection(entity)
+        Counts911 = doc.entity('dat:aquan_erj826#Counts911', {'prov:label':'911 Collection', prov.model.PROV_TYPE:'ont:DataSet'})
+        
+        #define the 911Counts collection(entity)
+        crimes = doc.entity('dat:aquan_erj826#crimes', {'prov:label':'Crime Collection', prov.model.PROV_TYPE:'ont:DataSet'})
+        
+        #define the activity of calling the script                              
+        subtract_crimes = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(Counts911, this_script)
+        doc.wasAssociatedWith(crimes, this_script)
+        doc.usage(subtract_crimes, Counts911, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Calculation'}
                   )
-        doc.usage(get_lost, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Animal+Lost&$select=type,latitude,longitude,OPEN_DT'
-                  }
+        doc.usage(subtract_crimes, crimes, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Calculation'}
                   )
 
-        lost = doc.entity('dat:alice_bob#lost', {prov.model.PROV_LABEL:'Animals Lost', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(lost, this_script)
-        doc.wasGeneratedBy(lost, get_lost, endTime)
-        doc.wasDerivedFrom(lost, resource, get_lost, get_lost, get_lost)
-
-        found = doc.entity('dat:alice_bob#found', {prov.model.PROV_LABEL:'Animals Found', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(found, this_script)
-        doc.wasGeneratedBy(found, get_found, endTime)
-        doc.wasDerivedFrom(found, resource, get_found, get_found, get_found)
+        #define the writeout entity
+        crimeDispatchResult = doc.entity('dat:aquan_erj826#crimeDispatchResult', {prov.model.PROV_LABEL:'Result of Subtraction', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(crimeDispatchResult, this_script)
+        doc.wasGeneratedBy(crimeDispatchResult, subtract_crimes, endTime)
+        doc.wasDerivedFrom(crimeDispatchResult, Counts911, subtract_crimes, subtract_crimes, subtract_crimes)
+        doc.wasDerivedFrom(crimeDispatchResult, crimes, subtract_crimes, subtract_crimes, subtract_crimes)
 
         repo.logout()
                   
         return doc
 
-crimeDispatch.execute()
-# doc = example.provenance()
-# print(doc.get_provn())
-# print(json.dumps(json.loads(doc.serialize()), indent=4))
+#crimeDispatch.execute()
+#doc = crimeDispatch.provenance()
+#print(doc.get_provn())
+#print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof
