@@ -124,7 +124,7 @@ class serviceRequestsVisionZeroTransformation(dml.Algorithm):
 
         return doc
 
-serviceRequestsVisionZeroTransformation.execute()
-doc = serviceRequestsVisionZeroTransformation.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+#serviceRequestsVisionZeroTransformation.execute()
+#doc = serviceRequestsVisionZeroTransformation.provenance()
+#print(doc.get_provn())
+#print(json.dumps(json.loads(doc.serialize()), indent=4))

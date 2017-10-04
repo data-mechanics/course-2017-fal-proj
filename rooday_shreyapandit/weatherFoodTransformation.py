@@ -138,4 +138,4 @@ class weatherFoodTransformation(dml.Algorithm):
 
         return doc
 
-weatherFoodTransformation.execute()
+#weatherFoodTransformation.execute()

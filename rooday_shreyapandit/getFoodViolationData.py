@@ -66,8 +66,8 @@ class getFoodViolationData(dml.Algorithm):
         return doc
 
 
-getFoodViolationData.execute()
-print("running provenance for getFoodViolationData")
-doc = getFoodViolationData.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+#getFoodViolationData.execute()
+#print("running provenance for getFoodViolationData")
+#doc = getFoodViolationData.provenance()
+#print(doc.get_provn())
+#print(json.dumps(json.loads(doc.serialize()), indent=4))
