@@ -5,10 +5,10 @@ import prov.model
 import datetime
 import uuid
 
-class example(dml.Algorithm):
+class bostonNeighborhoods(dml.Algorithm):
     contributor = 'medinad'
     reads = []
-    writes = ['medinad.lost', 'medinad.found']
+    writes = ['medinad.neighbor']#'medinad.meters'
 
     @staticmethod
     def execute(trial = False):
@@ -20,24 +20,17 @@ class example(dml.Algorithm):
         repo = client.repo
         repo.authenticate('medinad', 'medinad')
 
-        url = 'http://cs-people.bu.edu/lapets/591/examples/lost.json'
+        url = 'http://datamechanics.io/data/medinad/boston-neighborhoods.json'#'http://bostonopendata-boston.opendata.arcgis.com/datasets/962da9bb739f440ba33e746661921244_9.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("lost")
-        repo.createCollection("lost")
-        repo['medinad.lost'].insert_many(r)
-        repo['medinad.lost'].metadata({'complete':True})
-        print(repo['medinad.lost'].metadata())
+        repo.dropCollection("neighbor")
+        repo.createCollection("neighbor")
+        repo['medinad.neighbor'].insert_many(r)
+        repo['medinad.neighbor'].metadata({'complete':True})
+        print(repo['medinad.neighbor'].metadata())
 
-        url = 'http://cs-people.bu.edu/lapets/591/examples/found.json'
-        response = urllib.request.urlopen(url).read().decode("utf-8")
-        r = json.loads(response)
-        s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("found")
-        repo.createCollection("found")
-        repo['medinad.found'].insert_many(r)
-
+    
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -55,46 +48,46 @@ class example(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('alice_bob', 'alice_bob')
+        repo.authenticate('medinad', 'medinad')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
-
-        this_script = doc.agent('alg:alice_bob#example', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        
+        this_script = doc.agent('alg:medinad#bostonNeighborhoods', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        get_found = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        get_lost = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_found, this_script)
-        doc.wasAssociatedWith(get_lost, this_script)
-        doc.usage(get_found, resource, startTime, None,
+        #get_found = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        get_neighbor = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(get_neighbor, this_script)
+        #doc.wasAssociatedWith(get_lost, this_script)
+        doc.usage(get_neighbor, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
                   'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'
                   }
                   )
-        doc.usage(get_lost, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Animal+Lost&$select=type,latitude,longitude,OPEN_DT'
-                  }
-                  )
+        #doc.usage(get_lost, resource, startTime, None,
+        #          {prov.model.PROV_TYPE:'ont:Retrieval',
+        #          'ont:Query':'?type=Animal+Lost&$select=type,latitude,longitude,OPEN_DT'
+        #          }
+        #          )
 
-        lost = doc.entity('dat:alice_bob#lost', {prov.model.PROV_LABEL:'Animals Lost', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(lost, this_script)
-        doc.wasGeneratedBy(lost, get_lost, endTime)
-        doc.wasDerivedFrom(lost, resource, get_lost, get_lost, get_lost)
+        neighbor = doc.entity('dat:medinad#neighbor', {prov.model.PROV_LABEL:'NEIGHBOR', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(neighbor, this_script)
+        doc.wasGeneratedBy(neighbor, get_neighbor, endTime)
+        doc.wasDerivedFrom(neighbor, resource, get_neighbor, get_neighbor, get_neighbor)
 
-        found = doc.entity('dat:alice_bob#found', {prov.model.PROV_LABEL:'Animals Found', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(found, this_script)
-        doc.wasGeneratedBy(found, get_found, endTime)
-        doc.wasDerivedFrom(found, resource, get_found, get_found, get_found)
+        #found = doc.entity('dat:alice_bob#found', {prov.model.PROV_LABEL:'Animals Found', prov.model.PROV_TYPE:'ont:DataSet'})
+        #doc.wasAttributedTo(found, this_script)
+        #doc.wasGeneratedBy(found, get_found, endTime)
+        #doc.wasDerivedFrom(found, resource, get_found, get_found, get_found)
 
         repo.logout()
                   
         return doc
 
-example.execute()
-doc = example.provenance()
+bostonNeighborhoods.execute()
+doc = bostonNeighborhoods.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
 
