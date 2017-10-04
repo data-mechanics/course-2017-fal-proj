@@ -39,12 +39,13 @@ class avgTrafficDelay(dml.Algorithm):
         
         # set trafficData to a variable for manipulation
         trafficData = repo[avgTrafficDelay.reads[0]].find()  # a list of dictionaries
-        # need to drop the first dictionary entry of the list ... it doesn't go with the schema of the rest of data set for some reason and causes error
-        trafficData = trafficData[1:]
         
         # We will be doing a selection -> projection -> aggregation -> projection = new dataset
-        # Selection : will be based on the city so that I obtain all of the Boston data only.
-        selectedData = select(trafficData, lambda entry: entry["country"] == "US")
+        # need to drop the first dictionary entry of the list ... it doesn't go with the schema of the rest of data set for some reason and causes error
+        selectedData = select(trafficData, lambda entry: "city" in entry)
+#         
+         # Selection : will be based on the city so that I obtain all of the Boston data only.
+        selectedData = select(selectedData, lambda entry: entry["city"].startswith('Boston'))
         
         # Projection : I want to project the data so that it becomes {date : delay}
         projectedData = project(selectedData, lambda entry: (entry["inject_date"], int(entry["delay"])))
@@ -54,7 +55,7 @@ class avgTrafficDelay(dml.Algorithm):
         
         # Must do projection one last time to get the mean of delay time for each date; convert back to a dictionary
         finalData = project(aggregatedData, lambda entry: dict([(entry[0], entry[1]/len(projectedData))]))
-
+        
         repo['peterg04_yfchen.avgTrafficDelay'].insert(finalData, check_keys = False)
         repo['peterg04_yfchen.avgTrafficDelay'].metadata({'complete':True})
         print(repo['peterg04_yfchen.avgTrafficDelay'].metadata())
