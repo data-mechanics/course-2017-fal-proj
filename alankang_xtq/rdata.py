@@ -5,7 +5,7 @@ import prov.model
 import datetime
 import uuid
 
-class rData(dml.Algorithm):
+class rdata(dml.Algorithm):
     contributor = 'alankang_xtq'
     reads = []
     writes = ['alankang_xtq.jam', 'alankang_xtq.crash', 'alankang_xtq.MBTA', 'alankang_xtq.schools']
@@ -103,7 +103,7 @@ class rData(dml.Algorithm):
         
 
         # look url, base, query
-        this_script = doc.agent('alg:alankang_xtq#rData', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:alankang_xtq#rdata', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         
         resource_jam = doc.entity('dio:jam', {'prov:label':'Traffic Jam', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         resource_hubway = doc.entity('dio:Hubway_Stations', {'prov:label':'Hubway Stations', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
