@@ -6,7 +6,6 @@ import datetime
 import uuid
 import requests
 
-
 class crimeWeatherTransformation(dml.Algorithm):
     def union(R, S):
         return R + S
@@ -16,13 +15,12 @@ class crimeWeatherTransformation(dml.Algorithm):
         return [(t,u) for t in R for u in S]
     def select(R, s):
         return [t for t in R if s(t)]
-    def aggregate(R):
+    def aggregate(R,f):
         keys = {r[0] for r in R}
-        return [(key, [v for (k,v) in R if k == key]) for key in keys]
+        return [(key, f([v for (k,v) in R if k == key])) for key in keys]
     def project(R, p):
         return [p(t) for t in R]
     def removeDuplicates(seq):
-        #helper function from previous semester
         seen = set()
         seen_add = seen.add
         return [x for x in seq if not (x in seen or seen_add(x)) and x != " "]
@@ -42,11 +40,22 @@ class crimeWeatherTransformation(dml.Algorithm):
         keys = {r['OCCURRED_ON_DATE'] for r in R}
         return [(key, [v for (k,v) in R if k == key]) for key in keys]
 
+    def crimeDateAndType(t):
+        return (datetime.datetime.strptime(t['OCCURRED_ON_DATE'], '%Y-%m-%dT%H:%M:%S').date(), t['OFFENSE_DESCRIPTION'])
+
+    def weatherDateAndType(t):
+        return (datetime.datetime.strptime(t['BEGIN_DATE'], '%m/%d/%Y').date(), t['EVENT_TYPE'])
+
+    def findWeatherType(date, weatherData):
+        for weatherDate, weatherType in weatherData:
+            if (date == weatherDate):
+                return weatherType
+        return 'None'
 
     contributor = 'rooday_shreyapandit'
     reads = ['rooday_shreyapandit.crime',
               'rooday_shreyapandit.weather']
-    writes = ['rooday_shreyapandit.crimeWeatherAnalysis']
+    writes = ['rooday_shreyapandit.crimesByDateAndWeather']
 
     @staticmethod
     def execute(trial = False):
@@ -58,63 +67,31 @@ class crimeWeatherTransformation(dml.Algorithm):
         crimeData = repo['rooday_shreyapandit.crime']
         weatherData = repo['rooday_shreyapandit.weather']
 
-        #print(crimeData.find()[0])
-        #print(datetime.datetime.strptime(crimeData[0]['OCCURRED_ON_DATE'], '%Y-%m-%dT%H:%M:%S'))
-        #print(datetime.datetime.strptime(crimeData[0]['OCCURRED_ON_DATE'], '%Y-%m-%dT%H:%M:%S').date())
-        #print(weatherData.find()[0])
-
+        print("Filtering for crimes in 2016...")
         crimes2016 = crimeWeatherTransformation.select(crimeData.find(), crimeWeatherTransformation.betweenDates)
-        stormsAndCrimes = crimeWeatherTransformation.select(crimeWeatherTransformation.product(weatherData.find(), crimeData.find()), crimeWeatherTransformation.equalDates)
+        #stormsAndCrimes = crimeWeatherTransformation.select(crimeWeatherTransformation.product(weatherData.find(), crimeData.find()), crimeWeatherTransformation.equalDates)
 
+        print("Aggregating total crimes by date...")
+        crimesByDate = crimeWeatherTransformation.aggregate(crimeWeatherTransformation.project(crimes2016, crimeWeatherTransformation.crimeDateAndType), len)
+        print("Projecting weather data for date and type...")
+        weatherDatesAndTypes = crimeWeatherTransformation.project(weatherData.find(), crimeWeatherTransformation.weatherDateAndType)
+
+        print("Generating final list of dates, crime totals, and weather types...")
         finalList = []
-        dates = []
+        for crimeDate, crimeNum in crimesByDate:
+            finalList.append({'date': str(crimeDate), 'crimeNum': crimeNum, 'weatherType': crimeWeatherTransformation.findWeatherType(crimeDate, weatherDatesAndTypes)})
 
-        for entry in crimes2016:
-            dates.append(datetime.datetime.strptime(entry['OCCURRED_ON_DATE'], '%Y-%m-%dT%H:%M:%S').date())
-
-        dates = crimeWeatherTransformation.removeDuplicates(dates)
-
-        test = crimeWeatherTransformation.aggregateByDate(crimes2016)
-        print(test[0])
-
-        #print(crimes2016[0])
-        #print(stormsAndCrimes[0])
-
-
-        #begin transformation
-        
-        '''foodZips = []
-        entertainmentZips = []
-        finalList = []
-        for entry in foodLoc.find():
-            if 'zip' in entry:
-                foodZips.append((entry['zip'], entry['businessname']))
-
-        for entry in entertainmentLoc.find():
-            if 'zip' in entry:
-                entertainmentZips.append((entry['zip'], entry['businessname']))
-#            entertainmentZips.append({'zipcode': entry['zip'], "name": entry['businessname']})
-
-        both = crimeWeatherTransformation.union(foodZips, entertainmentZips)
-        both = crimeWeatherTransformation.removeDuplicates(both)
-        combo = crimeWeatherTransformation.aggregate(both)
-        for entry in combo:
-            finalList.append({'zipcode':entry[0], 'numSocialBusinesses':len(entry[1])})
-        print(finalList)
-            
-
-
+        print("Sorting final list...")
+        finalList.sort(key=lambda x: x['date'])
 
         print('DONE!')
-        repo.dropCollection('crimeWeatherAnalysis')
-        repo.createCollection('crimeWeatherAnalysis')
-        repo['rooday_shreyapandit.crimeWeatherAnalysis'].insert_many(finalList)
-'''
+        repo.dropCollection('crimesByDateAndWeather')
+        repo.createCollection('crimesByDateAndWeather')
+        repo['rooday_shreyapandit.crimesByDateAndWeather'].insert_many(finalList)
         
         repo.logout()
         endTime = datetime.datetime.now()
         return {"start":startTime, "end":endTime}
-
 
     @staticmethod
     def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
