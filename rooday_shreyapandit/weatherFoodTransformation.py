@@ -106,6 +106,35 @@ class weatherFoodTransformation(dml.Algorithm):
             in this script. Each run of the script will generate a new
             document describing that invocation event.
         """
+        # Set up the database connection.
+        client = dml.pymongo.MongoClient()
+        repo = client.repo
+        repo.authenticate('rooday_shreyapandit', 'rooday_shreyapandit')
+
+        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/')  # The scripts are in <folder>#<filename> format.
+        doc.add_namespace('dat', 'http://datamechanics.io/data/')  # The data sets are in <user>#<collection> format.
+        doc.add_namespace('ont', 'http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
+        doc.add_namespace('log', 'http://datamechanics.io/log/')  # The event log.
+
+        this_script = doc.agent('alg:rooday_shreyapandit#weatherFoodTransformation', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
+
+        resource_weather = doc.entity('dat:rooday_shreyapandit#weather', {'prov:label': 'Inclement Weather Data for Boston and Suffolk', prov.model.PROV_TYPE: 'ont:DataSet'})
+        resource_food = doc.entity('dat:rooday_shreyapandit#foodviolations', {'prov:label': 'Food Inspection Data for Boston', prov.model.PROV_TYPE: 'ont:DataSet'})
+
+        get_weatherFoodCombo = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
+
+        doc.wasAssociatedWith(get_weatherFoodCombo, this_script)
+
+        doc.usage(get_weatherFoodCombo, resource_weather, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
+        doc.usage(get_weatherFoodCombo, resource_food, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
+
+        weather_food = doc.entity('dat:rooday_shreyapandit#weatherFoodCombo', {prov.model.PROV_LABEL: 'Food Weather Combined Dataset', prov.model.PROV_TYPE: 'ont:DataSet'})
+        doc.wasAttributedTo(weather_food, this_script)
+        doc.wasGeneratedBy(weather_food, get_weatherFoodCombo, endTime)
+        doc.wasDerivedFrom(weather_food, resource_weather, get_weatherFoodCombo, get_weatherFoodCombo, get_weatherFoodCombo)
+        doc.wasDerivedFrom(weather_food, resource_food, get_weatherFoodCombo, get_weatherFoodCombo, get_weatherFoodCombo)
+
+        repo.logout()
 
         return doc
 
