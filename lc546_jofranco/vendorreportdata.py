@@ -5,7 +5,7 @@ import prov.model
 import datetime
 import uuid
 
-class retrievedata(dml.Algorithm):
+class vendorreportdata(dml.Algorithm):
     contributor = 'lc546_jofranco'
     reads = []
     writes = ['lc546_jofranco.vendor_report']
@@ -25,14 +25,10 @@ class retrievedata(dml.Algorithm):
     	repo.createCollection("vendor_report")
     	repo["lc546_jofranco.vendor_report"].insert_many(r)
     	repo["lc546_jofranco.vendor_report"].metadata({'complete':True})
-<<<<<<< HEAD:lc546_jofranco/retrievedata.py
-#print(repo["lc546_jofranco.vendor_report"].metadata()
-=======
+       # print(repo["lc546_jofranco.vendor_report"].metadata())
 #print(repo["lc546_jofranco.vendor_report"].metadata())
 
         
->>>>>>> 03872a3f7ef2dec05fc09d5eca33a34114a92678:lc546_jofranco/vendorreportdata.py
-
     	repo.logout()
     	endTime = datetime.datetime.now()
     	return {"start":startTime, "end":endTime}
@@ -48,7 +44,7 @@ class retrievedata(dml.Algorithm):
     	doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
     	doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
     	doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
-    	this_script = doc.agent('alg:lc546_jofranco#retrievedata', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+    	this_script = doc.agent('alg:lc546_jofranco#vendorreportdata', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
     	resource = doc.entity('bdp:xgbq-327x', {'prov:label':'Vendor', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
     	get_vendorinfo = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime, {prov.model.PROV_LABEL:'Vendors', prov.model.PROV_TYPE:'ont:DataSet'})
@@ -65,8 +61,8 @@ class retrievedata(dml.Algorithm):
 
 
 
-retrievedata.execute()
-doc = retrievedata.provenance()
+vendorreportdata.execute()
+doc = vendorreportdata.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
 #doc = example.provenance()
