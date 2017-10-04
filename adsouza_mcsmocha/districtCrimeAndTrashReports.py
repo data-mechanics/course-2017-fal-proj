@@ -53,14 +53,25 @@ class districtCrimeAndTrashReports(dml.Algorithm):
                 if e["NAME"] in keyval or keyval in e["NAME"]:
                     return e["DIST"]
 
+        # change district name to match that of the one in the crime 
+        # report data
+        def changeDistName(district):
+            newDist = ''
+            for i in district:
+                if i in '123456789':
+                    newDist += i
+                else:
+                    newDist =  i + newDist
+            return newDist
+
         trashDistricts = []
-        for e in threeReq:
-            trashDict = {}
+        for e in selectPWDNeighborhoods:
             if "Trash" in e["TYPE"]:
+                trashDict = {}
                 dist = findKeyInList(e["neighborhood"], pubWorks)
-                trashDict['district'] = dist
+                trashDict['district'] = changeDistName(dist)
                 trashDict['TYPE'] = e['TYPE']
-            trashDistricts.append(trashDict)
+                trashDistricts.append(trashDict)
 
         # aggregate common districts into one element, and unioning groups with a common
         # district
