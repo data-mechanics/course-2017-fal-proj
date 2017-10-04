@@ -27,6 +27,21 @@ class crimeWeatherTransformation(dml.Algorithm):
         seen_add = seen.add
         return [x for x in seq if not (x in seen or seen_add(x)) and x != " "]
 
+    def betweenDates(t):
+        startDate = datetime.datetime(2016, 1, 1).date()
+        endDate = datetime.datetime(2017, 1, 1).date()
+        date = datetime.datetime.strptime(t['OCCURRED_ON_DATE'], '%Y-%m-%dT%H:%M:%S').date()
+        return (startDate <= date <= endDate)
+
+    def equalDates(t):
+        crimeDate = datetime.datetime.strptime(t[1]['OCCURRED_ON_DATE'], '%Y-%m-%dT%H:%M:%S')
+        stormDate = datetime.datetime.strptime(t[0]['BEGIN_DATE'], '%m/%d/%Y')
+        return (crimeDate.date() == stormDate.date())
+
+    def aggregateByDate(R):
+        keys = {r['OCCURRED_ON_DATE'] for r in R}
+        return [(key, [v for (k,v) in R if k == key]) for key in keys]
+
 
     contributor = 'rooday_shreyapandit'
     reads = ['rooday_shreyapandit.crime',
@@ -43,8 +58,28 @@ class crimeWeatherTransformation(dml.Algorithm):
         crimeData = repo['rooday_shreyapandit.crime']
         weatherData = repo['rooday_shreyapandit.weather']
 
-        for entry in crimeData.find():
-            print(entry)
+        #print(crimeData.find()[0])
+        #print(datetime.datetime.strptime(crimeData[0]['OCCURRED_ON_DATE'], '%Y-%m-%dT%H:%M:%S'))
+        #print(datetime.datetime.strptime(crimeData[0]['OCCURRED_ON_DATE'], '%Y-%m-%dT%H:%M:%S').date())
+        #print(weatherData.find()[0])
+
+        crimes2016 = crimeWeatherTransformation.select(crimeData.find(), crimeWeatherTransformation.betweenDates)
+        stormsAndCrimes = crimeWeatherTransformation.select(crimeWeatherTransformation.product(weatherData.find(), crimeData.find()), crimeWeatherTransformation.equalDates)
+
+        finalList = []
+        dates = []
+
+        for entry in crimes2016:
+            dates.append(datetime.datetime.strptime(entry['OCCURRED_ON_DATE'], '%Y-%m-%dT%H:%M:%S').date())
+
+        dates = crimeWeatherTransformation.removeDuplicates(dates)
+
+        test = crimeWeatherTransformation.aggregateByDate(crimes2016)
+        print(test[0])
+
+        #print(crimes2016[0])
+        #print(stormsAndCrimes[0])
+
 
         #begin transformation
         
