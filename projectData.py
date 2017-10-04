@@ -7,8 +7,8 @@ import uuid
 
 class projectData():
     contributor = 'alanbur_jcaluag'
-    reads = ['do not run']
-    writes = ['alanbur_jcaluag.concat']
+    reads = ['alanbur_jcaluag.trafficSignal']
+    writes = ['alanbur_jcaluag.trafficSignalFiltered']
     @staticmethod
     def execute(trial = False):
         '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
@@ -20,7 +20,7 @@ class projectData():
         repo.authenticate('alanbur_jcaluag', 'alanbur_jcaluag')
 
         trafficSignal=[]
-        collection=repo['alanbur_jcaluag.trafficSignal']
+        collection=repo['alanbur_jcaluag.trafficSignal'].find()
         trafficSignal=[
             {'Dataset': 'Traffic Signals',
                 'Location':item['properties']['Location'],
@@ -40,4 +40,4 @@ class projectData():
 
         return {"start":startTime, "end":endTime}
 
-# trafficSignal.execute()
+projectData.execute()
