@@ -5,10 +5,10 @@ import prov.model
 import datetime
 import uuid
 
-class hubway():
+class projectData():
     contributor = 'alanbur_jcaluag'
-    reads = []
-    writes = ['alanbur_jcaluag.hubway']
+    reads = ['alanbur_jcaluag.trafficSignal']
+    writes = ['alanbur_jcaluag.trafficSignalFiltered']
     @staticmethod
     def execute(trial = False):
         '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
@@ -19,26 +19,22 @@ class hubway():
         repo = client.repo
         repo.authenticate('alanbur_jcaluag', 'alanbur_jcaluag')
 
-        url = 'https://secure.thehubway.com/data/stations.json'
-        response = urllib.request.urlopen(url).read().decode("utf-8")
-        r = json.loads(response)
-        stations=r['stations']
+        trafficSignal=[]
+        collection=repo['alanbur_jcaluag.trafficSignal'].find()
+        trafficSignal=[
+            {'Dataset': 'Traffic Signals',
+                'Location':item['properties']['Location'],
+             'Latitude': item['geometry']['coordinates'][0],
+             'Longitude': item['geometry']['coordinates'][1]}
+              for item in collection
+        ]
 
-
-        stations = [
-            {'Data': 'Hubway Stations',
-            'Location':dict['s'],
-            'Latitude': dict['la'],
-            'Longitude': dict['lo']}
-            for dict in stations]
-
-        s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("hubway")
-        repo.createCollection("hubway")
-        repo['alanbur_jcaluag.hubway'].insert_many(stations)
-        repo['alanbur_jcaluag.hubway'].metadata({'complete':True})
+        repo.dropCollection("trafficSignalFiltered")
+        repo.createCollection("trafficSignalFiltered")
+        repo['alanbur_jcaluag.trafficSignalFiltered'].insert_many(trafficSignal)
+        repo['alanbur_jcaluag.trafficSignalFiltered'].metadata({'complete':True})
+        print(repo['alanbur_jcaluag.trafficSignalFiltered'].metadata())
         repo.logout()
-        print(repo['alanbur_jcaluag.hubway'].metadata())
 
         endTime = datetime.datetime.now()
 
@@ -59,24 +55,23 @@ class hubway():
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('bdp', 'https://secure.thehubway.com/data/')
+        doc.add_namespace('bdp', 'http://datamechanics.io/data/')
 
-        this_script = doc.agent('alg:alanbur_jcaluag#hubway', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:alanbur_jcaluag#trafficSignalFiltered', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        get_hubway = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_hubway, this_script)
-        doc.usage(get_hubway, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'stations.json'
+        get_filter = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(get_filter, this_script)
+        doc.usage(get_filter, resource, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Computation'
                   }
                   )
 
-        hubway = doc.entity('dat:alanbur_jcaluag#bikeNetwork', {prov.model.PROV_LABEL:'Hubway Locations', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(hubway, this_script)
-        doc.wasGeneratedBy(hubway, get_hubway, endTime)
-        doc.wasDerivedFrom(hubway, resource, get_hubway, get_hubway, get_hubway)
+        filtered = doc.entity('dat:alanbur_jcaluag#trafficSignalFiltered', {prov.model.PROV_LABEL:'Filtered Traffic Data', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(filtered, this_script)
+        doc.wasGeneratedBy(filtered, get_filter, endTime)
+        doc.wasDerivedFrom(filtered, resource, get_filter, get_filter, get_filter)
 
         repo.logout()
                   
         return doc
-# hubway.execute()
+projectData.execute()

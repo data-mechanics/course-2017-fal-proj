@@ -54,5 +54,39 @@ class mbta():
         endTime = datetime.datetime.now()
 
         return {"start":startTime, "end":endTime}
+    def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
+        '''
+            Create the provenance document describing everything happening
+            in this script. Each run of the script will generate a new
+            document describing that invocation event.
+            '''
 
+        # Set up the database connection.
+        client = dml.pymongo.MongoClient()
+        repo = client.repo
+        repo.authenticate('alanbur_jcaluag', 'alanbur_jcaluag')
+        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
+        doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
+        doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
+        doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
+        doc.add_namespace('bdp', 'http://realtime.mbta.com/developer/')
+
+        this_script = doc.agent('alg:alanbur_jcaluag#mbta', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        get_busStops = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(get_busStops, this_script)
+        doc.usage(get_busStops, resource, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Retrieval',
+                  'ont:Query':'Complex'
+                  }
+                  )
+
+        mbta = doc.entity('dat:alanbur_jcaluag#mbta', {prov.model.PROV_LABEL:'Bus Stops', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(mbta, this_script)
+        doc.wasGeneratedBy(mbta, get_busStops, endTime)
+        doc.wasDerivedFrom(mbta, resource, get_busStops, get_busStops, get_busStops)
+
+        repo.logout()
+                  
+        return doc
 # mbta.execute()
