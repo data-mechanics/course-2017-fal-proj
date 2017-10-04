@@ -2,11 +2,13 @@
 Eric Jacobson
 erj826@bu.edu
 
-Partner: Andrew Quan
+Andrew Quan
 aquan@bu.edu
 
 CS591
 Project 1
+
+3 October 2017
 
 911Dispatch.py
 """
@@ -17,12 +19,11 @@ import dml
 import prov.model
 import datetime
 import uuid
-import certifi
 
 class get911Counts(dml.Algorithm):
     contributor = 'aquan_erj826'
     reads = []
-    writes = ['aquan_erj826.911counts']
+    writes = ['aquan_erj826.911Counts']
 
     @staticmethod
     def execute(trial = False):
@@ -39,12 +40,11 @@ class get911Counts(dml.Algorithm):
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("911counts")
-        repo.createCollection("911counts")
-        repo['aquan_erj826.911counts'].insert_many(r)
-        repo['aquan_erj826.911counts'].metadata({'complete':True})
-        print(repo['aquan_erj826.911counts'].metadata())
-        print(len(r))
+        repo.dropCollection("911Counts")
+        repo.createCollection("911Counts")
+        repo['aquan_erj826.911Counts'].insert_many(r)
+        repo['aquan_erj826.911Counts'].metadata({'complete':True})
+        print(repo['aquan_erj826.911Counts'].metadata())
 
         repo.logout()
 

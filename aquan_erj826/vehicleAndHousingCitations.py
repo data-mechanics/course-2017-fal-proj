@@ -10,48 +10,78 @@ Project 1
 
 3 October 2017
 
-getFirearms.py
+vehicleAndHousingCitations.py
+
+Transformation:
+An aggregation and projection from aquan_erj826.carCitations and 
+aquan_erj826.housingViolations to give a dataset in the form: 
+{Date, Time, Type, Charge}
 """
 
-import urllib.request
 import json
 import dml
 import prov.model
 import datetime
 import uuid
 
-class getFirearms(dml.Algorithm):
-    contributor = 'aquan_erj826'
+class vehicleAndHousingCitations(dml.Algorithm):
+    contributor = 'erj826'
     reads = []
-    writes = ['aquan_erj826.firearms']
+    writes = ['aquan_erj826.vehicleAndHousingCitations']
 
     @staticmethod
     def execute(trial = False):
-        '''Retrieve firearms recovery data set from analyze Boston.'''
+        '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
         startTime = datetime.datetime.now()
 
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
+        repo.authenticate('erj826', 'erj826')
 
-        repo.authenticate('erj826', 'erj826')          
+        vehicles = repo.aquan_erj826.carCitations
+        houses = repo.aquan_erj826.housingViolations
 
-        url = 'https://data.cityofboston.gov/resource/ffz3-2uqv.json'
-        response = urllib.request.urlopen(url).read().decode("utf-8")
-        r = json.loads(response)
-        s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("firearms")
-        repo.createCollection("firearms")
-        repo['aquan_erj826.firearms'].insert_many(r)
-        repo['aquan_erj826.firearms'].metadata({'complete':True})
-        print(repo['aquan_erj826.firearms'].metadata())
+
+        repo.dropCollection("vehicleAndHousingCitations")
+        repo.createCollection("vehicleAndHousingCitations")
+
+        for car in vehicles.find():
+            try:
+                total_date = car['dtissued'].split('T')
+            except:
+                continue
+            date = total_date[0]
+            time = total_date[1]
+            try:
+                charge = car['chgdesc']
+            except:
+                continue
+            kind = 'MOTOR VEHICLE'
+            repo['aquan_erj826.vehicleAndHousingCitations'].insert([{'DATE':date, 'TIME':time,'TYPE':kind, 'CHARGE':charge}], check_keys=False)
+
+        for house in houses.find():
+            total_date = house['cited'].split('T')
+            date = total_date[0]
+            time = total_date[1]
+            charge = house['code_description']
+            kind = 'HOUSING'
+            repo['aquan_erj826.vehicleAndHousingCitations'].insert([{'DATE':date, 'TIME':time,'TYPE':kind, 'CHARGE':charge}], check_keys=False)
+
+
+        for item in repo['aquan_erj826.vehicleAndHousingCitations'].find():
+            print(item)
+
+        repo['aquan_erj826.vehicleAndHousingCitations'].metadata({'complete':True})
+        print(repo['aquan_erj826.vehicleAndHousingCitations'].metadata())
+
 
         repo.logout()
 
         endTime = datetime.datetime.now()
 
         return {"start":startTime, "end":endTime}
-
+    
     @staticmethod
     def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
         '''
@@ -63,14 +93,14 @@ class getFirearms(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('erj826', 'erj826')
+        repo.authenticate('alice_bob', 'alice_bob')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
-        this_script = doc.agent('alg:aquan_erj826#example', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:alice_bob#example', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_found = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         get_lost = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
@@ -87,12 +117,12 @@ class getFirearms(dml.Algorithm):
                   }
                   )
 
-        lost = doc.entity('dat:aquan_erj826#911counts', {prov.model.PROV_LABEL:'Animals Lost', prov.model.PROV_TYPE:'ont:DataSet'})
+        lost = doc.entity('dat:alice_bob#lost', {prov.model.PROV_LABEL:'Animals Lost', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(lost, this_script)
         doc.wasGeneratedBy(lost, get_lost, endTime)
         doc.wasDerivedFrom(lost, resource, get_lost, get_lost, get_lost)
 
-        found = doc.entity('dat:aquan_erj826#911counts', {prov.model.PROV_LABEL:'Animals Found', prov.model.PROV_TYPE:'ont:DataSet'})
+        found = doc.entity('dat:alice_bob#found', {prov.model.PROV_LABEL:'Animals Found', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(found, this_script)
         doc.wasGeneratedBy(found, get_found, endTime)
         doc.wasDerivedFrom(found, resource, get_found, get_found, get_found)
@@ -101,10 +131,9 @@ class getFirearms(dml.Algorithm):
                   
         return doc
 
-getFirearms.execute()
-#doc = example.provenance()
-#print(doc.get_provn())
-#print(json.dumps(json.loads(doc.serialize()), indent=4))
+vehicleAndHousingCitations.execute()
+# doc = example.provenance()
+# print(doc.get_provn())
+# print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof
-

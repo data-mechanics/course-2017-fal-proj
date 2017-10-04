@@ -2,11 +2,13 @@
 Eric Jacobson
 erj826@bu.edu
 
-Partner: Andrew Quan
+Andrew Quan
 aquan@bu.edu
 
 CS591
 Project 1
+
+3 October 2017
 
 getCarCitations.py
 """
@@ -17,12 +19,11 @@ import dml
 import prov.model
 import datetime
 import uuid
-import certifi
 
 class getCarCitations(dml.Algorithm):
     contributor = 'aquan_erj826'
     reads = []
-    writes = ['aquan_erj826.carcitations']
+    writes = ['aquan_erj826.carCitations']
 
     @staticmethod
     def execute(trial = False):
@@ -39,11 +40,11 @@ class getCarCitations(dml.Algorithm):
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("carcitations")
-        repo.createCollection("carcitations")
-        repo['aquan_erj826.carcitations'].insert_many(r)
-        repo['aquan_erj826.carcitations'].metadata({'complete':True})
-        print(repo['aquan_erj826.carcitations'].metadata())
+        repo.dropCollection("carCitations")
+        repo.createCollection("carCitations")
+        repo['aquan_erj826.carCitations'].insert_many(r)
+        repo['aquan_erj826.carCitations'].metadata({'complete':True})
+        print(repo['aquan_erj826.carCitations'].metadata())
 
         repo.logout()
 

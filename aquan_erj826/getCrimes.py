@@ -2,11 +2,13 @@
 Eric Jacobson
 erj826@bu.edu
 
-Partner: Andrew Quan
+Andrew Quan
 aquan@bu.edu
 
 CS591
 Project 1
+
+3 October 2017
 
 getCrimes.py
 """
@@ -17,7 +19,6 @@ import dml
 import prov.model
 import datetime
 import uuid
-import certifi
 import requests
 
 class getCrimes(dml.Algorithm):
@@ -27,7 +28,7 @@ class getCrimes(dml.Algorithm):
 
     @staticmethod
     def execute(trial = False):
-        '''Retrieve crime information from Boston.'''
+        '''Retrieve crime incident report information from Boston.'''
         startTime = datetime.datetime.now()
 
         # Set up the database connection.
@@ -37,13 +38,10 @@ class getCrimes(dml.Algorithm):
         repo.authenticate('erj826', 'erj826')          
 
         url = 'https://data.boston.gov/datastore/odata3.0/12cb3883-56f5-47de-afa5-3b1cf61b257b?$top=500&$format=json'
-        #response = urllib.request.urlopen(url).read().decode("utf-8")
         response = requests.get(url).text
         
         r = json.loads(response)
-        #s = json.dumps(r, sort_keys=True, indent=2)
-        #print(type(r))
-        print(r)
+
         repo.dropCollection("crimes")
         repo.createCollection("crimes")
         repo['aquan_erj826.crimes'].insert(r, check_keys=False)

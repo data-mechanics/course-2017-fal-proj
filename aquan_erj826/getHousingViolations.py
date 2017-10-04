@@ -2,13 +2,15 @@
 Eric Jacobson
 erj826@bu.edu
 
-Partner: Andrew Quan
+Andrew Quan
 aquan@bu.edu
 
 CS591
 Project 1
 
-getTrees.py
+3 October 2017
+
+getHousingViolations.py
 """
 
 import urllib.request
@@ -17,7 +19,6 @@ import dml
 import prov.model
 import datetime
 import uuid
-import certifi
 
 class getHousingViolations(dml.Algorithm):
     contributor = 'aquan_erj826'
@@ -26,7 +27,7 @@ class getHousingViolations(dml.Algorithm):
 
     @staticmethod
     def execute(trial = False):
-        '''Retrieve housing code violations information from cambridge.'''
+        '''Retrieve housing code violations information from Cambridge.'''
         startTime = datetime.datetime.now()
 
         # Set up the database connection.
@@ -39,11 +40,11 @@ class getHousingViolations(dml.Algorithm):
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("housingviolations")
-        repo.createCollection("housingviolations")
-        repo['aquan_erj826.housingviolations'].insert_many(r)
-        repo['aquan_erj826.housingviolations'].metadata({'complete':True})
-        print(repo['aquan_erj826.housingviolations'].metadata())
+        repo.dropCollection("housingViolations")
+        repo.createCollection("housingViolations")
+        repo['aquan_erj826.housingViolations'].insert_many(r)
+        repo['aquan_erj826.housingViolations'].metadata({'complete':True})
+        print(repo['aquan_erj826.housingViolations'].metadata())
 
         repo.logout()
 

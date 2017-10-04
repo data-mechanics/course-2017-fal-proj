@@ -2,15 +2,13 @@
 Eric Jacobson
 erj826@bu.edu
 
-Andrew Quan
+Partner: Andrew Quan
 aquan@bu.edu
 
 CS591
 Project 1
 
-3 October 2017
-
-getFirearms.py
+getCrimes.py
 """
 
 import urllib.request
@@ -19,15 +17,17 @@ import dml
 import prov.model
 import datetime
 import uuid
+import certifi
+import requests
 
-class getFirearms(dml.Algorithm):
+class getCrimes(dml.Algorithm):
     contributor = 'aquan_erj826'
     reads = []
-    writes = ['aquan_erj826.firearms']
+    writes = ['aquan_erj826.crimes']
 
     @staticmethod
     def execute(trial = False):
-        '''Retrieve firearms recovery data set from analyze Boston.'''
+        '''Retrieve crime information from Boston.'''
         startTime = datetime.datetime.now()
 
         # Set up the database connection.
@@ -36,15 +36,19 @@ class getFirearms(dml.Algorithm):
 
         repo.authenticate('erj826', 'erj826')          
 
-        url = 'https://data.cityofboston.gov/resource/ffz3-2uqv.json'
-        response = urllib.request.urlopen(url).read().decode("utf-8")
+        url = 'https://data.boston.gov/datastore/odata3.0/12cb3883-56f5-47de-afa5-3b1cf61b257b?$top=500&$format=json'
+        #response = urllib.request.urlopen(url).read().decode("utf-8")
+        response = requests.get(url).text
+        
         r = json.loads(response)
-        s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("firearms")
-        repo.createCollection("firearms")
-        repo['aquan_erj826.firearms'].insert_many(r)
-        repo['aquan_erj826.firearms'].metadata({'complete':True})
-        print(repo['aquan_erj826.firearms'].metadata())
+        #s = json.dumps(r, sort_keys=True, indent=2)
+        #print(type(r))
+        print(r)
+        repo.dropCollection("crimes")
+        repo.createCollection("crimes")
+        repo['aquan_erj826.crimes'].insert(r, check_keys=False)
+        repo['aquan_erj826.crimes'].metadata({'complete':True})
+        print(repo['aquan_erj826.crimes'].metadata())
 
         repo.logout()
 
@@ -101,7 +105,7 @@ class getFirearms(dml.Algorithm):
                   
         return doc
 
-getFirearms.execute()
+getCrimes.execute()
 #doc = example.provenance()
 #print(doc.get_provn())
 #print(json.dumps(json.loads(doc.serialize()), indent=4))
