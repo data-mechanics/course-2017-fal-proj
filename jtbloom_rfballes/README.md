@@ -1,6 +1,7 @@
 # CS 591 Fall 2017 Project #1: Data Retrieval, Storage, Provenance, and Transformations 
 Jake Bloomfeld (jtbloom@bu.edu) and Ricardo Ballesteros (rfballes@bu.edu)
 ## Project Idea: Sustainability and Transportation in Boston
+## Potential Question: What part of Boston is the most "green"?
 
 ### Dataset #1: Electric Vehicle Charging Stations (Mass DOT)
 ##### Website URL: http://geo-massdot.opendata.arcgis.com/datasets/electric-vehicle-charging-stations/data
