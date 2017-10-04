@@ -13,8 +13,10 @@ Project 1
 crimeDispatch.py
 
 Transformation:
-
-
+Selection and projection on repo.aquan_erj826.Counts911, 
+and an aggregation with repo.aquan_erj826.crimes to find 
+the number of 911 calls that did not correspond to crime 
+incident reports in 2014
 """
 
 import json
@@ -22,11 +24,13 @@ import dml
 import prov.model
 import datetime
 import uuid
+from bson.objectid import ObjectId
 
 class crimeDispatch(dml.Algorithm):
     contributor = 'erj826'
     reads = []
     writes = ['aquan_erj826.crimeDispatch']
+
 
     @staticmethod
     def execute(trial = False):
@@ -47,30 +51,37 @@ class crimeDispatch(dml.Algorithm):
 
         for call in dispatch.find():
             date = call['Date'].split('/')
-            date = date[2] + '-' + date[1] + '-' + date[0]
+            date = date[0] + '-' + date[1] + '-' + date[2]
             total = call['Total']
-            repo['aquan_erj826.crimeDispatch'].insert([{'DATE':date, 'TOTAL_911_CALLS':total}], check_keys=False)
+            if date[-4::] == '2014':
+                repo['aquan_erj826.crimeDispatch'].insert([{date:total}], check_keys=True)
 
         crimeDispatch = repo.aquan_erj826.crimeDispatch
 
-
+        dates = []
         for report in crimeReports.find():
-            print('1')
-            try:
-                date = report['OCCURRED_ON_DATE']#.split('T')[0]
-            except: 
-                #print('hit')
-                continue
+            #Adding an arbitrary year to the date
+            date = report['OCCURRED_ON_DATE'].split('T')[0][5:] + '-2014'
+            dates.append(date)
 
-            #print(date)
-            
+        for point in crimeDispatch.find():
+            date = list(point.keys())[1]
+            total = point[date]
 
+            if date in dates:
+                new_total = int(total) - 1
+                dates.remove(date)
 
+                crimeDispatch.update_one({
+                   '_id': point['_id']
+                    },{
+                      '$set': {
+                       date: new_total
+                      }
+                    }, upsert=False)
 
-
-
-        # repo['aquan_erj826.gunsRecovered'].metadata({'complete':True})
-        # print(repo['aquan_erj826.gunsRecovered'].metadata())
+        repo['aquan_erj826.gunsRecovered'].metadata({'complete':True})
+        print(repo['aquan_erj826.gunsRecovered'].metadata())
 
 
         repo.logout()
