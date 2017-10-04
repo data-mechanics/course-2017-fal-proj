@@ -52,45 +52,22 @@ class retrieveCollegeUniversityData(dml.Algorithm):
         repo.authenticate('sbrz_nedg', 'sbrz_nedg')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/')  # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/')  # The data sets are in <user>#<collection> format.
-        doc.add_namespace('ont',
-                          'http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
+        doc.add_namespace('ont', 'http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/')  # The event log.
-        doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
+        doc.add_namespace('bdp', '"http://bostonopendata-boston.opendata.arcgis.com/datasets/')
 
-        this_script = doc.agent('alg:sbrz_nedg#example',
-                                {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
-        resource = doc.entity('bdp:wc8w-nujj',
-                              {'prov:label': '311, Service Requests', prov.model.PROV_TYPE: 'ont:DataResource',
-                               'ont:Extension': 'json'})
-        get_found = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
-        get_lost = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_found, this_script)
-        doc.wasAssociatedWith(get_lost, this_script)
-        doc.usage(get_found, resource, startTime, None,
-                  {prov.model.PROV_TYPE: 'ont:Retrieval',
-                   'ont:Query': '?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'
-                   }
-                  )
-        doc.usage(get_lost, resource, startTime, None,
-                  {prov.model.PROV_TYPE: 'ont:Retrieval',
-                   'ont:Query': '?type=Animal+Lost&$select=type,latitude,longitude,OPEN_DT'
-                   }
-                  )
+        this_script = doc.agent('alg:sbrz_nedg#retrieveCollegeUniversityData', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
+        resource = doc.entity('bdp:cbf14bb032ef4bd38e20429f71acb61a_2', {'prov:label': 'Colleges and Universities', prov.model.PROV_TYPE: 'ont:DataResource', 'ont:Extension': 'geojson'})
+        get_college_data = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
-        lost = doc.entity('dat:sbrz_nedg#lost',
-                          {prov.model.PROV_LABEL: 'Animals Lost', prov.model.PROV_TYPE: 'ont:DataSet'})
-        doc.wasAttributedTo(lost, this_script)
-        doc.wasGeneratedBy(lost, get_lost, endTime)
-        doc.wasDerivedFrom(lost, resource, get_lost, get_lost, get_lost)
+        doc.wasAssociatedWith(this_script)
+        doc.usage(retrieveCollegeUniversityData, resource, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval', 'ont:Query': ''}) # There is no query
 
-        found = doc.entity('dat:sbrz_nedg#found',
-                           {prov.model.PROV_LABEL: 'Animals Found', prov.model.PROV_TYPE: 'ont:DataSet'})
-        doc.wasAttributedTo(found, this_script)
-        doc.wasGeneratedBy(found, get_found, endTime)
-        doc.wasDerivedFrom(found, resource, get_found, get_found, get_found)
+        college_db = doc.entity('dat:sbrz_nedg#get_college_data', {prov.model.PROV_LABEL: 'college_university', prov.model.PROV_TYPE: 'ont:DataSet'})
+        doc.wasAttributedTo(this_script)
+        doc.wasGeneratedBy(get_college_data)
+        doc.wasDerivedFrom(college_db, resource)
 
         repo.logout()
 
         return doc
-
-retrieveCollegeUniversityData.execute()

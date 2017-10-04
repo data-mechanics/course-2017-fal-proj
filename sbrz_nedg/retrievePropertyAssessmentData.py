@@ -10,8 +10,9 @@ class retrievePropertyAssessmentData(dml.Algorithm):
     contributor = 'sbrz_nedg'
     reads = []
     writes = ['sbrz_nedg.property_assessment']
+
     @staticmethod
-    def execute(trial = False):
+    def execute(trial=False):
         '''Retrieve Boston property assessment data set.'''
         startTime = datetime.datetime.now()
 
@@ -31,14 +32,14 @@ class retrievePropertyAssessmentData(dml.Algorithm):
         repo.dropCollection("property_assessment")
         repo.createCollection("property_assessment")
         repo['sbrz_nedg.property_assessment'].insert_many(property_assessment_json)
-        repo['sbrz_nedg.property_assessment'].metadata({'complete':True})
+        repo['sbrz_nedg.property_assessment'].metadata({'complete': True})
         print(repo['sbrz_nedg.property_assessment'].metadata())
 
         repo.logout()
 
         endTime = datetime.datetime.now()
 
-        return {"start":startTime, "end":endTime}
+        return {"start": startTime, "end": endTime}
 
     @staticmethod
     def provenance(doc=prov.model.ProvDocument(), startTime=None, endTime=None):
@@ -57,42 +58,20 @@ class retrievePropertyAssessmentData(dml.Algorithm):
         doc.add_namespace('ont',
                           'http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/')  # The event log.
-        doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
+        doc.add_namespace('bdp', 'https://data.boston.gov/api/action/')
 
-        this_script = doc.agent('alg:sbrz_nedg#example',
-                                {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
-        resource = doc.entity('bdp:wc8w-nujj',
-                              {'prov:label': '311, Service Requests', prov.model.PROV_TYPE: 'ont:DataResource',
-                               'ont:Extension': 'json'})
-        get_found = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
-        get_lost = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_found, this_script)
-        doc.wasAssociatedWith(get_lost, this_script)
-        doc.usage(get_found, resource, startTime, None,
-                  {prov.model.PROV_TYPE: 'ont:Retrieval',
-                   'ont:Query': '?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'
-                   }
-                  )
-        doc.usage(get_lost, resource, startTime, None,
-                  {prov.model.PROV_TYPE: 'ont:Retrieval',
-                   'ont:Query': '?type=Animal+Lost&$select=type,latitude,longitude,OPEN_DT'
-                   }
-                  )
+        this_script = doc.agent('alg:sbrz_nedg#retrievePropertyAssessmentData', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
+        resource = doc.entity('bdp:062fc6fa-b5ff-4270-86cf-202225e40858', {'prov:label': 'Property Assessment FY2017', prov.model.PROV_TYPE: 'ont:DataResource', 'ont:Extension': 'json'})
+        get_property_data = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
-        lost = doc.entity('dat:sbrz_nedg#lost',
-                          {prov.model.PROV_LABEL: 'Animals Lost', prov.model.PROV_TYPE: 'ont:DataSet'})
-        doc.wasAttributedTo(lost, this_script)
-        doc.wasGeneratedBy(lost, get_lost, endTime)
-        doc.wasDerivedFrom(lost, resource, get_lost, get_lost, get_lost)
+        doc.wasAssociatedWith(this_script)
+        doc.usage(retrievePropertyAssessmentData, resource, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval', 'ont:Query': '&limit=200000'})
 
-        found = doc.entity('dat:sbrz_nedg#found',
-                           {prov.model.PROV_LABEL: 'Animals Found', prov.model.PROV_TYPE: 'ont:DataSet'})
-        doc.wasAttributedTo(found, this_script)
-        doc.wasGeneratedBy(found, get_found, endTime)
-        doc.wasDerivedFrom(found, resource, get_found, get_found, get_found)
+        property_db = doc.entity('dat:sbrz_nedg#get_property_data', {prov.model.PROV_LABEL: 'property_assessment', prov.model.PROV_TYPE: 'ont:DataSet'})
+        doc.wasAttributedTo(this_script)
+        doc.wasGeneratedBy(get_property_data)
+        doc.wasDerivedFrom(property_db, resource)
 
         repo.logout()
 
         return doc
-
-retrievePropertyAssessmentData.execute()
