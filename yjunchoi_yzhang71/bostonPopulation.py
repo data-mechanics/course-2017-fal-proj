@@ -11,7 +11,7 @@ import pandas as pd
 class bostonPopulation(dml.Algorithm):
     contributor = 'yjunchoi_yzhang71'
     reads = []
-    writes = ['yjunchoi_yzhang71.presidentElectionByPrecinct']
+    writes = ['yjunchoi_yzhang71.bostonPopulation']
 
     @staticmethod
     def execute(trial = False):
