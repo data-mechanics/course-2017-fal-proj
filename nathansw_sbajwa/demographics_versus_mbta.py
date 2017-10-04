@@ -9,112 +9,134 @@ from pprint import pprint
 from bson import ObjectId
 
 ### This transformation combines the MeansOfCommuting, PovertyRates, and Race datasets
+###
 ### Relevant commuting columns: % columns relating to use of public transit
 ### Relevant poverty rates columns: poverty rate %, % of Boston's impoverished
 ### Relevant race columns: % of each race in every neighborhood
+###
 ### Relationships being explored: In each neighborhood of Boston, use the social
 ### demographics to determine if there is a correlation to how one relies on 
 ### commuting to work. Additional areas for exploration: do these social demographics
 ### play a role in the accessibility of the MBTA
 
-client = dml.pymongo.MongoClient()
-repo = client.repo
-repo.authenticate('nathansw_sbajwa', 'nathansw_sbajwa')
+class demographics_versus_mbta(dml.Algorithm):
 
-def start_transformation():
-	startTime = datetime.datetime.now()
+	contributor = 'nathansw_sbajwa'
+	reads = ['nathansw_sbajwa.commuting', 'nathansw_sbajwa.povertyrates', 'nathansw_sbajwa.race']
+	writes = ['nathansw_sbajwa.demographics_versus_commuting']
 
-	db1 = repo['nathansw_sbajwa.commuting']
-	comms = db1.find_one()
+	@staticmethod
+	def execute(trial = False):
 
-	comm_data = {}
-	comm_cols = ['Bus or trolley %', 'Railroad %', 'Subway or elevated %']
+		startTime = datetime.datetime.now()
 
-	## Aggregate all commuting data related to MBTA and summarize in one column
-	for town in comms:
-		if town == 'Massachusetts' or town == 'Boston':
-			continue
-		if town =='_id':
-			continue
-		comm_data[town] = {}
+		# open db client and authenticate
+		client = dml.pymongo.MongoClient()
+		repo = client.repo
+		repo.authenticate('nathansw_sbajwa', 'nathansw_sbajwa')
 
-		# string manipulation, typecast to float in order to perform math ops on values
-		bus = float(comms[town][comm_cols[0]].replace('%', ''))
-		railroad = float(comms[town][comm_cols[1]].replace('%', ''))
-		subway = float(comms[town][comm_cols[2]].replace('%', ''))
-		transit_sum = round(bus + railroad + subway, 2)
-		comm_data[town]['Commute with Public Transit %'] = transit_sum
+		############### COMMUTING ################################
 
-	comm_data = json.dumps(comm_data, indent=4)
-	json_comm = json.loads(comm_data)
+		commuting_db = repo['nathansw_sbajwa.commuting']
+		commuting = commuting_db.find_one()
 
-	db2 = repo['nathansw_sbajwa.povertyrates']
-	pov_rates = db2.find_one()
+		commuting_data = {}
+		commuting_cols = ['Bus or trolley %', 'Railroad %', 'Subway or elevated %']
 
-	pov_data = {}
-	pov_cols = ['Poverty rate', "Percent of Boston's\nimpoverished"]
+		## Aggregate all commuting data related to MBTA and summarize in one column
+		for town in commuting:
+			if town == 'Massachusetts' or town == 'Boston':
+				continue
+			if town =='_id':
+				continue
+			commuting_data[town] = {}
 
-	for town in pov_rates:
-		if town == 'Massachusetts' or town == 'Boston':
-			continue
-		if town == "_id":
-			continue
-		pov_data[town] = {}
-		pov_data[town]['Poverty Rate %'] = float(pov_rates[town][pov_cols[0]].replace('%',''))
-		pov_data[town]["Percentage of Boston's Impoverished"] = float(pov_rates[town][pov_cols[1]].replace('%',''))
+			# string manipulation, typecast to float in order to perform math ops on values
+			bus = float(commuting[town][commuting_cols[0]].replace('%', ''))
+			railroad = float(commuting[town][commuting_cols[1]].replace('%', ''))
+			subway = float(commuting[town][commuting_cols[2]].replace('%', ''))
+			transit_sum = round(bus + railroad + subway, 2)
+			commuting_data[town]['Commute with Public Transit %'] = transit_sum
 
-	pov_data = json.dumps(pov_data, indent=4)
-	json_pov = json.loads(pov_data)
+		commuting_data = json.dumps(commuting_data, indent=4)
+		json_commuting = json.loads(commuting_data)
 
-	db3 = repo['nathansw_sbajwa.race']
-	races = db3.find_one()
+		################ POVERTY ###################################
 
-	race_data = {}
+		pov_db = repo['nathansw_sbajwa.povertyrates']
+		pov_rates = pov_db.find_one()
 
-	for town in races:
-		if town == 'Massachusetts' or town == 'Boston':
-			continue
-		if town == "_id":
-			continue
-		race_data[town] = {}
-		for key in races[town]:
-			if '%' in key:
-				# Entries with '-' indicate too small of a percentage reported
-				if '-' in races[town][key]:
-					race_data[town][key] = 0.0
-					continue
-				race_data[town][key] = float(races[town][key].replace('%', ''))
+		pov_data = {}
+		pov_cols = ['Poverty rate', "Percent of Boston's\nimpoverished"]
 
-	race_data = json.dumps(race_data, indent=4)
-	json_race = json.loads(race_data)
+		for town in pov_rates:
+			if town == 'Massachusetts' or town == 'Boston':
+				continue
+			if town == "_id":
+				continue
+			pov_data[town] = {}
+			pov_data[town]['Poverty Rate %'] = float(pov_rates[town][pov_cols[0]].replace('%',''))
+			pov_data[town]["Percentage of Boston's Impoverished"] = float(pov_rates[town][pov_cols[1]].replace('%',''))
 
-	df1 = pd.DataFrame(json_comm)
-	df2 = pd.DataFrame(json_pov)
-	df3 = pd.DataFrame(json_race)
+		pov_data = json.dumps(pov_data, indent=4)
+		json_pov = json.loads(pov_data)
 
-	frames = [df1, df2, df3]
-	result = pd.concat(frames, join='outer')
-	result = pd.DataFrame.transpose(result)
+		########################## RACE ###################################
 
-	# Aggregate column data for all non-white minorities into one column in order to see 
-	# any relationships that race is involved in more clearly
-	result['Non-white Minorities %'] = result['Asian %'] + result['Black or AfricanAmerican %'] + \
-		result['Hispanic or Latino %'] + result['Other %'] 
+		race_db = repo['nathansw_sbajwa.race']
+		races = race_db.find_one()
 
-	## write to csv file for debugging purposes
-	#result.to_csv('algorithm3.csv', encoding='utf-8')
+		race_data = {}
 
-	test = result.to_dict('index')
-	agg_data = json.dumps(test, indent=4)
-	merged_data = json.loads(agg_data)
+		for town in races:
+			if town == 'Massachusetts' or town == 'Boston':
+				continue
+			if town == "_id":
+				continue
+			race_data[town] = {}
+			for key in races[town]:
+				if '%' in key:
+					# Entries with '-' indicate too small of a percentage reported
+					if '-' in races[town][key]:
+						race_data[town][key] = 0.0
+						continue
+					race_data[town][key] = float(races[town][key].replace('%', ''))
 
-	repo.dropPermanent('demographics_verses_mbta')
-	repo.createPermanent('demographics_verses_mbta')
-	repo['nathansw_sbajwa'].insert_one(merged_data)
+		race_data = json.dumps(race_data, indent=4)
+		json_race = json.loads(race_data)
 
-	endTime = datetime.datetime.now()
+		##############################################################################
 
+		commuting_df = pd.DataFrame(json_commuting)
+		pov_df = pd.DataFrame(json_pov)
+		race_df = pd.DataFrame(json_race)
 
+		frames = [commuting_df, pov_df, race_df]
+		result = pd.concat(frames, join='outer')
+		result = pd.DataFrame.transpose(result)
 
+		# Aggregate column data for all non-white minorities into one column in order to see 
+		# any relationships that race is involved in more clearly
+		result['Non-white Minorities %'] = result['Asian %'] + result['Black or AfricanAmerican %'] + \
+			result['Hispanic or Latino %'] + result['Other %'] 
 
-start_transformation()
+		## write to csv file for debugging purposes
+		# result.to_csv('algorithm3.csv', encoding='utf-8')
+
+		test = result.to_dict('index')
+		agg_data = json.dumps(test, indent=4)
+		merged_data = json.loads(agg_data)
+
+		repo.dropCollection('demographics_versus_mbta')
+		repo.createCollection('demographics_versus_mbta')
+		repo['nathansw_sbajwa.demographics_versus_mbta'].insert_one(merged_data)
+
+		repo.logout()
+
+		endTime = datetime.datetime.now()
+
+		return {"start":startTime, "end":endTime}
+
+	@staticmethod
+	def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
+		return doc
