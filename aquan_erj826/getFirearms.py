@@ -68,21 +68,35 @@ class getFirearms(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
+        #resources:
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
+        doc.add_namespace('cdp', 'https://data.cambridgema.gov/resource/') 
+        doc.add_namespace('svm','https://data.somervillema.gov/resource/')
         
+        #declare agent, input entity, and activity
         this_script = doc.agent('alg:aquan_erj826#example', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bdp:ffz3-2uqv.json', {'prov:label':'Public Boston Firearms Records', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource = doc.entity('bdp:ffz3-2uqv.json', {'prov:label':'City of Boston Firearms Records', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_gunList = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        
+        #agent <-> activity
         doc.wasAssociatedWith(get_gunList, this_script)
+        
+        #activity <-> entity
         doc.usage(get_gunList, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
                   'ont:Query':'?=entireSet'
                   }
                   )
-        
-        gunList = doc.entity('dat:aquan_erj826#911counts', {prov.model.PROV_LABEL:'FirearmsCollection', prov.model.PROV_TYPE:'ont:DataSet'})
+        #output entity
+        gunList = doc.entity('dat:aquan_erj826#firearms', {prov.model.PROV_LABEL:'Firearms Collection on MongoDB', prov.model.PROV_TYPE:'ont:DataSet'})
+       
+        #output made by agent
         doc.wasAttributedTo(gunList, this_script)
+        
+        #output entity made by activty
         doc.wasGeneratedBy(gunList, get_gunList, endTime)
+        
+        #output entity derived from itself and activity
         doc.wasDerivedFrom(gunList, resource, get_gunList, get_gunList, get_gunList)
         
         repo.logout()
