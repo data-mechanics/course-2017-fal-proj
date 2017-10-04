@@ -92,9 +92,9 @@ class mergeVotePopulation(dml.Algorithm):
         get_voterByPopulation = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_voterByPopulation, this_script)
         doc.usage(get_voterByPopulation, resource_bostonPopulation, startTime, None,
-                  {prov.model.PROV_TYPE: 'ont:Computation'})
+                  {prov.model.PROV_TYPE: 'ont:Computation', 'ont:Query':'?type=boston+population$select=populationEstimate, under18'})
         doc.usage(get_voterByPopulation, resource_presidentElectionByPrecinct, startTime, None,
-                  {prov.model.PROV_TYPE: 'ont:Computation'})
+                  {prov.model.PROV_TYPE: 'ont:Computation', 'ont:Query':'?type=president+elction+by+precinct$select=city/town, ward, precinct, total vote cast'})
 
         voterByPopulation = doc.entity('dat:yjunchoi_yzhang71#voterByPopulation',
                           {prov.model.PROV_LABEL: 'voterByPopulation',
@@ -108,9 +108,9 @@ class mergeVotePopulation(dml.Algorithm):
 
         return doc
 
-mergeVotePopulation.execute()
-doc = mergeVotePopulation.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+#mergeVotePopulation.execute()
+#doc = mergeVotePopulation.provenance()
+#print(doc.get_provn())
+#print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof

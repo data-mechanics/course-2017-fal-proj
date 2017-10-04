@@ -27,10 +27,10 @@ class Station_Node(dml.Algorithm):
         repo.dropCollection("Station_Node")
         repo.createCollection("Station_Node")
 
-        
+
         for key in r:
             repo['yjunchoi_yzhang71.Station_Node'].insert_many(r[key])
-         #   for key in r[row]: 
+         #   for key in r[row]:
           #      print(r[row][key])
            #     print("hi")
             #Node = {}
