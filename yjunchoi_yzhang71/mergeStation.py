@@ -24,7 +24,7 @@ class mergeStation(dml.Algorithm):
         # loads the collection
         AD = repo['yjunchoi_yzhang71.averageDelay'].find()
         SN = repo['yjunchoi_yzhang71.Station_Node'].find()
-        
+
         # projection, aggregation, selection
         delayTime = []
         for i in AD:
@@ -40,18 +40,18 @@ class mergeStation(dml.Algorithm):
                             #print(abbList[0])
                         if abbList[1] == j['id']: #join
                             abbList[1] = j['name']
-                        name = abbList[0] + "|" + abbList[1]           
+                        name = abbList[0] + "|" + abbList[1]
             try:
                 delayTime.append({name:i[key]}) # aggregation with selected key
 
-                
+
             except:
                 pass
         #print(delayTime)
 
 
-        
-        
+
+
         stationData = delayTime
         #print(stationData)
         #print(stationNode)
@@ -101,9 +101,9 @@ class mergeStation(dml.Algorithm):
         get_stationData = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_stationData, this_script)
         doc.usage(get_stationData, resource_delayTime, startTime, None,
-                  {prov.model.PROV_TYPE: 'ont:Computation'})
+                  {prov.model.PROV_TYPE: 'ont:Computation', 'ont:Query':'?type=delay+time$select=id, time'})
         doc.usage(get_stationData, resource_stationNode, startTime, None,
-                  {prov.model.PROV_TYPE: 'ont:Computation'})
+                  {prov.model.PROV_TYPE: 'ont:Computation', 'ont:Query':'?type=delay+time$select=id, name'})
 
         stationData = doc.entity('dat:yjunchoi_yzhang71#station_data',
                           {prov.model.PROV_LABEL: 'Station Data',
@@ -112,7 +112,7 @@ class mergeStation(dml.Algorithm):
         doc.wasGeneratedBy(stationData, get_stationData, endTime)
         doc.wasDerivedFrom(stationData, resource_delayTime, get_stationData, get_stationData, get_stationData)
         doc.wasDerivedFrom(stationData, resource_stationNode, get_stationData, get_stationData, get_stationData)
-        
+
         repo.logout()
 
         return doc

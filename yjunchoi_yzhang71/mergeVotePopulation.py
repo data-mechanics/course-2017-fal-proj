@@ -5,7 +5,7 @@ import prov.model
 import datetime
 import uuid
 
-class mergeStation(dml.Algorithm):
+class mergeVotePopulation(dml.Algorithm):
     contributor = 'yjunchoi_yzhang71'
     reads = ['yjunchoi_yzhang71.bostonPopulation', 'yjunchoi_yzhang71.presidentElectionByPrecinct']
     writes = ['yjunchoi_yzhang71.mergeVotePopulation']
@@ -25,54 +25,32 @@ class mergeStation(dml.Algorithm):
         BP = repo['yjunchoi_yzhang71.bostonPopulation'].find()
         PE = repo['yjunchoi_yzhang71.presidentElectionByPrecinct'].find()
 
-        # projection
-        delayTime = []
-        for i in AD:
-            for key in i:
-                if(key != "_id"):
-                    abbList = key.split("|")
-                    #print(abbList)
-                    SN = repo['yjunchoi_yzhang71.Station_Node'].find()
-                    for j in SN:
-                        if abbList[0] == j['id']:
-                            #print(j['name'])
-                            abbList[0] = j['name']
-                            #print(abbList[0])
-                        if abbList[1] == j['id']:
-                            abbList[1] = j['name']
-                        name = abbList[0] + "|" + abbList[1]
-            try:
-                delayTime.append({name:i[key]})
+        mapBP = {}
+        # Selection and Projection to calculate eligible voters estimates
+        for row in BP:
+            if row['Fact'] == 'Population estimates, July 1, 2016,  (V2016)':
+                mapBP['Population estimates (2016)'] = row['Boston city, Massachusetts']
+            if row['Fact'] == 'Persons under 18 years, percent, April 1, 2010':
+                mapBP['Percentage under 18 (2010)'] = row['Boston city, Massachusetts']
+        mapBP['Eligible voters estimates'] = int((float(selectionBP['Population estimates (2016)'][0:3]+selectionBP['Population estimates (2016)'][4:]) * (100 - float(selectionBP['Percentage under 18 (2010)'][0:4])))/100)
+        eligibleVoters = mapBP['Eligible voters estimates']
 
+        mapPE = {}
+        # Select Boston Area and Total Votes from dataset
+        for row in PE:
+            if row['City/Town'] == 'Boston':
+                mapPE['City/Town'] = row['City/Town']
+                mapPE['Ward'] = row['Ward']
+                mapPE['PCT'] = row['Pct']
+                mapPE['Total Votes'] = row['Total Votes Cast']
 
-            except:
-                pass
-        #print(delayTime)
-
-        stationNode = []
-        for key in SN:
-            try:
-                stationNode.append({key['id']: key['name']})
-            except:
-                pass
-
-        print(stationNode)
-
-        # aggregation
-
-        stationData = delayTime
-        #print(stationData)
-        #print(stationNode)
-        #print(delayTime)
-        #print(stationData)
-
-        repo.dropCollection("Station_data")
-        repo.createCollection("Station_data")
-
-        repo['yjunchoi_yzhang71.Station_data'].insert_many(stationData)
-        repo['yjunchoi_yzhang71.Station_data'].metadata({'complete': True})
+        """
+        repo.dropCollection("VoterByPopulation")
+        repo.createCollection("VoterByPopulation")
+        repo['yjunchoi_yzhang71.VoterByPopulation'].insert_many(voterByPopulation)
+        repo['yjunchoi_yzhang71.VoterByPopulation'].metadata({'complete': True})
         print("Saved station_data", repo['yjunchoi_yzhang71.station_data'].metadata())
-
+        """
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -93,40 +71,39 @@ class mergeStation(dml.Algorithm):
         repo.authenticate('yjunchoi_yzhang71', 'yjunchoi_yzhang71')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/')  # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/')  # The data sets are in <user>#<collection> format.
-        doc.add_namespace('ont',
-                          'http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
+        doc.add_namespace('ont', 'http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/')  # The event log.
 
-        this_script = doc.agent('alg:#mergeStation',
+        this_script = doc.agent('alg:#mergeVotePopulation',
                                 {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
-        resource_delayTime = doc.entity('dat:yjunchoi_yzhang71#delayTime',
-                                             {'prov:label': 'delayTime',
+        resource_bostonPopulation = doc.entity('dat:yjunchoi_yzhang71#bostonPopulation',
+                                             {'prov:label': 'bostonPopulation',
                                               prov.model.PROV_TYPE: 'ont:DataSet'})
-        resource_stationNode = doc.entity('dat:yjunchoi_yzhang71#Station_Node',
-                                             {'prov:label': 'Station_Node',
+        resource_presidentElectionByPrecinct = doc.entity('dat:yjunchoi_yzhang71#presidentElectionByPrecinct',
+                                             {'prov:label': 'presidentElectionByPrecinct',
                                               prov.model.PROV_TYPE: 'ont:DataSet'})
 
-        get_stationData = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_stationData, this_script)
-        doc.usage(get_stationData, resource_delayTime, startTime, None,
+        get_voterByPopulation = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(get_voterByPopulation, this_script)
+        doc.usage(get_voterByPopulation, resource_bostonPopulation, startTime, None,
                   {prov.model.PROV_TYPE: 'ont:Computation'})
-        doc.usage(get_stationData, resource_stationNode, startTime, None,
+        doc.usage(get_voterByPopulation, resource_presidentElectionByPrecinct, startTime, None,
                   {prov.model.PROV_TYPE: 'ont:Computation'})
 
-        stationData = doc.entity('dat:yjunchoi_yzhang71#station_data',
-                          {prov.model.PROV_LABEL: 'Station Data',
+        voterByPopulation = doc.entity('dat:yjunchoi_yzhang71#voterByPopulation',
+                          {prov.model.PROV_LABEL: 'voterByPopulation',
                            prov.model.PROV_TYPE: 'ont:DataSet'})
-        doc.wasAttributedTo(stationData, this_script)
-        doc.wasGeneratedBy(stationData, get_stationData, endTime)
-        doc.wasDerivedFrom(stationData, resource_delayTime, get_stationData, get_stationData, get_stationData)
-        doc.wasDerivedFrom(stationData, resource_stationNode, get_stationData, get_stationData, get_stationData)
+        doc.wasAttributedTo(voterByPopulation, this_script)
+        doc.wasGeneratedBy(voterByPopulation, get_voterByPopulation, endTime)
+        doc.wasDerivedFrom(voterByPopulation, resource_bostonPopulation, get_voterByPopulation, get_voterByPopulation, get_voterByPopulation)
+        doc.wasDerivedFrom(voterByPopulation, resource_presidentElectionByPrecinct, get_voterByPopulation, get_voterByPopulation, get_voterByPopulation)
 
         repo.logout()
 
         return doc
 
-mergeStation.execute()
-doc = mergeStation.provenance()
+mergeVotePopulation.execute()
+doc = mergeVotePopulation.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
 

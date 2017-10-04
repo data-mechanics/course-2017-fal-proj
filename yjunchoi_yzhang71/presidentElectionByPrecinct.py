@@ -54,15 +54,14 @@ class presidentElectionByPrecinct(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/yjunchoi_yzhang71') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        
+
 
         this_script = doc.agent('alg:yjunchoi_yzhang71#presidentElectionByPrecinct', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('dat:presidentElectionByPrecinct.csv', {'prov:label':'President General Election by Prencinct', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'csv'})
         get_presidentElection = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_presidentElection, this_script)
         doc.usage(get_presidentElection, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=President+Election&$select=city/town,ward,pct,totalvotecast'
+                  {prov.model.PROV_TYPE:'ont:Retrieval'
                   }
                   )
 
@@ -75,9 +74,9 @@ class presidentElectionByPrecinct(dml.Algorithm):
 
         return doc
 
-presidentElectionByPrecinct.execute()
-doc = presidentElectionByPrecinct.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+#presidentElectionByPrecinct.execute()
+#doc = presidentElectionByPrecinct.provenance()
+#print(doc.get_provn())
+#print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof

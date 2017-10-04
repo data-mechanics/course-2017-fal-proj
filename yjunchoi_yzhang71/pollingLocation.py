@@ -60,8 +60,7 @@ class pollingLocation(dml.Algorithm):
         get_pollingLocation = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_pollingLocation, this_script)
         doc.usage(get_pollingLocation, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Boston+Population&$select=Fact,Boston'
+                  {prov.model.PROV_TYPE:'ont:Retrieval'
                   }
                   )
 
