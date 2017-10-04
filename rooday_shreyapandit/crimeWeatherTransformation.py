@@ -125,7 +125,7 @@ class crimeWeatherTransformation(dml.Algorithm):
 
         return doc
 
-crimeWeatherTransformation.execute()
-doc = crimeWeatherTransformation.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+# crimeWeatherTransformation.execute()
+# doc = crimeWeatherTransformation.provenance()
+# print(doc.get_provn())
+# print(json.dumps(json.loads(doc.serialize()), indent=4))
