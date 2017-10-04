@@ -103,8 +103,8 @@ class getDatasets(dml.Algorithm):
 
         this_script = doc.agent('alg:jdbrawn_slarbi#getData', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
 
-        resource_colleges = doc.entity('bdp:208dc980-a278-49e3-b95b-e193bb7bb6e4&limit=80', {'prov:label':'Boston Universities and Colleges', prov.model.PROV_TYPE:'ont:DataResource'})
-        resource_crime = doc.entity('bdp:12cb3883-56f5-47de-afa5-3b1cf61b257b&limit=10000', {'prov:label':'Boston Crime', prov.model.PROV_TYPE:'ont:DataResource'})
+        resource_colleges = doc.entity('bdp:208dc980-a278-49e3-b95b-e193bb7bb6e4', {'prov:label':'Boston Universities and Colleges', prov.model.PROV_TYPE:'ont:DataResource'})
+        resource_crime = doc.entity('bdp:12cb3883-56f5-47de-afa5-3b1cf61b257b', {'prov:label':'Boston Crime', prov.model.PROV_TYPE:'ont:DataResource'})
         resource_crashes = doc.entity('591:CarCrashData', {'prov:label':'Boston Crashes', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         resource_mbta = doc.entity('591:MBTA_Bus_Stops', {'prov:label':'MBTA Bus Stops', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
         resource_entertain = doc.entity('bdp1:cz6t-w69j', {'prov:label':'Entertainment Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
@@ -127,8 +127,8 @@ class getDatasets(dml.Algorithm):
         doc.wasAssociatedWith(get_food_license, this_script)
 
 
-        doc.usage(get_colleges, resource_colleges, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval'})
-        doc.usage(get_crime, resource_crime, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval'})
+        doc.usage(get_colleges, resource_colleges, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval', 'ont:Query':'&limit=80'})
+        doc.usage(get_crime, resource_crime, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval', 'ont:Query':'&limit=10000'})
         doc.usage(get_crashes, resource_crashes, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval'})
         doc.usage(get_mbta, resource_mbta, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval'})
         doc.usage(get_entertainment_data, resource_entertain, startTime, None,{prov.model.PROV_TYPE:'ont:Retrieval',})
