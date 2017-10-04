@@ -32,25 +32,31 @@ class mergeVotePopulation(dml.Algorithm):
                 mapBP['Population estimates (2016)'] = row['Boston city, Massachusetts']
             if row['Fact'] == 'Persons under 18 years, percent, April 1, 2010':
                 mapBP['Percentage under 18 (2010)'] = row['Boston city, Massachusetts']
-        mapBP['Eligible voters estimates'] = int((float(selectionBP['Population estimates (2016)'][0:3]+selectionBP['Population estimates (2016)'][4:]) * (100 - float(selectionBP['Percentage under 18 (2010)'][0:4])))/100)
+        mapBP['Eligible voters estimates'] = int((float(mapBP['Population estimates (2016)'].replace(',','')) * (100 - float(mapBP['Percentage under 18 (2010)'][0:4])))/100)
         eligibleVoters = mapBP['Eligible voters estimates']
 
-        mapPE = {}
+        #mapPE = {}
+        mapPEList = []
+        voterTotal = 0
         # Select Boston Area and Total Votes from dataset
         for row in PE:
             if row['City/Town'] == 'Boston':
-                mapPE['City/Town'] = row['City/Town']
-                mapPE['Ward'] = row['Ward']
-                mapPE['PCT'] = row['Pct']
-                mapPE['Total Votes'] = row['Total Votes Cast']
+                mapPEList.append({'City/Town':row['City/Town'], 'Ward':row['Ward'], 'PCT':row['Pct'], 'Total Votes':int(row['Total Votes Cast'].replace(',', ''))})
+        #print(mapPEList)
+        # Add the number of voters in Boston
+        for row in mapPEList:
+            voterTotal += row['Total Votes']
 
-        """
+        voterTurnout = round((float(voterTotal/eligibleVoters))*100, 2)
+        # The result of computation
+        result = {'The number of Eligible Voters Estimates':eligibleVoters, 'The number of Voters':voterTotal, 'Voter Turnout Estimates in Boston': voterTurnout}
+
         repo.dropCollection("VoterByPopulation")
         repo.createCollection("VoterByPopulation")
-        repo['yjunchoi_yzhang71.VoterByPopulation'].insert_many(voterByPopulation)
+        repo['yjunchoi_yzhang71.VoterByPopulation'].insert(result)
         repo['yjunchoi_yzhang71.VoterByPopulation'].metadata({'complete': True})
-        print("Saved station_data", repo['yjunchoi_yzhang71.station_data'].metadata())
-        """
+        print("Saved VoterByPopulation", repo['yjunchoi_yzhang71.voterByPopulation'].metadata())
+
         repo.logout()
 
         endTime = datetime.datetime.now()
