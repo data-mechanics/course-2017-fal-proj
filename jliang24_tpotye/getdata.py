@@ -60,7 +60,7 @@ class getdata(dml.Algorithm):
         repo.createCollection("hospital")
         repo['jliang24_tpotye.hospital'].insert_many(g)
 
-        print('DONE!')
+        #print('DONE!')
 
         repo.logout()
 
@@ -154,7 +154,7 @@ class getdata(dml.Algorithm):
                   
         return doc
 
-getdata.execute()
-doc = getdata.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+##getdata.execute()
+##doc = getdata.provenance()
+##print(doc.get_provn())
+##print(json.dumps(json.loads(doc.serialize()), indent=4))
