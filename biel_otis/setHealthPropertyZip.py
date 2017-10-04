@@ -6,10 +6,6 @@ import datetime
 import uuid
 import time
 import ssl
-<<<<<<< HEAD
-#Uses Helpers
-from math import sin, cos, sqrt, atan2, radians
-=======
 
 """
 Helper Functions courtesy of Andrei Lapets - CS591 BU
@@ -17,7 +13,6 @@ Helper Functions courtesy of Andrei Lapets - CS591 BU
 from math import sin, cos, sqrt, atan2, radians
 import math
 
->>>>>>> 46930c8bb340bc6a14bfab23565e5aacc7755096
 # approximate radius of earth in km
 
 def union(R, S):
@@ -83,22 +78,13 @@ def plus(args):
 def scale(p, c):
     (x,y) = p
     return (x/c, y/c)
-<<<<<<< HEAD
 #End Helpers
 
-=======
-
-def compTuples(t1, t2):
-    if(t1 == []):
-        return 100000000000000
-    comp = [abs(x[0] - y[0]) + abs(x[1] - y[1]) for x in t1 for y in t2]
-    return sum(comp)
->>>>>>> 46930c8bb340bc6a14bfab23565e5aacc7755096
 
 
 class setHealthPropertyZip(dml.Algorithm):
     contributor = 'biel_otis'
-    reads = ['biel_otis.HealthInspections', 'biel_otis.PropertyValues', 'biel_otis.ZipCodes']
+    reads = ['biel_otis.HealthInspection', 'biel_otis.PropertyValues', 'biel_otis.ZipCodes']
     writes = ['biel_otis.HealthPropertyZip']
 
     @staticmethod
@@ -109,12 +95,12 @@ class setHealthPropertyZip(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client['biel_otis']
         repo.authenticate('biel_otis', 'biel_otis')
-
+        print("Retrieving Data....")
         HealthInspections = repo['biel_otis.HealthInspection'].find()
         PropertyValues = list(repo['biel_otis.PropertyValues'].find())
         ZipCodes = repo['biel_otis.ZipCodes'].find()
         Zips = ZipCodes.distinct('1')
-
+        print("finished getting data...")
         props = [x for x in PropertyValues if x['owner_mail_zipcode'] in Zips] # Join operation on ZipCodes (had to append leading 0 to zipcode)
         
         props_extract = project(props, lambda x: (x['av_total'], x['location'], x['owner_mail_address'] + " " + x['owner_mail_cs'] + " " + x['owner_mail_zipcode']))
@@ -125,13 +111,13 @@ class setHealthPropertyZip(dml.Algorithm):
         inspections_extract = project(inspections, lambda x: (x['businessName'], x['Address'] + " " + x['CITY'] + " " + x['ZIP'], x['Location']))
         # returns tuples of form (businessName, Address, location)
         
-        bad_str="qwertyuiop[]\asdfghjkl;zxcvbnm?><./!@#$%^&*_+"
+        bad_str = "[]\;?><./!@#$%^&*+"
         dist_calc = [(x, y) for x in props_extract for y in inspections_extract if (x[1] not in bad_str and y[2] not in bad_str) and calculateDist(x[1], y[2])]
         near_final_set = [(x[0], 1) for x in dist_calc]
         final_set = aggregate(near_final_set, sum)
         #Now we have Income(value, 1) figure out the sum
         mongo_input = [{str(x[0]).replace('.','_'): x[1]} for x in final_set]
-
+        print("Finished Transformations...")
         repo.dropCollection("HealthPropertyZip")
         repo.createCollection("HealthPropertyZip")
         repo['biel_otis.HealthPropertyZip'].insert_many(mongo_input)
@@ -187,9 +173,6 @@ class setHealthPropertyZip(dml.Algorithm):
         
         return doc
 
-setHealthPropertyZip.execute()
-doc = setHealthPropertyZip.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+print("Finished SetHealthPropertyZip")
 
 ## eof

@@ -77,9 +77,6 @@ class getHealthInspection(dml.Algorithm):
           
         return doc
 
-getHealthInspection.execute()
-doc = getHealthInspection.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+print("finished getHealthInspections")
 
 ## eof

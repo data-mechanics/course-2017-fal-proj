@@ -70,9 +70,6 @@ class getWinterMarkets(dml.Algorithm):
     
         return doc
 
-getWinterMarkets.execute()
-doc = getWinterMarkets.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+print("Finished getWinterMarkets")
 
 ## eof

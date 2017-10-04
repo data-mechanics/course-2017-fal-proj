@@ -72,9 +72,5 @@ class getOrganicPrices(dml.Algorithm):
         
         return doc
 
-getOrganicPrices.execute()
-doc = getOrganicPrices.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
-
+print("finished getOrganicPrices")
 ## eof

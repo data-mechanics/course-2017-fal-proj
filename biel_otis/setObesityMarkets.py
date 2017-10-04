@@ -6,13 +6,7 @@ import datetime
 import uuid
 import time
 import ssl
-<<<<<<< HEAD
-#Uses Helpers
-from math import sin, cos, sqrt, atan2, radians
-# approximate radius of earth in km
-=======
 import random
->>>>>>> 46930c8bb340bc6a14bfab23565e5aacc7755096
 
 def union(R, S):
     return R + S
@@ -78,18 +72,13 @@ def scale(p, c):
     (x,y) = p
     return (x/c, y/c)
 
-<<<<<<< HEAD
-#End Helpers
-=======
 def compTuples(t1, t2):
     if(t1 == []):
         return 100000000000000
     comp = [abs(x[0] - y[0]) + abs(x[1] - y[1]) for x in t1 for y in t2]
-    print(sum(comp))
     return sum(comp)
 
 
->>>>>>> 46930c8bb340bc6a14bfab23565e5aacc7755096
 
 class setObesityMarkets(dml.Algorithm):
     contributor = 'biel_otis'
@@ -178,9 +167,6 @@ class setObesityMarkets(dml.Algorithm):
         
         return doc
 
-setObesityMarkets.execute()
-doc = setObesityMarkets.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+print("finished setObesityMarkets")
 
 ## eof

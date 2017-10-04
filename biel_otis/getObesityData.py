@@ -11,7 +11,7 @@ import ssl
 class getObesityData(dml.Algorithm):
     contributor = 'biel_otis'
     reads = []
-    writes = ['biel_otis.Obesity']
+    writes = ['biel_otis.ObesityData']
     ssl._create_default_https_context = ssl._create_unverified_context
 
     @staticmethod
@@ -74,9 +74,6 @@ class getObesityData(dml.Algorithm):
         
         return doc
 
-getObesityData.execute()
-doc = getObesityData.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+print("Finished getObesityData")
 
 ## eof
