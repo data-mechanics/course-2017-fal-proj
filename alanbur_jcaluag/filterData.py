@@ -28,7 +28,9 @@ class filterData():
 
         DSet = [x for x in collection]
 
+
         DSet = [x for x in DSet if ((southLat < x['Latitude'] < northLat)) and ((eastLong > x['Longitude'] > westLong))]
+
 
         repo.dropCollection("hubwayFiltered")
         repo.createCollection("hubwayFiltered")
