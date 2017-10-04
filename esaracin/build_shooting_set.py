@@ -114,5 +114,3 @@ class build_shooting_set(dml.Algorithm):
         return doc
 
 
-build_shooting_set.execute()
-build_shooting_set.provenance()

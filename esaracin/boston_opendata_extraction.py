@@ -106,9 +106,5 @@ class boston_opendata_extraction(dml.Algorithm):
                            get_districts, get_districts)
 
         repo.logout()
-
-
         return doc
 
-boston_opendata_extraction.execute()
-boston_opendata_extraction.provenance()

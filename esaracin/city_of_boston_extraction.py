@@ -59,17 +59,19 @@ class city_of_boston_extraction(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/')
         doc.add_namespace('ont', 'http://datamechanics/io/ontology/')
         doc.add_namespace('log', 'http://datamechanics.io/log/')
-        doc.add_namespace('cit', 'https://data.cityofboston.gov/') # Namespace specific to this script
+        doc.add_namespace('cit', 'https://data.cityofboston.gov/api/views/w4k7-yvrq/') # Namespace specific to this script
 
         # Add this script as a provenance agent to our document
         this_script = doc.agent('alg:esaracin#city_of_boston_extraction', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource_shootings = doc.entity('cit:api/views/w4k7-yvrq/rows', {'prov:label':'311, Service Requests',
+        resource_shootings = doc.entity('cit:rows', {'prov:label':'311, Service Requests',
                     prov.model.PROV_TYPE:'ont:DataResource','ont:Extension':'csv'})
 
         get_shootings = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 
         doc.wasAssociatedWith(get_shootings, this_script)
-        doc.usage(get_shootings, resource_shootings, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
+        doc.usage(get_shootings, resource_shootings, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Retrieval','ont:Query':'?accessType=DOWNLOAD'
+                  })
 
         shootings = doc.entity('dat:esaracin#boston_shootings',
                               {prov.model.PROV_LABEL:'Shootings in Boston', prov.model.PROV_TYPE:'ont:DataSet'})
@@ -80,9 +82,5 @@ class city_of_boston_extraction(dml.Algorithm):
 
 
         repo.logout()
-
-
         return doc
 
-city_of_boston_extraction.execute()
-city_of_boston_extraction.provenance()

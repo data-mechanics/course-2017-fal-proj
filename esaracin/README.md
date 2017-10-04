@@ -8,6 +8,9 @@ in looking into the location of Boston's police stations and how they relate to 
 This would give some insight into how effective Boston policing is, and where its most lacking. To this end, I've collected several
 datasets pertaining to this idea. These data are described in slightly more detail below. 
 
+As will be detailed below, a huge driving force behind these scripts is Python's Pandas library, which is the main tool used to 
+both convery .csv files to .json files and to perform all of the data transformations throughout.
+
 Data Extraction:
 	There are three main DML scripts that work to extract data-- one for each data portal used. The services used
 	are specified in each script's name, those being the following:
@@ -23,3 +26,5 @@ Data Extraction:
 
 	As an intermediary step, Python's pandas library was used to parse any .csv files read from the web into .json files
 	usable by Mongodb.
+
+

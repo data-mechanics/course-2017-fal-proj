@@ -112,5 +112,3 @@ class merge_police_sets(dml.Algorithm):
         return doc
 
 
-merge_police_sets.execute()
-merge_police_sets.provenance()

@@ -117,5 +117,3 @@ class join_sets(dml.Algorithm):
         repo.logout()
         return doc
 
-join_sets.execute()
-join_sets.provenance()
