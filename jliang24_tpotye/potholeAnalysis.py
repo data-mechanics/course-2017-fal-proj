@@ -9,7 +9,7 @@ import numpy as np
 class potholeAnalysis(dml.Algorithm):
     contributor = 'jliang24_tpotye'
     reads = ['jliang24_tpotye.doc_311', 'jliang24_tpotye.potholes']
-    writes = ['jliang24_tpotye.potholeAnalysis']
+    writes = ['jliang24_tpotye.potholeAnalysisData']
     
     
     @staticmethod
@@ -22,8 +22,8 @@ class potholeAnalysis(dml.Algorithm):
         repo = client.repo
         repo.authenticate('jliang24_tpotye', 'jliang24_tpotye')
 
-        repo.dropPermanent("potholeAnalysis")
-        repo.createPermanent("potholeAnalysis")
+        repo.dropPermanent("potholeAnalysisData")
+        repo.createPermanent("potholeAnalysisData")
 
         potholes311= []
         potholeRepairs= []
@@ -34,7 +34,7 @@ class potholeAnalysis(dml.Algorithm):
 
         for entry in repo.jliang24_tpotye.potholes.find():
             if "location_zipcode" in entry:
-                potholeRepairs += [(entry["location_zipcode"], 1)]
+                potholeRepairs += [("0"+ entry["location_zipcode"], 1)]
     
         # Selection transformation for 311
         
@@ -64,6 +64,15 @@ class potholeAnalysis(dml.Algorithm):
         ratio= [(key, np.prod([v for (k,v) in both if k == key])) for key in keys3]
 
         print("ratio", ratio)
+
+
+        final2= []
+        for entry in ratio:
+            final2.append({'zipcode:':entry[0], 'ratio':entry[1]})
+
+        print("final", final2)
+
+        repo['jliang24_tpotye.potholeAnalysisData'].insert_many(final2)
                             
         repo.logout()
 
@@ -105,7 +114,7 @@ class potholeAnalysis(dml.Algorithm):
         doc.usage(get_potholes_analysis, resource_potholes, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Computation'})
 
-        potholes_analysis = doc.entity('dat:jliang24_tpotye#potholeAnalysis', {prov.model.PROV_LABEL:'Pothole Analysis', prov.model.PROV_TYPE:'ont:DataSet'})
+        potholes_analysis = doc.entity('dat:jliang24_tpotye#potholeAnalysisData', {prov.model.PROV_LABEL:'Pothole Analysis', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(potholes_analysis, this_script)
         doc.wasGeneratedBy(potholes_analysis, get_potholes_analysis, endTime)
         doc.wasDerivedFrom(potholes_analysis, resource_311, get_potholes_analysis, get_potholes_analysis, get_potholes_analysis)
