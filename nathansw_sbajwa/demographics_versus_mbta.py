@@ -137,6 +137,20 @@ class demographics_versus_mbta(dml.Algorithm):
 
 		return {"start":startTime, "end":endTime}
 
+	### WIP ###
 	@staticmethod
 	def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
+		
+		client = dml.pymongo.MongoClient()
+		repo = client.repo
+		repo.authenticate('nathansw_sbajwa','nathansw_sbajwa')
+		doc.add_namespace('alg', 'http://datamechanics.io/algorithm/sbajwa_nathansw/') # The scripts in / format.
+		doc.add_namespace('dat', 'http://datamechanics.io/data/sbajwa_nathansw/') # The data sets in / format.
+		doc.add_namespace('ont', 'http://datamechanics.io/ontology#')
+		doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
+
+		this_script = doc.agent('alg:nathansw_sbajwa#demographics_versus_mbta', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+
+		repo.logout()
+
 		return doc

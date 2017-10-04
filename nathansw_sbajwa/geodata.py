@@ -23,6 +23,7 @@ class geodata(dml.Algorithm):
 		temp_f = open(new_dir + 'geo_coords.txt', 'r')
 		loc_coords = temp_f.readlines()
 
+
 		startTime = datetime.datetime.now()
 
 		# open db client and authenticate
@@ -66,6 +67,7 @@ class geodata(dml.Algorithm):
 
 		return {"start":startTime, "end":endTime}
 
+	### WIP ##
 	@staticmethod
 	def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
 
@@ -85,7 +87,7 @@ class geodata(dml.Algorithm):
 		doc.wasAssociatedWith(get_geodata, this_script)
 		doc.usage(get_geodata, resource, startTime, None,
               {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Geodata&$select=type,latitude,longitude,OPEN_DT'
+                  'ont:Query':'?longitude=&latitude='
               }
               )
 

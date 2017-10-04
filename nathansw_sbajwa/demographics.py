@@ -1,3 +1,4 @@
+import urllib.request
 import json
 import dml
 import prov.model
@@ -21,37 +22,45 @@ class demographics(dml.Algorithm):
 		repo = client.repo
 		repo.authenticate('nathansw_sbajwa','nathansw_sbajwa')
 
-		# directory navigation
-		curr_dir = os.getcwd()
-		new_dir = curr_dir + "\\nathansw_sbajwa\\" 
+		# opens 'Race.json' file from datamechanics.io
+		# and inserts it into repo collection 'nathansw_sbajwa.race'
 
-		# opens local 'Race.json' files and inserts it into repo collection 'nathansw_sbajwa.race'
-		with open(new_dir + 'Race.json') as race_json:
-			r = json.load(race_json)
+		url = 'http://datamechanics.io/data/nathansw_sbajwa/Race.json'
+		response = urllib.request.urlopen(url).read().decode("utf-8")
+		r = json.loads(response)
 		s = json.dumps(r, indent=4)
 		repo.dropCollection("race")
 		repo.createCollection("race")
 		repo['nathansw_sbajwa.race'].insert_one(r)
 
-		# opens local 'MeansOfCommuting.json' files and inserts it into repo collection 'nathansw_sbajwa.commuting'
-		with open(new_dir + 'MeansOfCommuting.json') as commuting_json:
-			r = json.load(commuting_json)
+		# opens 'MeansOfCommuting.json' file from datamechanics.io
+		# and inserts it into repo collection 'nathansw_sbajwa.commuting'
+
+		url = 'http://datamechanics.io/data/nathansw_sbajwa/MeansOfCommuting.json'
+		response = urllib.request.urlopen(url).read().decode("utf-8")
+		r = json.loads(response)				
 		s = json.dumps(r, indent=4)
 		repo.dropCollection("commuting")
 		repo.createCollection("commuting")
 		repo['nathansw_sbajwa.commuting'].insert_one(r)
 
-		# opens local 'PovertyRates.json' files and inserts it into repo collection 'nathansw_sbajwa.povertyrates'
-		with open(new_dir + 'PovertyRates.json') as poverty_json:
-			r = json.load(poverty_json)
+		# opens 'PovertyRates.json' file from datamechanics.io
+		# and inserts it into repo collection 'nathansw_sbajwa.povertyrates'
+
+		url = 'http://datamechanics.io/data/nathansw_sbajwa/PovertyRates.json'
+		response = urllib.request.urlopen(url).read().decode("utf-8")
+		r = json.loads(response)
 		s = json.dumps(r, indent=4)
 		repo.dropCollection("povertyrates")
 		repo.createCollection("povertyrates")
 		repo['nathansw_sbajwa.povertyrates'].insert_one(r)
 
-		# opens local 'HouseholdIncome.json' files and inserts it into repo collection 'nathansw_sbajwa.householdincome'
-		with open(new_dir + 'HouseholdIncome.json') as income_json:
-			r = json.load(income_json)
+		# opens 'HouseholdIncome.json' file from datamechanics.io
+		# and inserts it into repo collection 'nathansw_sbajwa.householdincome'
+
+		url = 'http://datamechanics.io/data/nathansw_sbajwa/HouseholdIncome.json'
+		response = urllib.request.urlopen(url).read().decode("utf-8")
+		r = json.loads(response)
 
 		## removes $ from all of the nested keys within the JSON file (char forbidden by mongodb)
 		for town in r.keys():
@@ -85,7 +94,7 @@ class demographics(dml.Algorithm):
 
 		return {"start": startTime, "end": endTime}
 
-
+	### WIP ###
 	@staticmethod
 	def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
 

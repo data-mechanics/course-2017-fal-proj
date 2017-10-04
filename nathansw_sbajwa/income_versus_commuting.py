@@ -55,7 +55,7 @@ class income_versus_commuting(dml.Algorithm):
 		income_data = json.dumps(income_data, indent=4)	 #string object
 		json_income = json.loads(income_data)			 #json/dict object
 
-		############ COMMUTING ####################################
+		#################### COMMUTING ##############################
 
 		commuting_db = repo['nathansw_sbajwa.commuting']
 		commuting = commuting_db.find_one()
@@ -76,7 +76,7 @@ class income_versus_commuting(dml.Algorithm):
 		commuting_data = json.dumps(commuting_data, indent = 4)	#string object
 		json_commuting = json.loads(commuting_data)				#json/dict object
 
-		###########################################################
+		################################################################
 
 		# load both json object as a panda dataframe 
 		income_df = pd.DataFrame(json_income)
@@ -147,4 +147,17 @@ class income_versus_commuting(dml.Algorithm):
 
 	@staticmethod
 	def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
+		
+		client = dml.pymongo.MongoClient()
+		repo = client.repo
+		repo.authenticate('nathansw_sbajwa','nathansw_sbajwa')
+		doc.add_namespace('alg', 'http://datamechanics.io/algorithm/sbajwa_nathansw/') # The scripts in / format.
+		doc.add_namespace('dat', 'http://datamechanics.io/data/sbajwa_nathansw/') # The data sets in / format.
+		doc.add_namespace('ont', 'http://datamechanics.io/ontology#')
+		doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
+
+		this_script = doc.agent('alg:nathansw_sbajwa#income_versus_commuting', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+
+		repo.logout()
+
 		return doc

@@ -20,6 +20,7 @@ class mbta(dml.Algorithm):
 		# directory navigation
 		curr_dir = os.getcwd()
 		new_dir = curr_dir + "\\nathansw_sbajwa\\"
+
 		# text file to hold all longitude and latitude coordinates that are collected
 		# would like to eventually elimate in favor of direct db draws from mbta -> geodata
 		f = open(new_dir + 'geo_coords.txt', 'w')
@@ -83,6 +84,7 @@ class mbta(dml.Algorithm):
 			coords.append([lat,lon])
 
 		for loc in coords:
+
 			# write all coordinates collected to a text file separated by a newline
 			# would like to eventually elimate in favor of direct db draws from mbta -> geodata
 			f.write(str(loc) + "\n")
@@ -114,10 +116,7 @@ class mbta(dml.Algorithm):
 
 		return {"start":startTime, "end":endTime}
 
-		## Sameena's code to generate JSON file
-		# with open('testMBTA.json', 'a') as outfile:
-		# 	json.dump(data, outfile, indent=4)
-
+	### WIP ###
 	@staticmethod
 	def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
 
@@ -128,17 +127,20 @@ class mbta(dml.Algorithm):
 		doc.add_namespace('dat', 'http://datamechanics.io/data/sbajwa_nathansw/') # The data sets in / format.
 		doc.add_namespace('ont', 'http://datamechanics.io/ontology#')
 		doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
+		
 		doc.add_namespace('mbta', 'http://realtime.mbta.com/developer/api/v2/')
 
 		this_script = doc.agent('alg:nathansw_sbajwa#mbta', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 		resource = doc.entity('mbta:stopsbylocation', {'prov:label':'MBTA Stops By Location', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+		
 		get_mbta = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 		doc.wasAssociatedWith(get_mbta, this_script)
 		doc.usage(get_mbta, resource, startTime, None,
               {prov.model.PROV_TYPE:'ont:Retrieval',
-              'ont:Query':'?type=MBTA+Stop&$select=type,latitude,longitude,OPEN_DT'
+              'ont:Query':'?api_key=&lat=&lon='
               }
               )
+
 		mbta = doc.entity('dat:nathansw_sbajwa#mbta', {prov.model.PROV_LABEL:'MBTA Stops',prov.model.PROV_TYPE:'ont:DataSet'})
 		doc.wasAttributedTo(mbta, this_script)
 		doc.wasGeneratedBy(mbta, get_mbta, endTime)
