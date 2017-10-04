@@ -8,11 +8,7 @@ import uuid
 class get_datasets(dml.Algorithm):
     contributor = 'jtbloom_rfballes'
     reads = []
-<<<<<<< HEAD
     writes = ['jtbloom_rfballes.charging_stations', 'jtbloom_rfballes.hubway_stations', 'jtbloom_rfballes.bike_network', 'jtbloom_rfballes.neighborhoods', 'jtbloom_rfballes.tripHistory']
-=======
-    writes = ['jtbloom_rfballes.charging_stations', 'jtbloom_rfballes.hubway_stations', 'jtbloom_rfballes.bike_network', 'jtbloom_rfballes.neighborhoods', 'jtbloom_rfballes.trees']
->>>>>>> 4db34b8079ffbd9645ec3e35d7dfc42834ed052d
 
     @staticmethod
     def execute(trial = False):
@@ -189,11 +185,7 @@ class get_datasets(dml.Algorithm):
                   
         return doc
 
-<<<<<<< HEAD
 get_datasets.execute()
-=======
-#example.execute()
->>>>>>> 4db34b8079ffbd9645ec3e35d7dfc42834ed052d
 doc = get_datasets.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
