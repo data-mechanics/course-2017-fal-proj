@@ -5,7 +5,7 @@ import prov.model
 import datetime
 import uuid
 
-class roadComplaints():
+class roadComplaints(dml.Algorithm):
     contributor = 'alanbur_jcaluag'
     reads = []
     writes = ['alanbur_jcaluag.roadComplaints']

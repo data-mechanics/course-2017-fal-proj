@@ -5,7 +5,7 @@ import prov.model
 import datetime
 import uuid
 
-class mbta(dml.algorithml):
+class mbta(dml.Algorithm):
     contributor = 'alanbur_jcaluag'
     reads = []
     writes = ['alanbur_jcaluag.mbta']
@@ -35,13 +35,7 @@ class mbta(dml.algorithml):
                     stops.extend(r['direction'][0]['stop'])
                     # print(r)
 
-        stops = [
-            {'Data': 'MBTA Bus Stops',
-            'Location':dict['stop_name'],
-            'Latitude':dict['stop_lat'],
-             'Longitude':dict['stop_lon']}
-
-         for dict in stops]
+       
 
         repo.dropCollection("mbta")
         repo.createCollection("mbta")

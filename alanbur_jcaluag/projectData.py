@@ -5,7 +5,7 @@ import prov.model
 import datetime
 import uuid
 
-class projectData(dml.algorithml):
+class projectData(dml.Algorithm):
     contributor = 'alanbur_jcaluag'
     reads = ['alanbur_jcaluag.trafficSignal', 'alanbur_jcaluag.mbta', 'alanbur_jcaluag.hubway']
     writes = ['alanbur_jcaluag.trafficSignalFiltered','alanbur_jcaluag.mbtaFiltered', 'alanbur_jcaluag.hubwayFiltered']

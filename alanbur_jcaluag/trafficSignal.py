@@ -5,7 +5,7 @@ import prov.model
 import datetime
 import uuid
 
-class trafficSignal():
+class trafficSignal(dml.Algorithm):
     contributor = 'alanbur_jcaluag'
     reads = []
     writes = ['alanbur_jcaluag.trafficSignal']
