@@ -6,13 +6,9 @@ import datetime
 import uuid
 
 class bikeNetwork():
-    # contributor = 'test'
-    # reads = []
-    # writes = ['test.trafficSignal']
-    # contributor = 'alice_bob'
-    # reads = []
-    # writes = ['alice_bob.lost', 'alice_bob.found']
-
+    contributor = 'alanbur_jcaluag'
+    reads = []
+    writes = ['alanbur_jcaluag.bikeNetwork']
     @staticmethod
     def execute(trial = False):
         '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
