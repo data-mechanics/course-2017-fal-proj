@@ -11,7 +11,6 @@ class redline_Selection(dml.Algorithm):
     contributor = 'lc546_jofranco'
     reads = ['lc546_jofranco.realtime_MBTA']
     writes = ['lc546_jofranco.realtime_MBTAbos']
-
     @staticmethod
     def execute(trial = False):
         startTime = datetime.datetime.now()
@@ -22,8 +21,7 @@ class redline_Selection(dml.Algorithm):
         repo.authenticate('lc546_jofranco', 'lc546_jofranco')
 
         
-        bos = repo.lc546_jofranco.realtime_MBTA
-        
+        bos = repo.lc546_jofranco.realtime_MBTA       
         bos_array = []
         for stop in bos.find():
             for prediction in stop['Predictions']:
