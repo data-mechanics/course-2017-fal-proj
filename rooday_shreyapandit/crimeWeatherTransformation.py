@@ -95,12 +95,6 @@ class crimeWeatherTransformation(dml.Algorithm):
 
     @staticmethod
     def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
-        '''
-            Create the provenance document describing everything happening
-            in this script. Each run of the script will generate a new
-            document describing that invocation event.
-
-        # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate('rooday_shreyapandit', 'rooday_shreyapandit')
@@ -109,33 +103,29 @@ class crimeWeatherTransformation(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/')  # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/')  # The event log.
-        doc.add_namespace('bdp', 'https://data.boston.gov/api/action/datastore_search?resource_id=')
-        doc.add_namespace('591', 'http://datamechanics.io/data/rooday_shreyapandit/')
-        doc.add_namespace('bdp1', 'https://data.cityofboston.gov/resource/')
-
 
         this_script = doc.agent('alg:rooday_shreyapandit#crimeWeatherTransformation', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
-        resource_entertain = doc.entity('dat:rooday_shreyapandit#entertain', {'prov:label':'Entertainment Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        resource_food = doc.entity('dat:rooday_shreyapandit#food', {'prov:label': 'Food Data', prov.model.PROV_TYPE: 'ont:DataSet'})
+        resource_weather = doc.entity('dat:rooday_shreyapandit#weather', {'prov:label': 'Inclement Weather Data for Boston and Suffolk', prov.model.PROV_TYPE: 'ont:DataSet'})
+        resource_crime = doc.entity('dat:rooday_shreyapandit#crime', {'prov:label': 'Crime Data for Boston', prov.model.PROV_TYPE: 'ont:DataSet'})
 
         get_crimeWeatherAnalysis = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
         
         doc.wasAssociatedWith(get_crimeWeatherAnalysis, this_script)
 
-        doc.usage(get_crimeWeatherAnalysis, resource_entertain, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
-        doc.usage(get_crimeWeatherAnalysis, resource_food, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
+        doc.usage(get_crimeWeatherAnalysis, resource_weather, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
+        doc.usage(get_crimeWeatherAnalysis, resource_crime, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
 
-        social = doc.entity('dat:rooday_shreyapandit#crimeWeatherAnalysis', {prov.model.PROV_LABEL: 'Social Analysis', prov.model.PROV_TYPE: 'ont:DataSet'})
-        doc.wasAttributedTo(social, this_script)
-        doc.wasGeneratedBy(social, get_crimeWeatherAnalysis, endTime)
-        doc.wasDerivedFrom(social, resource_entertain, get_crimeWeatherAnalysis, get_crimeWeatherAnalysis, get_crimeWeatherAnalysis)
-        doc.wasDerivedFrom(social, resource_food, get_crimeWeatherAnalysis, get_crimeWeatherAnalysis, get_crimeWeatherAnalysis)
+        crime_weather = doc.entity('dat:rooday_shreyapandit#crimesByDateAndWeather', {prov.model.PROV_LABEL: 'Number of Crimes and Weather Type by Date', prov.model.PROV_TYPE: 'ont:DataSet'})
+        doc.wasAttributedTo(crime_weather, this_script)
+        doc.wasGeneratedBy(crime_weather, get_crimeWeatherAnalysis, endTime)
+        doc.wasDerivedFrom(crime_weather, resource_weather, get_crimeWeatherAnalysis, get_crimeWeatherAnalysis, get_crimeWeatherAnalysis)
+        doc.wasDerivedFrom(crime_weather, resource_crime, get_crimeWeatherAnalysis, get_crimeWeatherAnalysis, get_crimeWeatherAnalysis)
         repo.logout()
 
-        return doc'''
+        return doc
 
 crimeWeatherTransformation.execute()
-#doc = crimeWeatherTransformation.provenance()
-#print(doc.get_provn())
-#print(json.dumps(json.loads(doc.serialize()), indent=4))
+doc = crimeWeatherTransformation.provenance()
+print(doc.get_provn())
+print(json.dumps(json.loads(doc.serialize()), indent=4))
