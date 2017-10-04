@@ -27,10 +27,8 @@ class filterData():
         westLong = -71.187272
 
         DSet = [x for x in collection]
-        print(len(DSet))
-        print(DSet)
-        DSet = [x for x in collection if ((southLat < x['Latitude'] < northLat)) and ((eastLong < x['Longitude'] <westLong))]
-        print(len(DSet))
+
+        DSet = [x for x in DSet if ((southLat < x['Latitude'] < northLat)) and ((eastLong > x['Longitude'] > westLong))]
 
         repo.dropCollection("hubwayFiltered")
         repo.createCollection("hubwayFiltered")
@@ -43,4 +41,4 @@ class filterData():
 
         return {"start":startTime, "end":endTime}
 
-filterData.execute()
+#filterData.execute()

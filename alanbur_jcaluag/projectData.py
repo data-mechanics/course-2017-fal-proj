@@ -8,7 +8,7 @@ import uuid
 class projectData(dml.Algorithm):
     contributor = 'alanbur_jcaluag'
     reads = ['alanbur_jcaluag.trafficSignal', 'alanbur_jcaluag.mbta', 'alanbur_jcaluag.hubway']
-    writes = ['alanbur_jcaluag.trafficSignalFiltered','alanbur_jcaluag.mbtaFiltered', 'alanbur_jcaluag.hubwayFiltered']
+    writes = ['alanbur_jcaluag.trafficSignalFiltered','alanbur_jcaluag.mbtaProjected', 'alanbur_jcaluag.hubwayProjected']
     @staticmethod
     def execute(trial = False):
         '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
@@ -23,6 +23,7 @@ class projectData(dml.Algorithm):
 
 
         collection=repo['alanbur_jcaluag.trafficSignal'].find()
+
         DSet=[
             {'Dataset': 'Traffic Signals',
                 'Location':item['properties']['Location'],
@@ -44,6 +45,7 @@ class projectData(dml.Algorithm):
                 'Longitude': item['lo']}
               for item in collection
         ]
+        print(DSet)
         repo.dropCollection("hubwayProjected")
         repo.createCollection("hubwayProjected")
         repo['alanbur_jcaluag.hubwayProjected'].insert_many(DSet)
@@ -109,4 +111,4 @@ class projectData(dml.Algorithm):
         return doc
     
     
-projectData.execute()
+#projectData.execute()
