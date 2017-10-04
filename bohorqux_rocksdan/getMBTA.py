@@ -20,7 +20,7 @@ class getMBTA(dml.Algorithm):
         repo = client.repo
         repo.authenticate('bohorqux_rocksdan', 'bohorqux_rocksdan')
 
-        url = 'http://datamechanics.io/data/bohorqux_rocksdan/mbta.json'
+        url = 'http://datamechanics.io/data/bohorqux_rocksdan/mbta_cleaned.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         response = response.replace(']', "")
         response += ']'
