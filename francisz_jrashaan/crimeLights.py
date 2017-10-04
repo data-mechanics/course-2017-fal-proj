@@ -157,18 +157,12 @@ class crimeLights(dml.Algorithm):
 
 
 
-         this_script = doc.agent('dat:francisz_jrashaan#crimeLights', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+
 
 
          resource_agg2 = doc.entity('bdp:wc8w-nujj', {'prov:label':'Longitude and Latitude of Lights in City', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-
-         get_aggLights = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-
-         doc.wasAssociatedWith(get_aggLights, this_script)
-
-         doc.usage(get_aggLights, resource_agg2, startTime, None,
-
-                   {prov.model.PROV_TYPE:'ont:Retrieval'})
+    
+    
 
 
 
@@ -177,26 +171,27 @@ class crimeLights(dml.Algorithm):
 
 
 
+
+         this_script = doc.agent('dat:francisz_jrashaan#crimeLights', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+         
+         compute_aggLights = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 
          aggLights = doc.entity('dat:francisz_jrashaan#newLights', {prov.model.PROV_LABEL:'Aggregation second half ', prov.model.PROV_TYPE:'ont:DataSet'})
-
-         doc.wasAttributedTo(aggLights, this_script)
-
-         doc.wasGeneratedBy(aggLights, get_aggLights, endTime)
-
-         doc.wasDerivedFrom(aggLights , resource_agg2, get_aggLights, get_aggLights, get_aggLights)
-
-
-
-         resource_agg = doc.entity('bdp:wc8w-nujj', {'prov:label':'Longtide and Lat of Crimes', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-
-         get_agg = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-
-         doc.wasAssociatedWith(get_agg, this_script)
-
-         doc.usage(get_agg, resource_agg, startTime, None,
-
-                   {prov.model.PROV_TYPE:'ont:Retreival'})
+         
+         lightsCrime = doc.entity('dat:francisz_jrashaan#crimeLight', {prov.model.PROV_LABEL:'Aggregation second half ', prov.model.PROV_TYPE:'ont:DataSet'})
+         
+         newCrime = doc.entity('dat:francisz_jrashaan#crimeData', {prov.model.PROV_LABEL:'Aggregation second half ', prov.model.PROV_TYPE:'ont:DataSet'})
+         
+         doc.wasAssociatedWith(compute_aggLights, this_script)
+         doc.wasAttributedTo(newCrime, this_script)
+         doc.wasGeneratedBy(newCrime, compute_aggLights, endTime)
+         doc.wasDerivedFrom(newCrime, lightsCrime, compute_aggLights, compute_aggLights, compute_aggLights)
+         doc.wasDerivedFrom(newCrime, aggLights, compute_aggLights, compute_aggLights, compute_aggLights)
+         
+         
+         
+         doc.usage(compute_aggLights, aggLights, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
+         doc.usage(compute_aggLights, lightsCrime, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
 
 
 
@@ -204,15 +199,33 @@ class crimeLights(dml.Algorithm):
 
 
 
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+ 
 
 
-         aggCrime = doc.entity('dat:francisz_jrashaan#crimeData', {prov.model.PROV_LABEL:'Aggregation first half ', prov.model.PROV_TYPE:'ont:DataSet'})
 
-         doc.wasAttributedTo(aggCrime, this_script)
 
-         doc.wasGeneratedBy(aggCrime, get_agg, endTime)
+         
 
-         doc.wasDerivedFrom(aggCrime , resource_agg, get_agg, get_agg, get_agg)
+
+
+
+
+
+
+
+
+
+
 
 
 

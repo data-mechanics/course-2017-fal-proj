@@ -139,11 +139,11 @@ class crimeTransformation(dml.Algorithm):
          #add url on doc.entity
          resource_selectProject = doc.entity('bdp:12cb3883-56f5-47de-afa5-3b1cf61b257b', {'prov:label':'Crime Data Set', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 
-         get_selectProject = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+         do_selectProject = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 
-         doc.wasAssociatedWith(get_selectProject, this_script)
+         doc.wasAssociatedWith(do_selectProject, this_script)
 
-         doc.usage(get_selectProject, resource_selectProject, startTime, None,
+         doc.usage(do_selectProject, resource_selectProject, startTime, None,
 
                    {prov.model.PROV_TYPE:'ont:Retrieval'})
 
@@ -153,13 +153,13 @@ class crimeTransformation(dml.Algorithm):
 
 
 
-         selectProject = doc.entity('dat:francisz_jrashaan#crimeData', {prov.model.PROV_LABEL:'Data set to Select and Project', prov.model.PROV_TYPE:'ont:DataSet'})
+         selectProject = doc.entity('dat:francisz_jrashaan#crimeData', {prov.model.PROV_LABEL:'Data Set which is  Selected and Projected', prov.model.PROV_TYPE:'ont:DataSet'})
 
          doc.wasAttributedTo(selectProject, this_script)
 
-         doc.wasGeneratedBy(selectProject, get_selectProject, endTime)
+         doc.wasGeneratedBy(selectProject, do_selectProject, endTime)
 
-         doc.wasDerivedFrom(selectProject, resource_selectProject, get_selectProject, get_selectProject, get_selectProject)
+         doc.wasDerivedFrom(selectProject, resource_selectProject, do_selectProject, do_selectProject, do_selectProject)
 
 
 

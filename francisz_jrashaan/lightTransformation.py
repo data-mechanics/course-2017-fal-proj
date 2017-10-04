@@ -115,7 +115,7 @@ class lightTransformation(dml.Algorithm):
 
 
 
-         resource_project = doc.entity('bdp:c2fcc1e3-c38f-44ad-a0cf-e5ea2a6585b5', {'prov:label':'Project', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+         resource_project = doc.entity('bdp:c2fcc1e3-c38f-44ad-a0cf-e5ea2a6585b5', {'prov:label':'Dataset which is projected', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 
          get_project = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 
@@ -131,7 +131,7 @@ class lightTransformation(dml.Algorithm):
 
 
 
-         project = doc.entity('dat:francisz_jrashaan#streetlights', {prov.model.PROV_LABEL:'Dataset to Project', prov.model.PROV_TYPE:'ont:DataSet'})
+         project = doc.entity('dat:francisz_jrashaan#newLights', {prov.model.PROV_LABEL:'New Dataset after Projection', prov.model.PROV_TYPE:'ont:DataSet'})
 
          doc.wasAttributedTo(project, this_script)
 
