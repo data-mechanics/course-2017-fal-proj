@@ -17,7 +17,7 @@ class retrieverealtime(dml.Algorithm):
     	client = dml.pymongo.MongoClient()
     	repo = client.repo
     	repo.authenticate("lc546_jofranco", "lc546_jofranco")		
-    	url = 'http://developer.mbta.com/Data/Red.json'
+    	url = 'http://Developer.mbta.com/lib/rthr/red.json'
     	response = urllib.request.urlopen(url).read().decode("utf-8")
     	r = json.loads(response)
     	s = json.dumps(r, sort_keys=True, indent=2)
