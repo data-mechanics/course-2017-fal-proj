@@ -26,7 +26,7 @@ import uuid
 
 class vehicleAndHousingCitations(dml.Algorithm):
     contributor = 'erj826'
-    reads = []
+    reads = ['aquan_erj826.carCitations', 'aquan_erj826.housingViolations']
     writes = ['aquan_erj826.vehicleAndHousingCitations']
 
     @staticmethod
@@ -69,8 +69,8 @@ class vehicleAndHousingCitations(dml.Algorithm):
             repo['aquan_erj826.vehicleAndHousingCitations'].insert([{'DATE':date, 'TIME':time,'TYPE':kind, 'CHARGE':charge}], check_keys=False)
 
 
-        for item in repo['aquan_erj826.vehicleAndHousingCitations'].find():
-            print(item)
+#       for item in repo['aquan_erj826.vehicleAndHousingCitations'].find():
+#            print(item)
 
         repo['aquan_erj826.vehicleAndHousingCitations'].metadata({'complete':True})
         print(repo['aquan_erj826.vehicleAndHousingCitations'].metadata())
@@ -99,41 +99,48 @@ class vehicleAndHousingCitations(dml.Algorithm):
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
+        #resources:
+        doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
+        doc.add_namespace('dbe', 'https://data.boston.gov/export/245/954/')
+        doc.add_namespace('dbg', 'https://data.boston.gov/datastore/odata3.0/')
+        doc.add_namespace('cdp', 'https://data.cambridgema.gov/resource/') 
+        doc.add_namespace('svm','https://data.somervillema.gov/resource/')
 
-        this_script = doc.agent('alg:alice_bob#example', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        get_found = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        get_lost = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_found, this_script)
-        doc.wasAssociatedWith(get_lost, this_script)
-        doc.usage(get_found, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'
+        #define the agent
+        this_script = doc.agent('alg:aquan_erj826#vehicleAndHousingCitations', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        
+        #define the Parking Violations we are using (entity)
+        carCitations = doc.entity('dat:aquan_erj826#carCitations', {'prov:label':'CarViolationsFromPriorRetrieval', prov.model.PROV_TYPE:'ont:DataSet'})
+        
+        #define the Housing Violations we are using(entity)
+        housingViolations = doc.entity('dat:aquan_erj826#housingViolations', {'prov:label':'housingViolationsFromPriorRetrieval', prov.model.PROV_TYPE:'ont:DataSet'})
+        
+        #define the activity of aggregating two datasets(and projecting to reduce the number of unnecessary arguments)
+        joinAndSimplify_lists = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(joinAndSimplify_lists, this_script)
+        doc.usage(joinAndSimplify_lists, carCitations, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Calculation',
                   }
                   )
-        doc.usage(get_lost, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Animal+Lost&$select=type,latitude,longitude,OPEN_DT'
+        doc.usage(joinAndSimplify_lists, housingViolations, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Calculation',
                   }
                   )
-
-        lost = doc.entity('dat:alice_bob#lost', {prov.model.PROV_LABEL:'Animals Lost', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(lost, this_script)
-        doc.wasGeneratedBy(lost, get_lost, endTime)
-        doc.wasDerivedFrom(lost, resource, get_lost, get_lost, get_lost)
-
-        found = doc.entity('dat:alice_bob#found', {prov.model.PROV_LABEL:'Animals Found', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(found, this_script)
-        doc.wasGeneratedBy(found, get_found, endTime)
-        doc.wasDerivedFrom(found, resource, get_found, get_found, get_found)
+        
+        #define the entity of the writeout
+        vehicleAndHousingCitations = doc.entity('dat:aquan_erj826#vehicleAndHousingCitations', {prov.model.PROV_LABEL:'Merged and Simplified Result', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(vehicleAndHousingCitations, this_script)
+        doc.wasGeneratedBy(vehicleAndHousingCitations, joinAndSimplify_lists, endTime)
+        doc.wasDerivedFrom(vehicleAndHousingCitations, carCitations, joinAndSimplify_lists, joinAndSimplify_lists, joinAndSimplify_lists)
+        doc.wasDerivedFrom(vehicleAndHousingCitations, housingViolations, joinAndSimplify_lists, joinAndSimplify_lists, joinAndSimplify_lists)
 
         repo.logout()
                   
         return doc
 
-vehicleAndHousingCitations.execute()
-# doc = example.provenance()
-# print(doc.get_provn())
-# print(json.dumps(json.loads(doc.serialize()), indent=4))
+#vehicleAndHousingCitations.execute()
+#doc = vehicleAndHousingCitations.provenance()
+#print(doc.get_provn())
+#print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof
