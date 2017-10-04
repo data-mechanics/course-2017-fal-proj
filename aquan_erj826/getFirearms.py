@@ -74,7 +74,7 @@ class getFirearms(dml.Algorithm):
         doc.add_namespace('svm','https://data.somervillema.gov/resource/')
         
         #declare agent, input entity, and activity
-        this_script = doc.agent('alg:aquan_erj826#example', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:aquan_erj826#getFirearms', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:ffz3-2uqv.json', {'prov:label':'City of Boston Firearms Records', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_gunList = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         
