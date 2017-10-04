@@ -46,6 +46,7 @@ while len(algorithms) > 0:
 
 # Execute the algorithms in order.
 provenance = prov.model.ProvDocument()
+print(ordered)
 for algorithm in ordered:
     algorithm.execute(trial=args.trial)
     provenance = algorithm.provenance(provenance)

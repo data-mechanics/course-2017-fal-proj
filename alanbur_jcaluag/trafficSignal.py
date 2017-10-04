@@ -50,4 +50,4 @@ class trafficSignal():
 
         return {"start":startTime, "end":endTime}
 
-trafficSignal.execute()
+# trafficSignal.execute()

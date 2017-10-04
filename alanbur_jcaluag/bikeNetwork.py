@@ -44,4 +44,4 @@ class bikeNetwork():
 
         return {"start":startTime, "end":endTime}
 
-bikeNetwork.execute()
+# bikeNetwork.execute()
