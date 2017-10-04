@@ -25,14 +25,7 @@ class trafficSignal():
         features=r['features']
         s = json.dumps(r, sort_keys=True, indent=2)
 
-        features = [
-
-            {'Data': 'Traffic Signals',
-                'Location':dict['properties']['Location'],
-             'Latitude': dict['geometry']['coordinates'][0],
-             'Longitude': dict['geometry']['coordinates'][1]}
-              for dict in features
-        ]
+      
 
 
         repo.dropCollection("trafficSignal")

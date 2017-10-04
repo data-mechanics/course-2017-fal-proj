@@ -35,9 +35,11 @@ for r,d,f in os.walk(path):
 # Create an ordering of the algorithms based on the data
 # sets that they read and write.
 datasets = set()
+print(algorithms)
 ordered = []
 while len(algorithms) > 0:
     for i in range(0,len(algorithms)):
+        print(algorithms[i])
         if set(algorithms[i].reads).issubset(datasets):
             datasets = datasets | set(algorithms[i].writes)
             ordered.append(algorithms[i])
