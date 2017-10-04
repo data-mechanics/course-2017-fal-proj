@@ -23,10 +23,10 @@ import prov.model
 import datetime
 import uuid
 
-class gunsRecovered(dml.Algorithm):
+class crimeDispatch(dml.Algorithm):
     contributor = 'erj826'
     reads = []
-    writes = ['aquan_erj826.gunsRecovered']
+    writes = ['aquan_erj826.crimeDispatch']
 
     @staticmethod
     def execute(trial = False):
@@ -37,21 +37,40 @@ class gunsRecovered(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate('erj826', 'erj826')
+        
 
-        collection = repo.aquan_erj826.firearms
+        dispatch = repo.aquan_erj826.Counts911
+        crimeReports = repo.aquan_erj826.crimes
 
-        repo.dropCollection("gunsRecovered")
-        repo.createCollection("gunsRecovered")
+        repo.dropCollection("crimeDispatch")
+        repo.createCollection("crimeDispatch")
 
-        for point in collection.find():
-            total = int(point['buybackgunsrecovered']) + \
-                    int(point['crimegunsrecovered']) + \
-                    int(point['gunssurrenderedsafeguarded'])
-            date = point['collectiondate'][:10]
-            repo['aquan_erj826.gunsRecovered'].insert([{'DATE':date, 'TOTAL_GUNS_COLLECTED':total}], check_keys=False)
+        for call in dispatch.find():
+            date = call['Date'].split('/')
+            date = date[2] + '-' + date[1] + '-' + date[0]
+            total = call['Total']
+            repo['aquan_erj826.crimeDispatch'].insert([{'DATE':date, 'TOTAL_911_CALLS':total}], check_keys=False)
 
-        repo['aquan_erj826.gunsRecovered'].metadata({'complete':True})
-        print(repo['aquan_erj826.gunsRecovered'].metadata())
+        crimeDispatch = repo.aquan_erj826.crimeDispatch
+
+
+        for report in crimeReports.find():
+            print('1')
+            try:
+                date = report['OCCURRED_ON_DATE']#.split('T')[0]
+            except: 
+                #print('hit')
+                continue
+
+            #print(date)
+            
+
+
+
+
+
+        # repo['aquan_erj826.gunsRecovered'].metadata({'complete':True})
+        # print(repo['aquan_erj826.gunsRecovered'].metadata())
 
 
         repo.logout()
@@ -109,7 +128,7 @@ class gunsRecovered(dml.Algorithm):
                   
         return doc
 
-gunsRecovered.execute()
+crimeDispatch.execute()
 # doc = example.provenance()
 # print(doc.get_provn())
 # print(json.dumps(json.loads(doc.serialize()), indent=4))

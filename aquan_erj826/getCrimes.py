@@ -37,7 +37,7 @@ class getCrimes(dml.Algorithm):
 
         repo.authenticate('erj826', 'erj826')          
 
-        url = 'https://data.boston.gov/datastore/odata3.0/12cb3883-56f5-47de-afa5-3b1cf61b257b?$top=500&$format=json'
+        url = 'https://data.boston.gov/datastore/odata3.0/12cb3883-56f5-47de-afa5-3b1cf61b257b?$top=1000&$format=json'
         response = requests.get(url).text
         
         r = json.loads(response)

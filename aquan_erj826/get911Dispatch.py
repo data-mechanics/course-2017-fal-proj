@@ -23,7 +23,7 @@ import uuid
 class get911Counts(dml.Algorithm):
     contributor = 'aquan_erj826'
     reads = []
-    writes = ['aquan_erj826.911Counts']
+    writes = ['aquan_erj826.Counts911']
 
     @staticmethod
     def execute(trial = False):
@@ -40,11 +40,11 @@ class get911Counts(dml.Algorithm):
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("911Counts")
-        repo.createCollection("911Counts")
-        repo['aquan_erj826.911Counts'].insert_many(r)
-        repo['aquan_erj826.911Counts'].metadata({'complete':True})
-        print(repo['aquan_erj826.911Counts'].metadata())
+        repo.dropCollection("Counts911")
+        repo.createCollection("Counts911")
+        repo['aquan_erj826.Counts911'].insert_many(r)
+        repo['aquan_erj826.Counts911'].metadata({'complete':True})
+        print(repo['aquan_erj826.Counts911'].metadata())
 
         repo.logout()
 
