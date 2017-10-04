@@ -43,8 +43,8 @@ class aggregateProperty(dml.Algorithm):
         keys2 = {r[0] for r in numBuild}
         aggregate_build= [(key, sum([v for (k,v) in numBuild if k == key])) for key in keys2]
 
-        print("aggzip",aggregate_val)
-        print("aggbuild",aggregate_build)
+        #print("aggzip",aggregate_val)
+        #print("aggbuild",aggregate_build)
 
         #Projection
 
@@ -57,13 +57,13 @@ class aggregateProperty(dml.Algorithm):
         keys3 = {r[0] for r in agg_both}
         aggregate_average= [(key, np.prod([v for (k,v) in agg_both if k == key])) for key in keys3]
         
-        print("aggregate_average", aggregate_average)
+        #print("aggregate_average", aggregate_average)
         
         final= []
         for entry in aggregate_average:
             final.append({'zipcode:':entry[0], 'averagePropertyVal':entry[1]})
 
-        print("final", final)
+        #print("final", final)
         repo['jliang24_tpotye.aggregatePropertyData'].insert_many(final)
         
         repo.logout()
@@ -89,14 +89,16 @@ class aggregateProperty(dml.Algorithm):
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
+        doc.add_namespace('bdp1', 'https://data.nlc.org/resource/')
+        doc.add_namespace('bdp2', 'https://data.boston.gov/export/622/208/')
 
         this_script = doc.agent('alg:jliang24_tpotye#aggregateProperty', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         
-        resource_properties = doc.entity('bdp:g5b5-xrwi', {'prov:label':'Property Assessments', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_properties = doc.entity('dat:jliang24_tpotye#properties', {'prov:label':'Property Assessments', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_aggProp = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_aggProp, this_script)
-        doc.usage(get_aggProp, resource_properties, startTime)
-
+        doc.usage(get_aggProp, resource_properties, startTime,None,
+                  {prov.model.PROV_TYPE:'ont:Computation'})
 
 
         aggregateProperty = doc.entity('dat:jliang24_tpotye#aggregatePropertyData', {prov.model.PROV_LABEL:'Aggregate Properties', prov.model.PROV_TYPE:'ont:DataSet'})
@@ -110,7 +112,7 @@ class aggregateProperty(dml.Algorithm):
                   
         return doc
 
-aggregateProperty.execute()
-doc = aggregateProperty.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+##aggregateProperty.execute()
+##doc = aggregateProperty.provenance()
+##print(doc.get_provn())
+##print(json.dumps(json.loads(doc.serialize()), indent=4))
