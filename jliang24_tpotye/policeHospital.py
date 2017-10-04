@@ -9,7 +9,7 @@ import numpy as np
 class policeHospital(dml.Algorithm):
     contributor = 'jliang24_tpotye'
     reads = ['jliang24_tpotye.police', 'jliang24_tpotye.hospital']
-    writes = ['jliang24_tpotye.policeHospital']
+    writes = ['jliang24_tpotye.policeHospitalData']
     
     
     @staticmethod
@@ -22,8 +22,8 @@ class policeHospital(dml.Algorithm):
         repo = client.repo
         repo.authenticate('jliang24_tpotye', 'jliang24_tpotye')
 
-        repo.dropPermanent("policeHospital")
-        repo.createPermanent("policeHospital")
+        repo.dropPermanent("policeHospitalData")
+        repo.createPermanent("policeHospitalData")
 
         numPolice= []
         numHospital= []
@@ -45,6 +45,13 @@ class policeHospital(dml.Algorithm):
         aggregate_both= [(key, sum([v for (k,v) in union_both if k == key])) for key in keys]
 
         print(aggregate_both)
+
+        final3= []
+        for entry in aggregate_both:
+            final3.append({'zipcode:':entry[0], 'NumofPoliceHospital':entry[1]})
+
+        print("final", final3)
+        repo['jliang24_tpotye.policeHospitalData'].insert_many(final3)
         
         repo.logout()
 
@@ -86,7 +93,7 @@ class policeHospital(dml.Algorithm):
         doc.usage(get_policeHospital, resource_hospital, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Computation'})
 
-        policeHospitalAnalysis = doc.entity('dat:jliang24_tpotye#policeHospital', {prov.model.PROV_LABEL:'PoliceHospital Analysis', prov.model.PROV_TYPE:'ont:DataSet'})
+        policeHospitalAnalysis = doc.entity('dat:jliang24_tpotye#policeHospitalData', {prov.model.PROV_LABEL:'PoliceHospital Analysis', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(policeHospitalAnalysis, this_script)
         doc.wasGeneratedBy(policeHospitalAnalysis, get_policeHospital, endTime)
         doc.wasDerivedFrom(policeHospitalAnalysis, resource_police, get_policeHospital, get_policeHospital, get_policeHospital)
