@@ -8,7 +8,7 @@ import uuid
 class get_datasets(dml.Algorithm):
     contributor = 'jtbloom_rfballes'
     reads = []
-    writes = ['jtbloom_rfballes.charging_stations', 'jtbloom_rfballes.hubway_stations', 'jtbloom_rfballes.bike_network']
+    writes = ['jtbloom_rfballes.charging_stations', 'jtbloom_rfballes.hubway_stations', 'jtbloom_rfballes.bike_network', 'jtbloom_rfballes.neighborhoods', 'jtbloom_rfballes.tripHistory']
 
     @staticmethod
     def execute(trial = False):
@@ -66,16 +66,17 @@ class get_datasets(dml.Algorithm):
         repo['jtbloom_rfballes.neighborhoods'].metadata({'complete':True})
         print(repo['jtbloom_rfballes.neighborhoods'].metadata())
 
-        # Database 5: Trees
-        url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/ce863d38db284efe83555caf8a832e2a_1.geojson'
+        # Database 5: Hubway Trip History
+        url = 'http://datamechanics.io/data/jt_rf_pr1/hubway_trip_history.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("trees")
-        repo.createCollection("trees")
-        repo['jtbloom_rfballes.trees'].insert(r)
-        repo['jtbloom_rfballes.trees'].metadata({'complete':True})
-        print(repo['jtbloom_rfballes.trees'].metadata())
+        repo.dropCollection("tripHistory")
+        repo.createCollection("tripHistory")
+        repo['jtbloom_rfballes.tripHistory'].insert(r)
+        repo['jtbloom_rfballes.tripHistory'].metadata({'complete':True})
+        print(repo['jtbloom_rfballes.tripHistory'].metadata())
+
 
 
         repo.logout()
@@ -104,7 +105,7 @@ class get_datasets(dml.Algorithm):
         doc.add_namespace('mdot','https://opendata.arcgis.com/datasets/')
         doc.add_namespace('bods', 'https://boston.opendatasoft.com/explore/dataset/')
         doc.add_namespace('ab', 'http://bostonopendata-boston.opendata.arcgis.com/datasets/')
-       # doc.add_namespace('abos','https://opendata.arcgis.com/datasets/')
+        doc.add_namespace('dm','http://datamechanics.io/data/jt_rf_pr1/')
 
         this_script = doc.agent('alg:get_datasets', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
@@ -112,20 +113,20 @@ class get_datasets(dml.Algorithm):
         resource_hubway = doc.entity('bods:hubway-station-locations', {'prov:label':'Hubway Stations', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
         resource_bike = doc.entity('ab:d02c9d2003af455fbc37f550cc53d3a4_0', {'prov:label':'Bike Network', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
         resource_neighborhoods = doc.entity('bods:boston-neighborhoods', {'prov:label':'Neighborhoods', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
-        resource_trees = doc.entity('ab:ce863d38db284efe83555caf8a832e2a_1', {'prov:label':'Trees', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
+        resource_trips = doc.entity('dm:hubway_trip_history', {'prov:label':'Trips', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 
 
         get_electric = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         get_hubway = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         get_bike = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         get_neighborhoods = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        get_trees = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        get_trips = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 
         doc.wasAssociatedWith(get_electric, this_script)
         doc.wasAssociatedWith(get_hubway, this_script)
         doc.wasAssociatedWith(get_bike, this_script)
         doc.wasAssociatedWith(get_neighborhoods, this_script)
-        doc.wasAssociatedWith(get_trees, this_script)
+        doc.wasAssociatedWith(get_trips, this_script)
 
         doc.usage(get_electric, resource_electric, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval'
@@ -149,7 +150,7 @@ class get_datasets(dml.Algorithm):
                   }
                   )
 
-        doc.usage(get_trees, resource_trees, startTime, None,
+        doc.usage(get_trips, resource_trips, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval'
                   }
                   )
@@ -174,18 +175,18 @@ class get_datasets(dml.Algorithm):
         doc.wasGeneratedBy(neighborhoods, get_neighborhoods, endTime)
         doc.wasDerivedFrom(neighborhoods, resource_neighborhoods, get_neighborhoods, get_neighborhoods, get_neighborhoods)
 
-        trees = doc.entity('dat:jtbloom_rfballes#trees', {prov.model.PROV_LABEL:'Trees', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(trees, this_script)
-        doc.wasGeneratedBy(trees, get_trees, endTime)
-        doc.wasDerivedFrom(trees, resource_trees, get_trees, get_trees, get_trees)
+        trips = doc.entity('dat:jtbloom_rfballes#trips', {prov.model.PROV_LABEL:'Trips', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(trips, this_script)
+        doc.wasGeneratedBy(trips, get_trips, endTime)
+        doc.wasDerivedFrom(trips, resource_trips, get_trips, get_trips, get_trips)
 
 
         repo.logout()
                   
         return doc
 
-#example.execute()
-doc = example.provenance()
+get_datasets.execute()
+doc = get_datasets.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
 
