@@ -7,10 +7,10 @@ import uuid
 
 
 
-class retrieve_Library_Visit_Data(dml.Algorithm):
+class retrieve_library_visits_data(dml.Algorithm):
     contributor = 'sbrz_nedg'
     reads = []
-    writes = ['sbrz_nedg.library_visits']
+    writes = ['sbrz_nedg.libraryData']
     @staticmethod
     def execute(trial = False):
         '''Retrieve library_visits data set.'''
@@ -77,7 +77,7 @@ class retrieve_Library_Visit_Data(dml.Algorithm):
         get_library_data = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
         doc.wasAssociatedWith(this_script)
-        doc.usage(retrieve_Library_Visit_Data, resource, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval', 'ont:Query': '&limit=200000'})
+        doc.usage(retrieve_library_visits_data, resource, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval', 'ont:Query': '&limit=200000'})
 
         library_db = doc.entity('dat:sbrz_nedg#get_library_data', {prov.model.PROV_LABEL: 'library_visits', prov.model.PROV_TYPE: 'ont:DataSet'})
         doc.wasAttributedTo(this_script)
@@ -88,4 +88,4 @@ class retrieve_Library_Visit_Data(dml.Algorithm):
         repo.logout()
 
         return doc
-retrieve_Library_Visit_Data.execute()
+retrieve_library_visits_data.execute()

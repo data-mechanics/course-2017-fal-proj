@@ -7,10 +7,10 @@ import uuid
 
 
 
-class libRainCor(dml.Algorithm):
+class library_rain_correlation(dml.Algorithm):
     contributor = 'sbrz_nedg'
     reads = ['sbrz_nedg.librarydata', 'sbrz_nedg.rainData']
-    writes = ['sbrz_nedg.librarydata', 'sbrz_nedg.rainData']
+    writes = ['sbrz_nedg.union_rain_library']
     @staticmethod
     def execute(trial = False):
         startTime = datetime.datetime.now()

@@ -8,10 +8,10 @@ import uuid
 
 
 
-class get_Rain_Data(dml.Algorithm):
+class retrieve_monthly_rain_data(dml.Algorithm):
     contributor = 'sbrz_nedg'
     reads = []
-    writes = ['sbrz_nedg.monthly_rain']
+    writes = ['sbrz_nedg.rainData']
     @staticmethod
     def execute(trial = False):
         '''Retrieve library_visits data set.'''
@@ -99,7 +99,7 @@ class get_Rain_Data(dml.Algorithm):
 
         weather_db = doc.entity('dat:sbrz_nedg#get_weather_data', {prov.model.PROV_LABEL: 'rain_data', prov.model.PROV_TYPE: 'ont:DataSet'})
         doc.wasAttributedTo(this_script)
-        doc.wasGeneratedBy(get_Rain_Data)
+        doc.wasGeneratedBy(retrieve_monthly_rain_data)
         doc.wasDerivedFrom(weather_db, resource)
 
         repo.logout()
