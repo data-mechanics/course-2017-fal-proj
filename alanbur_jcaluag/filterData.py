@@ -28,8 +28,17 @@ class filterData():
 
         DSet = [x for x in collection]
         print(len(DSet))
-        print(DSet)
-        DSet = [x for x in collection if ((southLat < x['Latitude'] < northLat)) and ((eastLong < x['Longitude'] <westLong))]
+        # print(DSet)
+        DSet=[]
+        collection=repo['alanbur_jcaluag.hubwayProjected'].find()
+        # for x in collection:
+        #     print(x['Latitude'])
+        #     print(x['Longitude'])
+        #     if ((southLat < x['Latitude'] < northLat) and (eastLong > x['Longitude'] > westLong)):
+        #         print(x)
+        #         DSet.append(x)
+
+        DSet = [x for x in collection if (southLat < x['Latitude'] < northLat and eastLong > x['Longitude'] > westLong)]
         print(len(DSet))
 
         repo.dropCollection("hubwayFiltered")

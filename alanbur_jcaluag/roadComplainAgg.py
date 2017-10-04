@@ -7,8 +7,8 @@ import uuid
 
 class roadComplaints(dml.Algorithm):
     contributor = 'alanbur_jcaluag'
-    reads = []
-    writes = ['alanbur_jcaluag.roadComplaints']
+    reads = ['alanbur_jcaluag.roadComplaints']
+    writes = ['alanbur_jcaluag.roadComplaintsAgg']
     
     @staticmethod
     def execute(trial = False):
@@ -19,30 +19,48 @@ class roadComplaints(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate('alanbur_jcaluag', 'alanbur_jcaluag')
+ 
+        DSet=[]
 
-        url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/5bed19f1f9cb41329adbafbd8ad260e5_0.geojson'
-        response = urllib.request.urlopen(url).read().decode("utf-8")
-        r = json.loads(response)
+        collection=repo['alanbur_jcaluag.roadComplaints'].find()
+        DSet=[]
+        # keys = {r[0] for r in R}
+        # [(key, f([v for (k,v) in R if k == key])) for key in keys]
+        DSet=[
+             
+             {
+                'Latitude': item['geometry']['coordinates'][0],
+                'Longitude': item['geometry']['coordinates'][1],
+                'UserType' : item['properties']['USERTYPE'],
+                'UserType' : item['properties']['COMMENTS'],
+                'Comments':item['properties']['COMMENTS'],
+                'Status': item['properties']['STATUS']
+                'Date' : item['properties']['REQUESTDATE'][:item['properties']['REQUESTDATE'].index(':')]:
+                }
+            
+              for item in collection
+        ]
+        DSetByDate=[]
+        dates=set()
+        for item in DSet:
+            dates.add(item['Date'])
+        for date in dates:
+            [DSetByDate.append({"Date": date,
+                "Incidents":[item in DSet if item['Date']==date]
+                })
+            ]
+            
 
-        features=r['features']
+        # print(DSet)
+        print(len(DSetByDate))
 
-        s = json.dumps(features, sort_keys=True, indent=2)
-
-        # features = [
-
-        #     {'Data': 'Road Complaints',
-        #         'Latitude': dict['geometry']['coordinates'][0],
-        #         'Longitude': dict['geometry']['coordinates'][1]}
-        #       for dict in features
-        # ]
-
-
-        repo.dropCollection("roadComplaints")
-        repo.createCollection("roadComplaints")
-        repo['alanbur_jcaluag.roadComplaints'].insert_many(features)
-        repo['alanbur_jcaluag.roadComplaints'].metadata({'complete':True})
-        print(repo['alanbur_jcaluag.roadComplaints'].metadata())
-        repo.logout()
+        repo.dropCollection("roadComplaintsAgg")
+        repo.createCollection("roadComplaintsAgg")
+        repo['alanbur_jcaluag.roadComplaintsAgg'].insert_many(DSet)
+        repo['alanbur_jcaluag.roadComplaintsAgg'].metadata({'complete':True})
+        print(repo['alanbur_jcaluag.roadComplaintsAgg'].metadata())
+        
+        
 
         endTime = datetime.datetime.now()
 
