@@ -5,9 +5,11 @@ import prov.model
 import datetime
 import uuid
 
+from shapely.geometry import shape, Point
+
 class mbta_stops(dml.Algorithm):
     contributor = 'gaudiosi_raykatz'
-    reads = ['gaudiosi_katz.mbta_routes']
+    reads = ['gaudiosi_katz.mbta_routes, gaudiosi_katz.zipcode_map']
     writes = ['gaudiosi_katz.mbta_stops']
 
     @staticmethod
@@ -28,6 +30,9 @@ class mbta_stops(dml.Algorithm):
         routes = list(repo.gaudiosi_raykatz.mbta_routes.find({}))
         
         r = []
+        geo_map = list(repo.gaudiosi_raykatz.zipcode_map.find({}))[0]
+
+
         for route in routes:
             url = "http://realtime.mbta.com/developer/api/v2/stopsbyroute?api_key=" + data["mbta"] + "&route=" + route["route_id"] +  "&format=json"
             response = urllib.request.urlopen(url).read().decode("utf-8")        
@@ -46,6 +51,18 @@ class mbta_stops(dml.Algorithm):
                     s["parent_station_name"] = stop["parent_station_name"]
                     s["stop_lat"] = stop["stop_lat"]
                     s["stop_lon"] = stop["stop_lon"]
+                    
+                    point = Point(float(s["stop_lon"]),float(s["stop_lat"]))
+                    for feature in geo_map["features"]:
+                        polygon = shape(feature['geometry'])
+                        inside = polygon.contains(point)
+                        if polygon.contains(point):
+                            s["zipcode"] = feature["properties"]["ZIP5"]
+                            break
+                    
+                    if not "zipcode" in s:
+                        continue
+                    
                     r.append(s)
         
         s = json.dumps(r, sort_keys=True, indent=2)        
@@ -97,5 +114,10 @@ class mbta_stops(dml.Algorithm):
         repo.logout()
                   
         return doc
-
+'''
+mbta_stops.execute()
+doc = mbta_stops.provenance()
+print(doc.get_provn())
+print(json.dumps(json.loads(doc.serialize()), indent=4))
+'''
 ## eof

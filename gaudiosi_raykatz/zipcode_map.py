@@ -20,25 +20,15 @@ class zipcode_map(dml.Algorithm):
         repo = client.repo
         repo.authenticate('gaudiosi_raykatz', 'gaudiosi_raykatz')
         boston_url = "https://data.boston.gov"
-        url = "http://gis.cityofboston.gov/arcgis/rest/services/Planning/OpenData/MapServer/1/query?where=1%3D1&geometryType=esriGeometryEnvelope&spatialRel=esriSpatialRelIntersects&outFields=*&returnGeometry=true&returnIdsOnly=false&returnCountOnly=false&returnZ=false&returnM=false&returnDistinctValues=false&f=pjson"
+        url = "http://bostonopendata-boston.opendata.arcgis.com/datasets/53ea466a189b4f43b3dfb7b38fa7f3b6_1.geojson"
         response = urllib.request.urlopen(url).read().decode("utf-8")
         
-        result = json.loads(response)
-        prelim_r = result["features"]
-        r = []
-        for points in prelim_r:
-            d = {}
-            d["zipcode"] = points["attributes"]["ZIP5"]
-            d["ShapeSTArea()"] = points["attributes"]["Shape.STArea()"]
-            d["ShapeSTLength()"] = points["attributes"] = ["Shape.STLength()"]
-            d["geometry"] = points["geometry"]
-            r.append(d)
-
+        r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
         
         repo.dropCollection("zipcode_map")
         repo.createCollection("zipcode_map")
-        repo['gaudiosi_raykatz.zipcode_map'].insert_many(r)
+        repo['gaudiosi_raykatz.zipcode_map'].insert(r)
         repo['gaudiosi_raykatz.zipcode_map'].metadata({'complete':True})
         print(repo['gaudiosi_raykatz.zipcode_map'].metadata())
         repo.logout()
@@ -84,5 +74,10 @@ class zipcode_map(dml.Algorithm):
         repo.logout()
                   
         return doc
-
+'''
+zipcode_map.execute()
+doc = zipcode_map.provenance()
+print(doc.get_provn())
+print(json.dumps(json.loads(doc.serialize()), indent=4))
+'''
 ## eof

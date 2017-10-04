@@ -21,7 +21,7 @@ class mbta_routes(dml.Algorithm):
         repo.authenticate('gaudiosi_raykatz', 'gaudiosi_raykatz')
         
         with open('auth.json') as data_file:    
-                data = json.load(data_file)
+            data = json.load(data_file)
 
         url = "http://realtime.mbta.com/developer/api/v2/routes?api_key=" + data["mbta"] + "&format=json"
         
@@ -90,5 +90,10 @@ class mbta_routes(dml.Algorithm):
         repo.logout()
                   
         return doc
-
+'''
+mbta_routes.execute()
+doc = mbta_routes.provenance()
+print(doc.get_provn())
+print(json.dumps(json.loads(doc.serialize()), indent=4))
+'''
 ## eof
