@@ -36,7 +36,6 @@ We performed three transformaion to process retrieved data sets to new three dat
 
 ## To Run this Project
 
-Before running this project, we checked that we can run each file by itself very quickly. Also, without mergeVotePopulation.py, running execute.py file does not take a long time. If running the following line takes a long time, please move mergeVotePopulation.py file in different place and run execute.py file. Then, run mergeVotePopulation.py file after uncommenting the last four lines.
 ```
 python execute.py yjunchoi_yzhang71
 ```
