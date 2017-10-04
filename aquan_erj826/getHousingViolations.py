@@ -23,7 +23,7 @@ import uuid
 class getHousingViolations(dml.Algorithm):
     contributor = 'aquan_erj826'
     reads = []
-    writes = ['aquan_erj826.housingviolations']
+    writes = ['aquan_erj826.housingViolations']
 
     @staticmethod
     def execute(trial = False):
@@ -68,41 +68,37 @@ class getHousingViolations(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
+        #resources:
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
+        doc.add_namespace('dbg', 'https://data.boston.gov/datastore/odata3.0/')
+        doc.add_namespace('cdp', 'https://data.cambridgema.gov/resource/') 
+        doc.add_namespace('svm','https://data.somervillema.gov/resource/')
 
-        this_script = doc.agent('alg:aquan_erj826#example', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        get_found = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        get_lost = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_found, this_script)
-        doc.wasAssociatedWith(get_lost, this_script)
-        doc.usage(get_found, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'
-                  }
+        #define the agent, this script
+        this_script = doc.agent('alg:aquan_erj826#getHousingViolations', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        
+        #define the resource we pulled from (entity)
+        resource = doc.entity('cdp:bepf-husa.json', {'prov:label':'Housing Violation Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        
+        #define the activity of grabbing the resource
+        get_housingViolations = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(get_housingViolations, this_script)
+        doc.usage(get_housingViolations, resource, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Retrieval',}    
                   )
-        doc.usage(get_lost, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Animal+Lost&$select=type,latitude,longitude,OPEN_DT'
-                  }
-                  )
-
-        lost = doc.entity('dat:aquan_erj826#911counts', {prov.model.PROV_LABEL:'Animals Lost', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(lost, this_script)
-        doc.wasGeneratedBy(lost, get_lost, endTime)
-        doc.wasDerivedFrom(lost, resource, get_lost, get_lost, get_lost)
-
-        found = doc.entity('dat:aquan_erj826#911counts', {prov.model.PROV_LABEL:'Animals Found', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(found, this_script)
-        doc.wasGeneratedBy(found, get_found, endTime)
-        doc.wasDerivedFrom(found, resource, get_found, get_found, get_found)
+        
+        #define writeout entity
+        housingViolations = doc.entity('dat:aquan_erj826#housingViolations', {prov.model.PROV_LABEL:'housingViolationsListMade', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(housingViolations, this_script)
+        doc.wasGeneratedBy(housingViolations, get_housingViolations, endTime)
+        doc.wasDerivedFrom(housingViolations, resource, get_housingViolations, get_housingViolations, get_housingViolations)
 
         repo.logout()
                   
         return doc
 
-getHousingViolations.execute()
-#doc = example.provenance()
+#getHousingViolations.execute()
+#doc = getHousingViolations.provenance()
 #print(doc.get_provn())
 #print(json.dumps(json.loads(doc.serialize()), indent=4))
 
