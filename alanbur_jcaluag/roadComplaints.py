@@ -23,17 +23,25 @@ class roadComplaints():
         url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/5bed19f1f9cb41329adbafbd8ad260e5_0.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
-        # print(r)
+
         features=r['features']
-        # print(features)
+
         s = json.dumps(features, sort_keys=True, indent=2)
-        # print(s)
+
+        features = [
+
+            {'Data': 'Road Complaints',
+                'Latitude': dict['geometry']['coordinates'][0],
+                'Longitude': dict['geometry']['coordinates'][1]}
+              for dict in features
+        ]
+
 
         repo.dropCollection("roadComplaints")
         repo.createCollection("roadComplaints")
         repo['alanbur_jcaluag.roadComplaints'].insert_many(features)
         repo['alanbur_jcaluag.roadComplaints'].metadata({'complete':True})
-        print(repo['alanbur_jcaluag.mbta'].metadata())
+        print(repo['alanbur_jcaluag.roadComplaints'].metadata())
         repo.logout()
 
         endTime = datetime.datetime.now()

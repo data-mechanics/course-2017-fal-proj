@@ -25,13 +25,12 @@ class hubway():
         stations=r['stations']
 
 
-        stations = [[
-            {'Location':dict['s']},
-            {'Latitude': dict['la']},
-            {'Longitude': dict['lo']}
-           ]  for dict in stations]
-        for x in stations:
-            print (x, '\n')
+        stations = [
+            {'Data': 'Hubway Stations',
+            'Location':dict['s'],
+            'Latitude': dict['la'],
+            'Longitude': dict['lo']}
+            for dict in stations]
 
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("hubway")
@@ -39,6 +38,7 @@ class hubway():
         repo['alanbur_jcaluag.hubway'].insert_many(stations)
         repo['alanbur_jcaluag.hubway'].metadata({'complete':True})
         repo.logout()
+        print(repo['alanbur_jcaluag.hubway'].metadata())
 
         endTime = datetime.datetime.now()
 
