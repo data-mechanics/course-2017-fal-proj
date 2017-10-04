@@ -20,16 +20,28 @@ class income(dml.Algorithm):
         repo = client.repo
         repo.authenticate('gaudiosi_raykatz', 'gaudiosi_raykatz')
         url = "https://api.census.gov/data/2015/acs5?get=B19013_001E,B25070_010E,B25070_001E,B25111_001E,B17023_002E,B17023_001E&for=zip+code+tabulation+area:02108,02109,02110,02111,02112,02113,02114,02115,02116,02117,02118,02119,02120,02121,02122,02123,02124,02125,02126,02127,02128,02129,02130,02131,02132,02133,02134,02135,02136,02137,02163,02196,02199,02201,02203,02204,02205,02206,02207,02210,02211,02212,02215,02216,02217,02222,02228,02241,02266,02283,02284,02293,02295,02297,02298&key="
-        with open('../auth.json') as data_file:    
+        with open('auth.json') as data_file:    
                 data = json.load(data_file)
         url += data["census"]
         
         #Returns the ordered by population numbers of [median income, total spending 50%+ income on rent, total renters, median rent, people in poverty, total people, zipcode]
         response = urllib.request.urlopen(url).read().decode("utf-8")
         
-        r = json.loads(response)
+        result = json.loads(response)
+        r = []
+        for i in range(1,len(result)):
+            d = {}
+            d["median_income"] = result[i][0]
+            d["50_income_rent"] = result[i][1]
+            d["total_renters"] = result[i][2]
+            d["median_rent"] = result[i][3]
+            d["people_in_poverty"] = result[i][4] 
+            d["total_people"] = result[i][5]
+            d["zipcode"] = result[i][6]
+            r.append(d)
+        
+        
         s = json.dumps(r, sort_keys=True, indent=2)
-        print(s)
         repo.dropCollection("income")
         repo.createCollection("income")
         repo['gaudiosi_raykatz.income'].insert_many(r)
@@ -66,7 +78,7 @@ class income(dml.Algorithm):
         
         doc.usage(get_income, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Property&$select=MAIL_ADDRESS,OWNER'
+                  'ont:Query':'?type=Income&$select=median_income,50_income_rent,total_renters,median_rent,people_in_poverty,total_people,zipcode'
                   }
                   )
         
@@ -78,10 +90,5 @@ class income(dml.Algorithm):
         repo.logout()
                   
         return doc
-
-income.execute()
-doc = income.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof

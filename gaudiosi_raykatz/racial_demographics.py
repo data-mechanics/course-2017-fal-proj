@@ -20,16 +20,30 @@ class racial_makeup(dml.Algorithm):
         repo = client.repo
         repo.authenticate('gaudiosi_raykatz', 'gaudiosi_raykatz')
         url = "https://api.census.gov/data/2010/sf1?get=P016A001,P016B001,P016C001,P016D001,P016E001,P016H001,P0160001&for=zip+code+tabulation+area:*&in=state:25&key="
-        with open('../auth.json') as data_file:    
+        with open('auth.json') as data_file:    
                 data = json.load(data_file)
         url += data["census"]
         
         #Returns the ordered by population numbers of [white, black, native american, asian, pacific islander, hispanic, total, state id (25), zipcode]
         response = urllib.request.urlopen(url).read().decode("utf-8")
         
-        r = json.loads(response)
+        result = json.loads(response)
+        r = []
+        for i in range(1,len(result)):
+            d = {}
+            d["white"] = result[i][0]
+            d["black"] = result[i][1]
+            d["native_american"] = result[i][2]
+            d["asian"] = result[i][3]
+            d["pacific_islander"] = result[i][4] 
+            d["hispanic"] = result[i][5]
+            d["total"] = result[i][6]
+            d["zipcode"] = result[i][8]
+            r.append(d)
+
+
+        
         s = json.dumps(r, sort_keys=True, indent=2)
-        print(s)
         repo.dropCollection("racial_makeup_2010")
         repo.createCollection("racial_makeup_2010")
         repo['gaudiosi_raykatz.racial_makeup_2010'].insert_many(r)
@@ -66,7 +80,7 @@ class racial_makeup(dml.Algorithm):
         
         doc.usage(get_race, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Property&$select=MAIL_ADDRESS,OWNER'
+                  'ont:Query':'?type=Racial_Demographics&$select=white,black,native_american,asian,pacific_islander,hispanic,total,zipcode'
                   }
                   )
         

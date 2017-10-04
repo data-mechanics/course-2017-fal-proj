@@ -5,48 +5,48 @@ import prov.model
 import datetime
 import uuid
 
-class housing(dml.Algorithm):
+class mbta_routes(dml.Algorithm):
     contributor = 'gaudiosi_raykatz'
     reads = []
-    writes = ['gaudiosi_katz.housing']
+    writes = ['gaudiosi_katz.mbta_routes']
 
     @staticmethod
     def execute(trial = False):
-        '''Retrieve housing data from US Census'''
+        '''Retrieve mbta_routes data from US Census'''
         startTime = datetime.datetime.now()
 
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate('gaudiosi_raykatz', 'gaudiosi_raykatz')
-        url = "https://api.census.gov/data/2015/acs5?get=B19013_001E,B25070_010E,B25070_001E,B25111_001E,B17023_002E,B17023_001E&for=zip+code+tabulation+area:02108,02109,02110,02111,02112,02113,02114,02115,02116,02117,02118,02119,02120,02121,02122,02123,02124,02125,02126,02127,02128,02129,02130,02131,02132,02133,02134,02135,02136,02137,02163,02196,02199,02201,02203,02204,02205,02206,02207,02210,02211,02212,02215,02216,02217,02222,02228,02241,02266,02283,02284,02293,02295,02297,02298&key="
+        
         with open('auth.json') as data_file:    
                 data = json.load(data_file)
-        url += data["census"]
+
+        url = "http://realtime.mbta.com/developer/api/v2/routes?api_key=" + data["mbta"] + "&format=json"
         
-        #Returns the ordered by population numbers of [occupied housing, vacant housing,housing,total housing,before 1939,total struct age]
+        
+        #Returns the ordered by population numbers of [occupied mbta_routes, vacant mbta_routes,mbta_routes,total mbta_routes,before 1939,total struct age]
         response = urllib.request.urlopen(url).read().decode("utf-8")
         
         result = json.loads(response)
+
         r = []
-        for i in range(1,len(result)):
-            d = {}
-            d["occupied_housing"] = result[i][0]
-            d["vacant_housing"] = result[i][1]
-            d["total_housing"] = result[i][2]
-            d["structures_built_before_1939"] = result[i][3]
-            d["total_structures_built"] = result[i][4]
-            d["zipcode"] = result[i][5]
-            r.append(d)
-        
+        for j in result["mode"]:
+            for route in j["route"]:
+                d = {}
+                d["mode_name"] = j["mode_name"]
+                d["route_type"] = j["route_type"]
+                d["route_id"] = route["route_id"]
+                d["route_name"] = route["route_name"]
+                r.append(d)
+
         s = json.dumps(r, sort_keys=True, indent=2)
-        
-        
-        repo.dropCollection("housing")
-        repo.createCollection("housing")
-        repo['gaudiosi_raykatz.housing'].insert_many(r)
-        repo['gaudiosi_raykatz.housing'].metadata({'complete':True})
-        print(repo['gaudiosi_raykatz.housing'].metadata())
+        repo.dropCollection("mbta_routes")
+        repo.createCollection("mbta_routes")
+        repo['gaudiosi_raykatz.mbta_routes'].insert_many(r)
+        repo['gaudiosi_raykatz.mbta_routes'].metadata({'complete':True})
+        print(repo['gaudiosi_raykatz.mbta_routes'].metadata())
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -73,19 +73,19 @@ class housing(dml.Algorithm):
 
         this_script = doc.agent('alg:gaudiosi_raykatz#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        get_housing = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_housing, this_script)
+        get_mbta_routes = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(get_mbta_routes, this_script)
         
-        doc.usage(get_housing, resource, startTime, None,
+        doc.usage(get_mbta_routes, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Housing&$select=occupied_housing,vacant_housing,total_housing,structures_build_before_1939,total_structures_built,zipcode'
+                  'ont:Query':'?type=MBTA_Routes&$select=mode_name,route_type,route_id,route_name'
                   }
                   )
         
-        housing = doc.entity('dat:gaudiosi_raykatz#housing', {prov.model.PROV_LABEL:'Housing and Income', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(housing, this_script)
-        doc.wasGeneratedBy(housing, get_housing, endTime)
-        doc.wasDerivedFrom(housing, resource, get_housing, get_housing, get_housing)
+        mbta_routes = doc.entity('dat:gaudiosi_raykatz#mbta_routes', {prov.model.PROV_LABEL:'Housing and Income', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(mbta_routes, this_script)
+        doc.wasGeneratedBy(mbta_routes, get_mbta_routes, endTime)
+        doc.wasDerivedFrom(mbta_routes, resource, get_mbta_routes, get_mbta_routes, get_mbta_routes)
 
         repo.logout()
                   
