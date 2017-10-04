@@ -17,7 +17,7 @@ class retrieverealtime(dml.Algorithm):
     	client = dml.pymongo.MongoClient()
     	repo = client.repo
     	repo.authenticate("lc546_jofranco", "lc546_jofranco")		
-    	url = 'http://developer.mbta.com/Data/Red.json'
+    	url = 'http://Developer.mbta.com/lib/rthr/red.json'
     	response = urllib.request.urlopen(url).read().decode("utf-8")
     	r = json.loads(response)
     	s = json.dumps(r, sort_keys=True, indent=2)
@@ -39,12 +39,12 @@ class retrieverealtime(dml.Algorithm):
     	doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
     	doc.add_namespace('bdp', 'http://old.mbta.com/rider_tools/developers/default.asp?id=21898')
 
-    	this_script = doc.agent('alg:lc546_jofranco#retrievedata', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-    	resource = doc.entity('bdp:xgbq-327x', {'prov:label':'RealTime', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-    	get_MBTAinfo = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime, {prov.model.PROV_LABEL:'RealTime', prov.model.PROV_TYPE:'ont:DataSet'})
+    	this_script = doc.agent('alg:lc546_jofranco#MBTAredlinedata', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+    	resource = doc.entity('bdp:xgbq-327x', {'prov:label':'RealTimeRedLine', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+    	get_MBTAinfo = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime, {prov.model.PROV_LABEL:'RealTimeRedLine', prov.model.PROV_TYPE:'ont:DataSet'})
     	doc.wasAssociatedWith(get_MBTAinfo, this_script)
     	doc.usage(get_MBTAinfo, resource, startTime)
-    	MBTAReport = doc.entity('dat:lc546_jofranco#RealTime', {prov.model.PROV_LABEL:'Real Time', prov.model.PROV_TYPE:'ont:DataSet'})
+    	MBTAReport = doc.entity('dat:lc546_jofranco#RealTimeRedLine', {prov.model.PROV_LABEL:'Real Time', prov.model.PROV_TYPE:'ont:DataSet'})
     	doc.wasAttributedTo(MBTAReport, this_script)
     	doc.wasGeneratedBy(MBTAReport, get_MBTAinfo, endTime)
     	doc.wasDerivedFrom(MBTAReport, resource, get_MBTAinfo, get_MBTAinfo, get_MBTAinfo)

@@ -25,7 +25,13 @@ class retrievedata(dml.Algorithm):
     	repo.createCollection("vendor_report")
     	repo["lc546_jofranco.vendor_report"].insert_many(r)
     	repo["lc546_jofranco.vendor_report"].metadata({'complete':True})
-    	print(repo["lc546_jofranco.vendor_report"].metadata()
+<<<<<<< HEAD:lc546_jofranco/retrievedata.py
+#print(repo["lc546_jofranco.vendor_report"].metadata()
+=======
+#print(repo["lc546_jofranco.vendor_report"].metadata())
+
+        
+>>>>>>> 03872a3f7ef2dec05fc09d5eca33a34114a92678:lc546_jofranco/vendorreportdata.py
 
     	repo.logout()
     	endTime = datetime.datetime.now()
