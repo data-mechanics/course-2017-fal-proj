@@ -67,8 +67,8 @@ class getVisionZeroData(dml.Algorithm):
                   
         return doc
 
-getVisionZeroData.execute()
-print("running provenance for getVisionZeroData")
-doc = getVisionZeroData.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+# getVisionZeroData.execute()
+# print("running provenance for getVisionZeroData")
+# doc = getVisionZeroData.provenance()
+# print(doc.get_provn())
+# print(json.dumps(json.loads(doc.serialize()), indent=4))

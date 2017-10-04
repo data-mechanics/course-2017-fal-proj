@@ -29,6 +29,7 @@ class getFoodViolationData(dml.Algorithm):
         repo.createCollection("foodviolations")
         repo['rooday_shreyapandit.foodviolations'].insert_many(resp['result']['records'])
         repo['rooday_shreyapandit.foodviolations'].metadata({'complete':True})
+        
         print("response has been inserted")
         print(repo['rooday_shreyapandit.foodviolations'].metadata())
         repo.logout()
@@ -66,8 +67,8 @@ class getFoodViolationData(dml.Algorithm):
         return doc
 
 
-getFoodViolationData.execute()
-print("running provenance for getFoodViolationData")
-doc = getFoodViolationData.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+# getFoodViolationData.execute()
+# print("running provenance for getFoodViolationData")
+# doc = getFoodViolationData.provenance()
+# print(doc.get_provn())
+# print(json.dumps(json.loads(doc.serialize()), indent=4))

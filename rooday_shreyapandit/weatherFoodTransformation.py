@@ -27,7 +27,7 @@ class weatherFoodTransformation(dml.Algorithm):
         return [(key, f([v for (k, v) in R if k == key])) for key in keys]
 
     contributor = 'rooday_shreyapandit'
-    reads = ['rooday_shreyapandit.weather', 'rooday_shreyapandit.foodviolations' ]
+    reads = ['rooday_shreyapandit.weather', 'rooday_shreyapandit.foodviolations']
     writes = ['rooday_shreyapandit.weatherFoodCombo']
 
     @staticmethod
@@ -138,4 +138,4 @@ class weatherFoodTransformation(dml.Algorithm):
 
         return doc
 
-weatherFoodTransformation.execute()
+# weatherFoodTransformation.execute()

@@ -73,8 +73,8 @@ class getCrimeData(dml.Algorithm):
                   
         return doc
 
-getCrimeData.execute()
-print("running provenance for getCrimeData")
-doc = getCrimeData.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+# getCrimeData.execute()
+# print("running provenance for getCrimeData")
+# doc = getCrimeData.provenance()
+# print(doc.get_provn())
+# print(json.dumps(json.loads(doc.serialize()), indent=4))
