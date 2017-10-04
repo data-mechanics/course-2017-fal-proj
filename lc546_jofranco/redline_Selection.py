@@ -9,7 +9,7 @@ import uuid
 
 class bos_redline(dml.Algorithm):
     contributor = 'lc546_jofranco'
-    reads = ['lc546_jofranco.redline']
+    reads = ['lc546_jofranco.MBTAredlinedata']
     writes = ['lc546_jofranco.redlinebos']
 
     @staticmethod
@@ -20,7 +20,7 @@ class bos_redline(dml.Algorithm):
         # Set up the database connection.
         repo = openDb(getAuth("db_username"), getAuth("db_password"))
         
-        bos = repo['lc546_jofranco.redline']
+        bos = repo['lc546_jofranco.MBTAredlinedata']
         
         bos_array = []
         for stop in bos.find():
