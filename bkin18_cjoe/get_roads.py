@@ -10,18 +10,24 @@ import pdb
 import csv
 
 def convert_roads_csv():
-    csvfile = open('Roads 2013.csv', 'r')
-    jsonfile = open('Roads 2013.json', 'w')
+    url = 'http://datamechanics.io/data/bkin18_cjoe/Roads%202013.csv'
+    csvfile = urllib.request.urlopen(url).read().decode("utf-8")
 
-    fieldnames = ("BG_ID_10", "X1", "TLID", "X", "STATEFP", "COUNTYFP", "TFIDL", "TFIDR", "MTFCC", "FULLNAME", "SMID", "LFROMADD", "LTOADD", "RFROMADD", "RTOADD", "ZIPL", "ZIPR", "Length", "CLASS", "RDTYPE", "CLUSTER", "Main", "Zoning", "CT_ID_10", "Ref_ID", "DeadEnd", "NSA_NAME", "BRA_PD")
-    reader = csv.DictReader(csvfile, fieldnames)
-    count = 0
-    for row in reader:
-        if count > 1:
-            count += 1
-            pass
-        json.dump(row, jsonfile)
-        jsonfile.write('\n')
+    dict_values = []
+
+    entries = csvfile.split('\n')
+    dot_keys = entries[0].split(',')
+    dot_keys[-1] = dot_keys[-1][:-1]
+
+    keys = [key.replace('.', '_') for key in dot_keys]
+
+    for row in entries[1:-1]:
+        values = row.split(',')
+        values[-1] = values[-1][:-1]
+        dictionary = dict([(keys[i], values[i]) for i in range(len(keys))])
+        dict_values.append(dictionary)
+
+    return dict_values
 
 
 class get_roads(dml.Algorithm):
@@ -38,19 +44,11 @@ class get_roads(dml.Algorithm):
         repo = client.repo
         repo.authenticate('bkin18_cjoe', 'bkin18_cjoe') # should probably move this to auth
 
-        convert_roads_csv()
-
-        dl = []
-        for line in open('Roads 2013.json'):
-
-            dl.append(line)
-
-        for i in range(len(dl)):
-            dl[i] = json.loads(dl[i])
+        dict_values = convert_roads_csv()
 
         repo.dropCollection("roads")
         repo.createCollection("roads")
-        repo['bkin18_cjoe.roads'].insert_many(dl)
+        repo['bkin18_cjoe.roads'].insert_many(dict_values)
 
         endTime = datetime.datetime.now()
 
