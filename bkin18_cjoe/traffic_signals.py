@@ -56,25 +56,28 @@ class traffic_signals(dml.Algorithm):
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'http://bostonopendata-boston.opendata.arcgis.com/datasets/')
+        doc.add_namespace('hdv', 'https://dataverse.harvard.edu/dataset.xhtml')
 
-        this_script = doc.agent('alg:bkin18_cjoe#traffic_signals', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+
+        this_script = doc.agent('alg:bkin18_cjoe#traffic_signals', 
+            { prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+
+        this_run = doc.activity('log:a'+str(uuid.uuid4()), startTime, endTime, 
+            { prov.model.PROV_TYPE:'ont:Retrieval'})#, 'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'})
+         
+        traffic_input = doc.entity('bdp:de08c6fe69c942509089e6db98c716a3_0', 
+            { 'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
         
-        ## Resource includes namespace and some suffix (usually use url)
-        resource = doc.entity('bdp:de08c6fe69c942509089e6db98c716a3_0', { 'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
-        
-        ## Work on this later 
-        ## TODO: Re-add query on our selection
-        ## Only need one of these activities
-        this_run = doc.activity('log:a'+str(uuid.uuid4()), startTime, endTime, { prov.model.PROV_TYPE:'ont:Retrieval'})#, 'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'})
-        route_activity = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        routes = doc.entity('dat:bkin18_cjoe#traffic_signals', {prov.model.PROV_LABEL:'Traffic Signals', prov.model.PROV_TYPE:'ont:DataSet'})
+        output = doc.entity('dat:bkin18_cjoe.traffic_signals', 
+            { prov.model.PROV_LABEL:'Traffic Signals', prov.model.PROV_TYPE:'ont:DataSet'})
     
-        doc.wasAssociatedWith(route_activity, this_script)
-        doc.usage(route_activity, resource, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
+        doc.wasAssociatedWith(this_run, this_script)
+        doc.used(this_run, traffic_input, startTime)
+        # doc.usage(routes, resource, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
 
-        doc.wasAttributedTo(routes, this_script)
-        doc.wasGeneratedBy(routes, route_activity, endTime)
-        doc.wasDerivedFrom(routes, resource, this_run, this_run, this_run)
+        doc.wasAttributedTo(output, this_script)
+        doc.wasGeneratedBy(output, this_run, endTime)
+        doc.wasDerivedFrom(output, traffic_input, this_run, this_run, this_run)
 
         repo.logout()
 

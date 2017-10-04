@@ -73,24 +73,26 @@ class get_census(dml.Algorithm):
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'http://bostonopendata-boston.opendata.arcgis.com/datasets/')
+        doc.add_namespace('hdv', 'https://dataverse.harvard.edu/dataset.xhtml')
 
+        this_script = doc.agent('alg:bkin18_cjoe#get_census', 
+            { prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
-        this_script = doc.agent('alg:bkin18_cjoe#get_census', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_run = doc.activity('log:a'+str(uuid.uuid4()), startTime, endTime, 
+            { prov.model.PROV_TYPE:'ont:Retrieval'})#, 'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'})
+
+        census_input = doc.entity('hdv:DVN_FI1YED', 
+            { 'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'csv', 'ont:Query':'??persistentId=doi:10.7910'})
         
-        ## I don't actually know what the key is to this (bdp:wc8w-nujj)
-        resource = doc.entity('bdp:DVN_FI1YED', { 'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'csv'})
-        
-        ## Work on this later
-        this_run = doc.activity('log:a'+str(uuid.uuid4()), startTime, endTime, { prov.model.PROV_TYPE:'ont:Retrieval'})#, 'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'})
-
-        routes = doc.entity('dat:bkin18_cjoe#census', {prov.model.PROV_LABEL:'Census', prov.model.PROV_TYPE:'ont:DataSet'})
+        output = doc.entity('dat:bkin18_cjoe#census', 
+            { prov.model.PROV_LABEL:'Census', prov.model.PROV_TYPE:'ont:DataSet'})
     
-        doc.wasAssociatedWith(routes, this_script)
-        doc.usage(routes, resource, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
- 
-        doc.wasAttributedTo(routes, this_script)
-        doc.wasGeneratedBy(routes, this_run, endTime)
-        doc.wasDerivedFrom(routes, resource, this_run, this_run, this_run)
+        doc.wasAssociatedWith(this_run , this_script)
+        doc.used(this_run, census_input, startTime)
+
+        doc.wasAttributedTo(output, this_script)
+        doc.wasGeneratedBy(output, this_run, endTime)
+        doc.wasDerivedFrom(output, census_input, this_run, this_run, this_run)
 
         repo.logout()
 

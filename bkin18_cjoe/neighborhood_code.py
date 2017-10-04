@@ -62,27 +62,27 @@ class neighborhood_code(dml.Algorithm):
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'http://bostonopendata-boston.opendata.arcgis.com/datasets/')
+        doc.add_namespace('hdv', 'https://dataverse.harvard.edu/dataset.xhtml')
 
-
-        this_script = doc.agent('alg:bkin18_cjoe#neighborhoods', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:bkin18_cjoe#neighborhood_code', 
+            { prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         
-        resource = doc.entity('bdp:3525b0ee6e6b427f9aab5d0a1d0a1a28_0.',
+        this_run = doc.activity('log:a'+str(uuid.uuid4()), startTime, endTime, 
+            { prov.model.PROV_TYPE:'ont:Retrieval'})
+
+        neighborhood_input = doc.entity('bdp:3525b0ee6e6b427f9aab5d0a1d0a1a28_0.',
             {'prov:label':'311, Service Requests',
             prov.model.PROV_TYPE:'ont:DataResource', 'bdp:Extension':'geojson'})
-        ## Work on this later
-        this_run = doc.activity('log:a'+str(uuid.uuid4()), startTime, endTime, { prov.model.PROV_TYPE:'ont:Retrieval'})#, 'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'})
 
-        neighborhood_activity = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-
-        neighborhoods = doc.entity('dat:bkin18_cjoe#neighborhoods', {prov.model.PROV_LABEL:'Neighborhoods', prov.model.PROV_TYPE:'ont:DataSet'})
+        output = doc.entity('dat:bkin18_cjoe.neighborhoods', 
+            { prov.model.PROV_LABEL:'Neighborhoods', prov.model.PROV_TYPE:'ont:DataSet'})
     
-        doc.wasAssociatedWith(neighborhood_activity, this_script)
-        doc.usage(neighborhood_activity, resource, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
-        # doc.wasAttributedTo(found, this_script)
+        doc.wasAssociatedWith(this_run , this_script)
+        doc.used(this_run, neighborhood_input, startTime)
 
-        doc.wasAttributedTo(neighborhoods, this_script)
-        doc.wasGeneratedBy(neighborhoods, neighborhood_activity, endTime)
-        doc.wasDerivedFrom(neighborhoods, resource, this_run, this_run, this_run)
+        doc.wasAttributedTo(output, this_script)
+        doc.wasGeneratedBy(output, this_run, endTime)
+        doc.wasDerivedFrom(output, neighborhood_input, this_run, this_run, this_run)
 
         repo.logout()
 
