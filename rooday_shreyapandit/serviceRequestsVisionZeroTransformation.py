@@ -5,8 +5,9 @@ import prov.model
 import datetime
 import uuid
 import requests
+import rtree
 
-class crimeWeatherTransformation(dml.Algorithm):
+class serviceRequestsVisionZeroTransformation(dml.Algorithm):
     def union(R, S):
         return R + S
     def intersect(R, S):
@@ -28,34 +29,20 @@ class crimeWeatherTransformation(dml.Algorithm):
     def betweenDates(t):
         startDate = datetime.datetime(2016, 1, 1).date()
         endDate = datetime.datetime(2017, 1, 1).date()
-        date = datetime.datetime.strptime(t['OCCURRED_ON_DATE'], '%Y-%m-%dT%H:%M:%S').date()
+        date = datetime.datetime.strptime(t['open_dt'], '%Y-%m-%dT%H:%M:%S').date()
         return (startDate <= date <= endDate)
 
-    def equalDates(t):
-        crimeDate = datetime.datetime.strptime(t[1]['OCCURRED_ON_DATE'], '%Y-%m-%dT%H:%M:%S')
-        stormDate = datetime.datetime.strptime(t[0]['BEGIN_DATE'], '%m/%d/%Y')
-        return (crimeDate.date() == stormDate.date())
+    def cleanServices(t):
+        return (str(datetime.datetime.strptime(t['open_dt'], '%Y-%m-%dT%H:%M:%S').date()), t['TYPE'], t['LOCATION_ZIPCODE'], [t['Longitude'], t['Latitude']])
 
-    def aggregateByDate(R):
-        keys = {r['OCCURRED_ON_DATE'] for r in R}
-        return [(key, [v for (k,v) in R if k == key]) for key in keys]
-
-    def crimeDateAndType(t):
-        return (datetime.datetime.strptime(t['OCCURRED_ON_DATE'], '%Y-%m-%dT%H:%M:%S').date(), t['OFFENSE_DESCRIPTION'])
-
-    def weatherDateAndType(t):
-        return (datetime.datetime.strptime(t['BEGIN_DATE'], '%m/%d/%Y').date(), t['EVENT_TYPE'])
-
-    def findWeatherType(date, weatherData):
-        for weatherDate, weatherType in weatherData:
-            if (date == weatherDate):
-                return weatherType
-        return 'None'
+    def cleanConcerns(t):
+        time = t["properties"]["REQUESTDATE"].split(".")[0]
+        return (str(datetime.datetime.strptime(time, '%Y-%m-%dT%H:%M:%S').date()), t["properties"]["REQUESTTYPE"], t['geometry']['coordinates'])
 
     contributor = 'rooday_shreyapandit'
-    reads = ['rooday_shreyapandit.crime',
-              'rooday_shreyapandit.weather']
-    writes = ['rooday_shreyapandit.crimesByDateAndWeather']
+    reads = ['rooday_shreyapandit.visionzero',
+              'rooday_shreyapandit.servicerequests']
+    writes = ['rooday_shreyapandit.serviceRequestsWithVisionZero']
 
     @staticmethod
     def execute(trial = False):
@@ -64,30 +51,43 @@ class crimeWeatherTransformation(dml.Algorithm):
         repo = client.repo
         repo.authenticate('rooday_shreyapandit', 'rooday_shreyapandit')
 
-        crimeData = repo['rooday_shreyapandit.crime']
-        weatherData = repo['rooday_shreyapandit.weather']
+        serviceRequestsData = repo['rooday_shreyapandit.servicerequests']
+        visionZeroData = repo['rooday_shreyapandit.visionzero']
 
-        print("Filtering for crimes in 2016...")
-        crimes2016 = crimeWeatherTransformation.select(crimeData.find(), crimeWeatherTransformation.betweenDates)
+        print("Filtering Service Requests for 2016 only...")
+        serviceRequests2016 = serviceRequestsVisionZeroTransformation.select(serviceRequestsData.find(), serviceRequestsVisionZeroTransformation.betweenDates)
+        print("Projecting Service Requests for relevant info only...")
+        cleanedServices = serviceRequestsVisionZeroTransformation.project(serviceRequests2016, serviceRequestsVisionZeroTransformation.cleanServices)
+        print("Projecting Concerns for relevant info only...")
+        cleanedConcerns = serviceRequestsVisionZeroTransformation.project(visionZeroData.find(), serviceRequestsVisionZeroTransformation.cleanConcerns)
 
-        print("Aggregating total crimes by date...")
-        crimesByDate = crimeWeatherTransformation.aggregate(crimeWeatherTransformation.project(crimes2016, crimeWeatherTransformation.crimeDateAndType), len)
-        print("Projecting weather data for date and type...")
-        weatherDatesAndTypes = crimeWeatherTransformation.project(weatherData.find(), crimeWeatherTransformation.weatherDateAndType)
+        print("Building RTree...")
+        serviceRequestsRtree = rtree.index.Index()
+        for i in range(len(cleanedServices)):
+            coords = cleanedServices[i][3]
+            bounds = (float(coords[0]), float(coords[1]), float(coords[0]), float(coords[1]))
+            serviceRequestsRtree.insert(i, bounds)
 
-        print("Generating final list of dates, crime totals, and weather types...")
+        print("Finding nearest requests...")
         finalList = []
-        for crimeDate, crimeNum in crimesByDate:
-            finalList.append({'date': str(crimeDate), 'crimeNum': crimeNum, 'weatherType': crimeWeatherTransformation.findWeatherType(crimeDate, weatherDatesAndTypes)})
+        for entry in cleanedConcerns:
+            coords = entry[2]
+            bounds = (float(coords[0]), float(coords[1]), float(coords[0]), float(coords[1]))
+            nearestIndices = serviceRequestsRtree.nearest(bounds, 3)
+            nearest = [cleanedServices[i] for i in nearestIndices]
+            finalList.append({'date': entry[0], 'type': entry[1], 'coords': entry[2], 'nearestRequests': nearest})
 
         print("Sorting final list...")
         finalList.sort(key=lambda x: x['date'])
 
+        print(finalList[0])
+
+    
         print('DONE!')
-        repo.dropCollection('crimesByDateAndWeather')
-        repo.createCollection('crimesByDateAndWeather')
-        repo['rooday_shreyapandit.crimesByDateAndWeather'].insert_many(finalList)
-        
+        repo.dropCollection('serviceRequestsWithVisionZero')
+        repo.createCollection('serviceRequestsWithVisionZero')
+        repo['rooday_shreyapandit.serviceRequestsWithVisionZero'].insert_many(finalList)
+
         repo.logout()
         endTime = datetime.datetime.now()
         return {"start":startTime, "end":endTime}
@@ -124,7 +124,7 @@ class crimeWeatherTransformation(dml.Algorithm):
 
         return doc
 
-crimeWeatherTransformation.execute()
-doc = crimeWeatherTransformation.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+serviceRequestsVisionZeroTransformation.execute()
+#doc = serviceRequestsVisionZeroTransformation.provenance()
+#print(doc.get_provn())
+#print(json.dumps(json.loads(doc.serialize()), indent=4))
