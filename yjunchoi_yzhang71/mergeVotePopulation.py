@@ -7,8 +7,8 @@ import uuid
 
 class mergeVotePopulation(dml.Algorithm):
     contributor = 'yjunchoi_yzhang71'
-    reads = ['yjunchoi_yzhang71.bostonPopulation', 'yjunchoi_yzhang71.presidentElectionByPrecinct']
-    writes = ['yjunchoi_yzhang71.mergeVotePopulation']
+    reads = ['yjunchoi_yzhang71.presidentElectionByPrecinct', 'yjunchoi_yzhang71.bostonPopulation']
+    writes = ['yjunchoi_yzhang71.VoterByPopulation']
 
     @staticmethod
     def execute(trial = False):
@@ -55,7 +55,7 @@ class mergeVotePopulation(dml.Algorithm):
         repo.createCollection("VoterByPopulation")
         repo['yjunchoi_yzhang71.VoterByPopulation'].insert(result)
         repo['yjunchoi_yzhang71.VoterByPopulation'].metadata({'complete': True})
-        print("Saved VoterByPopulation", repo['yjunchoi_yzhang71.voterByPopulation'].metadata())
+        print("Saved VoterByPopulation", repo['yjunchoi_yzhang71.VoterByPopulation'].metadata())
 
         repo.logout()
 
