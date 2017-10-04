@@ -5,10 +5,10 @@ import prov.model
 import datetime
 import uuid
 
-class projectData():
+class projectData(dml.algorithml):
     contributor = 'alanbur_jcaluag'
-    reads = ['alanbur_jcaluag.trafficSignal']
-    writes = ['alanbur_jcaluag.trafficSignalFiltered']
+    reads = ['alanbur_jcaluag.trafficSignal', 'alanbur_jcaluag.mbta', 'alanbur_jcaluag.hubway']
+    writes = ['alanbur_jcaluag.trafficSignalFiltered','alanbur_jcaluag.mbtaFiltered', 'alanbur_jcaluag.hubwayFiltered']
     @staticmethod
     def execute(trial = False):
         '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
@@ -19,21 +19,54 @@ class projectData():
         repo = client.repo
         repo.authenticate('alanbur_jcaluag', 'alanbur_jcaluag')
 
-        trafficSignal=[]
+        DSet=[]
+
+
         collection=repo['alanbur_jcaluag.trafficSignal'].find()
-        trafficSignal=[
+        DSet=[
             {'Dataset': 'Traffic Signals',
                 'Location':item['properties']['Location'],
              'Latitude': item['geometry']['coordinates'][0],
              'Longitude': item['geometry']['coordinates'][1]}
               for item in collection
         ]
-
         repo.dropCollection("trafficSignalFiltered")
         repo.createCollection("trafficSignalFiltered")
-        repo['alanbur_jcaluag.trafficSignalFiltered'].insert_many(trafficSignal)
+        repo['alanbur_jcaluag.trafficSignalFiltered'].insert_many(DSet)
         repo['alanbur_jcaluag.trafficSignalFiltered'].metadata({'complete':True})
         print(repo['alanbur_jcaluag.trafficSignalFiltered'].metadata())
+        
+        collection=repo['alanbur_jcaluag.hubway'].find()
+        DSet=[
+            {'DataSet': 'Hubway Stations',
+                'Location':item['s'],
+                'Latitude': item['la'],
+                'Longitude': item['lo']}
+              for item in collection
+        ]
+        repo.dropCollection("hubwayFiltered")
+        repo.createCollection("hubwayFiltered")
+        repo['alanbur_jcaluag.hubwayFiltered'].insert_many(DSet)
+        repo['alanbur_jcaluag.hubwayFiltered'].metadata({'complete':True})
+        print(repo['alanbur_jcaluag.hubwayFiltered'].metadata())
+        
+
+        collection=repo['alanbur_jcaluag.mbta'].find()
+        DSet=[
+           {'Data': 'MBTA Bus Stops',
+            'Location':item['stop_name'],
+            'Latitude':item['stop_lat'],
+             'Longitude':item['stop_lon']}
+              for item in collection
+        ]
+        repo.dropCollection("mbtaFiltered")
+        repo.createCollection("mbtaFiltered")
+        repo['alanbur_jcaluag.mbtaFiltered'].insert_many(DSet)
+        repo['alanbur_jcaluag.mbtaFiltered'].metadata({'complete':True})
+        print(repo['alanbur_jcaluag.mbtaFiltered'].metadata())
+
+
+
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -74,4 +107,6 @@ class projectData():
         repo.logout()
                   
         return doc
+    
+    
 projectData.execute()

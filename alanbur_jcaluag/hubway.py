@@ -5,7 +5,7 @@ import prov.model
 import datetime
 import uuid
 
-class hubway():
+class hubway(dml.algorithml):
     contributor = 'alanbur_jcaluag'
     reads = []
     writes = ['alanbur_jcaluag.hubway']
@@ -24,13 +24,6 @@ class hubway():
         r = json.loads(response)
         stations=r['stations']
 
-
-        stations = [
-            {'Data': 'Hubway Stations',
-            'Location':dict['s'],
-            'Latitude': dict['la'],
-            'Longitude': dict['lo']}
-            for dict in stations]
 
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("hubway")

@@ -5,7 +5,7 @@ import prov.model
 import datetime
 import uuid
 
-class mbta():
+class mbta(dml.algorithml):
     contributor = 'alanbur_jcaluag'
     reads = []
     writes = ['alanbur_jcaluag.mbta']
