@@ -6,10 +6,10 @@ import datetime
 import uuid
 from builtins import staticmethod
 
-class restaurantInspection(dml.Algorithm):
+class parcelData(dml.Algorithm):
     contributor = 'peterg04_yfchen'
     reads = []
-    writes = ['peterg04_yfchen.restaurants']
+    writes = ['peterg04_yfchen.parcelData']
     
     @staticmethod
     def execute(trial = False):
@@ -20,15 +20,15 @@ class restaurantInspection(dml.Algorithm):
         repo = client.repo
         repo.authenticate('peterg04_yfchen', 'peterg04_yfchen')
         
-        url = 'https://data.cityofboston.gov/resource/427a-3cn5.json'
+        url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/f3d274161b4a47aa9acf48d0d04cd5d4_0.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
 #         s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("restaurants")
-        repo.createCollection("restaurants")
-        repo['peterg04_yfchen.restaurants'].insert_many(r)
-        repo['peterg04_yfchen.restaurants'].metadata({'complete':True})
-        print(repo['peterg04_yfchen.restaurants'].metadata())
+        repo.dropCollection("parcelData")
+        repo.createCollection("parcelData")
+        repo['peterg04_yfchen.parcelData'].insert(r)
+        repo['peterg04_yfchen.parcelData'].metadata({'complete':True})
+        print(repo['peterg04_yfchen.parcelData'].metadata())
         
         repo.logout()
         
@@ -53,26 +53,26 @@ class restaurantInspection(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
-        this_script = doc.agent('alg:peterg04_yfchen#restaurantInspection', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:peterg04_yfchen#parcelData', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        get_restaurantInspection = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_restaurantInspection, this_script)
-        doc.usage(get_restaurantInspection, resource, startTime, None,
+        get_parcelData = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(get_parcelData, this_script)
+        doc.usage(get_parcelData, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
                   'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'
                   }
                   )
 
-        restaurantInspection= doc.entity('dat:peterg04_yfchen#restaurantInspection', {prov.model.PROV_LABEL:'Animals Found', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(restaurantInspection, this_script)
-        doc.wasGeneratedBy(restaurantInspection, get_restaurantInspection, endTime)
-        doc.wasDerivedFrom(restaurantInspection, resource, get_restaurantInspection, get_restaurantInspection, get_restaurantInspection)
+        parcelData= doc.entity('dat:peterg04_yfchen#parcelData', {prov.model.PROV_LABEL:'Animals Found', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(parcelData, this_script)
+        doc.wasGeneratedBy(parcelData, get_parcelData, endTime)
+        doc.wasDerivedFrom(parcelData, resource, get_parcelData, get_parcelData, get_parcelData)
 
         repo.logout()
                   
         return doc
         
         
-
+        
     
     
