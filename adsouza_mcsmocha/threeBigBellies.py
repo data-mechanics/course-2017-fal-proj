@@ -73,6 +73,8 @@ class threeBigBellies(dml.Algorithm):
 
         select311TrashNew = zip311coords(select311TrashReduced)
 
+        print (select311TrashNew)
+
         def selectBigBellyDel(dictList):
             newDictList = []
             for each_dict in dictList:
@@ -88,11 +90,14 @@ class threeBigBellies(dml.Algorithm):
         def aggregateScore(dictList1, dictList2):
             neighborhood_scores_dataset = []
             neighborhoods_list = []
+            print (neighborhood_scores_dataset)
 
             # Get all neighborhoods into a list
             for each_dict in dictList1:
                 if each_dict['neighborhood'] not in neighborhoods_list:
                     neighborhoods_list.append(each_dict['neighborhood'])
+
+            print (neighborhoods_list)
 
             # Create template for neighborhood_scores
             for item in neighborhoods_list:
@@ -100,15 +105,18 @@ class threeBigBellies(dml.Algorithm):
                 new_dict[item] = 0
                 neighborhood_scores_dataset.append(new_dict)
 
-                # Aggregates neighborhoods with 311's coordinates and BigBelly's locations
-                for each_dict2 in dictList2:
-                    for each_dict1 in dictList1:
-                        distance = vincenty(each_dict1['Coordinates'], each_dict2['Location']).miles
-                        if distance <= 0.5:
-                            neighborhood_scores_dataset.append({each_dict1['neighborhood'], 1})
+            print (neighborhood_scores_dataset)
 
-                            # for d in neighborhood_scores_dataset:
-                            #   d.update((k, v+1) for k, v in d.items() if k == each_dict1['neighborhood'])
+            # Aggregates neighborhoods with 311's coordinates and BigBelly's locations
+            for each_dict2 in dictList2:
+                for each_dict1 in dictList1:
+                    distance = vincenty(each_dict1['Coordinates'], each_dict2['Location']).miles
+                    if distance <= 0.5:
+                        neighborhood_scores_dataset.append({each_dict1['neighborhood'], 1})
+
+            # print (neighborhood_scores_dataset[0])
+                        # for d in neighborhood_scores_dataset:
+                        #   d.update((k, v+1) for k, v in d.items() if k == each_dict1['neighborhood'])
 
             return neighborhood_scores_dataset
 
