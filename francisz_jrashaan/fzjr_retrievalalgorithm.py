@@ -32,7 +32,7 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         # repo['francisz_jrashaan.crime'].metadata({'complete':True})
         # print(repo['francisz_jrashaan.crime'].metadata())
 
-        url = 'https://data.boston.gov/datastore/odata3.0/c2fcc1e3-c38f-44ad-a0cf-e5ea2a6585b5?$top=10000&$format=json'
+        url = 'https://data.boston.gov/datastore/odata3.0/c2fcc1e3-c38f-44ad-a0cf-e5ea2a6585b5?$top=100000&$format=json'
         response = requests.get(url).text
         a = json.loads(response)
         b = json.dumps(a, sort_keys=True, indent=2)

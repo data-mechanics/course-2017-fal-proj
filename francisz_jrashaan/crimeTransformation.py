@@ -22,9 +22,6 @@ class crimeTransformation(dml.Algorithm):
      writes = ['francisz_jrashaan.crimeData']
 
 
-
-
-
      @staticmethod
 
      def execute(trial = False):
@@ -69,17 +66,21 @@ class crimeTransformation(dml.Algorithm):
          #projection to simplify data to obtain street, lat, long, and date
          homicideCrimes = []
          for entry in homicides:
-             x = lambda t: (t['STREET'],t['OFFENSE_DESCRIPTION'],t['OCCURRED_ON_DATE'],t['Long'],t['Lat'])
+             x = lambda t: ({'STREET:':t['STREET'],'OFFENSE_DESCRIPTION:':t['OFFENSE_DESCRIPTION'],'OCCURED_ON_DATE:':t['OCCURRED_ON_DATE'],'Long:':t['Long'],'Lat:':t['Lat']})
              y = x(entry)
              homicideCrimes.append(y)
          
         
-         print("homicide crimes with street, offense, date, lat, and long",homicideCrimes)
+        # print("homicide crimes with street, offense, date, lat, and long",homicideCrimes)
 
 
 
 
-    
+
+         print("homicides in Boston", homicideCrimes)
+         repo['francisz_jrashaan.crimeData'].insert_many(homicideCrimes)
+         for entry in repo.francisz_jrashaan.crimeData.find():
+            print(entry)
 
          repo.logout()
 
@@ -149,7 +150,7 @@ class crimeTransformation(dml.Algorithm):
 
 
 
-         selectProject = doc.entity('dat:francisz_jrashaan#crime', {prov.model.PROV_LABEL:'Data set to Select and Project', prov.model.PROV_TYPE:'ont:DataSet'})
+         selectProject = doc.entity('dat:francisz_jrashaan#crimeData', {prov.model.PROV_LABEL:'Data set to Select and Project', prov.model.PROV_TYPE:'ont:DataSet'})
 
          doc.wasAttributedTo(selectProject, this_script)
 

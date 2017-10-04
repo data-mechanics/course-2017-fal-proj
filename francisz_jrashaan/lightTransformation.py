@@ -46,19 +46,21 @@ class lightTransformation(dml.Algorithm):
 
 
          lights = []
-         #projection to get coordinates 
+         #projection to get coordinates
          
          for entry in repo.francisz_jrashaan.streetlights.find():
-                 x = lambda t: (t['Long'],t['Lat'])
-                 y = x(entry)
-                 lights.append(y)
+             x = lambda t: ({'Long:':t['Long'],'Lat:':t['Lat']})
+             y = x(entry)
+             lights.append(y)
 
 
 
 
-
+         repo['francisz_jrashaan.newLights'].insert_many(lights)
+         for entry in repo.francisz_jrashaan.newLights.find():
+             print(entry)
          print("streetlight coordinates", lights)
-
+         
 
 
          repo.logout()
@@ -119,7 +121,7 @@ class lightTransformation(dml.Algorithm):
 
          doc.wasAssociatedWith(get_project, this_script)
 
-         doc.usage(get_selectProject, resource_project, startTime, None,
+         doc.usage(get_project, resource_project, startTime, None,
 
                    {prov.model.PROV_TYPE:'ont:Retrieval'})
 
