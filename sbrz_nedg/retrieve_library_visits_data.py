@@ -7,7 +7,7 @@ import uuid
 
 
 
-class example(dml.Algorithm):
+class retrieve_Library_Visit_Data(dml.Algorithm):
     contributor = 'sbrz_nedg'
     reads = []
     writes = ['sbrz_nedg.library_visits']
@@ -19,28 +19,35 @@ class example(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        library_visits_url = urllib.request.Request(
-            "https://data.boston.gov/api/action/datastore_search?resource_id=0d81febc-c7f8-4de3-b8f4-a18733b1c11b")
-        repo.authenticate('sbrz_nedg', 'sbrz_nedg')
-
-        # library visit Data Set.
         #library_visits_url = urllib.request.Request(
             #"https://data.boston.gov/api/action/datastore_search?resource_id=0d81febc-c7f8-4de3-b8f4-a18733b1c11b")
-        #library_visits_response = urllib.request.urlopen(urllib.request.Request(
-            #"https://data.boston.gov/api/action/datastore_search?resource_id=0d81febc-c7f8-4de3-b8f4-a18733b1c11b")).read().decode("utf-8")
-        library_visits_json = json_util.loads(urllib.request.urlopen(urllib.request.Request(
+        repo.authenticate('sbrz_nedg', 'sbrz_nedg')
+        #"https://data.boston.gov/api/action/datastore_search?resource_id=0d81febc-c7f8-4de3-b8f4-a18733b1c11b"
+        # library visit Data Set.
+        library_visits_json_one = json_util.loads(urllib.request.urlopen(urllib.request.Request(
             "https://data.boston.gov/api/action/datastore_search?resource_id=0d81febc-c7f8-4de3-b8f4-a18733b1c11b")).read().decode("utf-8"))
+        library_visits_json_two = json_util.loads(urllib.request.urlopen(urllib.request.Request(
+            "https://data.boston.gov/api/action/datastore_search?offset=100&resource_id=0d81febc-c7f8-4de3-b8f4-a18733b1c11b")).read().decode("utf-8"))
+        library_visits_json_three = json_util.loads(urllib.request.urlopen(urllib.request.Request(
+            "https://data.boston.gov/api/action/datastore_search?offset=200&resource_id=0d81febc-c7f8-4de3-b8f4-a18733b1c11b")).read().decode("utf-8"))
+        library_visits_json_four = json_util.loads(urllib.request.urlopen(urllib.request.Request(
+            "https://data.boston.gov/api/action/datastore_search?offset=300&resource_id=0d81febc-c7f8-4de3-b8f4-a18733b1c11b")).read().decode("utf-8"))
+        library_visits_json_five = json_util.loads(urllib.request.urlopen(urllib.request.Request(
+            "https://data.boston.gov/api/action/datastore_search?offset=400&resource_id=0d81febc-c7f8-4de3-b8f4-a18733b1c11b")).read().decode("utf-8"))
+        repo.dropCollection("libraryData")
+        repo.createCollection("libraryData")
+        print(library_visits_json_one['result'])
+        repo['sbrz_nedg.libraryData'].insert_one(library_visits_json_one)
+        print(library_visits_json_two['result'])
+        repo['sbrz_nedg.libraryData'].insert_one(library_visits_json_two)
+        print(library_visits_json_three['result'])
+        repo['sbrz_nedg.libraryData'].insert_one(library_visits_json_three)
+        print(library_visits_json_four['result'])
+        repo['sbrz_nedg.libraryData'].insert_one(library_visits_json_four)
+        print(library_visits_json_five['result'])
+        repo['sbrz_nedg.libraryData'].insert_one(library_visits_json_five)
 
-        #library_visits_json = library_visits_json
-
-        #repo.dropCollection("library_visits")
-        #repo.createCollection("library_visits")
-        #repo['sbrz_nedg.library_visits'].insert_many(library_visits_json)
-        #repo['sbrz_nedg.library_visits'].metadata({'complete':True})
-        #print(repo['sbrz_nedg.library_visits'].metadata())
-        print(library_visits_json)
-
-        repo.logout()
+        repo.logout
 
         endTime = datetime.datetime.now()
 
@@ -62,42 +69,23 @@ class example(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/')  # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont',
                           'http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
-        doc.add_namespace('log', 'http://datamechanics.io/log/')  # The event log.
-        doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
+        doc.add_namespace('bdp', 'https://data.boston.gov/api/action/')
 
-        this_script = doc.agent('alg:sbrz_nedg#example',
-                                {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
-        resource = doc.entity('bdp:wc8w-nujj',
-                              {'prov:label': '311, Service Requests', prov.model.PROV_TYPE: 'ont:DataResource',
-                               'ont:Extension': 'json'})
-        get_found = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
-        get_lost = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_found, this_script)
-        doc.wasAssociatedWith(get_lost, this_script)
-        doc.usage(get_found, resource, startTime, None,
-                  {prov.model.PROV_TYPE: 'ont:Retrieval',
-                   'ont:Query': '?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'
-                   }
-                  )
-        doc.usage(get_lost, resource, startTime, None,
-                  {prov.model.PROV_TYPE: 'ont:Retrieval',
-                   'ont:Query': '?type=Animal+Lost&$select=type,latitude,longitude,OPEN_DT'
-                   }
-                  )
 
-        lost = doc.entity('dat:sbrz_nedg#lost',
-                          {prov.model.PROV_LABEL: 'Animals Lost', prov.model.PROV_TYPE: 'ont:DataSet'})
-        doc.wasAttributedTo(lost, this_script)
-        doc.wasGeneratedBy(lost, get_lost, endTime)
-        doc.wasDerivedFrom(lost, resource, get_lost, get_lost, get_lost)
+        this_script = doc.agent('alg:sbrz_nedg#retrieve_Library_Visits_Data', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
+        resource = doc.entity('bdp:0d81febc-c7f8-4de3-b8f4-a18733b1c11b', {'prov:label': 'Library Visits 2014-2016', prov.model.PROV_TYPE: 'ont:DataResource', 'ont:Extension': 'json'})
+        get_library_data = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
-        found = doc.entity('dat:sbrz_nedg#found',
-                           {prov.model.PROV_LABEL: 'Animals Found', prov.model.PROV_TYPE: 'ont:DataSet'})
-        doc.wasAttributedTo(found, this_script)
-        doc.wasGeneratedBy(found, get_found, endTime)
-        doc.wasDerivedFrom(found, resource, get_found, get_found, get_found)
+        doc.wasAssociatedWith(this_script)
+        doc.usage(retrieve_Library_Visit_Data, resource, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval', 'ont:Query': '&limit=200000'})
+
+        library_db = doc.entity('dat:sbrz_nedg#get_library_data', {prov.model.PROV_LABEL: 'library_visits', prov.model.PROV_TYPE: 'ont:DataSet'})
+        doc.wasAttributedTo(this_script)
+        doc.wasGeneratedBy(get_library_data)
+        doc.wasDerivedFrom(library_db, resource)
+
 
         repo.logout()
 
         return doc
-example.execute()
+retrieve_Library_Visit_Data.execute()

@@ -95,4 +95,3 @@ class example(dml.Algorithm):
 
         return doc
 
-example.execute()

@@ -95,5 +95,3 @@ class example(dml.Algorithm):
         repo.logout()
 
         return doc
-
-example.execute()
