@@ -70,6 +70,10 @@ class crimeTransformation(dml.Algorithm):
              y = x(entry)
              homicideCrimes.append(y)
          
+         for entry in homicideCrimes:
+             print(entry)
+             print("right form")
+         
         
         # print("homicide crimes with street, offense, date, lat, and long",homicideCrimes)
 
@@ -79,8 +83,7 @@ class crimeTransformation(dml.Algorithm):
 
          print("homicides in Boston", homicideCrimes)
          repo['francisz_jrashaan.crimeData'].insert_many(homicideCrimes)
-         for entry in repo.francisz_jrashaan.crimeData.find():
-            print(entry)
+         
 
          repo.logout()
 

@@ -19,7 +19,7 @@ class crimeLights(dml.Algorithm):
 
      reads = ['francisz_jrashaan.crimeData','francisz_jrashaan.newLights']
 
-     writes = ['francisz_jrashaan.crimeLights']
+     writes = ['francisz_jrashaan.crimeLight']
 
 
 
@@ -74,8 +74,7 @@ class crimeLights(dml.Algorithm):
          
          
          
-         for entry in repo.francisz_jrashaan.newLights.find():
-             print(entry['Long:'])
+         
          for entry in repo.francisz_jrashaan.newLights.find():
                 if entry['Long:'] == None or entry['Lat:'] == None:
                    continue
@@ -90,19 +89,24 @@ class crimeLights(dml.Algorithm):
 
          for x in crimeLatLong:
              for y in lightLatLong:
-                 print(x)
-                 print(y)
+                
                  if x == y:
                   
                   lightMurders.append([tuple(x),1])
                   break
         #aggregate
          keys = {x[0] for x in lightMurders}
-         
+
          aggregate = [(key,sum([v for (k,v) in lightMurders if k == key])) for key in keys]
+         agg = []
+         for x in aggregate:
+             y = lambda t: ({'Long':t[0][0],'Lat':t[0][1],'Intersections':str(t[1])})
+             z = y(x)
+             agg.append(z)
+             
 
-
-         print("intersection of homicide and streetlight locations", aggregate)
+         
+         repo['francisz_jrashaan.crimeLight'].insert_many(agg)
 
 
 
