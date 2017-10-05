@@ -39,7 +39,7 @@ class getVisionZeroData(dml.Algorithm):
         endTime = datetime.datetime.now()
         print("Done!")
         return {"start":startTime, "end":endTime}
-    
+
     @staticmethod
     def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
         # Set up the database connection.
