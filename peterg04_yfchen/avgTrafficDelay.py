@@ -81,19 +81,18 @@ class avgTrafficDelay(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
+        doc.add_namespace('bdp', 'https://data.cityofboston.gov/Transportation/')
 
         this_script = doc.agent('alg:peterg04_yfchen#avgTrafficDelay', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataSet', 'ont:Extension':'json'})
         get_avgTrafficDelay = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_avgTrafficDelay, this_script)
         doc.usage(get_avgTrafficDelay, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'
+                  {prov.model.PROV_TYPE:'ont:Retrieval'
                   }
                   )
 
-        avgTrafficDelay= doc.entity('dat:peterg04_yfchen#avgTrafficDelay', {prov.model.PROV_LABEL:'Animals Found', prov.model.PROV_TYPE:'ont:DataSet'})
+        avgTrafficDelay= doc.entity('dat:peterg04_yfchen#avgTrafficDelay', {prov.model.PROV_LABEL:'Average Traffic', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(avgTrafficDelay, this_script)
         doc.wasGeneratedBy(avgTrafficDelay, get_avgTrafficDelay, endTime)
         doc.wasDerivedFrom(avgTrafficDelay, resource, get_avgTrafficDelay, get_avgTrafficDelay, get_avgTrafficDelay)
