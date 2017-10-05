@@ -39,5 +39,9 @@ For Project  #1, we picked data sets that revolved around a common theme: sustai
 
 The Electrical Vehicle Charging Stations dataset gives us the names of the stations along with their addresses and geographical coordinate points. The Hubway Station Locations dataset is pretty similar, as it also gives us the names of the stations, their addresses, geographical coordinate points, along with the number of bike docks. The Bike Network dataset gives us a visual representation of bike paths in Boston. Likewise, the Boston Neighborhoods dataset gives usa visual representation of the different neighborhoods within Boston, which could be used to filter data based on neighborhood. Lastly, the Hubway Trip History dataset includes information about trip starting and ending locations, when the trip occured, and duration. We believe that with the right tools, algorithms, and creativity, these datasets can be combined to create a very interesting and informative project.
 
+### Transformations
+#### Transformation 1:
+For the first transformation, we wanted to modify and clean up the Electric Vehicle Charging Station dataset. This dataset gives us all electric vehicle charging stations within the whole state of MA, but for the purpose of this project, we wanted to narrow them down to only include the stations in Boston. We performed a selection to filter the data, thus, retreiving the stations where the city was equal to 'Boston'. Once the dataset was narrowed down to just Boston stations, we wanted to clean up the dataset and remove any data that we thought was extraneous. The only other fields we wanted to include were 'Station Name', 'Address', 'Longtitude', and 'Latitude'. After extracting those fields, we inserted the new dataset into a dictionary, which was then inserted into a new MongoDB collection.
 
+Transformation file: electric_in_boston.py
  
