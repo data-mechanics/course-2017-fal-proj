@@ -7,3 +7,7 @@ Boston is a dynamic city, not only with respect to the people and cultures that 
 
 This project needs a few more python packages which would need to be installed.
 
+* Rtree consturction for working with geojson dataa ```python3 -m pip install rtree```
+* Alternative to urllib: ```python3 -m pip install requests```
+* Regex construction: ```python3 -m pip install re```
+
