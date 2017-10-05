@@ -95,7 +95,7 @@ class retrieve_monthly_rain_data(dml.Algorithm):
         retrieve_monthly_rain_data = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
         doc.wasAssociatedWith(this_script)
-        doc.usage(resource, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval'})
+        doc.usage(resource, startTime, None)
 
         weather_db = doc.entity('dat:sbrz_nedg#retrieve_monthly_rain_data.py', {prov.model.PROV_LABEL: 'rainData', prov.model.PROV_TYPE: 'ont:DataSet'})
         doc.wasAttributedTo(this_script, this_script)

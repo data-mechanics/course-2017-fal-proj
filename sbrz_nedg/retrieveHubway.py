@@ -63,7 +63,7 @@ class retrieveHubway(dml.Algorithm):
         get_hubway = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
         doc.wasAssociatedWith(get_hubway, this_script)
-        doc.usage(resource, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval'})
+        doc.usage(resource, startTime, None)
 
         property_db = doc.entity('dat:sbrz_nedg#hubway', {prov.model.PROV_LABEL: 'hubway', prov.model.PROV_TYPE: 'ont:DataSet'})
         doc.wasAttributedTo(this_script, this_script)
