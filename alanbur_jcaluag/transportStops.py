@@ -11,7 +11,7 @@ class transportStops(dml.Algorithm):
     writes = ['alanbur_jcaluag.transportStops']
     @staticmethod
     def execute(trial = False):
-       startTime = datetime.datetime.now()
+        startTime = datetime.datetime.now()
 
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
