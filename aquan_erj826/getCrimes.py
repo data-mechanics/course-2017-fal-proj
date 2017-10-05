@@ -37,6 +37,7 @@ class getCrimes(dml.Algorithm):
 
         repo.authenticate('aquan_erj826', 'aquan_erj826')          
 
+        #Get the data set and insert it into the database
         url = 'https://data.boston.gov/datastore/odata3.0/12cb3883-56f5-47de-afa5-3b1cf61b257b?$top=1000&$format=json'
         response = requests.get(url).text
         
@@ -101,11 +102,6 @@ class getCrimes(dml.Algorithm):
         repo.logout()
                   
         return doc
-
-#getCrimes.execute()
-#doc = getCrimes.provenance()
-#print(doc.get_provn())
-#print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof
 

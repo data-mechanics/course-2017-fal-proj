@@ -36,6 +36,7 @@ class getHousingViolations(dml.Algorithm):
 
         repo.authenticate('aquan_erj826', 'aquan_erj826')          
 
+        #Get the data set and insert it into the database
         url = 'https://data.cambridgema.gov/resource/bepf-husa.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
@@ -97,11 +98,6 @@ class getHousingViolations(dml.Algorithm):
         repo.logout()
                   
         return doc
-
-#getHousingViolations.execute()
-#doc = getHousingViolations.provenance()
-#print(doc.get_provn())
-#print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof
 

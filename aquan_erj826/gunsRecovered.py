@@ -44,10 +44,13 @@ class gunsRecovered(dml.Algorithm):
         repo.createCollection("gunsRecovered")
 
         for point in collection.find():
+            #Calculate the total number of guns recovered on a given day
             total = int(point['buybackgunsrecovered']) + \
                     int(point['crimegunsrecovered']) + \
                     int(point['gunssurrenderedsafeguarded'])
+            #Get the date (no time)
             date = point['collectiondate'][:10]
+            #Put the data into mongo
             repo['aquan_erj826.gunsRecovered'].insert([{'DATE':date, 'TOTAL_GUNS_COLLECTED':total}], check_keys=False)
 
         repo['aquan_erj826.gunsRecovered'].metadata({'complete':True})
@@ -105,10 +108,5 @@ class gunsRecovered(dml.Algorithm):
         repo.logout()
                   
         return doc
-
-#gunsRecovered.execute()
-#doc = gunsRecovered.provenance()
-#print(doc.get_provn())
-#print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof

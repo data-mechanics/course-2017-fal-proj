@@ -36,6 +36,7 @@ class get911Dispatch(dml.Algorithm):
 
         repo.authenticate('aquan_erj826', 'aquan_erj826')          
 
+        #Get the data set and insert it into the database
         url = 'https://data.boston.gov/export/245/954/2459542e-7026-48e2-9128-ca29dd3bebf8.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
@@ -97,11 +98,6 @@ class get911Dispatch(dml.Algorithm):
         repo.logout()
                   
         return doc
-
-#get911Dispatch.execute()
-#doc = get911Dispatch.provenance()
-#print(doc.get_provn())
-#print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof
 

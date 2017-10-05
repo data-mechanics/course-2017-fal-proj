@@ -36,6 +36,7 @@ class getCarCitations(dml.Algorithm):
 
         repo.authenticate('aquan_erj826', 'aquan_erj826')          
 
+        #Get the data set and insert it into the database
         url = 'https://data.somervillema.gov/resource/jpgd-3f23.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
@@ -98,11 +99,6 @@ class getCarCitations(dml.Algorithm):
         repo.logout()
                   
         return doc
-
-#getCarCitations.execute()
-#doc = getCarCitations.provenance()
-#print(doc.get_provn())
-#print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof
 

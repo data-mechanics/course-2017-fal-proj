@@ -39,6 +39,7 @@ class vehicleAndHousingCitations(dml.Algorithm):
         repo = client.repo
         repo.authenticate('aquan_erj826', 'aquan_erj826')
 
+        #The transformations will involve car citation and housing violation datasets
         vehicles = repo.aquan_erj826.carCitations
         houses = repo.aquan_erj826.housingViolations
 
@@ -48,33 +49,35 @@ class vehicleAndHousingCitations(dml.Algorithm):
 
         for car in vehicles.find():
             try:
+                #Get the date that the incident occured ([Date, Time])
                 total_date = car['dtissued'].split('T')
             except:
                 continue
             date = total_date[0]
             time = total_date[1]
             try:
+                #Get the description of the motor vehicle violation
                 charge = car['chgdesc']
             except:
                 continue
             kind = 'MOTOR VEHICLE'
+            #Put data into mongo
             repo['aquan_erj826.vehicleAndHousingCitations'].insert([{'DATE':date, 'TIME':time,'TYPE':kind, 'CHARGE':charge}], check_keys=False)
 
+
         for house in houses.find():
+            #Get the date that the violation was reported ([Date,Time])
             total_date = house['cited'].split('T')
             date = total_date[0]
             time = total_date[1]
             charge = house['code_description']
             kind = 'HOUSING'
+            #Put data into mongo
             repo['aquan_erj826.vehicleAndHousingCitations'].insert([{'DATE':date, 'TIME':time,'TYPE':kind, 'CHARGE':charge}], check_keys=False)
 
 
-#       for item in repo['aquan_erj826.vehicleAndHousingCitations'].find():
-#            print(item)
-
         repo['aquan_erj826.vehicleAndHousingCitations'].metadata({'complete':True})
         print(repo['aquan_erj826.vehicleAndHousingCitations'].metadata())
-
 
         repo.logout()
 
@@ -136,10 +139,5 @@ class vehicleAndHousingCitations(dml.Algorithm):
         repo.logout()
                   
         return doc
-
-#vehicleAndHousingCitations.execute()
-#doc = vehicleAndHousingCitations.provenance()
-#print(doc.get_provn())
-#print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof

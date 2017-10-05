@@ -12,7 +12,7 @@ Project 1
 
 crimeDispatch.py
 Transformation:
-Selection and projection on repo.aquan_erj826.Counts911, 
+Selection, projection, and aggregation on repo.aquan_erj826.Counts911, 
 and an aggregation with repo.aquan_erj826.crimes to find 
 the number of 911 calls that did not correspond to crime 
 incident reports in 2014
@@ -41,6 +41,7 @@ class crimeDispatch(dml.Algorithm):
         repo.authenticate('aquan_erj826', 'aquan_erj826')
         
 
+        #This transformation will involve 911 call totals and crime reports from Boston
         dispatch = repo.aquan_erj826.Counts911
         crimeReports = repo.aquan_erj826.crimes
 
@@ -48,9 +49,11 @@ class crimeDispatch(dml.Algorithm):
         repo.createCollection("crimeDispatch")
 
         for call in dispatch.find():
+            #Format the date so that it matches the format in the other collection
             date = call['Date'].split('/')
             date = date[0] + '-' + date[1] + '-' + date[2]
             total = call['Total']
+            #Select data from 2014
             if date[-4::] == '2014':
                 repo['aquan_erj826.crimeDispatch'].insert([{date:total}], check_keys=False)
 
@@ -58,7 +61,10 @@ class crimeDispatch(dml.Algorithm):
 
         dates = []
         for report in crimeReports.find():
-            #Adding an arbitrary year to the date
+            #Adding an arbitrary year to the date to aid in selection. 
+            #Note that the data sets do not overlap. For the sake of the 
+            #transformations we are assuming that the data comes from the 
+            #same year, 2014
             try:
                 date = report['OCCURRED_ON_DATE'].split('T')[0][5:] + '-2014'
                 dates.append(date)
@@ -69,6 +75,8 @@ class crimeDispatch(dml.Algorithm):
             date = list(point.keys())[1]
             total = point[date]
 
+            #If there is a crime report that coincides with a 911 call by date,
+            #subtract one from total 911 reports from that day
             if date in dates:
                 new_total = int(total) - 1
                 dates.remove(date)
@@ -144,10 +152,5 @@ class crimeDispatch(dml.Algorithm):
         repo.logout()
                   
         return doc
-
-#crimeDispatch.execute()
-#doc = crimeDispatch.provenance()
-#print(doc.get_provn())
-#print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof
