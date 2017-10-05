@@ -19,7 +19,12 @@ class mbta(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate('alanbur_jcaluag', 'alanbur_jcaluag')
-        api_key='iMJT5dgjok-SFSpHyPT-YQ'
+
+
+        with open('auth.json') as json_file:
+            key = json.load(json_file)
+        api_key = key['api']
+
         url1 = 'http://realtime.mbta.com/developer/api/v2/routes?api_key='+api_key+'&format=json'
         response = urllib.request.urlopen(url1).read().decode("utf-8")
         r = json.loads(response)
@@ -35,7 +40,7 @@ class mbta(dml.Algorithm):
                     stops.extend(r['direction'][0]['stop'])
                     # print(r)
 
-       
+
 
         repo.dropCollection("mbta")
         repo.createCollection("mbta")
@@ -83,4 +88,4 @@ class mbta(dml.Algorithm):
         repo.logout()
                   
         return doc
-# mbta.execute()
+mbta.execute()
