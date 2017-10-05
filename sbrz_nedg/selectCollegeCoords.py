@@ -63,7 +63,7 @@ class selectCollegeCoords(dml.Algorithm):
                                       {prov.model.PROV_LABEL: 'college_db', prov.model.PROV_TYPE: 'ont:DataSet'})
         select_college_coordinates = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
-        doc.wasAssociatedWith(this_script)
+        doc.wasAssociatedWith(select_college_coordinates, this_script)
         doc.usage(college_coord_db, college_db, startTime, None)
 
         doc.wasAttributedTo(this_script, this_script)

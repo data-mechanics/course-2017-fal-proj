@@ -66,7 +66,7 @@ class selectAddresses(dml.Algorithm):
                                 {'prov:label': 'property_assessment_addresses', prov.model.PROV_TYPE: 'ont:DataSet'})
         select_address_data = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
-        doc.wasAssociatedWith(this_script)
+        doc.wasAssociatedWith(select_address_data, this_script)
         doc.usage(property_address_db, address_db, startTime, None,  {prov.model.PROV_TYPE:'ont:Retrieval'})
 
         doc.wasAttributedTo(this_script, this_script)
