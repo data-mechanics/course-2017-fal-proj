@@ -36,15 +36,15 @@ class retrieve_library_visits_data(dml.Algorithm):
             "https://data.boston.gov/api/action/datastore_search?offset=400&resource_id=0d81febc-c7f8-4de3-b8f4-a18733b1c11b")).read().decode("utf-8"))
         repo.dropCollection("libraryData")
         repo.createCollection("libraryData")
-        print(library_visits_json_one['result'])
+
         repo['sbrz_nedg.libraryData'].insert_one(library_visits_json_one)
-        print(library_visits_json_two['result'])
+
         repo['sbrz_nedg.libraryData'].insert_one(library_visits_json_two)
-        print(library_visits_json_three['result'])
+
         repo['sbrz_nedg.libraryData'].insert_one(library_visits_json_three)
-        print(library_visits_json_four['result'])
+
         repo['sbrz_nedg.libraryData'].insert_one(library_visits_json_four)
-        print(library_visits_json_five['result'])
+
         repo['sbrz_nedg.libraryData'].insert_one(library_visits_json_five)
 
         repo.logout
@@ -77,10 +77,11 @@ class retrieve_library_visits_data(dml.Algorithm):
         get_library_data = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
         doc.wasAssociatedWith(this_script)
-        doc.usage(retrieve_library_visits_data, resource, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval', 'ont:Query': '&limit=200000'})
 
         library_db = doc.entity('dat:sbrz_nedg#get_library_data', {prov.model.PROV_LABEL: 'library_visits', prov.model.PROV_TYPE: 'ont:DataSet'})
-        doc.wasAttributedTo(this_script)
+        doc.usage(library_db, resource, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval', 'ont:Query': '&limit=200000'})
+
+        doc.wasAttributedTo(this_script, this_script)
         doc.wasGeneratedBy(get_library_data)
         doc.wasDerivedFrom(library_db, resource)
 

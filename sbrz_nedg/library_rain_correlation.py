@@ -144,17 +144,19 @@ class library_rain_correlation(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/')  # The event log.
 
         this_script = doc.agent('alg:sbrz_nedg#library_rain_correlation', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
-        visitRain_db = doc.entity({'prov:label': 'library_rain_correlation', prov.model.PROV_TYPE: 'ont:DataSet'})
+        rain_db = doc.entity('dat:sbrz_nedg#rainData',{'prov:label': 'rain Data', prov.model.PROV_TYPE: 'ont:DataSet'})
+        visit_db = doc.entity('dat:sbrz_nedg#libraryData',{'prov:label': 'library Data', prov.model.PROV_TYPE: 'ont:DataSet'})
 
         library_rain_correlation = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
-        doc.wasAssociatedWith(this_script)
-        doc.usage(library_rain_correlation, visitRain_db, startTime)
+        doc.wasAssociatedWith(library_rain_correlation, this_script)
+        doc.usage(rain_db, startTime)
+        doc.usage(visit_db, startTime)
 
 
-        doc.wasAttributedTo(this_script)
+        doc.wasAttributedTo(this_script, this_script)
         doc.wasGeneratedBy(library_rain_correlation)
-        doc.wasDerivedFrom(visitRain_db)
+        doc.wasDerivedFrom(rain_db, visit_db)
 
         repo.logout()
 
