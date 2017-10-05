@@ -70,7 +70,7 @@ class retrievePropertyAssessmentData(dml.Algorithm):
         property_db = doc.entity('dat:sbrz_nedg#property_assessment', {prov.model.PROV_LABEL: 'property_assessment', prov.model.PROV_TYPE: 'ont:DataSet'})
         doc.wasAttributedTo(this_script, this_script)
         doc.wasGeneratedBy(get_property_data)
-        doc.wasDerivedFrom(resource)
+        doc.wasDerivedFrom(resource, property_db)
 
         repo.logout()
 

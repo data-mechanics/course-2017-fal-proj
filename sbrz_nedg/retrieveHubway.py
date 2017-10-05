@@ -68,7 +68,7 @@ class retrieveHubway(dml.Algorithm):
         property_db = doc.entity('dat:sbrz_nedg#hubway', {prov.model.PROV_LABEL: 'hubway', prov.model.PROV_TYPE: 'ont:DataSet'})
         doc.wasAttributedTo(this_script, this_script)
         doc.wasGeneratedBy(get_hubway)
-        doc.wasDerivedFrom(resource)
+        doc.wasDerivedFrom(resource, property_db)
 
         repo.logout()
 
