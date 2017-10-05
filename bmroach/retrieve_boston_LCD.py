@@ -5,40 +5,41 @@ import datetime, uuid
 
 
 """
+Skelton file provided by lapets@bu.edu
+Heavily modified by bmroach@bu.edu
+
+Local Climate Data from NOAA -- Boston, MA -- 9/1/2008 through 9/1/2017
+
 Development notes:
--Optimization potential in using PyMongo "insert_many" rather than making a db
-call for every row with "insert_one". 
-Reason it was done with insert_one: trouble with input type for insert_many
 
 -Grossly inefficient in how it adds Long/Lat/station/elevation to every entry. Also, 
 a lot of the fields are left blank. Leaving it the way it is, though, for anyone else
 who would want to use this script and would want that data in there.
 """
 
-#Local Climate Data from NOAA -- Boston, MA -- 9/1/2008 through 9/1/2017
 
 class retrieve_boston_LCD(dml.Algorithm):
-    contributor = 'bmroach'
-    reads = []
-    writes = ['bmroach.boston_LCD']
+	contributor = 'bmroach'
+	reads = []
+	writes = ['bmroach.boston_LCD']
+	@staticmethod
+	def execute(trial = False):
+		'''Retrieve some data sets (not using the API here for the sake of simplicity).'''
+		startTime = datetime.datetime.now()
 
-    @staticmethod
-    def execute(trial = False):
-        '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
-        startTime = datetime.datetime.now()
+		# Set up the database connection.
+		client = dml.pymongo.MongoClient()
+		repo = client.repo
+		repo.authenticate('bmroach', 'bmroach')
 
-        # Set up the database connection.
-        client = dml.pymongo.MongoClient()
-        repo = client.repo
-        repo.authenticate('bmroach', 'bmroach')
-        
-        # Do retrieving of data    
-        url = 'http://datamechanics.io/data/bmroach/boston_climate_data.csv'
-        response = urllib.request.urlopen(url).read().decode("utf-8")
-        repo.dropCollection("boston_LCD")
-        repo.createCollection("boston_LCD")
-        rowCount = 0
-        fieldIndices = {
+		# Do retrieving of data    
+		url = 'http://datamechanics.io/data/bmroach/boston_climate_data.csv'
+		response = urllib.request.urlopen(url).read().decode("utf-8")
+		repo.dropCollection("boston_LCD")
+		repo.createCollection("boston_LCD")
+		rowCount = 0
+		lcdList = []
+		fieldIndices = {
 					0: 'STATION',
 					1: 'STATION_NAME',
 					2: 'ELEVATION',
@@ -131,35 +132,38 @@ class retrieve_boston_LCD(dml.Algorithm):
 					89: 'MonthlyTotalSeasonToDateCoolingDD'
 					}
 
-        for line in response.split('\n')[1:]:
-            lineDict = {}
-            if line == '':
-                continue
-            line = line.split(',')
-            for index, fieldName in fieldIndices.items():
-                lineDict[fieldName] = line[index]
+		for line in response.split('\n')[1:]:
+			lineDict = {}
+			if line == '':
+				continue
+			line = line.split(',')
+			for index, fieldName in fieldIndices.items():
+				lineDict[fieldName] = line[index]
 
-            repo['bmroach.boston_LCD'].insert_one( {str(rowCount) : lineDict} )    
-            rowCount += 1
+			lcdList.append( {str(rowCount) : lineDict} )   
+			rowCount += 1
         
-        repo['bmroach.boston_LCD'].metadata({'complete':True})  
-        repo.logout()
-        endTime = datetime.datetime.now()
-        print("Boston Local Climate Data successfully added to database")
-        return {"start":startTime, "end":endTime}
+
+		repo['bmroach.boston_LCD'].insert_many( lcdList )
+
+		repo['bmroach.boston_LCD'].metadata({'complete':True})  
+		repo.logout()
+		endTime = datetime.datetime.now()
+		print("Boston Local Climate Data successfully added to database")
+		return {"start":startTime, "end":endTime}
     
-    @staticmethod
-    def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
-        '''
-            Create the provenance document describing everything happening
-            in this script. Each run of the script will generate a new
-            document describing that invocation event.
-            '''
+	@staticmethod
+	def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
+		'''
+			Create the provenance document describing everything happening
+			in this script. Each run of the script will generate a new
+			document describing that invocation event.
+			'''
 
         
         
                   
-        return 
+		return 
 
 
 

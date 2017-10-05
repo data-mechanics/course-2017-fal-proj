@@ -4,6 +4,11 @@ import dml, prov.model
 import datetime, uuid
 
 """ 
+Skelton file provided by lapets@bu.edu
+Heavily modified by bmroach@bu.edu
+
+Yearly rainfall data by Boston neighborhood
+
 Development notes:
 -Currently not returning correct data, but have data from *somewhere
 """
@@ -26,6 +31,7 @@ class retrieve_rainfall(dml.Algorithm):
         repo.createCollection("rainfall")
         
         # Do retrieving of data
+        rainfallList = []
         years = [year for year in range(1999,2018)]
         
         url = "http://www.bwsc.org/COMMUNITY/rainfall/telog_rainfall/rf_yearly.asp"
@@ -90,15 +96,15 @@ class retrieve_rainfall(dml.Algorithm):
                     line=line[:end]
                     regions[r] = line
 
-            #add year to db
-            repo["bmroach.rainfall"].insert_one( {str(year) : regions} ) 
+            #add year to db list
+            rainfallList.append( {str(year) : regions} ) 
             
             if log:
-                print("Year:", year)
+                print("\nYear:", year)
                 for key, val in regions.items():
                     print(key, '\t', val)
 
-
+        repo["bmroach.rainfall"].insert_many( rainfallList )
         repo['bmroach.rainfall'].metadata({'complete':True})
         repo.logout()
         endTime = datetime.datetime.now()
@@ -120,7 +126,7 @@ class retrieve_rainfall(dml.Algorithm):
 
 
 
-retrieve_rainfall.execute()
+retrieve_rainfall.execute(log=True)
 
 # doc = retrieve.provenance()
 # print(doc.get_provn())

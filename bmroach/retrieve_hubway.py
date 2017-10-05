@@ -9,10 +9,13 @@ from io import BytesIO
 
 
 """
+Skelton file provided by lapets@bu.edu
+Heavily modified by bmroach@bu.edu
+
+Hubway trip log
+
 Development notes:
-Optimization potential in using PyMongo "insert_many" rather than making a db
-call for every row with "insert_one". 
-Reason it was done with insert_one: trouble with input type for insert_many
+
 """
 
 class retrieve_hubway(dml.Algorithm):
@@ -76,7 +79,8 @@ class retrieve_hubway(dml.Algorithm):
         repo.createCollection("hubway")
         
         # Do retrieving of data
-        tripCount = 0          
+        tripCount = 0
+        hubwayList = []          
         for timeFrame, url in hubwayDataSets.items(): #for every data set
             try:
                 response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -119,11 +123,12 @@ class retrieve_hubway(dml.Algorithm):
                     print("Error caught. Current line: ",lineItems)
 
                 #add line to db collection               
-                repo["bmroach.hubway"].insert_one( {str(tripCount) : lineDict} )    
+                hubwayList.append( {str(tripCount) : lineDict} )    
                 tripCount += 1
             if log:
                 print(timeFrame, "dataset imported to db")
 
+        repo["bmroach.hubway"].insert_many( hubwayList )    
         repo['bmroach.hubway'].metadata({'complete':True})  
         repo.logout()
         endTime = datetime.datetime.now()
@@ -179,7 +184,7 @@ class retrieve_hubway(dml.Algorithm):
 
 
 
-retrieve_hubway.execute()
+retrieve_hubway.execute(log=True)
 
 # doc = retrieve.provenance()
 # print(doc.get_provn())
