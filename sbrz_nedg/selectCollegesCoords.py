@@ -4,14 +4,14 @@ import datetime
 import uuid
 
 
-class selectAddresses(dml.Algorithm):
+class selectCollegeCoords(dml.Algorithm):
     contributor = 'sbrz_nedg'
-    reads = ['sbrz_nedg.property_assessment']
-    writes = ['sbrz_nedg.property_assessment_addresses']
+    reads = ['sbrz_nedg.college_university']
+    writes = ['sbrz_nedg.college_coords']
 
     @staticmethod
     def execute(trial=False):
-        '''Select all of the addresses from the Property Assessment data set'''
+        '''Select all of the addresses from the College/Universities data set'''
         startTime = datetime.datetime.now()
 
         # Set up the database connection.
@@ -20,19 +20,16 @@ class selectAddresses(dml.Algorithm):
         repo.authenticate('sbrz_nedg', 'sbrz_nedg')
 
         db = client.repo
-        collection = db['sbrz_nedg.property_assessment']
+        collection = db['sbrz_nedg.college_university']
         x = []
-        addresses = collection.find({}, {'MAIL_ADDRESS': 1, 'MAIL CS': 1, 'ZIPCODE': 1})
-        for address in addresses:
-            address['ZIPCODE'] = address['ZIPCODE'].strip('_') # strip off trailing underline
-            if 'PO BOX' not in address['MAIL_ADDRESS']:  # filter out PO Boxes
-                x.append(address)
+        colleges = collection.find({}, {'properties.Name': 1, 'properties.Latitude': 1, 'properties.Longitude': 1})
+        for college in colleges:
+            x.append(college)
 
-        repo.dropCollection('sbrz_nedg.property_assessment_addresses')
-        repo.createCollection('sbrz_nedg.property_assessment_addresses')
-        repo['sbrz_nedg.property_assessment_addresses'].insert_many(x)
-        repo['sbrz_nedg.property_assessment_addresses'].metadata({'complete': True})
-        repo.dropCollection('sbrz_nedg.property_assessment')
+        repo.dropCollection('sbrz_nedg.college_coords')
+        repo.createCollection('sbrz_nedg.college_coords')
+        repo['sbrz_nedg.college_coords'].insert_many(x)
+        repo['sbrz_nedg.college_coords'].metadata({'complete': True})
 
         repo.logout()
 
@@ -58,19 +55,18 @@ class selectAddresses(dml.Algorithm):
                           'http://datamechanics.io/ontology#DataSet')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/')  # The event log.
 
-        this_script = doc.agent('alg:sbrz_nedg#selectAddressesColleges',
+        this_script = doc.agent('alg:sbrz_nedg#selectCollegeCoords',
                                 {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
-        address_db = doc.entity({'prov:label': 'college_university', prov.model.PROV_TYPE: 'ont:DataResource'})
-        address_db = doc.entity('dat:sbrz_nedg#get_property_data',
-            {'prov:label': 'college_university_addresses', prov.model.PROV_TYPE: 'ont:DataResource'})
-        select_address_data = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
+        college_coord_db = doc.entity('dat:sbrz_nedg#get_college_data',
+                                {prov.model.PROV_LABEL: 'college_coords', prov.model.PROV_TYPE: 'ont:DataSet'})
+        select_college_coordinates = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
         doc.wasAssociatedWith(this_script)
-        doc.usage(selectAddresses, address_db, startTime)
+        doc.usage(selectCollegeCoords, college_coord_db, startTime)
 
         doc.wasAttributedTo(this_script)
-        doc.wasGeneratedBy(select_address_data)
-        doc.wasDerivedFrom(address_db, address_db)
+        doc.wasGeneratedBy(select_college_coordinates)
+        doc.wasDerivedFrom(college_coord_db)
 
         repo.logout()
 

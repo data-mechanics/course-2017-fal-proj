@@ -7,7 +7,7 @@ import uuid
 class selectAddressesColleges(dml.Algorithm):
     contributor = 'sbrz_nedg'
     reads = ['sbrz_nedg.college_university']
-    writes = ['sbrz_nedg.college_university_addresses', 'sbrz_nedg.college_university']
+    writes = ['sbrz_nedg.college_university_addresses']
 
     @staticmethod
     def execute(trial=False):
@@ -31,7 +31,6 @@ class selectAddressesColleges(dml.Algorithm):
         repo.createCollection('sbrz_nedg.college_university_addresses')
         repo['sbrz_nedg.college_university_addresses'].insert_many(x)
         repo['sbrz_nedg.college_university_addresses'].metadata({'complete': True})
-        repo.dropCollection('sbrz_nedg.college_university')
 
         repo.logout()
 

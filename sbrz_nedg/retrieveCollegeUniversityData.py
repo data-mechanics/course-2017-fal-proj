@@ -71,3 +71,5 @@ class retrieveCollegeUniversityData(dml.Algorithm):
         repo.logout()
 
         return doc
+
+retrieveCollegeUniversityData.execute()
