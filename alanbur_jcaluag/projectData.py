@@ -6,6 +6,10 @@ import datetime
 import uuid
 
 class projectData(dml.Algorithm):
+    '''
+    Class for projecting out the 3 data sets listed in reads
+    For each one load in the dataset(overriding the previous one) do appropriate projection and write to file
+    '''
     contributor = 'alanbur_jcaluag'
     reads = ['alanbur_jcaluag.trafficSignal', 'alanbur_jcaluag.mbta', 'alanbur_jcaluag.hubway']
 
