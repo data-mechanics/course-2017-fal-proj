@@ -72,7 +72,7 @@ class retrieve_library_visits_data(dml.Algorithm):
         doc.add_namespace('bdp', 'https://data.boston.gov/api/action/')
 
 
-        this_script = doc.agent('alg:sbrz_nedg#retrieve_Library_Visits_Data', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
+        this_script = doc.agent('alg:sbrz_nedg#retrieve_library_visits_data', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
         resource = doc.entity('bdp:0d81febc-c7f8-4de3-b8f4-a18733b1c11b', {'prov:label': 'Library Visits 2014-2016', prov.model.PROV_TYPE: 'ont:DataResource', 'ont:Extension': 'json'})
         get_library_data = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
