@@ -26,9 +26,8 @@ https://data.boston.gov/dataset/crime-incident-reports-august-2015-to-date-sourc
 3. number of restaurants within certain distance of location of that 100 means
 
 ### auth.json
-Please place the auth.json file in your folder
 Use yelp api:https://www.yelp.com/developers/documentation/v3/
-{
+Please place the auth.json file in your folder{
 	"yelp": {
 			"CLIENT_ID" : "xxxxxxxxxxxxxxxxxxxxxx",
 			"CLIENT_SECRET" : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
