@@ -6,6 +6,9 @@ import datetime
 import uuid
 
 class filterHubway(dml.Algorithm):
+    '''
+    Read hubwayProjected and filter out hubway stops outside of Boston
+    '''
     contributor = 'alanbur_jcaluag'
     reads = ['alanbur_jcaluag.hubwayProjected']
     writes = ['alanbur_jcaluag.hubwayFiltered']

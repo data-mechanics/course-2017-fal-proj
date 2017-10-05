@@ -5,7 +5,12 @@ import prov.model
 import datetime
 import uuid
 
+
+
 class transportStops(dml.Algorithm):
+    '''
+    read hubwayFiltered and mbtaProjected and apply union on the two datasets
+    '''
     contributor = 'alanbur_jcaluag'
     reads = ['alanbur_jcaluag.hubwayFiltered', 'alanbur_jcaluag.mbtaProjected']
     writes = ['alanbur_jcaluag.transportStops']

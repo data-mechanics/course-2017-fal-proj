@@ -6,6 +6,9 @@ import datetime
 import uuid
 
 class roadComplaints(dml.Algorithm):
+    '''
+    extract road complaint data from json file
+    '''
     contributor = 'alanbur_jcaluag'
     reads = []
     writes = ['alanbur_jcaluag.roadComplaints']

@@ -6,6 +6,10 @@ import datetime
 import uuid
 
 class mbta(dml.Algorithm):
+    '''
+    makes an API call using the MBTA API key to get a list of all MBTA routes. for each bus route, makes an API
+     call to get all the stops on the bus route. Finally, concatenates all the bus stops.
+    '''
     contributor = 'alanbur_jcaluag'
     reads = []
     writes = ['alanbur_jcaluag.mbta']

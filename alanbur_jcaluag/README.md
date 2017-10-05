@@ -18,19 +18,22 @@ Boston roads and their problem areas
 #Run Instructions
 - Run execute.py
 - mbta.py requires authentication. auth.json must contain an MBTA API key in the form {"MBTA_api_key":<key>}. 
+- In order to obtain an MBTA API key, register a developer account on 
+http://realtime.mbta.com/Portal/Account/Register, and request for an API key. The key will be emailed in about a day.
 
+———— 
 #Transformations
 roadComplainAgg: Filter the road complain data to get only relevent data. Next aggregate data by date and get a list of all complaints on that day through a projection 
 
 projectData: Project the trafficSignal, mbta, and hubway datasets to remove irrelevant data and reorder the keys
 
-filterHubway: Filter hubway data (projected) by removing data points outside of Boston
+filterHubway: Filter hubway data (projected) by removing data with geographical coordinates outside of Boston
 
 transportStops: merge MBTA and Hubway datasets
 
-bikeNetwork: Project the userful bikeNetwork data while reading it in
+bikeNetwork: Project the useful bikeNetwork data while reading it in
 
-#Resulting dataSets
+mbta: gets and merges data on all bus routes
 
 alanbur_jcaluag#roadComplaintsByDay
 alanbur_jcaluag#transportStops

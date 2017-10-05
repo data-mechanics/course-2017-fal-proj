@@ -6,6 +6,9 @@ import datetime
 import uuid
 
 class hubway(dml.Algorithm):
+    '''
+    extract hubway data from url
+    '''
     contributor = 'alanbur_jcaluag'
     reads = []
     writes = ['alanbur_jcaluag.hubway']
