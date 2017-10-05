@@ -65,7 +65,7 @@ class retrievePropertyAssessmentData(dml.Algorithm):
         get_property_data = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
         doc.wasAssociatedWith(get_property_data, this_script)
-        doc.usage(resource, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval'})
+        doc.usage(resource, startTime, None)
 
         property_db = doc.entity('dat:sbrz_nedg#property_assessment', {prov.model.PROV_LABEL: 'property_assessment', prov.model.PROV_TYPE: 'ont:DataSet'})
         doc.wasAttributedTo(this_script, this_script)

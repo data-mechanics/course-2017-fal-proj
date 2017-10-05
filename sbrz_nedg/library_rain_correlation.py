@@ -150,8 +150,8 @@ class library_rain_correlation(dml.Algorithm):
         library_rain_correlation = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
         doc.wasAssociatedWith(this_script)
-        doc.usage(rain_db, startTime, None,  {prov.model.PROV_TYPE:'ont:Retrieval'})
-        doc.usage(visit_db, startTime, None,  {prov.model.PROV_TYPE:'ont:Retrieval'})
+        doc.usage(rain_db, startTime, None)
+        doc.usage(visit_db, startTime, None)
 
 
         doc.wasAttributedTo(this_script, this_script)

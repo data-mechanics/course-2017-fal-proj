@@ -87,7 +87,7 @@ class retrieve_library_visits_data(dml.Algorithm):
 
         library_db = doc.entity('dat:sbrz_nedg#get_library_data',
                                 {prov.model.PROV_LABEL: 'library_visits', prov.model.PROV_TYPE: 'ont:DataSet'})
-        doc.usage(library_db, resource, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval'})
+        doc.usage(library_db, resource, startTime, None)
 
         doc.wasAttributedTo(this_script, this_script)
         doc.wasGeneratedBy(get_library_data)
