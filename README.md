@@ -13,7 +13,7 @@ Our project seeks to exlpore the relationship among shcool location, crime and h
 5. **New York Crime Data:** This dataset contains the crime, crime type and location of crime in New York.
 6. **Boston Hospitals Data:** This dataset contains the location and name of the hospitals in New York.
 
-##Transformations
+## Transformations
 
 There are four transformations, which are **BostonSchoolsCrime**, **NewYorkCitySchoolsCrime**,**BostonSchoolsHospitals** and **NewYorkCitySchoolsHospitals**.
 
