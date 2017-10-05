@@ -17,7 +17,7 @@ merge2012.py merges all the data from 2012 and puts them into a collection calle
 removeOutliers.py takes the data in all2012 and removes all entries with outliers. This leaves us 87 entries left and stored in collection clean2012. <br />
 correlations.py takes all the data from clean2012 and returns the correlation coefficient of CO2 emissions and all 6 other attributes: carbon intensity, energy intensity, energy use, GDP per capita, Human Development Index, and population. The results are stored in collection corr2012. <br />
 
-To run all files: execute the following command in root directory (course-2017-fal-proj):
+To run all files, execute the following command in root directory (course-2017-fal-proj):
 ```
 python3 execute.py angelay
 ```
