@@ -41,8 +41,8 @@ class CrimeRestaurants(dml.Algorithm):
 			foodstreet2 = ''.join([j for j in foodstreet1 if not j.isdigit()])
 			foodstreet3 = [foodstreet2]
 			foodpermitList.append(foodstreet3)
-		print("++++++++++++++")
-		print(foodpermitList)
+		#print("++++++++++++++")
+		#print(foodpermitList)
 
 		'''find the intersection of the two databases. We basically 
 			want to find the restaurants that are in a street that have had crimes. 
@@ -50,8 +50,8 @@ class CrimeRestaurants(dml.Algorithm):
 			restaurant is located in, the less desirable the place is to people.
 		'''
 		intersection = [st for st in streetsthathadcrimes if st in foodpermitList]
-		print("+++++++++++")
-		print(intersection)
+		#print("+++++++++++")
+		#print(intersection)
 
 		finalList =[]
 		for i in intersection:
@@ -60,8 +60,8 @@ class CrimeRestaurants(dml.Algorithm):
 			sts = "".join(i)
 			finalList.append({"Street": sts, "Crimes":count})
 
-		print("______--------_________")
-		print(finalList)
+	#	print("______--------_________")
+	#	print(finalList)
 
 		''' now do an aggregation '''
 		repo.dropCollection("CrimeRestaurants")

@@ -36,7 +36,7 @@ for item in json_decode:
     result.append(my_dict) ''' 
         #TripList =r["Trips"]
         print(type(TripList))
-        print(TripList)
+        #print(TripList)
         print(type(r))
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("realtime_MBTA")

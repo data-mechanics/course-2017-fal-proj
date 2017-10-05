@@ -22,9 +22,9 @@ class hubway(dml.Algorithm):
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         stations = r['stations']
-        print(type(stations))
-        print(stations)
-        print(type(r))
+        #print(type(stations))
+       # print(stations)
+       # print(type(r))
         s = json.dumps(r, sort_keys= True, indent = 2)
         print(type(s))
         repo.dropCollection("hubway")
