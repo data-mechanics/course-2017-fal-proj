@@ -34,7 +34,7 @@ class getCarCitations(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client.repo
 
-        repo.authenticate('erj826', 'erj826')          
+        repo.authenticate('aquan_erj826', 'aquan_erj826')          
 
         url = 'https://data.somervillema.gov/resource/jpgd-3f23.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")

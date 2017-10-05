@@ -25,7 +25,7 @@ import datetime
 import uuid
 
 class vehicleAndHousingCitations(dml.Algorithm):
-    contributor = 'erj826'
+    contributor = 'aquan_erj826'
     reads = ['aquan_erj826.carCitations', 'aquan_erj826.housingViolations']
     writes = ['aquan_erj826.vehicleAndHousingCitations']
 
@@ -37,7 +37,7 @@ class vehicleAndHousingCitations(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('erj826', 'erj826')
+        repo.authenticate('aquan_erj826', 'aquan_erj826')
 
         vehicles = repo.aquan_erj826.carCitations
         houses = repo.aquan_erj826.housingViolations

@@ -10,7 +10,7 @@ Project 1
 
 3 October 2017
 
-911Dispatch.py
+get911Dispatch.py
 """
 
 import urllib.request
@@ -34,7 +34,7 @@ class get911Dispatch(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client.repo
 
-        repo.authenticate('erj826', 'erj826')          
+        repo.authenticate('aquan_erj826', 'aquan_erj826')          
 
         url = 'https://data.boston.gov/export/245/954/2459542e-7026-48e2-9128-ca29dd3bebf8.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")

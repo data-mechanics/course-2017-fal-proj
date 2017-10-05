@@ -34,7 +34,7 @@ class getFirearms(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client.repo
 
-        repo.authenticate('erj826', 'erj826')          
+        repo.authenticate('aquan_erj826', 'aquan_erj826')          
 
         url = 'https://data.cityofboston.gov/resource/ffz3-2uqv.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")

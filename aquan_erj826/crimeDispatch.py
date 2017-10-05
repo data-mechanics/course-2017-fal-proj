@@ -1,11 +1,15 @@
 """
 Eric Jacobson
 erj826@bu.edu
+
 Andrew Quan
 aquan@bu.edu
+
 CS591
 Project 1
+
 3 October 2017
+
 crimeDispatch.py
 Transformation:
 Selection and projection on repo.aquan_erj826.Counts911, 
@@ -19,10 +23,9 @@ import dml
 import prov.model
 import datetime
 import uuid
-#from bson.objectid import ObjectId
 
 class crimeDispatch(dml.Algorithm):
-    contributor = 'erj826'
+    contributor = 'aquan_erj826'
     reads = ['aquan_erj826.Counts911', 'aquan_erj826.crimes']
     writes = ['aquan_erj826.crimeDispatchResult']
 
@@ -35,7 +38,7 @@ class crimeDispatch(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('erj826', 'erj826')
+        repo.authenticate('aquan_erj826', 'aquan_erj826')
         
 
         dispatch = repo.aquan_erj826.Counts911
@@ -49,15 +52,18 @@ class crimeDispatch(dml.Algorithm):
             date = date[0] + '-' + date[1] + '-' + date[2]
             total = call['Total']
             if date[-4::] == '2014':
-                repo['aquan_erj826.crimeDispatch'].insert([{date:total}], check_keys=True)
+                repo['aquan_erj826.crimeDispatch'].insert([{date:total}], check_keys=False)
 
         crimeDispatch = repo.aquan_erj826.crimeDispatch
 
         dates = []
         for report in crimeReports.find():
             #Adding an arbitrary year to the date
-            date = report['OCCURRED_ON_DATE'].split('T')[0][5:] + '-2014'
-            dates.append(date)
+            try:
+                date = report['OCCURRED_ON_DATE'].split('T')[0][5:] + '-2014'
+                dates.append(date)
+            except:
+                continue
 
         for point in crimeDispatch.find():
             date = list(point.keys())[1]

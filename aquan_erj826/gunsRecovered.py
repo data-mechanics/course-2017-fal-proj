@@ -24,9 +24,9 @@ import datetime
 import uuid
 
 class gunsRecovered(dml.Algorithm):
-    contributor = 'erj826'
-    reads = ['repo.aquan_erj826.firearms']
-    writes = ['aquan_erj826.gunsRecoveredNums']
+    contributor = 'aquan_erj826'
+    reads = ['aquan_erj826.firearms']
+    writes = ['aquan_erj826.gunsRecovered']
 
     @staticmethod
     def execute(trial = False):
@@ -36,7 +36,7 @@ class gunsRecovered(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('erj826', 'erj826')
+        repo.authenticate('aquan_erj826', 'aquan_erj826')
 
         collection = repo.aquan_erj826.firearms
 

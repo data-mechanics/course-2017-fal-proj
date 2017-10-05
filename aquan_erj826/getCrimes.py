@@ -35,7 +35,7 @@ class getCrimes(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client.repo
 
-        repo.authenticate('erj826', 'erj826')          
+        repo.authenticate('aquan_erj826', 'aquan_erj826')          
 
         url = 'https://data.boston.gov/datastore/odata3.0/12cb3883-56f5-47de-afa5-3b1cf61b257b?$top=1000&$format=json'
         response = requests.get(url).text
