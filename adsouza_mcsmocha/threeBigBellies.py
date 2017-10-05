@@ -10,7 +10,7 @@ from collections import defaultdict
 class threeBigBellies(dml.Algorithm):
     contributor = 'adsouza_mcsmocha'
     reads = ['adsouza_mcsmocha.ThreeReq', 'adsouza_mcsmocha.BigBelly']
-    writes = ['adsouza_mcsmocha.ThreeBigBellies']
+    writes = ['adsouza_mcsmocha.threeBigBellies']
 
     @staticmethod
     def execute(trial=False):
@@ -29,6 +29,8 @@ class threeBigBellies(dml.Algorithm):
 
         # Select entries in 311Requests that pertain to Trash violations using list comprehension
         select311Trash = [e for e in threeReq if 'Trash' in e['TYPE']]
+        # print('select311Trash', type(select311Trash))
+        # print (select311Trash[0])
 
         # Selectively take out entries we don't need for comparison
         def select311TrashDel(dictList):
@@ -39,10 +41,12 @@ class threeBigBellies(dml.Algorithm):
                 new_dict['Latitude'] = each_dict['Latitude']
                 new_dict['Longitude'] = each_dict['Longitude']
                 newDictList.append(new_dict)
-
+            # print('select311TrashDel', type(newDictList))
             return newDictList
 
         select311TrashReduced = select311TrashDel(select311Trash)
+        # print('select311TrashReduced', type(select311TrashReduced))
+        # print (select311TrashReduced[0])
 
         # Get latitudes and longitudes for 311Requests that pertain to trash and rounds them up for comparison
         select311Lats = []
@@ -60,6 +64,8 @@ class threeBigBellies(dml.Algorithm):
                 and we want to compare them using geopy later
             '''
             coordinates = list(zip(select311Lats, select311Longs))
+            # print('coordinates', type(coordinates))
+            # print(coordinates[0])
             i = 0
 
             # Appends them to corresponding dict
@@ -68,12 +74,16 @@ class threeBigBellies(dml.Algorithm):
                 new_dict = {}
                 new_dict['neighborhood'] = each_dict['neighborhood']
                 new_dict['Coordinates'] = coordinates[i]
+                newDictList.append(new_dict)
                 i += 1
+
             return newDictList
 
-        select311TrashNew = zip311coords(select311TrashReduced)
+            # print('zip311newDictList', type(newDictList))
 
-        print (select311TrashNew)
+        select311TrashNew = zip311coords(select311TrashReduced)
+        # print('select311TrashNew', type(select311TrashNew))
+        # print (select311TrashNew[0])
 
         def selectBigBellyDel(dictList):
             newDictList = []
@@ -85,19 +95,22 @@ class threeBigBellies(dml.Algorithm):
                 newDictList.append(new_dict)
             return newDictList
 
+            # print('selectBBnewDictList', type(newDictList))
+
         selectBigBellyReduced = selectBigBellyDel(bigBelly)
+        # print('selectBigBellyReduced', type(selectBigBellyReduced))
+        # print (selectBigBellyReduced[0]) 
 
         def aggregateScore(dictList1, dictList2):
             neighborhood_scores_dataset = []
             neighborhoods_list = []
-            print (neighborhood_scores_dataset)
-
+            
             # Get all neighborhoods into a list
             for each_dict in dictList1:
                 if each_dict['neighborhood'] not in neighborhoods_list:
                     neighborhoods_list.append(each_dict['neighborhood'])
 
-            print (neighborhoods_list)
+            # print ('neighborhoods', neighborhoods_list[0])
 
             # Create template for neighborhood_scores
             for item in neighborhoods_list:
@@ -105,7 +118,7 @@ class threeBigBellies(dml.Algorithm):
                 new_dict[item] = 0
                 neighborhood_scores_dataset.append(new_dict)
 
-            print (neighborhood_scores_dataset)
+            # print ('neighborhoods_scores', neighborhood_scores_dataset[0])
 
             # Aggregates neighborhoods with 311's coordinates and BigBelly's locations
             for each_dict2 in dictList2:
@@ -114,14 +127,13 @@ class threeBigBellies(dml.Algorithm):
                     if distance <= 0.5:
                         neighborhood_scores_dataset.append({each_dict1['neighborhood'], 1})
 
-            # print (neighborhood_scores_dataset[0])
-                        # for d in neighborhood_scores_dataset:
-                        #   d.update((k, v+1) for k, v in d.items() if k == each_dict1['neighborhood'])
-
+            # print ('neighborhoods_scores2', neighborhood_scores_dataset[0])
+            
             return neighborhood_scores_dataset
 
         final_result = aggregateScore(select311TrashNew,selectBigBellyReduced)
-        repo['adsouza_mcsmocha.ThreeBigBellies'].insert_many(final_result)
+
+        repo['adsouza_mcsmocha.threeBigBellies'].insert_many(final_result)
         repo.logout()
         endTime = datetime.datetime.now()
         return {'start': startTime, 'end': endTime}
