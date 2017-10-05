@@ -43,4 +43,7 @@ We used the uszipcode library, which acts as a zipcode search engine within Pyth
 When the API for the GeoData service is called, the url returns a large quantity of information. Because of this and the amount of calls we have to make to get all the necessary data, the file takes much longer to run. 
 
 ### Issues Running Geodata.py
-Despite successfully running Geodata.py for several days, we encountered issues querying their database shortly before submission. After running tests with both our current file and several backups from several machines, we concluded the server must be having issues temporarily on their end, which will hopefully be resolved soon. The API calls are correct and have been working for several days up until this point. 
+
+We have run into issues running Geodata.py in which API calls have been unresponsive. This is due to issues with the server hosting the database. Please ensure the database and API service is up and running before running this file. A test link can be found below:
+
+https://azure.geodataservice.net/GeoDataService.svc/GetUSDemographics?longitude=-71.0661193&latitude=42.3548561&$format=json
