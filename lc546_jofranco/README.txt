@@ -28,4 +28,5 @@ Algorithms for three non-trivial transformations
 
 1. Selection: This algorithm filters out all the redline T stops that are not in Boston.
 2. Intersection: This algorithm find the restaurants that are in a street that had crimes. 
-3. 
+3. Aggregation: This algorithm find the mean of the income of the population in a neighborhood.
+
