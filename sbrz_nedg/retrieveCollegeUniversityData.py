@@ -60,7 +60,7 @@ class retrieveCollegeUniversityData(dml.Algorithm):
         resource = doc.entity('bdp:cbf14bb032ef4bd38e20429f71acb61a_2', {'prov:label': 'Colleges and Universities', prov.model.PROV_TYPE: 'ont:DataResource', 'ont:Extension': 'geojson'})
         get_college_data = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
-        doc.wasAssociatedWith(this_script)
+        doc.wasAssociatedWith(get_college_data, this_script)
         doc.usage(resource, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval'})
 
         college_db = doc.entity('dat:sbrz_nedg#college_university', {prov.model.PROV_LABEL: 'college_university', prov.model.PROV_TYPE: 'ont:DataSet'})

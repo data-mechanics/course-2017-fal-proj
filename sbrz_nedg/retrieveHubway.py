@@ -62,7 +62,7 @@ class retrieveHubway(dml.Algorithm):
         resource = doc.entity('bdp:ee7474e2a0aa45cbbdfe0b747a5eb032_0', {'prov:label': 'Property Assessment FY2017', prov.model.PROV_TYPE: 'ont:DataResource', 'ont:Extension': 'geojson'})
         get_hubway = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
-        doc.wasAssociatedWith(this_script)
+        doc.wasAssociatedWith(get_hubway, this_script)
         doc.usage(resource, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval'})
 
         property_db = doc.entity('dat:sbrz_nedg#hubway', {prov.model.PROV_LABEL: 'hubway', prov.model.PROV_TYPE: 'ont:DataSet'})

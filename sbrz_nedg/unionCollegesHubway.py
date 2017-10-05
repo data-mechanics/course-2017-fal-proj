@@ -76,7 +76,7 @@ class unionCollegesHubway(dml.Algorithm):
                                         {'prov:label': 'union_colleges_hubway', prov.model.PROV_TYPE: 'ont:DataSet'})
         union_addresses_colleges = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
-        doc.wasAssociatedWith(this_script)
+        doc.wasAssociatedWith(union_addresses_colleges, this_script)
         doc.usage(college_coords_db, hubway_coords_db, union_db, startTime, None,  {prov.model.PROV_TYPE:'ont:Retrieval'})
 
         doc.wasAttributedTo(this_script, this_script, this_script)

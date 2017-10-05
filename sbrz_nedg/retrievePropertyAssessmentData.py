@@ -64,7 +64,7 @@ class retrievePropertyAssessmentData(dml.Algorithm):
         resource = doc.entity('bdp:062fc6fa-b5ff-4270-86cf-202225e40858', {'prov:label': 'Property Assessment FY2017', prov.model.PROV_TYPE: 'ont:DataResource', 'ont:Extension': 'json'})
         get_property_data = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
-        doc.wasAssociatedWith(this_script)
+        doc.wasAssociatedWith(get_property_data, this_script)
         doc.usage(resource, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval'})
 
         property_db = doc.entity('dat:sbrz_nedg#property_assessment', {prov.model.PROV_LABEL: 'property_assessment', prov.model.PROV_TYPE: 'ont:DataSet'})
