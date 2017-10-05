@@ -28,8 +28,6 @@ https://data.boston.gov/dataset/crime-incident-reports-august-2015-to-date-sourc
 ### auth.json
 Please place the auth.json file in your folder
 Use yelp api:https://www.yelp.com/developers/documentation/v3/
-
-
 {
 	"yelp": {
 			"CLIENT_ID" : "xxxxxxxxxxxxxxxxxxxxxx",
