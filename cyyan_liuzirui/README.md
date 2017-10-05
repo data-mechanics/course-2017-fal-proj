@@ -14,8 +14,15 @@ The way we want to implement these data sets is to evaluate the distance between
 
 To reach our goal, we implement three transformations:
 1. We merge Boston Police District Station and Hospital locations to calculate the number of police stations and hospitals in a certain zipcode
+   -We first use projection to get the zipcode of police stations and hospitals, repectively
+   -Then, we use aggregation to calculate the amount of hospitals and police stations in each zipcode
 2. We merge Boston Public Schools and Community Gardens to calculate the distance between each school and each garden
-3. We merge Boston Public Schools and Big Belly Locations to calculate the number of big belly within 2 miles from each school
+   -First, we use projection to get the coordinates of schools and gardens, respectively
+   -Then, we use two "for loops" to calculate the distance between schools and gardens
+3. We merge Boston Public Schools and Big Belly Locations to list all big belly within 3 miles from each school
+   -First, we use projection to calculate get the coordinates of schools and big belly, respectively
+   -Then, we use two "for loops" to calculate the distance between schools and big belly
+   -Finally, we list all the bigbelly within 3 miles from each school. The reason why we choose 3 miles is that if the big belly(receptacle locations) are too far away from schools, it will not be very convenient for students and school teachers to drop litters.
 
 
 
