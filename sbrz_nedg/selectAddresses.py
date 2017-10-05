@@ -66,7 +66,7 @@ class selectAddresses(dml.Algorithm):
         select_address_data = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
         doc.wasAssociatedWith(this_script)
-        doc.usage(selectAddresses, address_db, startTime)
+        doc.usage(address_db, startTime)
 
         doc.wasAttributedTo(this_script)
         doc.wasGeneratedBy(select_address_data)

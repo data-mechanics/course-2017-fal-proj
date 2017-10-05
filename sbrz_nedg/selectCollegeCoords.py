@@ -62,7 +62,7 @@ class selectCollegeCoords(dml.Algorithm):
         select_college_coordinates = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
         doc.wasAssociatedWith(this_script)
-        doc.usage(selectCollegeCoords, college_coord_db, startTime)
+        doc.usage(college_coord_db, startTime)
 
         doc.wasAttributedTo(this_script)
         doc.wasGeneratedBy(select_college_coordinates)
