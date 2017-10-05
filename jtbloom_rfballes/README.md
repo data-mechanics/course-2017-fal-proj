@@ -23,10 +23,10 @@ Jake Bloomfeld (jtbloom@bu.edu) and Ricardo Ballesteros (rfballes@bu.edu)
 #### JSON URL: https://boston.opendatasoft.com/explore/dataset/boston-neighborhoods/download/?format=geojson&timezone=America/New_York
 * Important info: geo point, geo shape, acres, square miles, neighborhood #
 
-### Dataset #5: Trees (Analyze Boston)
-#### Website URL: http://bostonopendata-boston.opendata.arcgis.com/datasets/ce863d38db284efe83555caf8a832e2a_1?uiTab=table
-#### JSON URL: http://bostonopendata-boston.opendata.arcgis.com/datasets/ce863d38db284efe83555caf8a832e2a_1.geojson
-* Important info: type, object id
+### Dataset #5: Hubway Trip History (Hubway)
+#### Website URL: https://www.thehubway.com/system-data
+#### JSON URL: http://datamechanics.io/data/jt_rf_pr1/hubway_trip_history.json
+* Important info: start station name, start station coordinates, end station name, end station coordinates, start time, stop time
 
 ### Narrative
 For Project  #1, we picked data sets that revolved around a common theme: sustainability and transportation in Boston. Although at this state we don’t know what specific problem we want to solve, we went ahead to search for data sets that could potentially lead us in the right direction. The data sets we chose are:
@@ -35,9 +35,9 @@ For Project  #1, we picked data sets that revolved around a common theme: sustai
 * Hubway Station Locations
 * Existing Bike Network
 * Boston Neighborhoods
-* Trees
+* Hubway Trip History
 
-The Electrical Vehicle Charging Stations dataset gives us the names of the stations along with their addresses and geographical coordinate points. The Hubway Station Locations dataset is pretty similar, as it also gives us the names of the stations, their addresses, geographical coordinate points, along with the number of bike docks. The Bike Network dataset gives us a visual representation of bike paths in Boston. Likewise, the Boston Neighborhoods dataset gives usa visual representation of the different neighborhoods within Boston, which could be used to filter data based on neighborhood. Lastly, the Trees dataset includes all the trees within Boston, which could be used as a metric to determine the "greenness" of a certain area. We believeve that with the right tools, algorithms, and creativity, these datasets can be combined to create a very interesting and informative project.
+The Electrical Vehicle Charging Stations dataset gives us the names of the stations along with their addresses and geographical coordinate points. The Hubway Station Locations dataset is pretty similar, as it also gives us the names of the stations, their addresses, geographical coordinate points, along with the number of bike docks. The Bike Network dataset gives us a visual representation of bike paths in Boston. Likewise, the Boston Neighborhoods dataset gives usa visual representation of the different neighborhoods within Boston, which could be used to filter data based on neighborhood. Lastly, the Hubway Trip History dataset includes information about trip starting and ending locations, when the trip occured, and duration. We believe that with the right tools, algorithms, and creativity, these datasets can be combined to create a very interesting and informative project.
 
 
  
