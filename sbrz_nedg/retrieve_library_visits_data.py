@@ -6,34 +6,39 @@ import datetime
 import uuid
 
 
-
 class retrieve_library_visits_data(dml.Algorithm):
     contributor = 'sbrz_nedg'
     reads = []
     writes = ['sbrz_nedg.libraryData']
+
     @staticmethod
-    def execute(trial = False):
+    def execute(trial=False):
         '''Retrieve library_visits data set.'''
         startTime = datetime.datetime.now()
 
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        #library_visits_url = urllib.request.Request(
-            #"https://data.boston.gov/api/action/datastore_search?resource_id=0d81febc-c7f8-4de3-b8f4-a18733b1c11b")
+        # library_visits_url = urllib.request.Request(
+        # "https://data.boston.gov/api/action/datastore_search?resource_id=0d81febc-c7f8-4de3-b8f4-a18733b1c11b")
         repo.authenticate('sbrz_nedg', 'sbrz_nedg')
-        #"https://data.boston.gov/api/action/datastore_search?resource_id=0d81febc-c7f8-4de3-b8f4-a18733b1c11b"
+        # "https://data.boston.gov/api/action/datastore_search?resource_id=0d81febc-c7f8-4de3-b8f4-a18733b1c11b"
         # library visit Data Set.
         library_visits_json_one = json_util.loads(urllib.request.urlopen(urllib.request.Request(
-            "https://data.boston.gov/api/action/datastore_search?resource_id=0d81febc-c7f8-4de3-b8f4-a18733b1c11b")).read().decode("utf-8"))
+            "https://data.boston.gov/api/action/datastore_search?resource_id=0d81febc-c7f8-4de3-b8f4-a18733b1c11b")).read().decode(
+            "utf-8"))
         library_visits_json_two = json_util.loads(urllib.request.urlopen(urllib.request.Request(
-            "https://data.boston.gov/api/action/datastore_search?offset=100&resource_id=0d81febc-c7f8-4de3-b8f4-a18733b1c11b")).read().decode("utf-8"))
+            "https://data.boston.gov/api/action/datastore_search?offset=100&resource_id=0d81febc-c7f8-4de3-b8f4-a18733b1c11b")).read().decode(
+            "utf-8"))
         library_visits_json_three = json_util.loads(urllib.request.urlopen(urllib.request.Request(
-            "https://data.boston.gov/api/action/datastore_search?offset=200&resource_id=0d81febc-c7f8-4de3-b8f4-a18733b1c11b")).read().decode("utf-8"))
+            "https://data.boston.gov/api/action/datastore_search?offset=200&resource_id=0d81febc-c7f8-4de3-b8f4-a18733b1c11b")).read().decode(
+            "utf-8"))
         library_visits_json_four = json_util.loads(urllib.request.urlopen(urllib.request.Request(
-            "https://data.boston.gov/api/action/datastore_search?offset=300&resource_id=0d81febc-c7f8-4de3-b8f4-a18733b1c11b")).read().decode("utf-8"))
+            "https://data.boston.gov/api/action/datastore_search?offset=300&resource_id=0d81febc-c7f8-4de3-b8f4-a18733b1c11b")).read().decode(
+            "utf-8"))
         library_visits_json_five = json_util.loads(urllib.request.urlopen(urllib.request.Request(
-            "https://data.boston.gov/api/action/datastore_search?offset=400&resource_id=0d81febc-c7f8-4de3-b8f4-a18733b1c11b")).read().decode("utf-8"))
+            "https://data.boston.gov/api/action/datastore_search?offset=400&resource_id=0d81febc-c7f8-4de3-b8f4-a18733b1c11b")).read().decode(
+            "utf-8"))
         repo.dropCollection("libraryData")
         repo.createCollection("libraryData")
 
@@ -51,7 +56,7 @@ class retrieve_library_visits_data(dml.Algorithm):
 
         endTime = datetime.datetime.now()
 
-        return {"start":startTime, "end":endTime}
+        return {"start": startTime, "end": endTime}
 
     @staticmethod
     def provenance(doc=prov.model.ProvDocument(), startTime=None, endTime=None):
@@ -71,20 +76,22 @@ class retrieve_library_visits_data(dml.Algorithm):
                           'http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('bdp', 'https://data.boston.gov/api/action/')
 
-
-        this_script = doc.agent('alg:sbrz_nedg#retrieve_library_visits_data', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
-        resource = doc.entity('bdp:0d81febc-c7f8-4de3-b8f4-a18733b1c11b', {'prov:label': 'Library Visits 2014-2016', prov.model.PROV_TYPE: 'ont:DataResource', 'ont:Extension': 'json'})
+        this_script = doc.agent('alg:sbrz_nedg#retrieve_library_visits_data',
+                                {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
+        resource = doc.entity('bdp:0d81febc-c7f8-4de3-b8f4-a18733b1c11b',
+                              {'prov:label': 'Library Visits 2014-2016', prov.model.PROV_TYPE: 'ont:DataResource',
+                               'ont:Extension': 'json'})
         get_library_data = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
         doc.wasAssociatedWith(this_script)
 
-        library_db = doc.entity('dat:sbrz_nedg#get_library_data', {prov.model.PROV_LABEL: 'library_visits', prov.model.PROV_TYPE: 'ont:DataSet'})
+        library_db = doc.entity('dat:sbrz_nedg#get_library_data',
+                                {prov.model.PROV_LABEL: 'library_visits', prov.model.PROV_TYPE: 'ont:DataSet'})
         doc.usage(library_db, resource, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval'})
 
         doc.wasAttributedTo(this_script, this_script)
         doc.wasGeneratedBy(get_library_data)
         doc.wasDerivedFrom(library_db, resource)
-
 
         repo.logout()
 

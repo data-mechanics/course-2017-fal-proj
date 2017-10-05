@@ -12,6 +12,10 @@ Transformations:
 
 3.) We used the same college/university data set from (2) only filtered the latitude and longitude and name. Next we took the Hubway staton data set and filtered out the latitude and longitude of each. Measuring the distance between each college and each Hubway station, we compiled a count of Hubway stations within each college and stored it in the college database as "hubway_station_count".
 
+Authentication for Weather Underground:
+
+To obtain a key, simply visit https://wunderground.com and create a free account to obtain it. Place your newly obtained key in the key variable at the top of retrieve_library_visits_data.py
+
 
 
 
