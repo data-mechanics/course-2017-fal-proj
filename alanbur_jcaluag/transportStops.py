@@ -5,7 +5,12 @@ import prov.model
 import datetime
 import uuid
 
+
+
 class transportStops(dml.Algorithm):
+    '''
+    read hubwayFiltered and mbtaProjected and apply union on the two datasets
+    '''
     contributor = 'alanbur_jcaluag'
     reads = ['alanbur_jcaluag.hubwayFiltered', 'alanbur_jcaluag.mbtaProjected']
     writes = ['alanbur_jcaluag.transportStops']
@@ -23,8 +28,6 @@ class transportStops(dml.Algorithm):
         
         mbta = [x for x in mbtaCollection]
         hubway = [y for y in hubwayCollection]
-
-
         DSet = hubway + mbta
 
         repo.dropCollection("transportStops")
@@ -37,7 +40,7 @@ class transportStops(dml.Algorithm):
         endTime = datetime.datetime.now()
 
         return {"start":startTime, "end":endTime}
-        
+
     @staticmethod
     def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
         '''

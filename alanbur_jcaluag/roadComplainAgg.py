@@ -6,6 +6,10 @@ import datetime
 import uuid
 
 class roadComplainAgg(dml.Algorithm):
+    '''
+    Filter the road complain data to get only relevent data.
+    Next aggregate data by date and get a list of all complaints on that day through a projection
+    '''
     contributor = 'alanbur_jcaluag'
     reads = ['alanbur_jcaluag.roadComplaints']
     writes = ['alanbur_jcaluag.roadComplaintsByDate']

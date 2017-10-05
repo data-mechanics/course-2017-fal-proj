@@ -6,6 +6,9 @@ import datetime
 import uuid
 
 class projectData(dml.Algorithm):
+    '''
+    Read trafficSignal, mbta, and hubway, project the datasets to remove irrelevant data, and reorder the keys
+    '''
     contributor = 'alanbur_jcaluag'
     reads = ['alanbur_jcaluag.trafficSignal', 'alanbur_jcaluag.mbta', 'alanbur_jcaluag.hubway']
 

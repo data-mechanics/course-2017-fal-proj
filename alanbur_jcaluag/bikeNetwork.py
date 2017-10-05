@@ -6,6 +6,10 @@ import datetime
 import uuid
 
 class bikeNetwork(dml.Algorithm):
+    '''
+    Read bikeNetwork and project useful data
+
+    '''
     contributor = 'alanbur_jcaluag'
     reads = []
     writes = ['alanbur_jcaluag.bikeNetwork']

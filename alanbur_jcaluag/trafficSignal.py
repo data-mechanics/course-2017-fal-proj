@@ -6,6 +6,9 @@ import datetime
 import uuid
 
 class trafficSignal(dml.Algorithm):
+    '''
+    extract traffic signal data from url
+    '''
     contributor = 'alanbur_jcaluag'
     reads = []
     writes = ['alanbur_jcaluag.trafficSignal']
