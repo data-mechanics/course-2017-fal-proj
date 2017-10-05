@@ -6,7 +6,7 @@
 
 Transformations:
 
-1.) We took a collection of daily library visitor counts and combined them to form monthly averages. Then extracted average cm of rain per month from the Weather Underground data set. We then combined the two to form tuples of the following format to insert into the database: (Month, Avg Rainfall(cm), Avg Users). Note: rainfall data was from 2016 and library data ranged from 2014-2016
+1.) We took a collection of daily library visitor counts and combined them to form monthly averages. Then extracted average cm of rain per month from the Weather Underground data set. We then combined the two to form tuples of the following format to insert into the database: (Month, Avg Rainfall(cm), Avg Users). Note: rainfall data was from 2016 and library data ranged from 2014-2016 When running this transformation, note that there is an added wait time added in order to not exceed what is allowed by the Weather Underground API.
 
 2.) We did a select for college names, addresses, and zip codes from the college/universities data set. Next we selected addresses, zip codes, and region (ex. East Boston) from the property assessment data set. We then aggregated properties and colleges together based on their zip codes and added a count, num_schools, to the filtered property data set.
 
@@ -15,6 +15,8 @@ Transformations:
 Authentication for Weather Underground:
 
 To obtain a key, simply visit https://wunderground.com and create a free account to obtain it. Place your newly obtained key in the key variable at the top of retrieve_library_visits_data.py
+
+
 
 
 
