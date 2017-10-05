@@ -21,7 +21,7 @@ class retrieve_hubway(dml.Algorithm):
     writes = ['bmroach.hubway']
 
     @staticmethod
-    def execute(trial = False):
+    def execute(trial = False, log=False):
         '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
         startTime = datetime.datetime.now()
 
@@ -121,8 +121,8 @@ class retrieve_hubway(dml.Algorithm):
                 #add line to db collection               
                 repo["bmroach.hubway"].insert_one( {str(tripCount) : lineDict} )    
                 tripCount += 1
-          
-            print(timeFrame, "dataset imported to db")
+            if log:
+                print(timeFrame, "dataset imported to db")
 
         repo['bmroach.hubway'].metadata({'complete':True})  
         repo.logout()
@@ -148,23 +148,25 @@ class retrieve_hubway(dml.Algorithm):
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
         this_script = doc.agent('alg:alice_bob#example', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        
         resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        
         get_found = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        get_lost = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        
+        
         doc.wasAssociatedWith(get_found, this_script)
-        doc.wasAssociatedWith(get_lost, this_script)
+        
+        
         doc.usage(get_found, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
                   'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'
                   }
                   )
-        doc.usage(get_lost, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Animal+Lost&$select=type,latitude,longitude,OPEN_DT'
-                  }
-                  )
+        
+
 
         lost = doc.entity('dat:alice_bob#lost', {prov.model.PROV_LABEL:'Animals Lost', prov.model.PROV_TYPE:'ont:DataSet'})
+        
         doc.wasAttributedTo(lost, this_script)
         doc.wasGeneratedBy(lost, get_lost, endTime)
         doc.wasDerivedFrom(lost, resource, get_lost, get_lost, get_lost)
