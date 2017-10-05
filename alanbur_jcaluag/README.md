@@ -1,4 +1,4 @@
-# CS 591
+﻿# CS 591
 # Data Mechanics
 # Andrei Lapets
 
@@ -34,6 +34,10 @@ transportStops: merge MBTA and Hubway datasets
 bikeNetwork: Project the useful bikeNetwork data while reading it in
 
 mbta: gets and merges data on all bus routes
+
+
+#Resulting dataSets
+
 
 alanbur_jcaluag#roadComplaintsByDay
 alanbur_jcaluag#transportStops
