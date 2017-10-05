@@ -7,7 +7,7 @@ import uuid
 class crimerate(dml.Algorithm):
     contributor = 'lc546_jofranco'
     reads = []
-    writes = ['lc546_jofranco.crime_rate']
+    writes = ['lc546_jofranco.crimerate']
     @staticmethod
     def execute(trial = False):
         startTime = datetime.datetime.now()
@@ -21,12 +21,14 @@ class crimerate(dml.Algorithm):
         s = json.dumps(r, sort_keys= True, indent = 2)
         repo.dropCollection("crimerate")
         repo.createCollection("crimerate")
+        
         repo["lc546_jofranco.crimerate"].insert_many(r)
         repo["lc546_jofranco.crimerate"].metadata({'complete':True})
         print(repo["lc546_jofranco.crimerate"].metadata())
         repo.logout()
         endTime = datetime.datetime.now()
         return {"start":startTime, "end":endTime}
+
     @staticmethod
     def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
         client = dml.pymongo.MongoClient()

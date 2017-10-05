@@ -28,28 +28,20 @@ class income_aggregate(dml.Algorithm):
         
         zipcode = []
         for zips in income.find():
-            zipcode.append((zips['postal']: zips['regular']))
+            zipcode.append({zips['postal']: zips['total_earnings']})
         print(zipcode)
         #Take the zipcodes and income out
-
-        
- 		def aggregate(R, f):
-    		keys = {r[0] for r in R}
-    		return [(key, f([v for (k,v) in R if k == key])) for key in keys]
+    def aggregate(R, f):
+        keys = {r[0] for r in R}
+        return [(key, f([v for (k,v) in R if k == key])) for key in keys]
     	
         #aggregate it. Find the medium of income of each zipcode
-        agg_income = aggregate(zipcode, math.medium)
-        
-
+        agg_income = aggregate(zipcode, numpy.mean)
         repo.dropCollection("income_aggregate")
         repo.createCollection("income_aggregate")
         repo['lc546_jofranco.income_aggregate'].insert_many(insert)
-
-
-
         repo.logout()
         endTime = datetime.datetime.now()
-
         return {"start": startTime, "end": endTime}
 
 

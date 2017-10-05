@@ -9,7 +9,7 @@ import uuid
 class permit(dml.Algorithm):
     contributor = 'lc546_jofranco'
     reads = []
-    writes = ['lc546_jofranco.restaurant_permit']
+    writes = ['lc546_jofranco.permit']
     @staticmethod
     def execute(trial = False):
         startTime = datetime.datetime.now()

@@ -25,12 +25,13 @@ class redline_Selection(dml.Algorithm):
         bos_array = []
         for stop in bos.find():
             for prediction in stop['Predictions']:
-                if prediction['Stop'] == 'Charles/MGH' or 'Park Street' or 'Downtown Crossing' or 'South Station' or 'Broadway' or'Andrew':
+                if prediction['Stop'] == 'Charles/MGH' or prediction['Stop'] == 'Park Street' or prediction['Stop'] == 'Downtown Crossing' or prediction['Stop'] == 'South Station' or prediction['Stop'] == 'Broadway' or prediction['Stop'] == 'Andrew':
+                # or 'Park Street' or 'Downtown Crossing' or 'South Station' or 'Broadway' or'Andrew':
                     bos_array.append({"Stop":prediction['Stop'], 'info':{"length(seconds)":prediction['Seconds']}})
            # if stop['Predictions'] == 'Charles/MGH' or 'Park Street' or 'Downtown Crossing' or 'South Station' or 'Broadway' or'Andrew':
             #    bos_array.append({"Stop":stop['Stop'], 'info':{"length(seconds)":stop['Seconds']}})
         # Filter: Check if the stops are in Boston, if yes, take in the array
-
+        print(bos_array)
         repo.dropPermanent("realtime_MBTAbos")
         repo.createPermanent("realtime_MBTAbos")
         repo['lc546_jofranco.realtime_MBTAbos'].insert_many(bos_array)

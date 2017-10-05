@@ -7,7 +7,7 @@ import uuid
 
 class CrimeRestaurants(dml.Algorithm):
 	contributor = 'lc546_jofranco'
-	reads = ['lc546_jofranco.crime_rate', 'lc546_jofranco.restaurant_permit']
+	reads = ['lc546_jofranco.crimerate', 'lc546_jofranco.permit']
 	writes = ['lc546_jofranco.CrimeRestaurants']
 	@staticmethod
 	def execute(trial = False):
@@ -15,38 +15,58 @@ class CrimeRestaurants(dml.Algorithm):
 		client = dml.pymongo.MongoClient()
 		repo = client.repo
 		repo.authenticate("lc546_jofranco", "lc546_jofranco")
-		crimerateData = repo.lc546_jofranco.crime_rate
-		print(crimerateData)
-		foodpermitData = repo.lc546_jofranco.restaurant_permit
+		crimerateData = repo.lc546_jofranco.crimerate
+		#print(crimerateData)
+		foodpermitData = repo.lc546_jofranco.permit
 		streetofcrime = crimerateData.find()
+		#rint(streetofcrime)
 		streetsthathadcrimes = []
 		for i in streetofcrime:
-			crimestreet = [str.lower(i['streetname'])]
-			streetsthathadcrimes.append(street)
+			crimestreet = str.lower(i['streetname'])
+			crimestreet2 = crimestreet.replace(" st", "").replace(" av", "").replace(" wy","").replace(" rd", "").replace( " pl", "").replace(" ln", "").replace(" dr", "")
+			#print(crimestreet2)
+			streetsthathadcrimes.append([crimestreet2])
 
 		permits = foodpermitData.find()
+		#print()
 		foodpermitList = []
 
 		'''Clean the data up by removing white spaces and removing 
 		   address numbers. We only want the streets. 
 		'''
+
 		for i in permits:
 			foodstreet = str.lower(i['address'])
 			foodstreet1 = foodstreet.replace(" ","")
 			foodstreet2 = ''.join([j for j in foodstreet1 if not j.isdigit()])
 			foodstreet3 = [foodstreet2]
 			foodpermitList.append(foodstreet3)
+		print("++++++++++++++")
+		print(foodpermitList)
 
 		'''find the intersection of the two databases. We basically 
 			want to find the restaurants that are in a street that have had crimes. 
 			The hope is to dedut the idea that the more crimes are in the street the 
 			restaurant is located in, the less desirable the place is to people.
 		'''
-		intersection = [st for st in foodpermitList if st in streetsthathadcrimes]
+		intersection = [st for st in streetsthathadcrimes if st in foodpermitList]
+		print("+++++++++++")
+		print(intersection)
 
+		finalList =[]
+		for i in intersection:
+			count = intersection.count(i)
+			#sts = i.replace("[", "").replace("]","")
+			sts = "".join(i)
+			finalList.append({"Street": sts, "Crimes":count})
+
+		print("______--------_________")
+		print(finalList)
+
+		''' now do an aggregation '''
 		repo.dropCollection("CrimeRestaurants")
 		repo.createCollection("CrimeRestaurants")
-		repo['lc546_jofranco.CrimeRestaurants'].insert_many(intersection)
+		repo['lc546_jofranco.CrimeRestaurants'].insert_many(finalList)
 		repo.logout()
 		endTime = datetime.datetime.now()
 		return {"start": startTime, "end": endTime}
