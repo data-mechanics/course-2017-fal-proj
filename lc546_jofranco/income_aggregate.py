@@ -4,6 +4,7 @@ import dml
 import prov.model
 import datetime
 import uuid
+import math
 import numpy
 
 
@@ -27,19 +28,18 @@ class income_aggregate(dml.Algorithm):
         
         zipcode = []
         for zips in income.find():
-            zipcode.append((zips['postal'], 1))
+            zipcode.append((zips['postal']: zips['regular']))
         print(zipcode)
-        #collect all the zipcodes
+        #Take the zipcodes and income out
 
-
-        keys = {r[0] for r in zipcode}
-        #print(keys)
-        zipcode = [(key, numpy.mean([v for (k,v) in zipcode if k == key])) for key in keys]
-
-        insert = []
-        for x in zipcode:
-            insert.append({"zip":x[0],'info': {"numberOfSchoolAndHospital":x[1]}})
-            
+        
+ 		def aggregate(R, f):
+    		keys = {r[0] for r in R}
+    		return [(key, f([v for (k,v) in R if k == key])) for key in keys]
+    	
+        #aggregate it. Find the medium of income of each zipcode
+        agg_income = aggregate(zipcode, math.medium)
+        
 
         repo.dropCollection("income_aggregate")
         repo.createCollection("income_aggregate")
@@ -73,14 +73,14 @@ class income_aggregate(dml.Algorithm):
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
         this_script = doc.agent('alg:lc546_jofranco#income_aggregate', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bdp:t85d-b449', {'prov:label':'School and Hospital Number in each zipcode', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource = doc.entity('bdp:t85d-b449', {'prov:label':'The medium income of the population in each zipcode', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_income_aggregate = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_income_aggregate, this_script)
         doc.usage(get_income_aggregate, resource, startTime, None,
                 {prov.model.PROV_TYPE:'ont:Retrieval'}
             )
 
-        income_aggregate = doc.entity('dat:lc546_jofranco#income_aggregate', {prov.model.PROV_LABEL:'School and Hospital number in each zipcode', prov.model.PROV_TYPE:'ont:DataSet'})
+        income_aggregate = doc.entity('dat:lc546_jofranco#income_aggregate', {prov.model.PROV_LABEL:'The medium income of the population in each zipcode', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(income_aggregate, this_script)
         doc.wasGeneratedBy(income_aggregate, get_income_aggregate, endTime)
         doc.wasDerivedFrom(income_aggregate, resource, get_income_aggregate, get_income_aggregate, get_income_aggregate)
