@@ -90,14 +90,14 @@ class retrieve_monthly_rain_data(dml.Algorithm):
         doc.add_namespace('bdp', 'http://api.wunderground.com/api/')
 
 
-        this_script = doc.agent('alg:sbrz_nedg#retrieve_monthly_rain_data.py', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
+        this_script = doc.agent('alg:sbrz_nedg#retrieve_monthly_rain_data', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
         resource = doc.entity('bdp:40f7f8bd3f0f7fb1', {'prov:label': 'Monthly Weather Data', prov.model.PROV_TYPE: 'ont:DataResource', 'ont:Extension': 'json'})
         retrieve_monthly_rain_data = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
-        doc.wasAssociatedWith(retrieve_monthly_rain_data, this_script)
+        doc.wasAssociatedWith(this_script)
         doc.usage(resource, startTime, None)
 
-        weather_db = doc.entity('dat:sbrz_nedg#retrieve_monthly_rain_data.py', {prov.model.PROV_LABEL: 'rainData', prov.model.PROV_TYPE: 'ont:DataSet'})
+        weather_db = doc.entity('dat:sbrz_nedg#rainData', {prov.model.PROV_LABEL: 'rainData', prov.model.PROV_TYPE: 'ont:DataSet'})
         doc.wasAttributedTo(this_script, this_script)
         doc.wasGeneratedBy(retrieve_monthly_rain_data)
         doc.wasDerivedFrom(weather_db, resource)
