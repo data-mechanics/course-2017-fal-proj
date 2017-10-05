@@ -22,15 +22,16 @@ class retrieve_monthly_rain_data(dml.Algorithm):
         repo = client.repo
         repo.authenticate('sbrz_nedg', 'sbrz_nedg')
 
+        key = 40f7f8bd3f0f7fb1
         # library visit Data Set.
         jan_rain_json = json_util.loads(urllib.request.urlopen(urllib.request.Request(
-           "http://api.wunderground.com/api/40f7f8bd3f0f7fb1/planner_01010131/q/MA/Boston.json")).read().decode("utf-8"))
+           "http://api.wunderground.com/api/" + key + "/planner_01010131/q/MA/Boston.json")).read().decode("utf-8"))
         feb_rain_json = json_util.loads(urllib.request.urlopen(urllib.request.Request(
-           "http://api.wunderground.com/api/40f7f8bd3f0f7fb1/planner_02010228/q/MA/Boston.json")).read().decode("utf-8"))
+           "http://api.wunderground.com/api/" + key + "/planner_02010228/q/MA/Boston.json")).read().decode("utf-8"))
         mar_rain_json = json_util.loads(urllib.request.urlopen(urllib.request.Request(
-           "http://api.wunderground.com/api/40f7f8bd3f0f7fb1/planner_03010331/q/MA/Boston.json")).read().decode("utf-8"))
+           "http://api.wunderground.com/api/" + key + "/planner_03010331/q/MA/Boston.json")).read().decode("utf-8"))
         apr_rain_json = json_util.loads(urllib.request.urlopen(urllib.request.Request(
-           "http://api.wunderground.com/api/40f7f8bd3f0f7fb1/planner_04010430/q/MA/Boston.json")).read().decode("utf-8"))
+           "http://api.wunderground.com/api/" + key + "/planner_04010430/q/MA/Boston.json")).read().decode("utf-8"))
         may_rain_json = json_util.loads(urllib.request.urlopen(urllib.request.Request(
            "http://api.wunderground.com/api/40f7f8bd3f0f7fb1/planner_05010531/q/MA/Boston.json")).read().decode("utf-8"))
         jun_rain_json = json_util.loads(urllib.request.urlopen(urllib.request.Request(
@@ -90,14 +91,15 @@ class retrieve_monthly_rain_data(dml.Algorithm):
         doc.add_namespace('bdp', 'http://api.wunderground.com/api/')
 
 
-        this_script = doc.agent('alg:sbrz_nedg#retrieve_monthly_rain_data.py', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
+        this_script = doc.agent('alg:sbrz_nedg#retrieve_monthly_rain_data', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
         resource = doc.entity('bdp:40f7f8bd3f0f7fb1', {'prov:label': 'Monthly Weather Data', prov.model.PROV_TYPE: 'ont:DataResource', 'ont:Extension': 'json'})
         retrieve_monthly_rain_data = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
-        doc.wasAssociatedWith(this_script)
+        doc.wasAssociatedWith(retrieve_monthly_rain_data, this_script)
         doc.usage(resource, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval'})
 
-        weather_db = doc.entity('dat:sbrz_nedg#retrieve_monthly_rain_data.py', {prov.model.PROV_LABEL: 'rainData', prov.model.PROV_TYPE: 'ont:DataSet'})
+        weather_db = doc.entity('dat:sbrz_nedg#retrieve_monthly_rain_data', {prov.model.PROV_LABEL: 'rainData', prov.model.PROV_TYPE: 'ont:DataSet'})
+
         doc.wasAttributedTo(this_script, this_script)
         doc.wasGeneratedBy(retrieve_monthly_rain_data)
         doc.wasDerivedFrom(weather_db, resource)

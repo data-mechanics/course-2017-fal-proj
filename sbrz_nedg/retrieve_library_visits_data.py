@@ -75,10 +75,10 @@ class retrieve_library_visits_data(dml.Algorithm):
         this_script = doc.agent('alg:sbrz_nedg#retrieve_library_visits_data', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
         resource = doc.entity('bdp:0d81febc-c7f8-4de3-b8f4-a18733b1c11b', {'prov:label': 'Library Visits 2014-2016', prov.model.PROV_TYPE: 'ont:DataResource', 'ont:Extension': 'json'})
         get_library_data = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(retrieve_library_visits_data, this_script)
 
-        doc.wasAssociatedWith(this_script)
 
-        library_db = doc.entity('dat:sbrz_nedg#get_library_data', {prov.model.PROV_LABEL: 'library_visits', prov.model.PROV_TYPE: 'ont:DataSet'})
+        library_db = doc.entity('dat:sbrz_nedg#libraryData', {prov.model.PROV_LABEL: 'libraryData', prov.model.PROV_TYPE: 'ont:DataSet'})
         doc.usage(library_db, resource, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval'})
 
         doc.wasAttributedTo(this_script, this_script)
