@@ -117,9 +117,6 @@ class mbta_versus_geodata(dml.Algorithm):
 		### find percentage of vacant units and create a new column
 		result['Percentage Vacant Units'] = (1 - (result['Total Occupied Units'] / result['Total Housing Units'])) * 100
 
-		## write to csv for testing purposes
-		# result.to_csv('algorithm2.csv', encoding='utf-8')
-
 		test = result.to_dict('index')
 		agg_data = json.dumps(test, indent=4)
 		merged_data = json.loads(agg_data)
@@ -146,7 +143,36 @@ class mbta_versus_geodata(dml.Algorithm):
 		doc.add_namespace('ont', 'http://datamechanics.io/ontology#')
 		doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
 
+		doc.add_namespace('mbta', 'dat:nathansw_sbajwa#mbta')
+		doc.add_namespace('geodata', 'dat:nathansw_sbajwa#geodata')
+
 		this_script = doc.agent('alg:nathansw_sbajwa#mbta_versus_geodata', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+
+		###############################################################################
+
+		get_mbta = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+		doc.wasAssociatedWith(get_mbta, this_script)
+
+		resource1 = doc.entity('dat:nathansw_sbajwa#mbta', {'prov:label':'MBTA Stops By Location', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+		doc.usage(get_mbta, resource1, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
+		
+		mbta = doc.entity('dat:nathansw_sbajwa#mbta', {prov.model.PROV_LABEL:'MBTA Stops',prov.model.PROV_TYPE:'ont:DataSet'})
+		doc.wasAttributedTo(mbta, this_script)
+		doc.wasGeneratedBy(mbta, get_mbta, endTime)
+		doc.wasDerivedFrom(mbta, resource1, get_mbta, get_mbta, get_mbta)
+
+		################################################################################
+
+		get_geodata = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+		doc.wasAssociatedWith(get_geodata, this_script)
+
+		resource2 = doc.entity('dat:nathansw_sbajwa#geodata', {'prov:label':'Lifestyle Data By Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+		doc.usage(get_geodata, resource2, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval',})
+
+		geodata = doc.entity('dat:nathansw_sbajwa#geodata', {prov.model.PROV_LABEL:'Lifestyle Data by Neighborhood', prov.model.PROV_TYPE:'ont:DataSet'})
+		doc.wasAttributedTo(geodata, this_script)
+		doc.wasGeneratedBy(geodata, get_geodata, endTime)
+		doc.wasDerivedFrom(geodata, resource2, get_geodata, get_geodata, get_geodata)
 
 		repo.logout()
 

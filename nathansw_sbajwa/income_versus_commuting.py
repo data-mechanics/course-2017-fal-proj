@@ -128,9 +128,6 @@ class income_versus_commuting(dml.Algorithm):
 			result['Public transit %'] += result[col]
 			result.drop(col, axis=1, inplace=True)
 
-		# ## write to csv for testing purposes
-		# result.to_csv('algorithm1.csv', encoding='utf-8')
-
 		test = result.to_dict('index')
 		agg_data = json.dumps(test, indent=4)
 		merged_data = json.loads(agg_data)
@@ -156,7 +153,36 @@ class income_versus_commuting(dml.Algorithm):
 		doc.add_namespace('ont', 'http://datamechanics.io/ontology#')
 		doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
 
+		doc.add_namespace('householdincome', 'dat:nathansw_sbajwa#householdincome')
+		doc.add_namespace('commuting', 'dat:nathansw_sbajwa#commuting')
+
 		this_script = doc.agent('alg:nathansw_sbajwa#income_versus_commuting', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+
+		###########################################################################################
+
+		get_householdincome = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+		doc.wasAssociatedWith(get_householdincome, this_script)
+		
+		resource1 = doc.entity('dat:nathansw_sbajwa#householdincome', {'prov:label':'Household Income by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+		doc.usage(get_householdincome, resource1, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
+
+		householdincome = doc.entity('dat:nathansw_sbajwa#householdincome', {prov.model.PROV_LABEL:'Household Income by Neighborhood', prov.model.PROV_TYPE:'ont:DataSet'})
+		doc.wasAttributedTo(householdincome, this_script)
+		doc.wasGeneratedBy(householdincome, get_householdincome, endTime)
+		doc.wasDerivedFrom(householdincome, resource1, get_householdincome, get_householdincome, get_householdincome)	
+
+		###########################################################################################
+		
+		get_commuting = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+		doc.wasAssociatedWith(get_commuting, this_script)
+		
+		resource2 = doc.entity('commuting: dat:nathansw_sbajwa#commuting', {'prov:label':'Means of Commuting by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+		doc.usage(get_commuting, resource2, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
+
+		commuting = doc.entity('dat:nathansw_sbajwa#commuting', {prov.model.PROV_LABEL:'Means of Commuting by Neighborhood', prov.model.PROV_TYPE:'ont:DataSet'})
+		doc.wasAttributedTo(commuting, this_script)
+		doc.wasGeneratedBy(commuting, get_commuting, endTime)
+		doc.wasDerivedFrom(commuting, resource2, get_commuting, get_commuting, get_commuting)	
 
 		repo.logout()
 

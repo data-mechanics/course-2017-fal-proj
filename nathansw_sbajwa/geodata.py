@@ -67,29 +67,26 @@ class geodata(dml.Algorithm):
 
 		return {"start":startTime, "end":endTime}
 
-	### WIP ##
 	@staticmethod
 	def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
 
 		client = dml.pymongo.MongoClient()
 		repo = client.repo
 		repo.authenticate("nathansw_sbajwa","nathansw_sbajwa")
-		doc.add_namespace('alg', 'http://datamechanics.io/algorithm/sbajwa_nathansw/') # The scripts in / format.
-		doc.add_namespace('dat', 'http://datamechanics.io/data/sbajwa_nathansw/') # The data sets in / format.
+		doc.add_namespace('alg', 'http://datamechanics.io/algorithm/nathansw_sbajwa/') # The scripts in / format.
+		doc.add_namespace('dat', 'http://datamechanics.io/data/nathansw_sbajwa/') # The data sets in / format.
 		doc.add_namespace('ont', 'http://datamechanics.io/ontology#')
 		doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
+	
 		doc.add_namespace('geodata', 'http://azure.geodataservice.net/GeoDataService.svc/')
 
 		this_script = doc.agent('alg:nathansw_sbajwa#geodata', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-		resource = doc.entity('geodata:GetUSDemographics', {'prov:label':'Lifestyle Data By Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-		
+
 		get_geodata = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 		doc.wasAssociatedWith(get_geodata, this_script)
-		doc.usage(get_geodata, resource, startTime, None,
-              {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?longitude=&latitude='
-              }
-              )
+
+		resource = doc.entity('geodata:GetUSDemographics', {'prov:label':'Lifestyle Data By Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+		doc.usage(get_geodata, resource, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval',})
 
 		geodata = doc.entity('dat:nathansw_sbajwa#geodata', {prov.model.PROV_LABEL:'Lifestyle Data by Neighborhood', prov.model.PROV_TYPE:'ont:DataSet'})
 		doc.wasAttributedTo(geodata, this_script)

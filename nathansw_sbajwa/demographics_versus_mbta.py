@@ -120,9 +120,6 @@ class demographics_versus_mbta(dml.Algorithm):
 		result['Non-white Minorities %'] = result['Asian %'] + result['Black or AfricanAmerican %'] + \
 			result['Hispanic or Latino %'] + result['Other %'] 
 
-		## write to csv file for debugging purposes
-		# result.to_csv('algorithm3.csv', encoding='utf-8')
-
 		test = result.to_dict('index')
 		agg_data = json.dumps(test, indent=4)
 		merged_data = json.loads(agg_data)
@@ -149,7 +146,50 @@ class demographics_versus_mbta(dml.Algorithm):
 		doc.add_namespace('ont', 'http://datamechanics.io/ontology#')
 		doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
 
+		doc.add_namespace('race', 'dat:nathansw_sbajwa#race') 
+		doc.add_namespace('povertyrates', 'dat:nathansw_sbajwa#povertyrates')
+		doc.add_namespace('commuting', 'dat:nathansw_sbajwa#commuting')
+
 		this_script = doc.agent('alg:nathansw_sbajwa#demographics_versus_mbta', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+
+	    ####################################################################################
+
+		get_race = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+		doc.wasAssociatedWith(get_race, this_script)
+
+		resource1 = doc.entity('race: dat:nathansw_sbajwa#race', {'prov:label':'Race by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+		doc.usage(get_race, resource1, startTime, None,{prov.model.PROV_TYPE:'ont:Retrieval'})
+
+		race = doc.entity('dat:nathansw_sbajwa#race', {prov.model.PROV_LABEL:'Race by Neighborhood', prov.model.PROV_TYPE:'ont:DataSet'})
+		doc.wasAttributedTo(race, this_script)
+		doc.wasGeneratedBy(race, get_race, endTime)
+		doc.wasDerivedFrom(race, resource1, get_race, get_race, get_race)	
+
+		####################################################################################
+
+		get_commuting = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+		doc.wasAssociatedWith(get_commuting, this_script)
+		
+		resource2 = doc.entity('commuting: dat:nathansw_sbajwa#commuting', {'prov:label':'Means of Commuting by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+		doc.usage(get_commuting, resource2, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
+
+		commuting = doc.entity('dat:nathansw_sbajwa#commuting', {prov.model.PROV_LABEL:'Means of Commuting by Neighborhood', prov.model.PROV_TYPE:'ont:DataSet'})
+		doc.wasAttributedTo(commuting, this_script)
+		doc.wasGeneratedBy(commuting, get_commuting, endTime)
+		doc.wasDerivedFrom(commuting, resource2, get_commuting, get_commuting, get_commuting)	
+
+		####################################################################################
+
+		get_povertyrates = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+		doc.wasAssociatedWith(get_povertyrates, this_script)
+
+		resource3 = doc.entity('dat:nathansw_sbajwa#povertyrates', {'prov:label':'Poverty Rates by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+		doc.usage(get_povertyrates, resource3, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
+
+		povertyrates = doc.entity('dat:nathansw_sbajwa#povertyrates', {prov.model.PROV_LABEL:'Poverty by Neighborhood', prov.model.PROV_TYPE:'ont:DataSet'})
+		doc.wasAttributedTo(povertyrates, this_script)
+		doc.wasGeneratedBy(povertyrates, get_povertyrates, endTime)
+		doc.wasDerivedFrom(povertyrates, resource3, get_povertyrates, get_povertyrates, get_povertyrates)
 
 		repo.logout()
 

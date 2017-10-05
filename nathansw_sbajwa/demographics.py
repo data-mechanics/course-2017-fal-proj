@@ -94,7 +94,6 @@ class demographics(dml.Algorithm):
 
 		return {"start": startTime, "end": endTime}
 
-	### WIP ###
 	@staticmethod
 	def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
 
@@ -106,66 +105,54 @@ class demographics(dml.Algorithm):
 		doc.add_namespace('ont', 'http://datamechanics.io/ontology#')
 		doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
 
-		doc.add_namespace('race', 'goo.gl/V3hgSW') 
-		doc.add_namespace('povertyrates', 'goo.gl/V3hgSW')
-		doc.add_namespace('householdincome', 'goo.gl/V3hgSW')
-		doc.add_namespace('commuting', 'goo.gl/V3hgSW')
+		doc.add_namespace('race', 'http://datamechanics.io/data/nathansw_sbajwa/') 
+		doc.add_namespace('povertyrates', 'http://datamechanics.io/data/nathansw_sbajwa/')
+		doc.add_namespace('householdincome', 'http://datamechanics.io/data/nathansw_sbajwa/')
+		doc.add_namespace('commuting', 'http://datamechanics.io/data/nathansw_sbajwa/')
 
 		this_script = doc.agent('alg:nathansw_sbajwa#demographics', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-		resource = doc.entity('race: goo.gl/V3hgSW', {'prov:label':'Race by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-		resource = doc.entity('povertyrates: goo.gl/V3hgSW', {'prov:label':'Poverty Rates by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-		resource = doc.entity('householdincome: goo.gl/V3hgSW', {'prov:label':'Household Income by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-		resource = doc.entity('commuting: goo.gl/V3hgSW', {'prov:label':'Means of Commuting by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 
 		get_race = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 		get_povertyrates = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 		get_householdincome = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 		get_commuting = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 
+		resource1 = doc.entity('race: Race.json', {'prov:label':'Race by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+		resource2 = doc.entity('povertyrates: PovertyRates.json', {'prov:label':'Poverty Rates by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+		resource3 = doc.entity('householdincome: HouseholdIncome.json', {'prov:label':'Household Income by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+		resource4 = doc.entity('commuting: MeansOfCommuting.json', {'prov:label':'Means of Commuting by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+
 		doc.wasAssociatedWith(get_race, this_script)
-		doc.usage(get_race, resource, startTime, None,
-              {prov.model.PROV_TYPE:'ont:Retrieval',
-              'ont:Query':'?type=Race&$select=type,latitude,longitude,OPEN_DT'
-              }
-              )
+		doc.usage(get_race, resource1, startTime, None,{prov.model.PROV_TYPE:'ont:Retrieval'})
+
 		doc.wasAssociatedWith(get_povertyrates, this_script)
-		doc.usage(get_povertyrates, resource, startTime, None,
-              {prov.model.PROV_TYPE:'ont:Retrieval',
-              'ont:Query':'?type=Poverty+Rate&$select=type,latitude,longitude,OPEN_DT'
-              }
-              )
+		doc.usage(get_povertyrates, resource2, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
+
 		doc.wasAssociatedWith(get_householdincome, this_script)
-		doc.usage(get_householdincome, resource, startTime, None,
-              {prov.model.PROV_TYPE:'ont:Retrieval',
-              'ont:Query':'?type=Household+Income&$select=type,latitude,longitude,OPEN_DT'
-              }
-              )
+		doc.usage(get_householdincome, resource3, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
+
 		doc.wasAssociatedWith(get_commuting, this_script)
-		doc.usage(get_commuting, resource, startTime, None,
-              {prov.model.PROV_TYPE:'ont:Retrieval',
-              'ont:Query':'?type=Commuting&$select=type,latitude,longitude,OPEN_DT'
-              }
-              )
+		doc.usage(get_commuting, resource4, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
 
 		race = doc.entity('dat:nathansw_sbajwa#race', {prov.model.PROV_LABEL:'Race by Neighborhood', prov.model.PROV_TYPE:'ont:DataSet'})
 		doc.wasAttributedTo(race, this_script)
 		doc.wasGeneratedBy(race, get_race, endTime)
-		doc.wasDerivedFrom(race, resource, get_race, get_race, get_race)			
+		doc.wasDerivedFrom(race, resource1, get_race, get_race, get_race)			
 
 		povertyrates = doc.entity('dat:nathansw_sbajwa#povertyrates', {prov.model.PROV_LABEL:'Poverty by Neighborhood', prov.model.PROV_TYPE:'ont:DataSet'})
 		doc.wasAttributedTo(povertyrates, this_script)
 		doc.wasGeneratedBy(povertyrates, get_povertyrates, endTime)
-		doc.wasDerivedFrom(povertyrates, resource, get_povertyrates, get_povertyrates, get_povertyrates)		
+		doc.wasDerivedFrom(povertyrates, resource2, get_povertyrates, get_povertyrates, get_povertyrates)		
 
 		householdincome = doc.entity('dat:nathansw_sbajwa#householdincome', {prov.model.PROV_LABEL:'Household Income by Neighborhood', prov.model.PROV_TYPE:'ont:DataSet'})
 		doc.wasAttributedTo(householdincome, this_script)
 		doc.wasGeneratedBy(householdincome, get_householdincome, endTime)
-		doc.wasDerivedFrom(householdincome, resource, get_householdincome, get_householdincome, get_householdincome)		
+		doc.wasDerivedFrom(householdincome, resource3, get_householdincome, get_householdincome, get_householdincome)		
 
 		commuting = doc.entity('dat:nathansw_sbajwa#commuting', {prov.model.PROV_LABEL:'Means of Commuting by Neighborhood', prov.model.PROV_TYPE:'ont:DataSet'})
 		doc.wasAttributedTo(commuting, this_script)
 		doc.wasGeneratedBy(commuting, get_commuting, endTime)
-		doc.wasDerivedFrom(commuting, resource, get_commuting, get_commuting, get_commuting)		
+		doc.wasDerivedFrom(commuting, resource4, get_commuting, get_commuting, get_commuting)		
 
 		repo.logout()
 

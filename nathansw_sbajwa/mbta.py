@@ -116,31 +116,27 @@ class mbta(dml.Algorithm):
 
 		return {"start":startTime, "end":endTime}
 
-	### WIP ###
 	@staticmethod
 	def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
 
 		client = dml.pymongo.MongoClient()
 		repo = client.repo
 		repo.authenticate("nathansw_sbajwa","nathansw_sbajwa")
-		doc.add_namespace('alg', 'http://datamechanics.io/algorithm/sbajwa_nathansw/') # The scripts in / format.
-		doc.add_namespace('dat', 'http://datamechanics.io/data/sbajwa_nathansw/') # The data sets in / format.
+		doc.add_namespace('alg', 'http://datamechanics.io/algorithm/nathansw_sbajwa/') # The scripts in / format.
+		doc.add_namespace('dat', 'http://datamechanics.io/data/nathansw_sbajwa/') # The data sets in / format.
 		doc.add_namespace('ont', 'http://datamechanics.io/ontology#')
 		doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
-		
+	
 		doc.add_namespace('mbta', 'http://realtime.mbta.com/developer/api/v2/')
 
 		this_script = doc.agent('alg:nathansw_sbajwa#mbta', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-		resource = doc.entity('mbta:stopsbylocation', {'prov:label':'MBTA Stops By Location', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-		
+
 		get_mbta = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 		doc.wasAssociatedWith(get_mbta, this_script)
-		doc.usage(get_mbta, resource, startTime, None,
-              {prov.model.PROV_TYPE:'ont:Retrieval',
-              'ont:Query':'?api_key=&lat=&lon='
-              }
-              )
 
+		resource = doc.entity('mbta:stopsbylocation', {'prov:label':'MBTA Stops By Location', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+		doc.usage(get_mbta, resource, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
+		
 		mbta = doc.entity('dat:nathansw_sbajwa#mbta', {prov.model.PROV_LABEL:'MBTA Stops',prov.model.PROV_TYPE:'ont:DataSet'})
 		doc.wasAttributedTo(mbta, this_script)
 		doc.wasGeneratedBy(mbta, get_mbta, endTime)
