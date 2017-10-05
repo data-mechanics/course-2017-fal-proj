@@ -103,10 +103,10 @@ class projectData(dml.Algorithm):
                   }
                   )
 
-        Projected = doc.entity('dat:alanbur_jcaluag#trafficSignalFiltered', {prov.model.PROV_LABEL:'Filtered Traffic Data', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(filtered, this_script)
-        doc.wasGeneratedBy(filtered, get_filter, endTime)
-        doc.wasDerivedFrom(filtered, resource, get_filter, get_filter, get_filter)
+        projected = doc.entity('dat:alanbur_jcaluag#trafficSignalFiltered', {prov.model.PROV_LABEL:'Filtered Traffic Data', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(projected, this_script)
+        doc.wasGeneratedBy(projected, get_filter, endTime)
+        doc.wasDerivedFrom(projected, resource, get_filter, get_filter, get_filter)
 
         repo.logout()
                   

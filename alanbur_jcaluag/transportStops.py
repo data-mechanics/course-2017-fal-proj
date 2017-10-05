@@ -5,11 +5,10 @@ import prov.model
 import datetime
 import uuid
 
-class roadComplainAgg(dml.Algorithm):
+class transportStops(dml.Algorithm):
     contributor = 'alanbur_jcaluag'
-    reads = ['alanbur_jcaluag.roadComplaints']
-    writes = ['alanbur_jcaluag.roadComplaintsByDate']
-    
+    reads = ['alanbur_jcaluag.hubwayFiltered', 'alanbur_jcaluag.mbtaProjected']
+    writes = ['alanbur_jcaluag.transportStops']
     @staticmethod
     def execute(trial = False):
         '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
@@ -19,50 +18,24 @@ class roadComplainAgg(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate('alanbur_jcaluag', 'alanbur_jcaluag')
- 
-        DSet=[]
+        hubwayCollection=repo['alanbur_jcaluag.hubwayFiltered'].find()
+        mbtaCollection =repo['alanbur_jcaluag.mbtaProjected'].find()
+        mbta = [x for x in mbtaCollection]
+        hubway = [y for y in hubwayCollection]
 
-        collection=repo['alanbur_jcaluag.roadComplaints'].find()
-        DSet=[]
-        # keys = {r[0] for r in R}
-        # [(key, f([v for (k,v) in R if k == key])) for key in keys]
-        DSet=[
-             
-             {
-                'Latitude': item['geometry']['coordinates'][0],
-                'Longitude': item['geometry']['coordinates'][1],
-                'UserType' : item['properties']['USERTYPE'],
-                'UserType' : item['properties']['COMMENTS'],
-                'Comments':item['properties']['COMMENTS'],
-                'Status': item['properties']['STATUS'],
-                'Date' : item['properties']['REQUESTDATE'][:item['properties']['REQUESTDATE'].index(':')]
-            }
-            
-              for item in collection
-        ]
-        DSetByDate=[]
-        dates=set()
-        for item in DSet:
-            dates.add(item['Date'])
-        for date in dates:
-            [DSetByDate.append({"Date": date,
-                "Incidents":[item for item in DSet if item['Date']==date]
-                })
-            ]
-            
 
-        repo.dropCollection("roadComplaintsByDate")
-        repo.createCollection("roadComplaintsByDate")
-        repo['alanbur_jcaluag.roadComplaintsByDate'].insert_many(DSet)
-        repo['alanbur_jcaluag.roadComplaintsByDate'].metadata({'complete':True})
-        print(repo['alanbur_jcaluag.roadComplaintsByDate'].metadata())
-        
-        
+        DSet = hubway + mbta
+
+        repo.dropCollection("transportStops")
+        repo.createCollection("transportStops")
+        repo['alanbur_jcaluag.transportStops'].insert_many(DSet)
+        repo['alanbur_jcaluag.transportStops'].metadata({'complete':True})
+        print(repo['alanbur_jcaluag.transportStops'].metadata())
+        repo.logout()
 
         endTime = datetime.datetime.now()
 
         return {"start":startTime, "end":endTime}
-
     @staticmethod
     def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
         '''
@@ -79,10 +52,9 @@ class roadComplainAgg(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('bdp', 'http://datamechanics.io/data')
-
-        this_script = doc.agent('alg:alanbur_jcaluag#roadComplaintsByDate', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        
+        this_script = doc.agent('alg:alanbur_jcaluag#transportStops', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource = doc.entity('dat:alanbur_jcaluag#transportStops', {'prov:label':'transportStops', prov.model.PROV_TYPE:'ont:DataSet'})
         get_complaints = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_complaints, this_script)
         doc.usage(get_complaints, resource, startTime, None,
@@ -90,7 +62,7 @@ class roadComplainAgg(dml.Algorithm):
                   }
                   )
 
-        roadComplaints = doc.entity('dat:alanbur_jcaluag#complaintsByDate', {prov.model.PROV_LABEL:'Road Complaints by date', prov.model.PROV_TYPE:'ont:DataSet'})
+        roadComplaints = doc.entity('dat:alanbur_jcaluag#transportStops', {prov.model.PROV_LABEL:'MBTA and Hubway Stops', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(roadComplaints, this_script)
         doc.wasGeneratedBy(roadComplaints, get_complaints, endTime)
         doc.wasDerivedFrom(roadComplaints, resource, get_complaints, get_complaints, get_complaints)
@@ -98,4 +70,4 @@ class roadComplainAgg(dml.Algorithm):
         repo.logout()
                   
         return doc
-# roadComplaints.execute()
+#stopsData.execute()
