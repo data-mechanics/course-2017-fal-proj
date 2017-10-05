@@ -83,13 +83,13 @@ class retrieve_library_visits_data(dml.Algorithm):
                                'ont:Extension': 'json'})
         get_library_data = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
-        doc.wasAssociatedWith(this_script)
+        doc.wasAssociatedWith(get_library_data, this_script)
 
-        library_db = doc.entity('dat:sbrz_nedg#get_library_data',
+        library_db = doc.entity('dat:sbrz_nedg#libraryData',
                                 {prov.model.PROV_LABEL: 'library_visits', prov.model.PROV_TYPE: 'ont:DataSet'})
         doc.usage(library_db, resource, startTime, None)
 
-        doc.wasAttributedTo(this_script, this_script)
+        doc.wasAttributedTo(retrieve_library_visits_data, this_script)
         doc.wasGeneratedBy(get_library_data)
         doc.wasDerivedFrom(library_db, resource)
 
