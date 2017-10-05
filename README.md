@@ -12,10 +12,10 @@ https://data.worldbank.org/
 
 I manually cleaned up all the data because it would be difficult to perform cleanup in python since there are different ways to write some country names. I chose data from 2012 and 2013 because they were fairly comprehensive and recent. I organized the data and stored them as .json files, and then uploaded them to http://datamechanics.io/ in order to access them.
 
-getData.py retrieves the 7 datasets
-merge2012.py merges all the data from 2012 and puts them into a collection called all2012. There are 129 entries in all2012.
-removeOutliers.py takes the data in all2012 and removes all entries with outliers. This leaves us 87 entries left and stored in collection clean2012.
-correlations.py takes all the data from clean2012 and returns the correlation coefficient of CO2 emissions and all 6 other attributes: carbon intensity, energy intensity, energy use, GDP per capita, Human Development Index, and population. The results are stored in collection corr2012.
+getData.py retrieves the 7 datasets <br />
+merge2012.py merges all the data from 2012 and puts them into a collection called all2012. There are 129 entries in all2012. <br />
+removeOutliers.py takes the data in all2012 and removes all entries with outliers. This leaves us 87 entries left and stored in collection clean2012. <br />
+correlations.py takes all the data from clean2012 and returns the correlation coefficient of CO2 emissions and all 6 other attributes: carbon intensity, energy intensity, energy use, GDP per capita, Human Development Index, and population. The results are stored in collection corr2012. <br />
 
 To run all files: execute the following command in root directory (course-2017-fal-proj):
 ```
