@@ -27,9 +27,9 @@ class bikeNetwork(dml.Algorithm):
         features = [
 
 
-                {'Data': 'Bike Routes','Location':dict['properties']['STREET_NAM'], 'Coordinates': dict['geometry']['coordinates']}
+                {'Data': 'Bike Routes','Location':item['properties']['STREET_NAM'], 'Coordinates': item['geometry']['coordinates']}
 
-              for dict in features
+              for item in features
         ]
 
         repo.dropCollection("bikeNetwork")
@@ -61,13 +61,11 @@ class bikeNetwork(dml.Algorithm):
         doc.add_namespace('bdp', 'http://bostonopendata-boston.opendata.arcgis.com/datasets/')
 
         this_script = doc.agent('alg:alanbur_jcaluag#bikeNetwork', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource = doc.entity('bdp:d02c9d2003af455fbc37f550cc53d3a4_0', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
         get_bikeNetwork = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_bikeNetwork, this_script)
         doc.usage(get_bikeNetwork, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'d02c9d2003af455fbc37f550cc53d3a4_0.geojson'
-                  }
+                  {prov.model.PROV_TYPE:'ont:Retrieval'}
                   )
 
         bikeNetwork = doc.entity('dat:alanbur_jcaluag#bikeNetwork', {prov.model.PROV_LABEL:'Bike Network Paths', prov.model.PROV_TYPE:'ont:DataSet'})

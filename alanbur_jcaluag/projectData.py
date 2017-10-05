@@ -33,11 +33,11 @@ class projectData(dml.Algorithm):
              'Longitude': item['geometry']['coordinates'][1]}
               for item in collection
         ]
-        repo.dropCollection("trafficSignalFiltered")
-        repo.createCollection("trafficSignalFiltered")
-        repo['alanbur_jcaluag.trafficSignalFiltered'].insert_many(DSet)
-        repo['alanbur_jcaluag.trafficSignalFiltered'].metadata({'complete':True})
-        print(repo['alanbur_jcaluag.trafficSignalFiltered'].metadata())
+        repo.dropCollection("trafficSignalProjected")
+        repo.createCollection("trafficSignalProjected")
+        repo['alanbur_jcaluag.trafficSignalProjected'].insert_many(DSet)
+        repo['alanbur_jcaluag.trafficSignalProjected'].metadata({'complete':True})
+        print(repo['alanbur_jcaluag.trafficSignalProjected'].metadata())
         
         collection=repo['alanbur_jcaluag.hubway'].find()
         DSet=[
@@ -47,7 +47,6 @@ class projectData(dml.Algorithm):
                 'Longitude': item['lo']}
               for item in collection
         ]
-        print(DSet)
         repo.dropCollection("hubwayProjected")
         repo.createCollection("hubwayProjected")
         repo['alanbur_jcaluag.hubwayProjected'].insert_many(DSet)
@@ -92,21 +91,43 @@ class projectData(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('bdp', 'http://datamechanics.io/data/')
+        
+        this_script = doc.agent('alg:alanbur_jcaluag#projectData', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource = doc.entity('dat:trafficSignal', {'prov:label':'Traffic Signal Data', prov.model.PROV_TYPE:'ont:DataSet'})
+        resource2 = doc.entity('dat:mbta', {'prov:label':'MBTA Stop Data', prov.model.PROV_TYPE:'ont:DataSet'})
+        resource3 = doc.entity('dat:hubway', {'prov:label':'Hubway Stop Data', prov.model.PROV_TYPE:'ont:DataSet'})
 
-        this_script = doc.agent('alg:alanbur_jcaluag#trafficSignalProjected', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_filter = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+
         doc.wasAssociatedWith(get_filter, this_script)
         doc.usage(get_filter, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Computation'
                   }
                   )
+        doc.usage(get_filter, resource2, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Computation'
+                  }
+                  )
+        doc.usage(get_filter, resource3, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Computation'
+                  }
+                  )
+        projected1 = doc.entity('dat:alanbur_jcaluag#trafficSignalProjected', {prov.model.PROV_LABEL:'Filtered Traffic Data', prov.model.PROV_TYPE:'ont:DataSet'})
+        projected2 = doc.entity('dat:alanbur_jcaluag#mbtaProjected', {prov.model.PROV_LABEL:'Filtered Traffic Data', prov.model.PROV_TYPE:'ont:DataSet'})
+        projected3 = doc.entity('dat:alanbur_jcaluag#hubwayProjected', {prov.model.PROV_LABEL:'Filtered Traffic Data', prov.model.PROV_TYPE:'ont:DataSet'})
+        
 
-        projected = doc.entity('dat:alanbur_jcaluag#trafficSignalFiltered', {prov.model.PROV_LABEL:'Filtered Traffic Data', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(projected, this_script)
-        doc.wasGeneratedBy(projected, get_filter, endTime)
-        doc.wasDerivedFrom(projected, resource, get_filter, get_filter, get_filter)
+        doc.wasAttributedTo(projected1, this_script)
+        doc.wasGeneratedBy(projected1, get_filter, endTime)
+        doc.wasDerivedFrom(projected1, resource, get_filter, get_filter, get_filter)
+
+        doc.wasAttributedTo(projected2, this_script)
+        doc.wasGeneratedBy(projected2, get_filter, endTime)
+        doc.wasDerivedFrom(projected2, resource2, get_filter, get_filter, get_filter)
+
+        doc.wasAttributedTo(projected3, this_script)
+        doc.wasGeneratedBy(projected3, get_filter, endTime)
+        doc.wasDerivedFrom(projected3, resource3, get_filter, get_filter, get_filter)
 
         repo.logout()
                   

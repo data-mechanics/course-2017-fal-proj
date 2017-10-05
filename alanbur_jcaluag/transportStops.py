@@ -54,10 +54,15 @@ class transportStops(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         
         this_script = doc.agent('alg:alanbur_jcaluag#transportStops', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('dat:alanbur_jcaluag#transportStops', {'prov:label':'transportStops', prov.model.PROV_TYPE:'ont:DataSet'})
+        resource = doc.entity('dat:alanbur_jcaluag#hubwayFiltered', {'prov:label':'Filtered Hubway Data', prov.model.PROV_TYPE:'ont:DataSet'})
+        resource2 = doc.entity('dat:alanbur_jcaluag#mbtaProjected', {'prov:label':'Projected MBTA Data', prov.model.PROV_TYPE:'ont:DataSet'})
         get_complaints = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_complaints, this_script)
         doc.usage(get_complaints, resource, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Computation'
+                  }
+                  )
+        doc.usage(get_complaints, resource2, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Computation'
                   }
                   )
@@ -66,6 +71,7 @@ class transportStops(dml.Algorithm):
         doc.wasAttributedTo(roadComplaints, this_script)
         doc.wasGeneratedBy(roadComplaints, get_complaints, endTime)
         doc.wasDerivedFrom(roadComplaints, resource, get_complaints, get_complaints, get_complaints)
+        doc.wasDerivedFrom(roadComplaints, resource2, get_complaints, get_complaints, get_complaints)
 
         repo.logout()
                   

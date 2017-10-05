@@ -79,10 +79,9 @@ class roadComplainAgg(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('bdp', 'http://datamechanics.io/data')
-
-        this_script = doc.agent('alg:alanbur_jcaluag#roadComplaintsByDate', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        
+        this_script = doc.agent('alg:alanbur_jcaluag#roadComplainAgg', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource = doc.entity('dat:alanbur_jcaluag#roadComplaints', {'prov:label':'Road Complaints', prov.model.PROV_TYPE:'ont:DataSet'})
         get_complaints = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_complaints, this_script)
         doc.usage(get_complaints, resource, startTime, None,
@@ -90,7 +89,7 @@ class roadComplainAgg(dml.Algorithm):
                   }
                   )
 
-        roadComplaints = doc.entity('dat:alanbur_jcaluag#complaintsByDate', {prov.model.PROV_LABEL:'Road Complaints by date', prov.model.PROV_TYPE:'ont:DataSet'})
+        roadComplaints = doc.entity('dat:alanbur_jcaluag#roadComplaintsByDate', {prov.model.PROV_LABEL:'Road Complaints by date', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(roadComplaints, this_script)
         doc.wasGeneratedBy(roadComplaints, get_complaints, endTime)
         doc.wasDerivedFrom(roadComplaints, resource, get_complaints, get_complaints, get_complaints)

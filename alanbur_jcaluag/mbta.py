@@ -76,7 +76,7 @@ class mbta(dml.Algorithm):
         doc.wasAssociatedWith(get_busStops, this_script)
         doc.usage(get_busStops, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?api_key='+api_key+'&format=json'
+                  'ont:Query':'?api_key=,api_key,&format=json'
                   }
                   )
 
@@ -88,4 +88,4 @@ class mbta(dml.Algorithm):
         repo.logout()
                   
         return doc
-mbta.execute()
+# mbta.execute()
