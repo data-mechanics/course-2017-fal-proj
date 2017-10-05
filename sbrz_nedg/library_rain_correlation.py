@@ -149,7 +149,7 @@ class library_rain_correlation(dml.Algorithm):
 
         library_rain_correlation = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
-        doc.wasAssociatedWith(library_rain_correlation, this_script)
+        doc.wasAssociatedWith(this_script)
         doc.usage(rain_db, startTime, None)
         doc.usage(visit_db, startTime, None)
 
