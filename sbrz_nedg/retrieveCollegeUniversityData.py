@@ -66,7 +66,7 @@ class retrieveCollegeUniversityData(dml.Algorithm):
         college_db = doc.entity('dat:sbrz_nedg#college_university', {prov.model.PROV_LABEL: 'college_university', prov.model.PROV_TYPE: 'ont:DataSet'})
         doc.wasAttributedTo(this_script, this_script)
         doc.wasGeneratedBy(get_college_data)
-        doc.wasDerivedFrom(resource)
+        doc.wasDerivedFrom(resource, college_db)
 
         repo.logout()
 
