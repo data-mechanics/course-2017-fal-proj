@@ -8,7 +8,7 @@ import uuid
 class mbta_routes(dml.Algorithm):
     contributor = 'gaudiosi_raykatz'
     reads = []
-    writes = ['gaudiosi_katz.mbta_routes']
+    writes = ['gaudiosi_raykatz.mbta_routes']
 
     @staticmethod
     def execute(trial = False):
@@ -82,7 +82,7 @@ class mbta_routes(dml.Algorithm):
                   }
                   )
         
-        mbta_routes = doc.entity('dat:gaudiosi_raykatz#mbta_routes', {prov.model.PROV_LABEL:'Housing and Income', prov.model.PROV_TYPE:'ont:DataSet'})
+        mbta_routes = doc.entity('dat:gaudiosi_raykatz#mbta_routes', {prov.model.PROV_LABEL:'MBTA Routes', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(mbta_routes, this_script)
         doc.wasGeneratedBy(mbta_routes, get_mbta_routes, endTime)
         doc.wasDerivedFrom(mbta_routes, resource, get_mbta_routes, get_mbta_routes, get_mbta_routes)
@@ -90,6 +90,8 @@ class mbta_routes(dml.Algorithm):
         repo.logout()
                   
         return doc
+
+
 '''
 mbta_routes.execute()
 doc = mbta_routes.provenance()

@@ -8,7 +8,7 @@ import uuid
 class income(dml.Algorithm):
     contributor = 'gaudiosi_raykatz'
     reads = []
-    writes = ['gaudiosi_katz.income']
+    writes = ['gaudiosi_raykatz.income']
 
     @staticmethod
     def execute(trial = False):
@@ -30,13 +30,15 @@ class income(dml.Algorithm):
         result = json.loads(response)
         r = []
         for i in range(1,len(result)):
+            if int(result[i][2]) == 0 or int(result[i][5]) == 0:
+                continue
             d = {}
             d["median_income"] = result[i][0]
-            d["50_income_rent"] = result[i][1]
-            d["total_renters"] = result[i][2]
+            d["50_income_rent"] = int(result[i][1])
+            d["total_renters"] = int(result[i][2])
             d["median_rent"] = result[i][3]
-            d["people_in_poverty"] = result[i][4] 
-            d["total_people"] = result[i][5]
+            d["people_in_poverty"] = int(result[i][4]) 
+            d["total_people"] = int(result[i][5])
             d["zipcode"] = result[i][6]
             r.append(d)
         
@@ -90,10 +92,10 @@ class income(dml.Algorithm):
         repo.logout()
                   
         return doc
-
+'''
 income.execute()
 doc = income.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
-
+'''
 ## eof

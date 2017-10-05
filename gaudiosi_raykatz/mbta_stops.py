@@ -9,8 +9,8 @@ from shapely.geometry import shape, Point
 
 class mbta_stops(dml.Algorithm):
     contributor = 'gaudiosi_raykatz'
-    reads = ['gaudiosi_katz.mbta_routes, gaudiosi_katz.zipcode_map']
-    writes = ['gaudiosi_katz.mbta_stops']
+    reads = ['gaudiosi_raykatz.mbta_routes','gaudiosi_raykatz.zipcode_map']
+    writes = ['gaudiosi_raykatz.mbta_stops']
 
     @staticmethod
     def execute(trial = False):
@@ -102,7 +102,7 @@ class mbta_stops(dml.Algorithm):
         
         doc.usage(get_mbta_stops, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=MBTA_Routes&$select=mode_name,route_type,route_id,route_name'
+                  'ont:Query':'?type=MBTA_Stops&$select=mode_name,route_id,route_name,direction,stop_order,stop_id,stop_name,parent_station,parent_station_name,stop_lat,stop_lon'
                   }
                   )
         

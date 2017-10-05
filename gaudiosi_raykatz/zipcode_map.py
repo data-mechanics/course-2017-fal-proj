@@ -8,7 +8,7 @@ import uuid
 class zipcode_map(dml.Algorithm):
     contributor = 'gaudiosi_raykatz'
     reads = []
-    writes = ['gaudiosi_katz.zipcode_map']
+    writes = ['gaudiosi_raykatz.zipcode_map']
 
     @staticmethod
     def execute(trial = False):

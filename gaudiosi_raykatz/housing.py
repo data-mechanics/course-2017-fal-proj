@@ -8,7 +8,7 @@ import uuid
 class housing(dml.Algorithm):
     contributor = 'gaudiosi_raykatz'
     reads = []
-    writes = ['gaudiosi_katz.housing']
+    writes = ['gaudiosi_raykatz.housing']
 
     @staticmethod
     def execute(trial = False):
@@ -30,12 +30,14 @@ class housing(dml.Algorithm):
         result = json.loads(response)
         r = []
         for i in range(1,len(result)):
+            if int(result[i][2]) == 0 or int(result[i][4]) ==0:
+                continue
             d = {}
-            d["occupied_housing"] = result[i][0]
-            d["vacant_housing"] = result[i][1]
-            d["total_housing"] = result[i][2]
-            d["structures_built_before_1939"] = result[i][3]
-            d["total_structures_built"] = result[i][4]
+            d["occupied_housing"] = int(result[i][0])
+            d["vacant_housing"] = int(result[i][1])
+            d["total_housing"] = int(result[i][2])
+            d["structures_built_before_1939"] = int(result[i][3])
+            d["total_structures_built"] = int(result[i][4])
             d["zipcode"] = result[i][5]
             r.append(d)
         
@@ -82,7 +84,7 @@ class housing(dml.Algorithm):
                   }
                   )
         
-        housing = doc.entity('dat:gaudiosi_raykatz#housing', {prov.model.PROV_LABEL:'Housing and Income', prov.model.PROV_TYPE:'ont:DataSet'})
+        housing = doc.entity('dat:gaudiosi_raykatz#housing', {prov.model.PROV_LABEL:'Housing', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(housing, this_script)
         doc.wasGeneratedBy(housing, get_housing, endTime)
         doc.wasDerivedFrom(housing, resource, get_housing, get_housing, get_housing)
@@ -90,9 +92,11 @@ class housing(dml.Algorithm):
         repo.logout()
                   
         return doc
+
+'''
 housing.execute()
 doc = housing.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
-
+'''
 ## eof
