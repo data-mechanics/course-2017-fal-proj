@@ -23,7 +23,7 @@ class mbta(dml.Algorithm):
 
         with open('auth.json') as json_file:
             key = json.load(json_file)
-        api_key = key['api']
+        api_key = key['MBTA_api_key']
 
         url1 = 'http://realtime.mbta.com/developer/api/v2/routes?api_key='+api_key+'&format=json'
         response = urllib.request.urlopen(url1).read().decode("utf-8")

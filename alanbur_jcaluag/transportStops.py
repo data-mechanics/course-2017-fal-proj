@@ -11,15 +11,16 @@ class transportStops(dml.Algorithm):
     writes = ['alanbur_jcaluag.transportStops']
     @staticmethod
     def execute(trial = False):
-        '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
-        startTime = datetime.datetime.now()
+       startTime = datetime.datetime.now()
 
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate('alanbur_jcaluag', 'alanbur_jcaluag')
         hubwayCollection=repo['alanbur_jcaluag.hubwayFiltered'].find()
+        
         mbtaCollection =repo['alanbur_jcaluag.mbtaProjected'].find()
+        
         mbta = [x for x in mbtaCollection]
         hubway = [y for y in hubwayCollection]
 
@@ -36,6 +37,7 @@ class transportStops(dml.Algorithm):
         endTime = datetime.datetime.now()
 
         return {"start":startTime, "end":endTime}
+        
     @staticmethod
     def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
         '''
