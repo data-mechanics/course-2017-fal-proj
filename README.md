@@ -8,7 +8,9 @@ Transformations:
 
 1.) We took a collection of daily library visitor counts and combined them to form monthly averages. Then extracted average cm of rain per month from the Weather Underground data set. We then combined the two to form tuples of the following format to insert into the database: (Month, Avg Rainfall(cm), Avg Users). Note: rainfall data was from 2016 and library data ranged from 2014-2016
 
-2.) We did a select for college names, addresses, and zip codes from the college/universities data set. Next we selected addresses, zip codes, and region (ex. East Boston) from the property assessment data set. We then aggregated properties and colleges together based on their zip codes and added a count
+2.) We did a select for college names, addresses, and zip codes from the college/universities data set. Next we selected addresses, zip codes, and region (ex. East Boston) from the property assessment data set. We then aggregated properties and colleges together based on their zip codes and added a count, num_schools, to the filtered property data set.
+
+3.) We used the same college/university data set from (2) only filtered the latitude and longitude and name. Next we took the Hubway staton data set and filtered out the latitude and longitude of each. Measuring the distance between each college and each Hubway station, we compiled a count of Hubway stations within each college and stored it in the college database as "hubway_station_count".
 
 
 
