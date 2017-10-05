@@ -63,10 +63,10 @@ class retrieveCollegeUniversityData(dml.Algorithm):
         doc.wasAssociatedWith(this_script)
         doc.usage(resource, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval', 'ont:Query': ''}) # There is no query
 
-        college_db = doc.entity('dat:sbrz_nedg#get_college_data', {prov.model.PROV_LABEL: 'college_university', prov.model.PROV_TYPE: 'ont:DataSet'})
+        college_db = doc.entity('dat:sbrz_nedg#college_university', {prov.model.PROV_LABEL: 'college_university', prov.model.PROV_TYPE: 'ont:DataSet'})
         doc.wasAttributedTo(this_script, this_script)
         doc.wasGeneratedBy(get_college_data)
-        doc.wasDerivedFrom(college_db, resource)
+        doc.wasDerivedFrom(resource)
 
         repo.logout()
 

@@ -68,17 +68,20 @@ class unionCollegesHubway(dml.Algorithm):
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#DataSet')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/')  # The event log.
 
-        this_script = doc.agent('alg:sbrz_nedg#unionAddressesColleges', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
-        address_db = doc.entity({'prov:label': 'union_addresses_colleges', prov.model.PROV_TYPE: 'ont:DataSet'})
-
+        this_script = doc.agent('alg:sbrz_nedg#unionCollegesHubway', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
+        college_coords_db = doc.entity('dat:sbrz_nedg#college_coords', {'prov:label': 'college_coords', prov.model.PROV_TYPE: 'ont:DataSet'})
+        hubway_coords_db = doc.entity('dat:sbrz_nedg#hubway',
+                                        {'prov:label': 'hubway', prov.model.PROV_TYPE: 'ont:DataSet'})
+        union_db = doc.entity('dat:sbrz_nedg#union_colleges_hubway',
+                                        {'prov:label': 'union_colleges_hubway', prov.model.PROV_TYPE: 'ont:DataSet'})
         union_addresses_colleges = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
         doc.wasAssociatedWith(this_script)
-        doc.usage(address_db, startTime)
+        doc.usage(college_coords_db, hubway_coords_db, union_db, startTime)
 
-        doc.wasAttributedTo(this_script)
+        doc.wasAttributedTo(this_script, this_script, this_script)
         doc.wasGeneratedBy(union_addresses_colleges)
-        doc.wasDerivedFrom(address_db)
+        doc.wasDerivedFrom(college_coords_db, hubway_coords_db, union_db)
 
         repo.logout()
 

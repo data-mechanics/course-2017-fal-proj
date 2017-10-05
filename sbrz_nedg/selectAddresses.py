@@ -60,17 +60,18 @@ class selectAddresses(dml.Algorithm):
 
         this_script = doc.agent('alg:sbrz_nedg#selectAddressesColleges',
                                 {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
-        address_db = doc.entity({'prov:label': 'college_university', prov.model.PROV_TYPE: 'ont:DataResource'})
-        address_db = doc.entity('dat:sbrz_nedg#get_property_data',
-            {'prov:label': 'college_university_addresses', prov.model.PROV_TYPE: 'ont:DataResource'})
+        property_address_db = doc.entity('dat:sbrz_nedg#property_assessment',
+            {'prov:label': 'property_assessment', prov.model.PROV_TYPE: 'ont:DataSet'})
+        address_db = doc.entity('dat:sbrz_nedg#property_assessment_addresses',
+                                {'prov:label': 'property_assessment_addresses', prov.model.PROV_TYPE: 'ont:DataSet'})
         select_address_data = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
         doc.wasAssociatedWith(this_script)
-        doc.usage(address_db, startTime)
+        doc.usage(property_address_db, address_db, startTime)
 
         doc.wasAttributedTo(this_script, this_script)
         doc.wasGeneratedBy(select_address_data)
-        doc.wasDerivedFrom(address_db, address_db)
+        doc.wasDerivedFrom(property_address_db, address_db)
 
         repo.logout()
 

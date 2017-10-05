@@ -58,16 +58,16 @@ class selectAddressesColleges(dml.Algorithm):
 
         this_script = doc.agent('alg:sbrz_nedg#selectAddressesColleges',
                                 {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
-        college_db = doc.entity({'prov:label': 'college_university', prov.model.PROV_TYPE: 'ont:DataResource'})
-        college_address_db = doc.entity({'prov:label': 'college_university_addresses', prov.model.PROV_TYPE: 'ont:DataResource'})
+        college_db = doc.entity('dat:sbrz_nedg#college_university', {'prov:label': 'college_university', prov.model.PROV_TYPE: 'ont:DataResource'})
+        college_address_db = doc.entity('dat:sbrz#college_university_addresses', {'prov:label': 'college_university_addresses', prov.model.PROV_TYPE: 'ont:DataResource'})
         select_college_address_data = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
         doc.wasAssociatedWith(this_script)
-        doc.usage(college_db, startTime)
+        doc.usage(college_address_db, college_db, startTime)
 
         doc.wasAttributedTo(this_script, this_script)
         doc.wasGeneratedBy(select_college_address_data)
-        doc.wasDerivedFrom(college_db, college_db)
+        doc.wasDerivedFrom(college_address_db, college_db)
 
         repo.logout()
 
