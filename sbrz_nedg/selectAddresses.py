@@ -68,7 +68,7 @@ class selectAddresses(dml.Algorithm):
         doc.wasAssociatedWith(this_script)
         doc.usage(address_db, startTime)
 
-        doc.wasAttributedTo(this_script)
+        doc.wasAttributedTo(this_script, this_script)
         doc.wasGeneratedBy(select_address_data)
         doc.wasDerivedFrom(address_db, address_db)
 

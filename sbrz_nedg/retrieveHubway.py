@@ -66,7 +66,7 @@ class retrieveHubway(dml.Algorithm):
         doc.usage(resource, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval', 'ont:Query': ''})# There is no query used in retrieval
 
         property_db = doc.entity('dat:sbrz_nedg#get_hubway', {prov.model.PROV_LABEL: 'hubway', prov.model.PROV_TYPE: 'ont:DataSet'})
-        doc.wasAttributedTo(this_script)
+        doc.wasAttributedTo(this_script, this_script)
         doc.wasGeneratedBy(get_hubway)
         doc.wasDerivedFrom(property_db, resource)
 

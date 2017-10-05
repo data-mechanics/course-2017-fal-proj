@@ -65,7 +65,7 @@ class selectAddressesColleges(dml.Algorithm):
         doc.wasAssociatedWith(this_script)
         doc.usage(college_db, startTime)
 
-        doc.wasAttributedTo(this_script)
+        doc.wasAttributedTo(this_script, this_script)
         doc.wasGeneratedBy(select_college_address_data)
         doc.wasDerivedFrom(college_db, college_db)
 

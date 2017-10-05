@@ -68,7 +68,7 @@ class retrievePropertyAssessmentData(dml.Algorithm):
         doc.usage(resource, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval', 'ont:Query': '&limit=200000'})
 
         property_db = doc.entity('dat:sbrz_nedg#get_property_data', {prov.model.PROV_LABEL: 'property_assessment', prov.model.PROV_TYPE: 'ont:DataSet'})
-        doc.wasAttributedTo(this_script)
+        doc.wasAttributedTo(this_script, this_script)
         doc.wasGeneratedBy(get_property_data)
         doc.wasDerivedFrom(property_db, resource)
 
