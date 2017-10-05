@@ -137,5 +137,3 @@ class weatherFoodTransformation(dml.Algorithm):
         repo.logout()
 
         return doc
-
-# weatherFoodTransformation.execute()

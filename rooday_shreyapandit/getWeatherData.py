@@ -68,9 +68,3 @@ class getWeatherData(dml.Algorithm):
         repo.logout()
                   
         return doc
-
-# getWeatherData.execute()
-# print("running provenance for getWeatherData")
-# doc = getWeatherData.provenance()
-# print(doc.get_provn())
-# print(json.dumps(json.loads(doc.serialize()), indent=4))

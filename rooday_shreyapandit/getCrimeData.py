@@ -22,9 +22,8 @@ class getCrimeData(dml.Algorithm):
         repo.authenticate('rooday_shreyapandit', 'rooday_shreyapandit')
 
         #Get crime data
-        # url = 'https://data.boston.gov/api/action/datastore_search?limit=5&q=title:jones'
         url_crime = "https://data.boston.gov/api/action/datastore_search_sql?sql=SELECT%20*%20from%20%2212cb3883-56f5-47de-afa5-3b1cf61b257b%22"
-        #'http://localhost:8890/crime.json'
+
         response_crime = requests.get(url_crime).json()
         print("crime response has come, inserting....")
         repo.dropCollection("crime")
@@ -56,13 +55,19 @@ class getCrimeData(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/rooday_shreyapandit') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('crime', 'https://data.boston.gov/dataset/crime-incident-reports-august-2015-to-date-source-new-system/resource/')
+
+        #Since the urls have a lot more information about the resource itself, we are treating everything apart from the actual document suffix as the namespace.
+        doc.add_namespace('crime', 'https://data.boston.gov/api/action/datastore_search_sql')
 
         this_script = doc.agent('alg:#getCrimeData', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('crime:12cb3883-56f5-47de-afa5-3b1cf61b257b', {'prov:label':'Crime Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource = doc.entity('crime:?sql=SELECT%20*%20from%20%2212cb3883-56f5-47de-afa5-3b1cf61b257b%22', {'prov:label':'Crime Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_crime_data = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_crime_data, this_script)
-        doc.usage(get_crime_data, resource, startTime, None,{prov.model.PROV_TYPE:'ont:Retrieval'})
+        doc.usage(get_crime_data, resource, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Retrieval',
+                  'ont:Query':'?sql=SELECT%20*%20from%20%2212cb3883-56f5-47de-afa5-3b1cf61b257b%22'
+                  }
+                  )        
         crime = doc.entity('dat:#crime', {prov.model.PROV_LABEL:'Crime Data', prov.model.PROV_TYPE:'ont:DataSet'})
 
         doc.wasAttributedTo(crime, this_script)
@@ -72,9 +77,3 @@ class getCrimeData(dml.Algorithm):
         repo.logout()
                   
         return doc
-
-# getCrimeData.execute()
-# print("running provenance for getCrimeData")
-# doc = getCrimeData.provenance()
-# print(doc.get_provn())
-# print(json.dumps(json.loads(doc.serialize()), indent=4))

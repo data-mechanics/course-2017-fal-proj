@@ -69,7 +69,6 @@ class crimeWeatherTransformation(dml.Algorithm):
 
         print("Filtering for crimes in 2016...")
         crimes2016 = crimeWeatherTransformation.select(crimeData.find(), crimeWeatherTransformation.betweenDates)
-        #stormsAndCrimes = crimeWeatherTransformation.select(crimeWeatherTransformation.product(weatherData.find(), crimeData.find()), crimeWeatherTransformation.equalDates)
 
         print("Aggregating total crimes by date...")
         crimesByDate = crimeWeatherTransformation.aggregate(crimeWeatherTransformation.project(crimes2016, crimeWeatherTransformation.crimeDateAndType), len)
@@ -124,8 +123,3 @@ class crimeWeatherTransformation(dml.Algorithm):
         repo.logout()
 
         return doc
-
-# crimeWeatherTransformation.execute()
-# doc = crimeWeatherTransformation.provenance()
-# print(doc.get_provn())
-# print(json.dumps(json.loads(doc.serialize()), indent=4))
