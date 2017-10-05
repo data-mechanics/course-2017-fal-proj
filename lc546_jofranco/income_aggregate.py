@@ -34,8 +34,8 @@ class income_aggregate(dml.Algorithm):
     
     	
         #aggregate it. Find the medium of income of each zipcode
-        agg_income = income_aggregate.aggregate(zipcode, sum)
-      #  print("INCOME MEAN",dict(agg_income))
+        agg_income = income_aggregate.aggregate(zipcode, numpy.mean)
+       # print("INCOME MEAN",dict(agg_income))
 
         repo.dropCollection("income_aggregate")
         repo.createCollection("income_aggregate")
