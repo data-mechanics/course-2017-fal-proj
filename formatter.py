@@ -1,7 +1,7 @@
 stuff = {}
-filein = open("mbta.json")
+filein = open("real_colleges.json")
 
-for i in range(10):
+for i in range(125):
     line = filein.readline()
     if "FIELD" in line:
         formatter = line.split(":")
@@ -9,8 +9,8 @@ for i in range(10):
 
 filein.close()
 
-fileout = open("mbta_cleaned.json", "w")
-filein = open("mbta.json")
+fileout = open("colleges_cleaned.json", "w")
+filein = open("real_colleges.json")
 
 for line in filein:
     if "FIELD" in line:

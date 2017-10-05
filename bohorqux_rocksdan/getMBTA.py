@@ -8,7 +8,7 @@ import uuid
 class getMBTA(dml.Algorithm):
     contributor = 'bohorqux_rocksdan'
     reads = []
-    writes = ['bohorqux_rocksdan.crimes']
+    writes = ['bohorqux_rocksdan.MBTA']
 
     @staticmethod
     def execute(trial = False):
@@ -20,7 +20,7 @@ class getMBTA(dml.Algorithm):
         repo = client.repo
         repo.authenticate('bohorqux_rocksdan', 'bohorqux_rocksdan')
 
-        url = 'http://datamechanics.io/data/bohorqux_rocksdan/mbta_cleaned.json'
+        url = 'http://datamechanics.io/data/bohorqux_rocksdan/mbta_cleaned2.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         response = response.replace(']', "")
         response += ']'
@@ -62,10 +62,10 @@ class getMBTA(dml.Algorithm):
         doc.wasAssociatedWith(get_MBTA, this_script)
         doc.usage(get_MBTA, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-                   'ont:Query':'?OFFENSE_CODE_GROUP=Residential+Burglary&$select=OFFENSE_CODE_GROUP,Lat,Long,STREET'
+                   'ont:Query':'?line=Bus&$select=line,trxhour'
                   }
                   )
-        MBTA = doc.entity('dat:bohorqux_rocksdan#crimes', {prov.model.PROV_LABEL:'MBTA Report', prov.model.PROV_TYPE:'ont:DataSet'})
+        MBTA = doc.entity('dat:bohorqux_rocksdan#MBTA', {prov.model.PROV_LABEL:'MBTA Report', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(MBTA, this_script)
         doc.wasGeneratedBy(MBTA, get_MBTA, endTime)
         doc.wasDerivedFrom(MBTA, resource, get_MBTA, get_MBTA, get_MBTA)
