@@ -5,10 +5,10 @@ import prov.model
 import datetime
 import uuid
 
-class parkingmeters(dml.Algorithm):
+class metersneighbors(dml.Algorithm):
     contributor = 'medinad'
-    reads = []
-    writes = ['medinad.meters']#'medinad.meters'
+    reads = ['medinad.meters','medinad.neighborhoods']
+    writes = ['medinad.meters-neighborhoods']#'medinad.meters'
 
     @staticmethod
     def execute(trial = False):
@@ -20,17 +20,28 @@ class parkingmeters(dml.Algorithm):
         repo = client.repo
         repo.authenticate('medinad', 'medinad')
 
-        url = 'https://data.opendatasoft.com/explore/dataset/parking-meters@mapathon-public/download/?format=json&timezone=America/New_York'#'http://bostonopendata-boston.opendata.arcgis.com/datasets/962da9bb739f440ba33e746661921244_9.geojson'
-        response = urllib.request.urlopen(url).read().decode("utf-8")
-        r = json.loads(response)
-        s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("meters")
-        repo.createCollection("meters")
-        repo['medinad.meters'].insert_many(r)
-        repo['medinad.meters'].metadata({'complete':True})
-        print(repo['medinad.meters'].metadata())
+        
 
-    
+        meters1 = repo.medinad.meters
+        neighborhoods = repo.medinad.neighborhoods
+        
+
+        new_meters = []
+
+        new_meters = [{'Meters Point':x["fields"]["geo_point_2d"]} for x in meters1]
+
+
+        new_neighborhoods = [{'Neighborhood':x["fields"]["objectid"]} for x in neighborhoods]
+
+        new_neighborhoods.append([{'Geo Shape':x["fields"]["geo_shape"]} for x in neighborhoods])
+
+
+        repo.dropCollection("meters-neighborhoods")
+        repo.createCollection("meters-neighborhoods")
+        repo['meters-neighborhoods'].insert_many(new_meters)
+        repo['meters-neighborhoods'].insert_many(new_neighborhoods)
+
+
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -55,15 +66,15 @@ class parkingmeters(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('met', 'https://data.opendatasoft.com/explore/dataset/')
         
-        this_script = doc.agent('alg:medinad#parkingmeters', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('met:parking-meters', {'prov:label':'parking meters', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        this_script = doc.agent('alg:medinad#meters-neighborhoods', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource = doc.entity('met:meters-neighborhoods', {'prov:label':'meters neighborhoods', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         #get_found = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        get_meters = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_meters, this_script)
+        get_metersneighbors = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(get_metersneighbors, this_script)
         #doc.wasAssociatedWith(get_lost, this_script)
         doc.usage(get_meters, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'/@mapathon-public/download/?format=json&timezone=America/New_York'
+                  
                   }
                   )
         #doc.usage(get_lost, resource, startTime, None,
@@ -72,22 +83,22 @@ class parkingmeters(dml.Algorithm):
         #          }
         #          )
 
-        meters = doc.entity('dat:medinad#meters', {prov.model.PROV_LABEL:'METERS', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(meters, this_script)
-        doc.wasGeneratedBy(meters, get_meters, endTime)
-        doc.wasDerivedFrom(meters, resource, get_meters, get_meters, get_meters)
+        metersneighbors = doc.entity('dat:medinad#metersneighbors', {prov.model.PROV_LABEL:'METERS NEIGHBORS', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(metersneighbors, this_script)
+        doc.wasGeneratedBy(metersneighbors, get_metersneighbors, endTime)
+        doc.wasDerivedFrom(metersneighbors, resource, get_metersneighbors, get_metersneighbors, get_metersneighbors)
 
         #found = doc.entity('dat:alice_bob#found', {prov.model.PROV_LABEL:'Animals Found', prov.model.PROV_TYPE:'ont:DataSet'})
         #doc.wasAttributedTo(found, this_script)
         #doc.wasGeneratedBy(found, get_found, endTime)
         #doc.wasDerivedFrom(found, resource, get_found, get_found, get_found)
 
-        repo.logout()
+        repo.logout() 
                   
         return doc
 
-parkingmeters.execute()
-doc = parkingmeters.provenance()
+metersneighbors.execute()
+doc = metersneighbors.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
 

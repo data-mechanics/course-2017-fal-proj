@@ -53,18 +53,18 @@ class parkboston(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
+        doc.add_namespace('prk', 'https://data.boston.gov/export/8d3/8cc/')
         
         this_script = doc.agent('alg:medinad#parkboston', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource = doc.entity('prk:park-boston', {'prov:label':'park boston', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         #get_found = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         get_app = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_app, this_script)
         #doc.wasAssociatedWith(get_lost, this_script)
         doc.usage(get_app, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'
-                  }
+                  'ont:Query':'/8d38cc9d-8c58-462e-b2df-b793e9c05612.json'
+                  } 
                   )
         #doc.usage(get_lost, resource, startTime, None,
         #          {prov.model.PROV_TYPE:'ont:Retrieval',
