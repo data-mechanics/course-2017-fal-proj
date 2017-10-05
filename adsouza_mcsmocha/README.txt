@@ -17,6 +17,8 @@ For exact list of packages used, look at req.txt within the same directory
 
 Additional Notes:
 As there are several datasets of considerable size (311 Service Requests especially) that we're working on and the transformations require parsing through 
-them multiple times so to run the entire adsouza_mcsmocha folder to generate the results and provenance would as such take a considerable amount of time.
-Please keep this in mind when running the following files.
+them multiple times so to run the entire adsouza_mcsmocha folder to generate the results and provenance and as such would take a considerable amount of time.
+Please keep this in mind when running the following files. You may have to comment out some sections when testing (namely within threeBigBellies.py).
+
+Also note auth.json is not necessary as we do not require any authentication for our APIs and is simply a placeholder when running code.
 

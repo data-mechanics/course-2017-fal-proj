@@ -101,6 +101,7 @@ class threeBigBellies(dml.Algorithm):
         # print('selectBigBellyReduced', type(selectBigBellyReduced))
         # print (selectBigBellyReduced[0]) 
 
+        # This aggregate function takes a considerable amount of time to run. Comment out lines 124-129 when testing.
         def aggregateScore(dictList1, dictList2):
             neighborhood_scores_dataset = []
             neighborhoods_list = []
