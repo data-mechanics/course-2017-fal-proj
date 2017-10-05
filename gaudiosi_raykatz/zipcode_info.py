@@ -7,8 +7,8 @@ import uuid
 
 class zipcode_info(dml.Algorithm):
     contributor = 'gaudiosi_raykatz'
-    reads = ["gaudiosi_katz.zipcode_map", "gaudiosi_katz.demographics", "gaudiosi_katz.housing", "gaudiosi_katz.income", "gaudiosi_katz.mbta_stops"]
-    writes = ['gaudiosi_katz.zipcode_info']
+    reads = ["gaudiosi_raykatz.zipcode_map", "gaudiosi_raykatz.demographic_percentages", "gaudiosi_raykatz.housing_percentages", "gaudiosi_raykatz.income_percentages", "gaudiosi_raykatz.mbta_stops"]
+    writes = ['gaudiosi_raykatz.zipcode_info']
 
     @staticmethod
     def execute(trial = False):
@@ -21,46 +21,50 @@ class zipcode_info(dml.Algorithm):
         repo.authenticate('gaudiosi_raykatz', 'gaudiosi_raykatz')
        
         r = []
+        
         zipcode_data = list(repo.gaudiosi_raykatz.zipcode_map.find({}))[0]
+
         zipcode_list = []
         for feature in zipcode_data["features"]:
             zipcode_list.append(feature['properties']['ZIP5'])
         
         zipcode_list = list(set(zipcode_list))
-        demographics = list(repo.gaudiosi_raykatz.demographics.find({}))
-        housing = list(repo.gaudiosi_raykatz.housing.find({}))
-        income = list(repo.gaudiosi_raykatz.income.find({}))
-        mbta_stops = list(repo.gaudiosi_raykatz.mbta_stops.find({}))
         
         for zipcode in zipcode_list:
             z = {}
             z["zipcode"] = zipcode
-            demographics = list(repo.gaudiosi_raykatz.demographics.find({"zipcode": zipcode}))[0]
-            housing = list(repo.gaudiosi_raykatz.housing.find({"zipcode": zipcode}))[0]
-            income = list(repo.gaudiosi_raykatz.income.find({"zipcode": zipcode}))[0]
-            if demographics["total"] == "0":
+            demographics = list(repo.gaudiosi_raykatz.demographic_percentages.find({"zipcode": zipcode}))
+            if len(demographics) == 0:
                 continue
-
-            z["percent_white"] = "{0:.4f}".format( float(demographics["white"]) / float(demographics["total"]) )
-            z["percent_black"] = "{0:.4f}".format( float(demographics["black"]) / float(demographics["total"]) )
-            z["percent_native"] = "{0:.4f}".format( float(demographics["native_american"]) / float(demographics["total"]) )
-            z["percent_asian"] = "{0:.4f}".format( float(demographics["asian"]) / float(demographics["total"]) )
-            z["percent_pacific"] = "{0:.4f}".format( float(demographics["pacific_islander"]) / float(demographics["total"]) )
-            z["percent_hispanic"] = "{0:.4f}".format( float(demographics["hispanic"]) / float(demographics["total"]) )
+            else:
+               demographics = demographics[0]
+            income = list(repo.gaudiosi_raykatz.income_percentages.find({"zipcode": zipcode}))[0]
+            housing = list(repo.gaudiosi_raykatz.housing_percentages.find({"zipcode": zipcode}))[0]
+            
+            
+            z["percent_white"] = demographics["percent_white"]
+            z["percent_black"] = demographics["percent_black"]
+            z["percent_native"] = demographics["percent_native"]
+            z["percent_asian"] = demographics["percent_asian"]
+            z["percent_pacific"] = demographics["percent_pacific"]
+            z["percent_hispanic"] = demographics["percent_hispanic"]
+            
             z["median_income"] = income["median_income"]
             z["median_rent"] = income["median_rent"]
-            z["percent_spending_50_rent"] = "{0:.4f}".format( float(income["50_income_rent"]) / float(income["total_renters"]) )
-            z["percent_poverty"] = "{0:.4f}".format( float(income["people_in_poverty"]) / float(income["total_people"]) )
-            z["percent_homes_occupied"] = "{0:.4f}".format( float(housing["occupied_housing"]) / float(housing["total_housing"]) )
-            z["percent_homes_vacant"] = "{0:.4f}".format( float(housing["vacant_housing"]) / float(housing["total_housing"]) )
-            z["perecent_homes_built_before_1939"] = "{0:.4f}".format( float(housing["structures_built_before_1939"]) / float(housing["total_structures_built"]) )
+            z["percent_spending_50_rent"] = income["percent_spending_50_rent"]
+            z["percent_poverty"] = income["percent_poverty"]
+            
+            z["percent_homes_occupied"] = housing["percent_homes_occupied"]
+            z["percent_homes_vacant"] = housing["percent_homes_vacant"]
+            z["percent_homes_built_before_1939"] = housing["percent_homes_built_before_1939"]
+
             z["subway_stops"] = repo.gaudiosi_raykatz.mbta_stops.count({"zipcode": zipcode, "mode_name": "Subway"})
             z["commuter_stops"] = repo.gaudiosi_raykatz.mbta_stops.count({"zipcode": zipcode, "mode_name": "Commuter Rail"})
             z["bus_stops"] = repo.gaudiosi_raykatz.mbta_stops.count({"zipcode": zipcode, "mode_name": "Bus"})
             
             
             r.append(z)
-        
+            
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("zipcode_info")
         repo.createCollection("zipcode_info")
@@ -98,7 +102,7 @@ class zipcode_info(dml.Algorithm):
         
         doc.usage(get_demos, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Demographics&$select=white,black,native_american,asian,pacific_islander,hispanic,total,zipcode'
+                  'ont:Query':'?type=Zipcode Info&$select=zipcode,percent_white,percent_black,percent_native,percent_asian,percent_pacific,percent_hispanic,median_income,median_rent,percent_spending_50_rent,percent_poverty,percent_homes_occupied,percent_homes_vacant,percent_homes_built_before_1939,subway_stops,commuter_stops,bus_stops'
                   }
                   )
         
@@ -110,10 +114,10 @@ class zipcode_info(dml.Algorithm):
         repo.logout()
                   
         return doc
-
+'''
 zipcode_info.execute()
 doc = zipcode_info.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
-
+'''
 ## eof

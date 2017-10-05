@@ -5,53 +5,44 @@ import prov.model
 import datetime
 import uuid
 
-class demographics(dml.Algorithm):
+class demographic_percentages(dml.Algorithm):
     contributor = 'gaudiosi_raykatz'
-    reads = []
-    writes = ['gaudiosi_raykatz.demographics']
+    reads = ["gaudiosi_raykatz.demographics"]
+    writes = ['gaudiosi_raykatz.demographic_percentages']
 
     @staticmethod
     def execute(trial = False):
-        '''Retrieve racial demographics from US Census'''
+        '''Get demographic percentages'''
         startTime = datetime.datetime.now()
 
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate('gaudiosi_raykatz', 'gaudiosi_raykatz')
-        url = "https://api.census.gov/data/2010/sf1?get=P016A001,P016B001,P016C001,P016D001,P016E001,P016H001,P0160001&for=zip+code+tabulation+area:*&in=state:25&key="
-        with open('auth.json') as data_file:    
-                data = json.load(data_file)
-        url += data["census"]
+       
         
-        #Returns the ordered by population numbers of [white, black, native american, asian, pacific islander, hispanic, total, state id (25), zipcode]
-        response = urllib.request.urlopen(url).read().decode("utf-8")
         
-        result = json.loads(response)
-        r = []
-        for i in range(1,len(result)):
-            if int(result[i][6]) == 0:
-                continue
-
-            d = {}
-            d["white"] = int(result[i][0])
-            d["black"] = int(result[i][1])
-            d["native_american"] = int(result[i][2])
-            d["asian"] = int(result[i][3])
-            d["pacific_islander"] = int(result[i][4] )
-            d["hispanic"] = int(result[i][5])
-            d["total"] = int(result[i][6])
-            d["zipcode"] = result[i][8]
-            r.append(d)
-
-
+        repo.dropCollection("demographic_percentages")
+        repo.createCollection("demographic_percentages")
         
-        s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("demographics")
-        repo.createCollection("demographics")
-        repo['gaudiosi_raykatz.demographics'].insert_many(r)
-        repo['gaudiosi_raykatz.demographics'].metadata({'complete':True})
-        print(repo['gaudiosi_raykatz.demographics'].metadata())
+        
+        repo.gaudiosi_raykatz.demographics.aggregate( [ {"$project":{
+            "zipcode":1, 
+            "percent_white":{"$divide": ["$white", "$total"]},
+            "percent_black":{"$divide": ["$black", "$total"]},
+            "percent_native":{"$divide": ["$native", "$total"]},
+            "percent_asian":{"$divide": ["$asian", "$total"]},
+            "percent_pacific":{"$divide": ["$pacific", "$total"]},
+            "percent_hispanic":{"$divide": ["$hispanic", "$total"]},
+            }},
+                                                
+            {"$out": "gaudiosi_raykatz.demographic_percentages"}
+
+                                                
+        ])
+        
+        repo['gaudiosi_raykatz.demographic_percentages'].metadata({'complete':True})
+        print(repo['gaudiosi_raykatz.demographic_percentages'].metadata())
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -83,11 +74,11 @@ class demographics(dml.Algorithm):
         
         doc.usage(get_demos, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Demographics&$select=white,black,native_american,asian,pacific_islander,hispanic,total,zipcode'
+                  'ont:Query':'?type=Demographic Percentages&$select=percent_white,percent_black,percent_native,percent_asian,percent_pacific,percent_hispanic'
                   }
                   )
         
-        demos = doc.entity('dat:gaudiosi_raykatz#demographics', {prov.model.PROV_LABEL:'Demographics', prov.model.PROV_TYPE:'ont:DataSet'})
+        demos = doc.entity('dat:gaudiosi_raykatz#demographic_percentages', {prov.model.PROV_LABEL:'Demographic Percentages', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(demos, this_script)
         doc.wasGeneratedBy(demos, get_demos, endTime)
         doc.wasDerivedFrom(demos, resource, get_demos, get_demos, get_demos)
@@ -96,8 +87,8 @@ class demographics(dml.Algorithm):
                   
         return doc
 '''
-demographics.execute()
-doc = demographics.provenance()
+demographic_percentages.execute()
+doc = demographic_percentages.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
 '''
