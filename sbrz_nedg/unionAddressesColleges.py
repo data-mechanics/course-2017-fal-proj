@@ -73,7 +73,7 @@ class unionAddressesColleges(dml.Algorithm):
         union_addresses_colleges = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
         doc.wasAssociatedWith(this_script)
-        doc.usage(address_db, college_address_db, union_db, startTime, None)
+        doc.usage(address_db, college_address_db, union_db, startTime)
 
         doc.wasAttributedTo(this_script, this_script, this_script)
         doc.wasGeneratedBy(union_addresses_colleges)
