@@ -11,7 +11,7 @@ import numpy as np
 
 class transformation_k_means(dml.Algorithm):
     contributor = 'wenjun'
-    reads =['wenjun.allParkingMeters','wenjun.parkingMetersBoston','k_means_parkingMeters']
+    reads =[]
     writes = ['wenjun.allParkingMeters','wenjun.parkingMetersBoston','k_means_parkingMeters']
 
     @staticmethod
@@ -72,44 +72,36 @@ class transformation_k_means(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/')  # The event log.
         doc.add_namespace('bdp', 'https://data.boston.gov/dataset')
         #doc.add_namespace('cdp', 'https://data.cambridgema.gov/')
-        this_script = doc.agent('alg:wenjun#transformation_restaurants_within_1mile',
+        this_script = doc.agent('alg:wenjun#transformation_k_mans',
                                 {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
 
         # Resources
-        resource_yelpRestaurants = doc.entity('dat:wenjun#yelpRestaurants',
-                                               {'prov:label': 'restaurants in City of Boston',
-                                                prov.model.PROV_TYPE: 'ont:DataResource',
-                                                'ont:Extension': 'json'})
-
         resource_k_means_ParkingMeters = doc.entity('dat:wenjun#k_means_ParkingMeters',
                                                {'prov:label': 'k_means_ParkingMeters',
                                                 prov.model.PROV_TYPE: 'ont:DataResource',
                                                 'ont:Extension': 'json'})
 
        # Activities' Associations with Agent
-        transform_restaurants_within_1mile= doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime,
+        transform_k_means= doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime,
                                                 {
-                                                    prov.model.PROV_LABEL: "transform restaurants within 1 mile",
+                                                    prov.model.PROV_LABEL: "transform k means",
                                                     prov.model.PROV_TYPE: 'ont:Computation'})
 
         # Activities' Associations with Agent
-        doc.wasAssociatedWith(transform_restaurants_within_1mile, this_script)
+        doc.wasAssociatedWith(transform_k_means, this_script)
 
         # Record which activity used which resource
-        doc.usage(transform_restaurants_within_1mile, resource_yelpRestaurants, startTime)
-        doc.usage(transform_restaurants_within_1mile, resource_k_means_ParkingMeters, startTime)
+        doc.usage(transform_k_means, resource_k_means_ParkingMeters, startTime)
 
         # Result dataset entity
-        k_means_ParkingMeters_restaurants  = doc.entity('dat:wenjun#k_means_coordinates_restaurants',
+        k_means_ParkingMeters  = doc.entity('dat:wenjun#k_means_ParkingMeters',
                                        {prov.model.PROV_LABEL: 'k means Parking Meters Restaurants',
                                         prov.model.PROV_TYPE: 'ont:DataSet'})
 
-        doc.wasAttributedTo(k_means_ParkingMeters_restaurants, this_script)
-        doc.wasGeneratedBy(k_means_ParkingMeters_restaurants, transform_restaurants_within_1mile, endTime)
-        doc.wasDerivedFrom(k_means_ParkingMeters_restaurants, resource_yelpRestaurants, k_means_ParkingMeters_restaurants, k_means_ParkingMeters_restaurants,
-                           k_means_ParkingMeters_restaurants)
-        doc.wasDerivedFrom(k_means_ParkingMeters_restaurants, resource_k_means_ParkingMeters, k_means_ParkingMeters_restaurants, k_means_ParkingMeters_restaurants,
-                           k_means_ParkingMeters_restaurants)
+        doc.wasAttributedTo(k_means_ParkingMeters, this_script)
+        doc.wasGeneratedBy(k_means_ParkingMeters, transform_k_means, endTime)
+        doc.wasDerivedFrom(k_means_ParkingMeters, resource_k_means_ParkingMeters, transform_k_means, transform_k_means,
+                           transform_k_means)
 
 
         repo.logout()
@@ -120,9 +112,4 @@ class transformation_k_means(dml.Algorithm):
  
 
 #transformation_k_means.execute()
-
-transformation_k_means.execute()
-doc = transformation_k_means.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
 

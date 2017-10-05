@@ -31,7 +31,7 @@ def distance(lon1,lat1,lon2,lat2):
 
 class transformation_cirme_within_1mile(dml.Algorithm):
     contributor = 'wenjun'
-    reads =['wenjun.crimeBoston','wenjun.k_means_parkingMeters']
+    reads =[]
     writes = ['wenjun.Property_Assessment','wenjun.foodCambridge','wenjun.foodBoston',
               'wenjun.parkingMetersBoston','wenjun.parkingMetersCambridge','wenjun.crimeBoston','wenjun.k_means_coordinates_safty']
 
@@ -77,8 +77,7 @@ class transformation_cirme_within_1mile(dml.Algorithm):
             insert = {'coordinates':entry['coordinates'],'crime_number':crime_num}
             repo['wenjun.k_means_coordinates_safty'].insert_one(insert)
 
-        for entry in repo['wenjun.k_means_coordinates_safty'].find():
-            print(entry)    
+     
         repo.logout()
         
 
@@ -100,6 +99,7 @@ class transformation_cirme_within_1mile(dml.Algorithm):
                           'http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/')  # The event log.
         doc.add_namespace('bdp', 'https://data.boston.gov/dataset')
+        
         #doc.add_namespace('cdp', 'https://data.cambridgema.gov/')
         this_script = doc.agent('alg:wenjun#transformation_cirme_within_1mile',
                                 {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
@@ -144,9 +144,9 @@ class transformation_cirme_within_1mile(dml.Algorithm):
         repo.logout()
         return doc        
 
-     
+'''
 transformation_cirme_within_1mile.execute()
 doc = transformation_cirme_within_1mile.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
-
+'''

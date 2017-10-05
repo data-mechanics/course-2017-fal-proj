@@ -31,7 +31,7 @@ def distance(lon1,lat1,lon2,lat2):
 
 class transformation_restaurants_within_1mile(dml.Algorithm):
     contributor = 'wenjun'
-    reads =['wenjun.crimeBoston','wenjun.k_means_parkingMeters','wenjun.yelpRestaurants']
+    reads =[]
     writes = ['wenjun.Property_Assessment','wenjun.foodCambridge','wenjun.foodBoston',
               'wenjun.parkingMetersBoston','wenjun.parkingMetersCambridge',
               'wenjun.crimeBoston','wenjun.k_means_coordinates_safty','wenjun.k_means_coordinates_restaurants']
@@ -145,9 +145,9 @@ class transformation_restaurants_within_1mile(dml.Algorithm):
         repo.logout()
         return doc        
 
-
+'''
 transformation_restaurants_within_1mile.execute()
 doc = transformation_restaurants_within_1mile.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
-
+'''

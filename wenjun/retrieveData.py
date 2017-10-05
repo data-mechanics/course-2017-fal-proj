@@ -249,23 +249,23 @@ class retrieveData(dml.Algorithm):
             SEARCH_LIMIT = 3
             
             parser =argparse.ArgumentParser()
-            print("2")
+            #print("2")
             parser.add_argument('-q', '--term', dest='term', default=DEFAULT_TERM,
                                 type=str, help='Search term (default: %(default)s)')
-            print("3")
+            #print("3")
             parser.add_argument('-l', '--location', dest='location',
                                 default=DEFAULT_LOCATION, type=str,
 
                                 help='Search location (default: %(default)s)')
-            print("4")
-            print(parser)
+            #print("4")
+            #print(parser)
             args, unknown = parser.parse_known_args()
             input_values = args
-            print("5")
+            #print("5")
             try:
                 
                 bearer_token = obtain_bearer_token(API_HOST, TOKEN_PATH,CLIENT_ID,CLIENT_SECRET,GRANT_TYPE)
-                print("6")
+                #print("6")
                 
                 r = search(bearer_token,input_values.term, input_values.location,API_HOST,SEARCH_PATH)
                 r = json.loads(json.dumps(r, sort_keys=True, indent=2))
@@ -320,7 +320,7 @@ class retrieveData(dml.Algorithm):
                                                 prov.model.PROV_TYPE: 'ont:DataResource',
                                                 'ont:Extension': 'json'})
         
-        resource_parkingMetersBoston = doc.entity('dat:wenjun#crimeBoston',
+        resource_parkingMetersBoston = doc.entity('dat:wenjun#parkingMetersBoston',
                                                {'prov:label': 'crimeBoston',
                                                 prov.model.PROV_TYPE: 'ont:DataResource',
                                                 'ont:Extension': 'json'})
@@ -392,31 +392,31 @@ class retrieveData(dml.Algorithm):
         doc.wasAttributedTo(neighborhoodsBoston, this_script)
         doc.wasAttributedTo(incomeBoston, this_script)
         
-        doc.wasGeneratedBy(yelpRestaurants, yelpRestaurants, endTime)
-        doc.wasGeneratedBy(crimeBoston, crimeBoston, endTime)
-        doc.wasGeneratedBy(parkingMetersBoston, parkingMetersBoston, endTime)
-        doc.wasGeneratedBy(neighborhoodsBoston, neighborhoodsBoston, endTime)
-        doc.wasGeneratedBy(incomeBoston, incomeBoston, endTime)
+        doc.wasGeneratedBy(yelpRestaurants, get_resource_yelpRestaurants, endTime)
+        doc.wasGeneratedBy(crimeBoston, get_resource_crimeBoston, endTime)
+        doc.wasGeneratedBy(parkingMetersBoston, get_resource_parkingMetersBoston, endTime)
+        doc.wasGeneratedBy(neighborhoodsBoston, get_resource_neighborhoodsBoston, endTime)
+        doc.wasGeneratedBy(incomeBoston, get_resource_incomeBoston, endTime)
 
         
-        doc.wasDerivedFrom(yelpRestaurants, yelpRestaurants, yelpRestaurants, yelpRestaurants,
-                           yelpRestaurants)
-        doc.wasDerivedFrom(crimeBoston, crimeBoston, crimeBoston, crimeBoston,
-                           crimeBoston)
-        doc.wasDerivedFrom(parkingMetersBoston, parkingMetersBoston, parkingMetersBoston, parkingMetersBoston,
-                           parkingMetersBoston)
-        doc.wasDerivedFrom(neighborhoodsBoston, neighborhoodsBoston, neighborhoodsBoston, neighborhoodsBoston,
-                           neighborhoodsBoston)
-        doc.wasDerivedFrom(incomeBoston, incomeBoston, incomeBoston, incomeBoston,
-                           incomeBoston)
+        doc.wasDerivedFrom(yelpRestaurants, resource_yelpRestaurants, get_resource_yelpRestaurants, get_resource_yelpRestaurants,
+                           get_resource_yelpRestaurants)
+        doc.wasDerivedFrom(crimeBoston, resource_crimeBoston, get_resource_crimeBoston, get_resource_crimeBoston,
+                           get_resource_crimeBoston)
+        doc.wasDerivedFrom(parkingMetersBoston, resource_parkingMetersBoston, get_resource_parkingMetersBoston, get_resource_parkingMetersBoston,
+                           get_resource_parkingMetersBoston)
+        doc.wasDerivedFrom(neighborhoodsBoston, resource_neighborhoodsBoston, get_resource_neighborhoodsBoston, get_resource_neighborhoodsBoston,
+                           get_resource_neighborhoodsBoston)
+        doc.wasDerivedFrom(incomeBoston, resource_incomeBoston, get_resource_incomeBoston, get_resource_incomeBoston,
+                           get_resource_incomeBoston)
 
 
         repo.logout()
         return doc        
         
-
+'''
 retrieveData.execute()
 doc = retrieveData.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
-
+'''
