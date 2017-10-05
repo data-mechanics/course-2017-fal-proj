@@ -63,7 +63,7 @@ class selectAddressesColleges(dml.Algorithm):
         select_college_address_data = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
         doc.wasAssociatedWith(this_script)
-        doc.usage(college_address_db, college_db, startTime, None)
+        doc.usage(college_address_db, college_db, startTime, None,  {prov.model.PROV_TYPE:'ont:Retrieval'})
 
         doc.wasAttributedTo(this_script, this_script)
         doc.wasGeneratedBy(select_college_address_data)
