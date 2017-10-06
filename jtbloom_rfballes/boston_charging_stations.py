@@ -25,32 +25,24 @@ class boston_charging_stations(dml.Algorithm):
         repo.createCollection("jtbloom_rfballes.boston_charging_stations")
 
         new_charging_stations = repo.jtbloom_rfballes.charging_stations.find()
-        new_dict = {}
-
+        
+        charging_list = []
+        
         for item in new_charging_stations:
             for feature in item['features']: 
-                    city = feature['properties']['CITY']
-                    station_name = feature['properties']['STATION_NA']
-                    address = feature['properties']['ADDRESS']
-                    longitude = feature['properties']['LONGITUDE']
-                    latitude = feature['properties']['LATITDE']
-                    if (city == 'Boston'):
-                        new_dict['City'] = city
-                        new_dict['Station Name'] = station_name
-                        new_dict['Address'] = address
-                        new_dict['Longitude'] = longitude
-                        new_dict['Latitude'] = latitude
-                        print(new_dict)
-        
-        repo['jtbloom_rfballes.boston_charging_stations'].insert(new_dict)
-
-
-
-
-
+                new_dict = {}
+                if (feature['properties']['CITY'] == 'Boston'):
+                    new_dict['City'] = feature['properties']['CITY']
+                    new_dict['Station Name'] = feature['properties']['STATION_NA']
+                    new_dict['Address'] = feature['properties']['ADDRESS']
+                    new_dict['Longitude'] = feature['properties']['LONGITUDE']
+                    new_dict['Latitude'] = feature['properties']['LATITDE']
+                    charging_list.append(new_dict)
+        #print(charging_list)
+        repo['jtbloom_rfballes.boston_charging_stations'].insert_many(charging_list)
 
     @staticmethod
     def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
         pass
 
-boston_charging_stations.execute()
+#boston_charging_stations.execute()
