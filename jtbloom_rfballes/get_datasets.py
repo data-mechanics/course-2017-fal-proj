@@ -185,9 +185,9 @@ class get_datasets(dml.Algorithm):
                   
         return doc
 
-get_datasets.execute()
-doc = get_datasets.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+#get_datasets.execute()
+#doc = get_datasets.provenance()
+#print(doc.get_provn())
+#print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof

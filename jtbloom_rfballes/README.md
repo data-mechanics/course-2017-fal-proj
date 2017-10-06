@@ -44,4 +44,11 @@ The Electrical Vehicle Charging Stations dataset gives us the names of the stati
 For the first transformation, we wanted to modify and clean up the Electric Vehicle Charging Station dataset. This dataset gives us all electric vehicle charging stations within the whole state of MA, but for the purpose of this project, we wanted to narrow them down to only include the stations in Boston. We performed a selection to filter the data, thus, retreiving the stations where the city was equal to 'Boston'. Once the dataset was narrowed down to just Boston stations, we wanted to clean up the dataset and remove any data that we thought was extraneous. The only other fields we wanted to include were 'Station Name', 'Address', 'Longtitude', and 'Latitude'. After extracting those fields, we inserted the new dataset into a dictionary, which was then inserted into a new MongoDB collection.
 
 Transformation file: boston_charging_stations.py
+
+#### Transformation 2 & 3:
+This two trasformations are similar in that they are both the derived from the Hubway trip history. The final results tell us the number of (1)incoming trips to every hubway station in the month of january 2015 and (2) outgoing trips of every hubway station in the month of january 2015. The results were obtained by selecting, projecting into a tuple list, and then aggregating by countitng the number of bikes that either started or finished a trip at a certain station. 
+
+Files: outgoing_trips.py and incoming_trips.py
+
+ 
  

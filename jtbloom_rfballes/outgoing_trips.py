@@ -71,4 +71,4 @@ class outgoing_trips(dml.Algorithm):
 	def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
 		pass
 
-outgoing_trips.execute()
+#outgoing_trips.execute()
