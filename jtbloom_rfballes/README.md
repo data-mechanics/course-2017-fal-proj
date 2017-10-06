@@ -1,7 +1,6 @@
 # CS 591 Fall 2017 Project #1: Data Retrieval, Storage, Provenance, and Transformations 
 Jake Bloomfeld (jtbloom@bu.edu) and Ricardo Ballesteros (rfballes@bu.edu)
 ## Project Idea: Sustainability and Transportation in Boston
-## Potential Question: What part of Boston is the most "green"?
 
 ### Notes
 * We didn't use any APIs
@@ -50,7 +49,7 @@ For the first transformation, we wanted to modify and clean up the Electric Vehi
 
 Transformation file: boston_charging_stations.py
 
-#### Transformation 2 & 3:
+#### Transformations 2 & 3:
 These two trasformations are similar in that they are both the derived from the Hubway Trip History. The final results tell us the number of (1)incoming trips to every Hubway station in the month of January 2015 and (2) outgoing trips of every hubway station in the month of January 2015. The results were obtained by selecting, projecting into a tuple list, and then aggregating by counting the number of bikes that either started or finished a trip at a certain station. When continuing further in this project, we can combine trip history from many different months and years to get a larger set of data.
 
 Transformation files: outgoing_trips.py, incoming_trips.py
