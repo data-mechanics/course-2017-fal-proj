@@ -3,6 +3,11 @@ Jake Bloomfeld (jtbloom@bu.edu) and Ricardo Ballesteros (rfballes@bu.edu)
 ## Project Idea: Sustainability and Transportation in Boston
 ## Potential Question: What part of Boston is the most "green"?
 
+### Notes
+* We didn't use any APIs
+* At the end of each transformation script, we commented out ''class'.execute()'
+* At the end of get_datasets.py, we commented out the last 4 lines
+
 ### Dataset #1: Electric Vehicle Charging Stations (Mass DOT)
 ##### Website URL: http://geo-massdot.opendata.arcgis.com/datasets/electric-vehicle-charging-stations/data
 ##### JSON URL: https://opendata.arcgis.com/datasets/ed1c6fb748a646ac83b210985e1069b5_0.geojson
@@ -46,9 +51,13 @@ For the first transformation, we wanted to modify and clean up the Electric Vehi
 Transformation file: boston_charging_stations.py
 
 #### Transformation 2 & 3:
-This two trasformations are similar in that they are both the derived from the Hubway trip history. The final results tell us the number of (1)incoming trips to every hubway station in the month of january 2015 and (2) outgoing trips of every hubway station in the month of january 2015. The results were obtained by selecting, projecting into a tuple list, and then aggregating by countitng the number of bikes that either started or finished a trip at a certain station. 
+These two trasformations are similar in that they are both the derived from the Hubway Trip History. The final results tell us the number of (1)incoming trips to every Hubway station in the month of January 2015 and (2) outgoing trips of every hubway station in the month of January 2015. The results were obtained by selecting, projecting into a tuple list, and then aggregating by counting the number of bikes that either started or finished a trip at a certain station. When continuing further in this project, we can combine trip history from many different months and years to get a larger set of data.
 
-Files: outgoing_trips.py and incoming_trips.py
+Transformation files: outgoing_trips.py, incoming_trips.py
 
+#### Transformation 4:
+This transformation modifies the Hubway Station Locations dataset to see how many Hubway docks are in each municipality within Boston. First, we do a selection to filter the dataset. The fields we select are the municipality of the station within the city of Boston, the station name, the number of bike docks, and the longitude and latitude. Then, we projected the municipality and the number of docks into a tuple list. Lastly, we aggregated by sum so the final result shows us how many docks there are per municipality.
+
+Transformation files: boston_hubway_stations.py
  
  
