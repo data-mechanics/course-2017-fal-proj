@@ -60,7 +60,6 @@ class incoming_trips(dml.Algorithm):
 
 		num_trips = incoming_trips.aggregate(incoming, incoming_trips.count_trips)
 		num_trips = [{'# incoming trips': n, 'station': s} for (s, n) in num_trips]
-		print(num_trips)
 		repo['jtbloom_rfballes.incoming_trips'].insert_many(num_trips)
 
 			
