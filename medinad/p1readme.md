@@ -2,7 +2,7 @@ Project 1 Readme
 
 These datasets were chosen to try to answer the question of which neighborhoods commit the most parking violations in boston, and also try to find the areas where park boston the parking meter app is mostly used.
 
-The plan is to extract the points where all the parking meters are into a new dataset. Then extract the location of police district stations and of the shapes of the different boston neighborhoods, and place these into another dataset. Then take the prequency of visity to the parking violation website on different days of the year, and compare it to the record of usage of the park boston app in another dataset. 
+The plan is to extract the points where all the parking meters are into a new dataset. Then extract the location of police district stations and of the shapes of the different boston neighborhoods, and place these into another dataset. Then take the prequency of visity to the parking violation website on different days of the year, and compare it to the record of usage of the park boston app in another dataset. This would allow for a future analysis how location and distance to a police station affect the srictness or effectiveness of parking meters.
 
 Boston Neighborhoods
 
@@ -20,6 +20,10 @@ https://data.opendatasoft.com/explore/dataset/parking-meters@mapathon-public/dow
 
 PARK BOSTON MONTHLY TRANSACTIONS BY ZONE 2015
 https://data.boston.gov/export/8d3/8cc/8d38cc9d-8c58-462e-b2df-b793e9c05612.json
+
+
+
+
 
 
 
