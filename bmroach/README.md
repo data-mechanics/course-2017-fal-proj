@@ -26,7 +26,7 @@ available via Analyze Boston, aimed at expanding or improving outdoor spaces.
 ### Python modules in use not typically included in standard Python distributions
 * dml
 * prov
-* ~~geojson~~ (see Dev notes in scripts)
+* geojson
 
 ### Authentication for Datasets
 * Hubway - __None__
@@ -35,6 +35,17 @@ available via Analyze Boston, aimed at expanding or improving outdoor spaces.
 * Existing Bike Network - __None__
 * Open Space - __None__
 
+### Authentication for Transformations
+* Transform Hubway - Google Maps API
+    * https://developers.google.com/maps/documentation/geocoding/get-api-key
+    * auth.json should include a pair following the convention: 
+        * { "GoogleMapsAPI": { "key": "YOUR-KEY" } }
+
+
+### Three Output Datasets
+* Aggregated Hubway Data by Neighborhood
+* 
+* 
 
 ### Resources
 * Awesome tool to format curl commands as Python https://curl.trillworks.com

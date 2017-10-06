@@ -2,7 +2,8 @@ import urllib.request
 import json
 import dml, prov.model
 import datetime, uuid
-# import geojson
+import geojson
+# import csv
 
 """
 Skelton file provided by lapets@bu.edu
@@ -11,7 +12,9 @@ Heavily modified by bmroach@bu.edu
 City of Boston Open Spaces (Like parks, etc)
 
 Development notes:
-Currently accessing a csv, although geoJSON is available - maybe a later alteration depending on use?
+
+csv alt link:
+url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/2868d370c55d4d458d4ae2224ef8cddd_7.csv'
 
 """
 
@@ -22,7 +25,7 @@ class retrieve_open_space(dml.Algorithm):
 
     @staticmethod
     def execute(trial = False, log=False):
-        '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
+        '''Retrieves open spaces in Boston as geoJSON'''
         startTime = datetime.datetime.now()
 
         # Set up the database connection.
@@ -34,39 +37,12 @@ class retrieve_open_space(dml.Algorithm):
         repo.dropCollection("open_space")
         repo.createCollection("open_space")    
         
-        #retaining geoJSON link url for future use
-        # url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/2868d370c55d4d458d4ae2224ef8cddd_7.geojson'
-
-        url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/2868d370c55d4d458d4ae2224ef8cddd_7.csv'
-        response = urllib.request.urlopen(url).read().decode("utf-8")
-        
-        rowCount = 0
-        spaceList = []
-        response = response.split('\n')
-
-        fields = response[0].split(',')
-        response  = response[1:]
-        for line in response:
-            lineDict = {}
-            items = line.split(',')
-            #Some genius put fields with commas inside a csv, so that's the next few lines.. 
-            if len(fields) != len(items): 
-                    items = items[:9] + [items[9] + items[10]] + items[11:]
-
-            try:
-                assert len(fields) == len(items)
-            except AssertionError:
-                print(line)
-                print(items)
-                print('\n', fields)
-                return
-
-            for i in range(len(items)):                
-                lineDict[ fields[i] ] = items[i]
-                
-            spaceList.append(lineDict)
-
-        repo['bmroach.open_space'].insert_many( spaceList )
+        url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/2868d370c55d4d458d4ae2224ef8cddd_7.geojson'
+        response = urllib.request.urlopen(url).read().decode("utf-8")        
+        gj = geojson.loads(response)
+        geoDict = dict(gj)
+        geoList = geoDict['features']
+        repo['bmroach.open_space'].insert_many( geoList )
         repo['bmroach.open_space'].metadata({'complete':True})  
         repo.logout()
         endTime = datetime.datetime.now()

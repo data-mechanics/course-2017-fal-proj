@@ -20,7 +20,7 @@ class retrieve_rainfall(dml.Algorithm):
 
     @staticmethod
     def execute(trial = False, log=False, htmlDump = False):
-        '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
+        '''Retrieve Boston rainfall'''
         startTime = datetime.datetime.now()
 
         # Set up the database connection.
