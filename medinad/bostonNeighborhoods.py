@@ -55,8 +55,8 @@ class bostonNeighborhoods(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('nei', 'http://datamechanics.io/data/medinad/')
         
-        this_script = doc.agent('alg:medinad#bostonNeighborhoods', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bdp:boston-neighborhoods', {'prov:label':'boston neighborhoods', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        this_script = doc.agent('nei:medinad#bostonNeighborhoods', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource = doc.entity('nei:boston-neighborhoods', {'prov:label':'boston neighborhoods', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         #get_found = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         get_neighbor = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_neighbor, this_script)

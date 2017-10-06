@@ -55,17 +55,17 @@ class bostonpolice(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
+        doc.add_namespace('bpd', 'https://data.cityofboston.gov/resource/')
         
         this_script = doc.agent('alg:medinad#bostonpolice', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource = doc.entity('bpd:boston-police', {'prov:label':'boston police', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         #get_found = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         get_police = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_police, this_script)
         #doc.wasAssociatedWith(get_lost, this_script)
         doc.usage(get_police, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'
+                  '/pyxn-r3i2.json'
                   }
                   )
         #doc.usage(get_lost, resource, startTime, None,

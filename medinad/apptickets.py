@@ -6,10 +6,10 @@ import datetime
 import uuid
 from collections import defaultdict 
 
-class metersneighbors(dml.Algorithm):
+class apptickets(dml.Algorithm):
     contributor = 'medinad'
-    reads = ['medinad.meters','medinad.neighbor']
-    writes = ['medinad.meters-neighborhoods']#'medinad.meters'
+    reads = ['medinad.app','medinad.tickets']
+    writes = ['medinad.app-tickets']#'medinad.meters'
 
     @staticmethod
     def execute(trial = False):
@@ -22,8 +22,8 @@ class metersneighbors(dml.Algorithm):
         repo.authenticate('medinad', 'medinad')
 
 
-        meters1 = repo.medinad.meters
-        neighborhoods = repo.medinad.neighbor
+        app1 = repo.medinad.app
+        tickets = repo.medinad.tickets
         
 
         def product(R, S):
@@ -32,21 +32,23 @@ class metersneighbors(dml.Algorithm):
         def project(R, p):
             return [p(t) for t in R]
 
-        meters1_list = list(meters1.find())
+        app1_list = list(app1.find())
         #print(meters1_list)
-        neighborhoods_list = list(neighborhoods.find())
+        tickets_list = list(tickets.find())
 
-        new_meters = []
+        new_ticket = [{'Day':x["Day Index"], 'Page views': x["Pageviews"]} for x in tickets_list]
 
-        new_meters = [{'Meters':x["fields"]["geo_point_2d"]} for x in meters1_list]
+        new_app = []
+
+        new_app = [{ 'Zone':x['Zone Name'] ,'January':x["January"],'February':x["February"],'March':x["March"],'April':x["April"],'May':x["May"],'June':x["June"],'July':x["July"]} for x in app1_list]
 
         #print(new_meters)        
 
         #new_meters.extend()
-        nid_list = [{'Neighborhood':x["fields"]["objectid"], 'Geo Shape':x["fields"]["geo_shape"]} for x in neighborhoods_list]
+        #nid_list = [{'Neighborhood':x["fields"]["objectid"], 'Geo Shape':x["fields"]["geo_shape"]} for x in tickets_list]
         #print(nid_list)
 
-        productmn = product(new_meters,nid_list)
+        productmn = product(new_app,new_ticket)  
         
         #print(productmn[0])
 
@@ -54,7 +56,7 @@ class metersneighbors(dml.Algorithm):
         print(type(productmn))
         #ngeo_list = [{} for x in neighborhoods_list]
 
-        final_dict = [{'Meter':n, 'Neighbor':d} for (n,d) in productmn]
+        final_dict = [{'App':n, 'Tickets':d} for (n,d) in productmn]
        
         for i in range(2):
             print(final_dict[i])
@@ -70,18 +72,18 @@ class metersneighbors(dml.Algorithm):
         #for x in productmn:
             #print(x[0])
          
-        print(type(new_meters))
+        
 
 
 
-        repo.dropCollection("medinad.meters-neighborhoods")
-        repo.createCollection("medinad.meters-neighborhoods")
+        repo.dropCollection("medinad.app-tickets")
+        repo.createCollection("medinad.app-tickets")
 #       repo['medinad.meters-neighborhoods'].insert_many(new_meters)
-        repo['medinad.meters-neighborhoods'].insert_many(final_dict)
+        repo['medinad.app-tickets'].insert_many(final_dict)
 
 
 
-        repo.logout()
+        #repo.logout()
 
         endTime = datetime.datetime.now()
 
@@ -94,7 +96,7 @@ class metersneighbors(dml.Algorithm):
             in this script. Each run of the script will generate a new
             document describing that invocation event.
             '''
-
+        pass
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
@@ -105,13 +107,13 @@ class metersneighbors(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('mtn', 'https://data.opendatasoft.com/explore/dataset/')
         
-        this_script = doc.agent('mtn:medinad#meters-neighborhoods', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('mtn:meters-neighborhoods', {'prov:label':'meters neighborhoods', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        this_script = doc.agent('alg:medinad#app-tickets', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource = doc.entity('mtn:app-tickets', {'prov:label':'app tickets', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         #get_found = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        get_metersneighbors = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_metersneighbors, this_script)
+        get_apptickets = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(get_apptickets, this_script)
         #doc.wasAssociatedWith(get_lost, this_script)
-        doc.usage(get_metersneighbors, resource, startTime, None,
+        doc.usage(get_apptickets, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
                   
                   }
@@ -122,10 +124,10 @@ class metersneighbors(dml.Algorithm):
         #          }
         #          )
 
-        metersneighbors = doc.entity('dat:medinad#metersneighbors', {prov.model.PROV_LABEL:'METERS NEIGHBORS', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(metersneighbors, this_script)
-        doc.wasGeneratedBy(metersneighbors, get_metersneighbors, endTime)
-        doc.wasDerivedFrom(metersneighbors, resource, get_metersneighbors, get_metersneighbors, get_metersneighbors)
+        apptickets = doc.entity('dat:medinad#apptickets', {prov.model.PROV_LABEL:'APP TICKETS', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(apptickets, this_script)
+        doc.wasGeneratedBy(apptickets, get_apptickets, endTime)
+        doc.wasDerivedFrom(apptickets, resource, get_apptickets, get_apptickets, get_apptickets)
 
         #found = doc.entity('dat:alice_bob#found', {prov.model.PROV_LABEL:'Animals Found', prov.model.PROV_TYPE:'ont:DataSet'})
         #doc.wasAttributedTo(found, this_script)
@@ -136,8 +138,8 @@ class metersneighbors(dml.Algorithm):
                   
         return doc
 
-metersneighbors.execute()
-doc = metersneighbors.provenance()
+apptickets.execute()
+doc = apptickets.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
 

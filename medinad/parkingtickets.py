@@ -52,7 +52,7 @@ class parkingtickets(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('tic', 'https://data.boston.gov/export/94a/c9d/94ac9d44-c6d6-441c-9c57-12dca571a02f.json')
+        doc.add_namespace('tic', 'https://data.boston.gov/export/94a/')
         
         this_script = doc.agent('alg:medinad#parkingtickets', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'parking tickets', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
@@ -62,7 +62,7 @@ class parkingtickets(dml.Algorithm):
         #doc.wasAssociatedWith(get_lost, this_script)
         doc.usage(get_tickets, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'
+                  'ont:Query':'/c9d/94ac9d44-c6d6-441c-9c57-12dca571a02f.json'
                   }
                   )
         #doc.usage(get_lost, resource, startTime, None,

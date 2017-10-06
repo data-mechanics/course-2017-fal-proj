@@ -6,10 +6,10 @@ import datetime
 import uuid
 from collections import defaultdict 
 
-class metersneighbors(dml.Algorithm):
+class policeneighbors(dml.Algorithm):
     contributor = 'medinad'
-    reads = ['medinad.meters','medinad.neighbor']
-    writes = ['medinad.meters-neighborhoods']#'medinad.meters'
+    reads = ['medinad.police','medinad.neighbor']
+    writes = ['medinad.police-neighborhoods']#'medinad.meters'
 
     @staticmethod
     def execute(trial = False):
@@ -22,7 +22,7 @@ class metersneighbors(dml.Algorithm):
         repo.authenticate('medinad', 'medinad')
 
 
-        meters1 = repo.medinad.meters
+        police = repo.medinad.police
         neighborhoods = repo.medinad.neighbor
         
 
@@ -32,21 +32,21 @@ class metersneighbors(dml.Algorithm):
         def project(R, p):
             return [p(t) for t in R]
 
-        meters1_list = list(meters1.find())
+        police_list = list(police.find())
         #print(meters1_list)
         neighborhoods_list = list(neighborhoods.find())
 
-        new_meters = []
+        new_police = []
 
-        new_meters = [{'Meters':x["fields"]["geo_point_2d"]} for x in meters1_list]
+        new_police = [{'Station Name':x['name'],"Address":x["location_location"],"Point":x["location"]["coordinates"]} for x in police_list]
 
         #print(new_meters)        
 
         #new_meters.extend()
-        nid_list = [{'Neighborhood':x["fields"]["objectid"], 'Geo Shape':x["fields"]["geo_shape"]} for x in neighborhoods_list]
+        nid_list = [{'Neighborhood':x["fields"]["objectid"], 'Geo Shape':x["fields"]["geo_shape"]} for x in neighborhoods_list]#, 'Geo Shape':x["fields"]["geo_shape"]
         #print(nid_list)
 
-        productmn = product(new_meters,nid_list)
+        productmn = product(new_police,nid_list)
         
         #print(productmn[0])
 
@@ -54,7 +54,7 @@ class metersneighbors(dml.Algorithm):
         print(type(productmn))
         #ngeo_list = [{} for x in neighborhoods_list]
 
-        final_dict = [{'Meter':n, 'Neighbor':d} for (n,d) in productmn]
+        final_dict = [{'Police':n, 'Neighborhood':d} for (n,d) in productmn]
        
         for i in range(2):
             print(final_dict[i])
@@ -70,14 +70,14 @@ class metersneighbors(dml.Algorithm):
         #for x in productmn:
             #print(x[0])
          
-        print(type(new_meters))
+        #print(type(new_meters))
 
 
 
-        repo.dropCollection("medinad.meters-neighborhoods")
-        repo.createCollection("medinad.meters-neighborhoods")
+        repo.dropCollection("medinad.police-neighborhoods")
+        repo.createCollection("medinad.police-neighborhoods")
 #       repo['medinad.meters-neighborhoods'].insert_many(new_meters)
-        repo['medinad.meters-neighborhoods'].insert_many(final_dict)
+        repo['medinad.police-neighborhoods'].insert_many(final_dict)
 
 
 
@@ -96,6 +96,7 @@ class metersneighbors(dml.Algorithm):
             '''
 
         # Set up the database connection.
+        pass 
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate('medinad', 'medinad')
@@ -136,8 +137,8 @@ class metersneighbors(dml.Algorithm):
                   
         return doc
 
-metersneighbors.execute()
-doc = metersneighbors.provenance()
+policeneighbors.execute()
+doc = policeneighbors.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
 
