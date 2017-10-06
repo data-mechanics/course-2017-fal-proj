@@ -271,7 +271,7 @@ class retrieve_hubway(dml.Algorithm):
                                 )"""
             exec(command)
 
-        hubway = doc.entity('dat:bmroach#hubway', {prov.model.PROV_LABEL:'Hubway', prov.model.PROV_TYPE:'ont:DataSet'})
+        hubway = doc.entity('dat:bmroach#hubway', {prov.model.PROV_LABEL:'hubway', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(hubway, this_script)
         doc.wasGeneratedBy(hubway, get_hubway, endTime)
         
@@ -284,8 +284,8 @@ class retrieve_hubway(dml.Algorithm):
 
 
 # retrieve_hubway.execute(log=True)
-doc = retrieve_hubway.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+# doc = retrieve_hubway.provenance()
+# print(doc.get_provn())
+# print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof

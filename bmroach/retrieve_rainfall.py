@@ -117,18 +117,47 @@ class retrieve_rainfall(dml.Algorithm):
             in this script. Each run of the script will generate a new
             document describing that invocation event.
             '''
+        client = dml.pymongo.MongoClient()
+        repo = client.repo
+        repo.authenticate('bmroach', 'bmroach')
+        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
+        doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
+        doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
+        doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.        
+        doc.add_namespace('rnf', 'http://www.bwsc.org/COMMUNITY/rainfall/telog_rainfall/')
 
+        this_script = doc.agent('alg:bmroach#rainfall', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         
-                  
-        return 
+        resource = doc.entity('rnf:rf_yearly', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'asp'})
+        
+        get_rainfall = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        
+        doc.wasAssociatedWith(get_rainfall, this_script)
+        
+        doc.usage(get_rainfall,resource, startTime, None,
+                            {prov.model.PROV_TYPE:'ont:Retrieval',
+                            'ont:Query':''  
+                            }
+                            )
+        
+        
+
+        rainfall = doc.entity('dat:bmroach#rainfall', {prov.model.PROV_LABEL:'rainfall', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(rainfall, this_script)
+        doc.wasGeneratedBy(rainfall, get_rainfall, endTime)
+        
+        doc.wasDerivedFrom(rainfall, resource, get_rainfall, get_rainfall, get_rainfall)
+      
+        repo.logout()                  
+        return doc
 
 
 
 
 
-retrieve_rainfall.execute(log=True)
 
-# doc = retrieve.provenance()
+# retrieve_rainfall.execute(log=True)
+# doc = retrieve_rainfall.provenance()
 # print(doc.get_provn())
 # print(json.dumps(json.loads(doc.serialize()), indent=4))
 

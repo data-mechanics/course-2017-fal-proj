@@ -17,8 +17,8 @@ Development notes:
 
 class transform_hubway(dml.Algorithm):
     contributor = 'bmroach'
-    reads = ['bmroach.']
-    writes = ['bmroach.']
+    reads = ['bmroach.hubway']
+    writes = []
 
     @staticmethod
     def execute(trial = False, log=False, cacheIn=False, cacheOut=False):
@@ -70,7 +70,8 @@ class transform_hubway(dml.Algorithm):
 
             #Cache miss, so retrieve
             else:
-                print("making api call for", finalPair)
+                if log:
+                    print("making api call for", finalPair)
                 url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" \
                 + str( finalPair[0] ) + ','+ str( finalPair[1] ) \
                 + "&key=" + auth['GoogleMapsAPI']['key']
@@ -101,25 +102,22 @@ class transform_hubway(dml.Algorithm):
                 with open('locationCache.json', 'w') as outfile:
                     json.dump(locationCache, outfile)
         
-        print(newEntriesList)   
-
         #Aggregate number of trips by neighborhood'
+        agg = {}
+        for trip in newEntriesList:
+            neighborhood = trip['Neighborhood'] 
+            if neighborhood in agg:
+                agg[neighborhood] += 1
+            else:
+                agg[neighborhood] = 1
+
+
+        with open("./custom_output_datasets/hubway_by_neighborhood.json", 'w') as outfile:
+            json.dump(agg, outfile)
+
         
-
-
-
-
-
         
-        return
         
-        # New collection
-        newCollectionName = "hubway_by_neighborhood"
-        repo.dropCollection(newCollectionName)
-        repo.createCollection(newCollectionName)    
-                
-        repo['bmroach.'+newCollectionName].insert_many(  )
-        repo['bmroach.'+newCollectionName].metadata({'complete':True})  
         repo.logout()
         endTime = datetime.datetime.now()
         return {"start":startTime, "end":endTime}
@@ -131,18 +129,43 @@ class transform_hubway(dml.Algorithm):
             in this script. Each run of the script will generate a new
             document describing that invocation event.
             '''
+        client = dml.pymongo.MongoClient()
+        repo = client.repo
+        repo.authenticate('bmroach', 'bmroach')
+        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
+        doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
+        doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
+        doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.        
 
+        this_script = doc.agent('alg:bmroach#transform_hubway', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        
+        resource = doc.entity('dat:bmroach#hubway', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        
+        transform = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        
+        doc.wasAssociatedWith(transform, this_script)
+        
+        doc.usage(transform,resource, startTime, None,
+                            {prov.model.PROV_TYPE:'ont:Retrieval',
+                            'ont:Query':''  
+                            }
+                            )
+        
+        
+
+        hubway_by_neighborhood = doc.entity('dat:bmroach#hubway_by_neighborhood', {prov.model.PROV_LABEL:'hubway_by_neighborhood', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(hubway_by_neighborhood, this_script)
+        doc.wasGeneratedBy(hubway_by_neighborhood, transform, endTime)
+        
+        doc.wasDerivedFrom(hubway_by_neighborhood, resource, transform, transform, transform)
+      
+        repo.logout()                  
+        return doc
         
                   
-        return 
+# transform_hubway.execute(cacheIn=False, cacheOut=False, log=False)
 
-
-
-
-
-transform_hubway.execute(cacheIn=True, cacheOut=True, log=True)
-
-# doc = retrieve.provenance()
+# doc = transform_hubway.provenance()
 # print(doc.get_provn())
 # print(json.dumps(json.loads(doc.serialize()), indent=4))
 

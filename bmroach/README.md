@@ -40,11 +40,12 @@ available via Analyze Boston, aimed at expanding or improving outdoor spaces.
     * https://developers.google.com/maps/documentation/geocoding/get-api-key
     * auth.json should include a pair following the convention: 
         * { "GoogleMapsAPI": { "key": "YOUR-KEY" } }
+    
 
 
 ### Three Output Datasets
 * Aggregated Hubway Data by Neighborhood
-* 
+* Desirable weather conditions (intended to serve as an example for later customization)
 * 
 
 ### Resources
