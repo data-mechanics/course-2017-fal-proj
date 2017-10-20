@@ -1,5 +1,5 @@
 ###############################################################################
-## 
+##
 ## execute.py
 ##
 ## Script for running a single project's data and provenance workflows.
