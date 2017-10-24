@@ -1,8 +1,3 @@
-Our team's README is located within the team folder.  
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  
-
-
 # course-2017-fal-proj
 Joint repository for the collection of student course projects in the Fall 2017 iteration of the Data Mechanics course at Boston University.
 
@@ -106,5 +101,4 @@ python execute.py alice_bob
 To execute the algorithms for a particular contributor in trial mode, use the `-t` or `--trial` option:
 ```
 python execute.py alice_bob --trial
-```T h i s   i s   t h e   R E A D M E .  
- 
+```
