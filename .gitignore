@@ -114,8 +114,3 @@ auth.json
 
 # exclude node_modules
 node_modules/
-
-# exclude user generated test cases
-output.txt
-Roads 2013.json
-Census 2010.json

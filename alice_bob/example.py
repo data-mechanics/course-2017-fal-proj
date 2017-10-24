@@ -4,7 +4,6 @@ import dml
 import prov.model
 import datetime
 import uuid
-import pdb
 
 class example(dml.Algorithm):
     contributor = 'alice_bob'
@@ -25,8 +24,6 @@ class example(dml.Algorithm):
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
-
-
         repo.dropCollection("lost")
         repo.createCollection("lost")
         repo['alice_bob.lost'].insert_many(r)
