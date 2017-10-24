@@ -114,3 +114,8 @@ auth.json
 
 # exclude node_modules
 node_modules/
+
+# other
+.swp
+.py.swp
+.*.py.swp
