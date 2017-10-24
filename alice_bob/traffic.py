@@ -24,9 +24,6 @@ class example(dml.Algorithm):
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
-        stations=r.stations
-        print(type(stations))
-        print(type(r))
         repo.dropCollection("lost")
         repo.createCollection("lost")
         repo['alice_bob.lost'].insert_many(r)
@@ -96,9 +93,9 @@ class example(dml.Algorithm):
                   
         return doc
 
-# example.execute()
-# doc = example.provenance()
-# print(doc.get_provn())
-# print(json.dumps(json.loads(doc.serialize()), indent=4))
+example.execute()
+doc = example.provenance()
+print(doc.get_provn())
+print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof
