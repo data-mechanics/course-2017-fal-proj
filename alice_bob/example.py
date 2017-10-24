@@ -26,8 +26,6 @@ class example(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("lost")
         repo.createCollection("lost")
-        print(r)
-        print(type(r))
         repo['alice_bob.lost'].insert_many(r)
         repo['alice_bob.lost'].metadata({'complete':True})
         print(repo['alice_bob.lost'].metadata())
@@ -94,10 +92,10 @@ class example(dml.Algorithm):
         repo.logout()
                   
         return doc
-'''
+
 example.execute()
 doc = example.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
-'''
+
 ## eof
