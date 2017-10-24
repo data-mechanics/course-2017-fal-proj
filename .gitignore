@@ -111,12 +111,6 @@ ENV/
 auth.json
 *.iml
 *.xml
-*.html
 
 # exclude node_modules
 node_modules/
-
-# other
-.swp
-.py.swp
-.*.py.swp

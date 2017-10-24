@@ -15,7 +15,6 @@ import importlib
 import json
 import argparse
 import prov.model
-import protoql
 
 parser = argparse.ArgumentParser()
 parser.add_argument("contributor_folder")
@@ -26,10 +25,8 @@ args = parser.parse_args()
 # subdirectory specified on the command line.
 path = args.contributor_folder
 algorithms = []
-print('reading files')
 for r,d,f in os.walk(path):
     for file in f:
-        print(file)
         if file.split(".")[-1] == "py":
             name_module = ".".join(file.split(".")[0:-1])
             module = importlib.import_module(path + "." + name_module)
@@ -38,11 +35,9 @@ for r,d,f in os.walk(path):
 # Create an ordering of the algorithms based on the data
 # sets that they read and write.
 datasets = set()
-print(algorithms)
 ordered = []
 while len(algorithms) > 0:
     for i in range(0,len(algorithms)):
-        print(algorithms[i])
         if set(algorithms[i].reads).issubset(datasets):
             datasets = datasets | set(algorithms[i].writes)
             ordered.append(algorithms[i])
@@ -51,9 +46,7 @@ while len(algorithms) > 0:
 
 # Execute the algorithms in order.
 provenance = prov.model.ProvDocument()
-print(ordered)
 for algorithm in ordered:
-    print(algorithm)
     algorithm.execute(trial=args.trial)
     provenance = algorithm.provenance(provenance)
 
@@ -62,7 +55,7 @@ print(provenance.get_provn())
 
 # Render the provenance document as an interactive graph.
 prov_json = json.loads(provenance.serialize())
-
+import protoql
 agents = [[a] for a in prov_json['agent']]
 entities = [[e] for e in prov_json['entity']]
 activities = [[v] for v in prov_json['activity']]
