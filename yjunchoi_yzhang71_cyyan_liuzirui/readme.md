@@ -1,13 +1,22 @@
 ## Data set:
 Data set for Wards: https://data.boston.gov/dataset/wards
+
 Data set for Precincts: https://data.boston.gov/dataset/precincts
+
 Data set for Polling Location: https://data.boston.gov/dataset/polling-locations
+
 Data set for Boston Population: https://www.opendatanetwork.com/entity/1600000US2507000/Boston_MA/demographics.population.count?year=2014
+
 Data set for Boston Map: https://data.boston.gov/dataset/city-of-boston-boundary
+
 Data set from US Census: https://docs.digital.mass.gov/dataset/massgis-data-datalayers-2010-us-census
+
 Data set for Boston Street: https://data.boston.gov/dataset/boston-segments/resource/a159f77f-3b3d-423d-a36f-6c804475817a
+
 Data set for Boston Street 2: https://data.boston.gov/dataset/live-street-address-management-sam-addresses (Young prefers this)
+
 Data set for Boston Main Street: https://data.boston.gov/dataset/main-street-districts (It does not have much, only 20)
+
 ## Optimize Polling Location
 Optimize polling locations based on the accessibility to bus stops and MBTA
 Use k-mean algorithms (SciKit) - Young
