@@ -5,10 +5,10 @@ import prov.model
 import datetime
 import uuid
 
-class averageDelay(dml.Algorithm):
+class coordinate(dml.Algorithm):
     contributor = 'yjunchoi_yzhang71_cyyan_liuzirui'
     reads = []
-    writes = ['yjunchoi_yzhang71_cyyan_liuzirui.averageDelay']
+    writes = ['yjunchoi_yzhang71_cyyan_liuzirui.coordinate']
 
     @staticmethod
     def execute(trial = False):
@@ -20,17 +20,17 @@ class averageDelay(dml.Algorithm):
         repo = client.repo
         repo.authenticate('yjunchoi_yzhang71_cyyan_liuzirui', 'yjunchoi_yzhang71_cyyan_liuzirui')
 
-        url = 'http://datamechanics.io/data/yjunchoi_yzhang71_cyyan_liuzirui/coordinate.json'
+        url = 'http://datamechanics.io/data/yjunchoi_yzhang71/coordinate.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("averageDelay")
-        repo.createCollection("averageDelay")
+        repo.dropCollection("coordinate")
+        repo.createCollection("coordinate")
 
         for key in r:
             delay = {}
             delay[key] = r[key]
-            repo['yjunchoi_yzhang71_cyyan_liuzirui.averageDelay'].insert(delay)
+            repo['yjunchoi_yzhang71_cyyan_liuzirui.coordinate'].insert(delay)
 
         repo.logout()
 
@@ -54,30 +54,30 @@ class averageDelay(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/yjunchoi_yzhang71_cyyan_liuzirui') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('mbtaviz', 'https://github.com/yzhang71/mbtaviz.github.io/blob/master/data/') #MBTA Data Set
+        doc.add_namespace('dat', 'http://datamechanics.io/data/yjunchoi_yzhang71/') #MBTA Data Set
 
-        this_script = doc.agent('alg:yjunchoi_yzhang71_cyyan_liuzirui#averageDelay', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('mbtaviz:average-actual-delays', {'prov:label':'Average Actual Delay', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        get_averageDelay = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_averageDelay, this_script)
-        doc.usage(get_averageDelay, resource, startTime, None,
+        this_script = doc.agent('alg:yjunchoi_yzhang71_cyyan_liuzirui#coordinate', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource = doc.entity('dat:coordinate.json', {'prov:label':'Station coordinate', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        get_coordinate = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(get_coordinate, this_script)
+        doc.usage(get_coordinate, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Average+Actual+Delays&$select=Station, Time'
+                  'ont:Query':'?type=Station+Coordinate&$select=Station, Coordinate'
                   }
                   )
 
-        averageDelay = doc.entity('dat:yjunchoi_yzhang71_cyyan_liuzirui#averageDelay', {prov.model.PROV_LABEL:'Average Actual Delay of MBTA', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(averageDelay, this_script)
-        doc.wasGeneratedBy(averageDelay, get_averageDelay, endTime)
-        doc.wasDerivedFrom(averageDelay, resource, get_averageDelay, get_averageDelay, get_averageDelay)
+        coordinate = doc.entity('dat:yjunchoi_yzhang71_cyyan_liuzirui#coordinate', {prov.model.PROV_LABEL:'Station Coordinate', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(coordinate, this_script)
+        doc.wasGeneratedBy(coordinate, get_coordinate, endTime)
+        doc.wasDerivedFrom(coordinate, resource, get_coordinate, get_coordinate, get_coordinate)
 
         repo.logout()
 
         return doc
 
-#averageDelay.execute()
-#doc = averageDelay.provenance()
-#print(doc.get_provn())
-#print(json.dumps(json.loads(doc.serialize()), indent=4))
+coordinate.execute()
+doc = coordinate.provenance()
+print(doc.get_provn())
+print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof
