@@ -4,11 +4,12 @@ import dml
 import prov.model
 import datetime
 import uuid
+import geoql
 
-class coordinate(dml.Algorithm):
+class bostonCoordinates(dml.Algorithm):
     contributor = 'yjunchoi_yzhang71_cyyan_liuzirui'
     reads = []
-    writes = ['yjunchoi_yzhang71_cyyan_liuzirui.coordinate']
+    writes = ['yjunchoi_yzhang71_cyyan_liuzirui.bostonCoordinates']
 
     @staticmethod
     def execute(trial = False):
@@ -20,17 +21,18 @@ class coordinate(dml.Algorithm):
         repo = client.repo
         repo.authenticate('yjunchoi_yzhang71_cyyan_liuzirui', 'yjunchoi_yzhang71_cyyan_liuzirui')
 
-        url = 'http://datamechanics.io/data/yjunchoi_yzhang71/City_of_Boston_Boundary%20(1).geojson'
+        url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/142500a77e2a4dbeb94a86f7e0b568bc_0.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("coordinate")
-        repo.createCollection("coordinate")
+        repo.dropCollection("bostonCoordinates")
+        repo.createCollection("bostonCoordinates")
 
+        #TODO: Find the way to use geoql and check mongodb
         for key in r:
             delay = {}
             delay[key] = r[key]
-            repo['yjunchoi_yzhang71_cyyan_liuzirui.coordinate'].insert(delay)
+            repo['yjunchoi_yzhang71_cyyan_liuzirui.bostonCoordinates'].insert(delay)
 
         repo.logout()
 
@@ -54,29 +56,29 @@ class coordinate(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/yjunchoi_yzhang71_cyyan_liuzirui') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('dat', 'http://datamechanics.io/data/yjunchoi_yzhang71/') #MBTA Data Set
+        doc.add_namespace('bod', 'http://bostonpoendata-boston.opendata.argcis.com/datasets/')
 
-        this_script = doc.agent('alg:yjunchoi_yzhang71_cyyan_liuzirui#coordinate', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('dat:coordinate.json', {'prov:label':'Boston coordinate', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        get_coordinate = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_coordinate, this_script)
-        doc.usage(get_coordinate, resource, startTime, None,
+        this_script = doc.agent('alg:yjunchoi_yzhang71_cyyan_liuzirui#bostonCoordinates', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource = doc.entity('bod:142500a77e2a4dbeb94a86f7e0b568bc_0.geojson', {'prov:label':'Boston Boundary', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
+        get_bostonCoordinates = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(get_bostonCoordinates, this_script)
+        doc.usage(get_bostonCoordinates, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Boston+Coordinate&$select=Boston, Coordinate'
+                  'ont:Query':'?type=Boston+Boundary&$select=Boston, Polygon'
                   }
                   )
 
-        coordinate = doc.entity('dat:yjunchoi_yzhang71_cyyan_liuzirui#coordinate', {prov.model.PROV_LABEL:'Boston Coordinate', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(coordinate, this_script)
-        doc.wasGeneratedBy(coordinate, get_coordinate, endTime)
-        doc.wasDerivedFrom(coordinate, resource, get_coordinate, get_coordinate, get_coordinate)
+        bostonCoordinates = doc.entity('dat:yjunchoi_yzhang71_cyyan_liuzirui#bostonCoordinates', {prov.model.PROV_LABEL:'Boston Boundary Coordinate', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(bostonCoordinates, this_script)
+        doc.wasGeneratedBy(bostonCoordinates, get_bostonCoordinates, endTime)
+        doc.wasDerivedFrom(bostonCoordinates, resource, get_bostonCoordinates, get_bostonCoordinates, get_bostonCoordinates)
 
         repo.logout()
 
         return doc
 
-coordinate.execute()
-doc = coordinate.provenance()
+bostonCoordinates.execute()
+doc = bostonCoordinates.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
 
