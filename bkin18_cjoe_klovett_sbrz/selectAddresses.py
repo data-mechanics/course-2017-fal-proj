@@ -5,9 +5,9 @@ import uuid
 
 
 class selectAddresses(dml.Algorithm):
-    contributor = 'sbrz_nedg'
-    reads = ['sbrz_nedg.property_assessment']
-    writes = ['sbrz_nedg.property_assessment_addresses']
+    contributor = 'bkin18_cjoe_klovett_sbrz'
+    reads = ['bkin18_cjoe_klovett_sbrz.property_assessment']
+    writes = ['bkin18_cjoe_klovett_sbrz.property_assessment_addresses']
 
     @staticmethod
     def execute(trial=False):
@@ -17,22 +17,24 @@ class selectAddresses(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('sbrz_nedg', 'sbrz_nedg')
+        repo.authenticate('bkin18_cjoe_klovett_sbrz', 'bkin18_cjoe_klovett_sbrz')
 
         db = client.repo
-        collection = db['sbrz_nedg.property_assessment']
+        collection = db['bkin18_cjoe_klovett_sbrz.property_assessment']
         x = []
-        addresses = collection.find({}, {'MAIL_ADDRESS': 1, 'MAIL CS': 1, 'ZIPCODE': 1})
+        property_lookup = ['010', '019', '025', '026', '027', '111', '112', '113', '114', '115', '117', '118', '120',
+                            '121', '122', '123', '124', '125', '126', '127', '128', '129', '300', '301']
+
+        addresses = collection.find({}, {'ST_NAME': 1, 'PTYPE': 1})
         for address in addresses:
-            address['ZIPCODE'] = address['ZIPCODE'].strip('_') # strip off trailing underline
-            if 'PO BOX' not in address['MAIL_ADDRESS']:  # filter out PO Boxes
+            if address['PTYPE'] in property_lookup:
                 x.append(address)
 
-        repo.dropCollection('sbrz_nedg.property_assessment_addresses')
-        repo.createCollection('sbrz_nedg.property_assessment_addresses')
-        repo['sbrz_nedg.property_assessment_addresses'].insert_many(x)
-        repo['sbrz_nedg.property_assessment_addresses'].metadata({'complete': True})
-        repo.dropCollection('sbrz_nedg.property_assessment')
+        repo.dropCollection('bkin18_cjoe_klovett_sbrz.property_assessment_addresses')
+        repo.createCollection('bkin18_cjoe_klovett_sbrz.property_assessment_addresses')
+        repo['bkin18_cjoe_klovett_sbrz.property_assessment_addresses'].insert_many(x)
+        repo['bkin18_cjoe_klovett_sbrz.property_assessment_addresses'].metadata({'complete': True})
+        repo.dropCollection('bkin18_cjoe_klovett_sbrz.property_assessment')
 
         repo.logout()
 
