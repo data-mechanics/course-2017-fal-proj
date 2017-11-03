@@ -30,7 +30,7 @@ class getAccidents(dml.Algorithm):
         repo.authenticate('alanbur_aquan_erj826_jcaluag', 'alanbur_aquan_erj826_jcaluag')          
 
         #Get the data set and insert it into the database
-        url = 'https://data.cityofnewyork.us/api/views/h9gi-nx95/rows.json?accessType=DOWNLOAD'
+        url = 'https://data.cityofnewyork.us/resource/qiz3-axqb.json'
         response = requests.get(url).text
         
         r = json.loads(response)
