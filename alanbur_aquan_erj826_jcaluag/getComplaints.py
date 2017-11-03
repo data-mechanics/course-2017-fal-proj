@@ -95,7 +95,7 @@ class getComplaints(dml.Algorithm):
         repo.logout()
                   
         return doc
-        
-    getComplaints.execute()
+
+getComplaints.execute()
 
 ## eof

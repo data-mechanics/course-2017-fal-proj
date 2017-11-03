@@ -96,6 +96,6 @@ class getAccidents(dml.Algorithm):
                   
         return doc
 
-    getAccidents.execute()
+getAccidents.execute()
 ## eof
 
