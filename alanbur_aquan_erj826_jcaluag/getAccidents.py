@@ -2,7 +2,7 @@
 CS591
 Project 2
 11.2.17
-getComplaints.py
+getAccidents.py
 """
 
 import urllib.request
