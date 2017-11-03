@@ -1,1 +1,3 @@
-First commit
+# CS591 Project 1
+
+Many residents in the City of Boston rely on the MBTA for transportation to and from work. It is also no secret that Boston's diverse weather throughout the year can take a toll on MBTA service - one notable example from recent memory would be the Winter of 2014-2015. The question we want to ask is how can MassDOT, the MBTA, and the governments of Boston and Massachusetts direct their resources in such a manner that communities that depend moreso on public transportation than others get the attention they need? Factors such as incliment weather would be explored with relevant datasets, as well as demographic data on various neighborhoods around Bosotn including but not limited to median household income, race, and means of commuting.
