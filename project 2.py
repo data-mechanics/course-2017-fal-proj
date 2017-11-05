@@ -10,8 +10,8 @@ import requests
 class fzjr_retrievalalgorithm(dml.Algorithm):
     contributor = 'francisz_jrashaan'
     reads = []
-    writes = ['francisz_jrashaan.crime', 'francisz_jrashaan.streetlights', 'francisz_jrashaan.landuse',
-              'francisz_jrashaan.openspace', 'francisz_jrashaan.capopulation']
+    writes = ['francisz_jrashaan.hubways', 'francisz_jrashaan.ChargingStation', 'francisz_jrashaan.bikeNetwork',
+              'francisz_jrashaan.openspace', 'francisz_jrashaan.neighborhood']
 
     @staticmethod
     def execute(trial=False):
@@ -22,65 +22,66 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate('francisz_jrashaan', 'francisz_jrashaan')
-
+        repo.dropCollection("hubways")
+        repo.createCollection("hubways")
         url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/ee7474e2a0aa45cbbdfe0b747a5eb032_0.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         gj = geojson.loads(response)
         geoDict = dict(gj)
         geoList = geoDict['features']
-        buf = requests.get(url).text
-        r = json.loads(buf)
-        s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("hubways")
-        repo.createCollection("hubways")
+        
+      
         repo['francisz_jrashaan.hubways'].insert_many(geoList)
-        repo['francisz_jrashaan.hubways'].insert_many({'complete': True})
-        # repo['francisz_jrashaan.crime'].metadata({'complete':True})
+        repo['francisz_jrashaan.hubways'].metadata({'complete':True})
         # print(repo['francisz_jrashaan.crime'].metadata())
 
         url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/465e00f9632145a1ad645a27d27069b4_2.geojson'
-        response = requests.get(url).text
-        a = json.loads(response)
-        b = json.dumps(a, sort_keys=True, indent=2)
+        response = urllib.request.urlopen(url).read().decode("utf-8")
+       
         repo.dropCollection("ChargingStation")
         repo.createCollection("ChargingStation")
-        repo['francisz_jrashaan.ChargingStation'].insert_many(a['value'])
-        # repo['francisz_jrashaan.streetlights'].metadata({'complete':True})
-        # print(repo['francisz_jrashaan.streetlights'].metadata())
+        gj = geojson.loads(response)
+        geoDict = dict(gj)
+        geoList = geoDict['features']
+        repo['francisz_jrashaan.ChargingStation'].insert_many(geoList)
+        repo['francisz_jrashaan.ChargingStation'].metadata({'complete':True})
 
 
         url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/d02c9d2003af455fbc37f550cc53d3a4_0.geojson'
-        response = requests.get(url).text
-        c = json.loads(response)
-        d = json.dumps(c, sort_keys=True, indent=2)
+        response = urllib.request.urlopen(url).read().decode("utf-8")
+
         repo.dropCollection("bikeNetwork")
         repo.createCollection("bikeNetwork")
-        repo['francisz_jrashaan.landuse'].insert(c)
-        # repo['francisz_jrashaan.landuse'].metadata({'complete':True})
-        # print(repo['francisz_jrashaan.landuse'].metadata())
+        gj = geojson.loads(response)
+        geoDict = dict(gj)
+        geoList = geoDict['features']
+        repo['francisz_jrashaan.bikeNetworks'].insert_many(geoList)
+        repo['francisz_jrashaan.bikeNetworks'].metadata({'complete':True})
 
-        url = 'https://data.cambridgema.gov/api/views/r4pm-qqje/rows.json?'
-        response = requests.get(url).text
-        e = json.loads(response)
-        f = json.dumps(e, sort_keys=True, indent=2)
-        repo.dropCollection("capopulation")
-        repo.createCollection("capopulation")
-        repo['francisz_jrashaan.capopulation'].insert(e)
+
+        url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/3525b0ee6e6b427f9aab5d0a1d0a1a28_0.geojson'
+        response = urllib.request.urlopen(url).read().decode("utf-8")
+       
+        repo.dropCollection("neighborhood")
+        repo.createCollection("neighborhood")
+        gj = geojson.loads(response)
+        geoDict = dict(gj)
+        geoList = geoDict['features']
+        repo['francisz_jrashaan.neighborhood'].insert(geoList)
+        repo['francisz_jrashaan.neighborhood'].metadata({'complete':True})
+
         # repo['francisz_jrashaan.capopulation'].metadata({'complete':True})
         # print(repo['francisz_jrashaan.capopulation'].metadata())
-http://bostonopendata-boston.opendata.arcgis.com/datasets/2868d370c55d4d458d4ae2224ef8cddd_7.geojson
+        
         url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/2868d370c55d4d458d4ae2224ef8cddd_7.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         gj = geojson.loads(response)
         geoDict = dict(gj)
         geoList = geoDict['features']
-        response = requests.get(url).text
-        g = json.loads(response)
-        h = json.dumps(g, sort_keys=True, indent=2)
         repo.dropCollection("openspace")
         repo.createCollection("openspace")
-        repo['francisz_jrashaan.hubways'].insert_many(geoList)
-        repo['francisz_jrashaan.hubways'].insert_many({'complete': True})
+        repo['francisz_jrashaan.openspace'].insert_many(geoList)
+        repo['francisz_jrashaan.openspace'].insert_many({'complete': True})
 
         repo.logout()
 
