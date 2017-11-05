@@ -45,10 +45,10 @@ class retrievePropertyAssessmentData(dml.Algorithm):
     @staticmethod
     def provenance(doc=prov.model.ProvDocument(), startTime=None, endTime=None):
         '''
-            Create the provenance document describing everything happening
-            in this script. Each run of the script will generate a new
-            document describing that invocation event.
-            '''
+        Create the provenance document describing everything happening
+        in this script. Each run of the script will generate a new
+        document describing that invocation event.
+        '''
 
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
@@ -56,8 +56,7 @@ class retrievePropertyAssessmentData(dml.Algorithm):
         repo.authenticate('bkin18_cjoe_klovett_sbrz', 'bkin18_cjoe_klovett_sbrz')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/')  # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/')  # The data sets are in <user>#<collection> format.
-        doc.add_namespace('ont',
-                          'http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
+        doc.add_namespace('ont','http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/')  # The event log.
         doc.add_namespace('bdp', 'https://data.boston.gov/api/action/')
 
@@ -66,12 +65,16 @@ class retrievePropertyAssessmentData(dml.Algorithm):
         get_property_data = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
         doc.wasAssociatedWith(get_property_data, this_script)
-        doc.usage(resource, startTime, None)
+        doc.usage(get_property_data, resource, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Retrieval',
+                  'ont:Query':'?type=property+data&$select=description'
+                  }
+                  )
 
         property_db = doc.entity('dat:bkin18_cjoe_klovett_sbrz#property_assessment', {prov.model.PROV_LABEL: 'property_assessment', prov.model.PROV_TYPE: 'ont:DataSet'})
-        doc.wasAttributedTo(this_script, this_script)
-        doc.wasGeneratedBy(get_property_data)
-        doc.wasDerivedFrom(resource, property_db)
+        doc.wasAttributedTo(property_db, this_script)
+        doc.wasGeneratedBy(property_db,get_property_data, endTime)
+        doc.wasDerivedFrom(property_db, resource, get_property_data)
 
         repo.logout()
 

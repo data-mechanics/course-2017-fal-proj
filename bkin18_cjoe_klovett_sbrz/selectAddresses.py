@@ -68,12 +68,13 @@ class selectAddresses(dml.Algorithm):
         repo.authenticate('bkin18_cjoe_klovett_sbrz', 'bkin18_cjoe_klovett_sbrz')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/')  # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/')  # The data sets are in <user>#<collection> format.
-        doc.add_namespace('ont',
-                          'http://datamechanics.io/ontology#DataSet')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
+        doc.add_namespace('ont', 'http://datamechanics.io/ontology#DataSet')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/')  # The event log.
 
         this_script = doc.agent('alg:bkin18_cjoe_klovett_sbrz#selectAddressesColleges',
                                 {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
+        #This line might need some modification - Keith
+        resource = doc.entity('bdp:062fc6fa-b5ff-4270-86cf-202225e40858', {'prov:label': 'Modified Property Data', prov.model.PROV_TYPE: 'ont:DataResource', 'ont:Extension': 'json'})
         property_address_db = doc.entity('dat:bkin18_cjoe_klovett_sbrz#property_assessment',
             {'prov:label': 'property_assessment', prov.model.PROV_TYPE: 'ont:DataSet'})
         address_db = doc.entity('dat:bkin18_cjoe_klovett_sbrz#property_assessment_addresses',
@@ -81,11 +82,16 @@ class selectAddresses(dml.Algorithm):
         select_address_data = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
         doc.wasAssociatedWith(select_address_data, this_script)
-        doc.usage(property_address_db, address_db, startTime, None)
+        #I don't think this is actually of type "retrieval," I'm just not sure what the actual name for it is atm. - Keith
+        doc.usage(select_address_data, resource, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Retrieval',
+                  'ont:Query':'?type=address+data&$select=description'
+                  }
+                  )
 
-        doc.wasAttributedTo(this_script, this_script)
-        doc.wasGeneratedBy(select_address_data)
-        doc.wasDerivedFrom(property_address_db, address_db)
+        doc.wasAttributedTo(address_db, this_script)
+        doc.wasGeneratedBy(address_db, select_address_data, endTime)
+        doc.wasDerivedFrom(property_address_db, resource, address_db)
 
         repo.logout()
 
