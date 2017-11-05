@@ -39,7 +39,7 @@ class selectAddresses(dml.Algorithm):
                 street_agg[street['ST_NAME']] = street_agg[street['ST_NAME']] + 1
             except KeyError:
                 street_agg[street['ST_NAME']] = 1
-        print(street_agg)
+        print("===============\n " + str(street_agg))
         ## TODO: add this to our collection 
 
         repo.dropCollection('bkin18_cjoe_klovett_sbrz.property_assessment_addresses')
