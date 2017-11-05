@@ -30,13 +30,16 @@ class retrieveRoadsInventory(dml.Algorithm):
 
         roads_inventory_json = roads_inventory_json['features']
         x = []
+        removeEntries = ['MHS', 'From_Measure', 'To_Measure', 'From_Date', 'To_Date', 'Med_Type', 'Med_Width', 'Mile_Count', 'NHS', 'Trk_Network' 
+        'Trk_Permit', 'Fd_Aid_Rd', 'AADT', 'Shldr_Lt_W', 'Shldr_Lt_T', 'Shldr_Rt_W', 'Shldr_Rt_T', 'AADT_Yearr', 'AADT_Deriv', 'Shldr_UL_W', 'Shldr_UL_T']
 
         for road in roads_inventory_json:
             if road['attributes']['MPO'] == 'Boston Region':
+                for entry in removeEntries:
+                    road['attributes'].pop(entry, None)
                 x.append(road)
 
-
-        ## IMPORTANT KEYS: Route_ID, Urban_Type, (maybe) Mileage_Counted, Number_of_Lanes, Street_Name (duh), Length, Toll_Road (nobody likes tolls)
+        ## IMPORTANT KEYS: Route_ID, Urban_Type, Number_of_Lanes, Street_Name (duh), Length, Toll_Road (nobody likes tolls), struct_cd(?)
         repo.dropCollection("roads_inventory")
         repo.createCollection("roads_inventory")
         repo['bkin18_cjoe_klovett_sbrz.roads_inventory'].insert_many(x)
