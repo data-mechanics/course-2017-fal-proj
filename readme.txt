@@ -1,0 +1,2 @@
+Problem:
+Using Hubway data, bike network data, charging station data, and neighborhood data we will attempt to find the most optimal "green score" for each neighborhood within Boston. Our definition of a "green score" for a neighborhood will be the proximity and frequency of zero emission forms of transportation. Initially using various projection and selection transformations we will calculate the green scores
