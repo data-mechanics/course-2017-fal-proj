@@ -42,7 +42,7 @@ class retrieveRoadsInventory(dml.Algorithm):
                     if road['attributes']['St_Name'] is not None or road['attributes']['Fm_St_Name'] is not None or road['attributes']['To_St_Name'] is not None:
                         for entry in removeEntries:
                             road['attributes'].pop(entry, None)
-                        x.append(road)
+                        x.append(road['attributes'])
 
         ## IMPORTANT KEYS: Route_ID, Urban_Type, Number_of_Lanes, Street_Name (duh), Length, Toll_Road (nobody likes tolls), struct_cd(?)
         repo.dropCollection("roads_inventory")
