@@ -20,17 +20,21 @@ class busstopCoordinates(dml.Algorithm):
         repo = client.repo
         repo.authenticate('yjunchoi_yzhang71_cyyan_liuzirui', 'yjunchoi_yzhang71_cyyan_liuzirui')
 
-        url = 'http://datamechanics.io/data/yjunchoi_yzhang71/coordinate.json'
+        url = 'http://datamechanics.io/data/wuhaoyu_yiran123/MBTA_Bus_Stops.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
-        r = json.loads(response)
+        raw = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("busstopCoordinates")
         repo.createCollection("busstopCoordinates")
 
-        for key in r:
-            delay = {}
-            delay[key] = r[key]
-            repo['yjunchoi_yzhang71_cyyan_liuzirui.busstopCoordinates'].insert(delay)
+        coordinates = {}
+        for i in raw['features']:
+            coordinates[i['properties']['STOP_NAME']] = i['geometry']['coordinates']
+
+        results = [ {'name': key,  'coordinates': coordinates[key]}  for key in coordinates ]
+
+        repo['yjunchoi_yzhang71_cyyan_liuzirui.bus_stop'].insert(new)
+        repo['yjunchoi_yzhang71_cyyan_liuzirui.bus_stop'].insert_many(results)
 
         repo.logout()
 
@@ -54,10 +58,10 @@ class busstopCoordinates(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/yjunchoi_yzhang71_cyyan_liuzirui') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('dat', 'http://datamechanics.io/data/yjunchoi_yzhang71/') #MBTA Data Set
+        doc.add_namespace('oth', 'http://datamechanics.io/data/wuhaoyu_yiran123') #Data Source from the other team
 
         this_script = doc.agent('alg:yjunchoi_yzhang71_cyyan_liuzirui#busstopCoordinates', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('dat:coordinate.json', {'prov:label':'Bus Stop Coordinates', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource = doc.entity('oth:MBTA_Bus_Stops.geojson', {'prov:label':'Bus Stop Coordinates', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_busstopCoordinates = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_busstopCoordinates, this_script)
         doc.usage(get_busstopCoordinates, resource, startTime, None,
