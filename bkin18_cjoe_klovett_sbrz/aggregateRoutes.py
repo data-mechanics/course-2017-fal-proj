@@ -24,11 +24,15 @@ class aggregateRoutes(dml.Algorithm):
         ## Create dictionary to store route data
         route_dict = {}
         roads = collection.find()
+
+        ## Format of list: [Street_Name, From_Street_Name, To_Street_Name]
         for road in roads:
             try:
-                route_dict[road['Route_ID']].append(road)
+                ## To remove duplicates
+                if [road['St_Name'], road['Fm_St_Name'], road['To_St_Name']] not in route_dict[road['Route_ID']]:
+                    route_dict[road['Route_ID']].append([ road['St_Name'], road['Fm_St_Name'], road['To_St_Name'] ])
             except Exception as e:
-                route_dict[road['Route_ID']] = [road]
+                route_dict[road['Route_ID']] = [[ road['St_Name'], road['Fm_St_Name'], road['To_St_Name'] ]]
  
         repo.dropCollection('bkin18_cjoe_klovett_sbrz.routes_agg')
         repo.createCollection('bkin18_cjoe_klovett_sbrz.routes_agg')

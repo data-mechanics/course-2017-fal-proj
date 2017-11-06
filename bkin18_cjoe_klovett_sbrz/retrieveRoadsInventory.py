@@ -30,15 +30,20 @@ class retrieveRoadsInventory(dml.Algorithm):
 
         roads_inventory_json = roads_inventory_json['features']
         x = []
-        removeEntries = ['MHS', 'From_Measure', 'To_Measure', 'From_Date', 'To_Date', 'Med_Type', 'Med_Width', 'Mile_Count', 'NHS', 'Trk_Network' 
-        'Trk_Permit', 'Fd_Aid_Rd', 'AADT', 'Shldr_Lt_W', 'Shldr_Lt_T', 'Shldr_Rt_W', 'Shldr_Rt_T', 'AADT_Yearr', 'AADT_Deriv', 'Shldr_UL_W', 'Shldr_UL_T']
+        removeEntries = ['MHS', 'From_Measure', 'To_Measure', 'From_Date', 'To_Date', 'Med_Type', 'Med_Width', 'Mile_Count', 'NHS', 'Trk_Netwrk', 
+        'Trk_Permit', 'Fd_Aid_Rd', 'AADT', 'Shldr_Lt_W', 'Shldr_Lt_T', 'Shldr_Rt_W', 'Shldr_Rt_T', 'AADT_Year', 'AADT_Deriv', 'Shldr_UL_W', 'Shldr_UL_T',
+        'County', 'Surface_Tp', 'Route_System', 'Surface_Wd', 'Hwy_Dist', 'F_F_Class', 'T_Exc_Time', 'Curb', 'Statn_Num', 'Station', 'Hwy_Subdst', 'Lt_Sidewlk',
+        'Rt_Sidewlk', 'Truck_Rte', 'T_Exc_Type', 'Operation', 'Control', 'Facility', 'F_Class', 'Jurisdictn', 'ROW_Width']
 
         ## Removing unnecessary keys for legibility
         for road in roads_inventory_json:
             if road['attributes']['MPO'] == 'Boston Region':
+                # print('BRegion')
                 for entry in removeEntries:
                     road['attributes'].pop(entry, None)
+                    # print("Popped " + str(entry))
                 x.append(road['attributes'])
+        # print(x)
 
         ## IMPORTANT KEYS: Route_ID, Urban_Type, Number_of_Lanes, Street_Name (duh), Length, Toll_Road (nobody likes tolls), struct_cd(?)
         repo.dropCollection("roads_inventory")
@@ -48,7 +53,7 @@ class retrieveRoadsInventory(dml.Algorithm):
 
         repo.logout()
         endTime = datetime.datetime.now()
-        
+
         return {"start": startTime, "end": endTime}
 
     @staticmethod
