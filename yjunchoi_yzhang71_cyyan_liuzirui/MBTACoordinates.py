@@ -4,6 +4,7 @@ import dml
 import prov.model
 import datetime
 import uuid
+import yaml
 
 class MBTACoordinates(dml.Algorithm):
     contributor = 'yjunchoi_yzhang71_cyyan_liuzirui'
@@ -22,17 +23,12 @@ class MBTACoordinates(dml.Algorithm):
 
         url = 'http://erikdemaine.org/maps/mbta/mbta.yaml'
         response = urllib.request.urlopen(url).read().decode("utf-8")
-        mbta = yaml.loads(response)
+        mbta = yaml.load(response)
 
         repo.dropCollection("MBTACoordinates")
         repo.createCollection("MBTACoordinates")
 
-        mbtaData = {}
-        for line in mbta:
-            for station in line["stations"]:
-                name = station["title"]
-                
-
+        repo['yjunchoi_yzhang71_cyyan_liuzirui.MBTACoordinates'].insert_many(mbta)
 
         repo.logout()
 
