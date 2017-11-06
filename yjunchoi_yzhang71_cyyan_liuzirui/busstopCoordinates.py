@@ -23,7 +23,7 @@ class busstopCoordinates(dml.Algorithm):
         url = 'http://datamechanics.io/data/wuhaoyu_yiran123/MBTA_Bus_Stops.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         raw = json.loads(response)
-        s = json.dumps(r, sort_keys=True, indent=2)
+        s = json.dumps(raw, sort_keys=True, indent=2)
         repo.dropCollection("busstopCoordinates")
         repo.createCollection("busstopCoordinates")
 
@@ -33,8 +33,7 @@ class busstopCoordinates(dml.Algorithm):
 
         results = [ {'name': key,  'coordinates': coordinates[key]}  for key in coordinates ]
 
-        repo['yjunchoi_yzhang71_cyyan_liuzirui.bus_stop'].insert(new)
-        repo['yjunchoi_yzhang71_cyyan_liuzirui.bus_stop'].insert_many(results)
+        repo['yjunchoi_yzhang71_cyyan_liuzirui.busstopCoordinates'].insert_many(results)
 
         repo.logout()
 
