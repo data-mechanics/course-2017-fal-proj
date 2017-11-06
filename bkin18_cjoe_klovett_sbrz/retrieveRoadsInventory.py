@@ -33,11 +33,14 @@ class retrieveRoadsInventory(dml.Algorithm):
         removeEntries = ['MHS', 'From_Measure', 'To_Measure', 'From_Date', 'To_Date', 'Med_Type', 'Med_Width', 'Mile_Count', 'NHS', 'Trk_Network' 
         'Trk_Permit', 'Fd_Aid_Rd', 'AADT', 'Shldr_Lt_W', 'Shldr_Lt_T', 'Shldr_Rt_W', 'Shldr_Rt_T', 'AADT_Yearr', 'AADT_Deriv', 'Shldr_UL_W', 'Shldr_UL_T']
 
+        #Obtains all roads in the Boston region, that have at least some associated street name data, and removes some entries.
         for road in roads_inventory_json:
             if road['attributes']['MPO'] == 'Boston Region':
-                for entry in removeEntries:
-                    road['attributes'].pop(entry, None)
-                x.append(road)
+                if road['attributes']['St_Name'] != '' or road['attributes']['Fm_St_Name'] != '' or road['attributes']['To_St_Name'] != '':
+                    if road['attributes']['St_Name'] is not None or road['attributes']['Fm_St_Name'] is not None or road['attributes']['To_St_Name'] is not None:
+                        for entry in removeEntries:
+                            road['attributes'].pop(entry, None)
+                        x.append(road)
 
         ## IMPORTANT KEYS: Route_ID, Urban_Type, Number_of_Lanes, Street_Name (duh), Length, Toll_Road (nobody likes tolls), struct_cd(?)
         repo.dropCollection("roads_inventory")
