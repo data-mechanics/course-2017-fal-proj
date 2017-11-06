@@ -65,7 +65,7 @@ class busstopCoordinates(dml.Algorithm):
         doc.wasAssociatedWith(get_busstopCoordinates, this_script)
         doc.usage(get_busstopCoordinates, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Station+Coordinate&$select=Station, Coordinate'
+                  'ont:Query':'?type=Busstop+Coordinate&$select=Busstop, Coordinate'
                   }
                   )
 
