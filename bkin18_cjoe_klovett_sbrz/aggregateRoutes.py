@@ -4,14 +4,14 @@ import datetime
 import uuid
 
 
-class selectAddresses(dml.Algorithm):
+class aggregateRoutes(dml.Algorithm):
     contributor = 'bkin18_cjoe_klovett_sbrz'
-    reads = ['bkin18_cjoe_klovett_sbrz.property_assessment']
-    writes = ['bkin18_cjoe_klovett_sbrz.property_assessment_addresses']
+    reads = ['bkin18_cjoe_klovett_sbrz.roads_inventory']
+    writes = ['bkin18_cjoe_klovett_sbrz.routes_agg']
 
     @staticmethod
     def execute(trial=False):
-        '''Select all of the addresses from the Property Assessment data set'''
+        '''Aggregate based off of routes in the roads inventory data set'''
         startTime = datetime.datetime.now()
 
         # Set up the database connection.
@@ -19,36 +19,28 @@ class selectAddresses(dml.Algorithm):
         repo = client.repo
         repo.authenticate('bkin18_cjoe_klovett_sbrz', 'bkin18_cjoe_klovett_sbrz')
         db = client.repo
-        collection = db['bkin18_cjoe_klovett_sbrz.property_assessment']
+        collection = db['bkin18_cjoe_klovett_sbrz.roads_inventory']
 
-        ## Build a list out of valid residential property IDs
-        addr_list = []
-        property_lookup = ['010', '019', '025', '026', '027', '111', '112', '113', '114', '115', '117', '118', '120',
-                            '121', '122', '123', '124', '125', '126', '127', '128', '129', '300', '301']
- 
+        ## Create dictionary to store route data
+        route_dict = {}
+        roads = collection.find()
 
-        ## When we move aggregate sum out of this file, we should change it to insert_many(addr_list)
-        addresses = collection.find({}, {'ST_NAME': 1, 'PTYPE': 1})
-        for address in addresses:
-            if address['PTYPE'] in property_lookup:
-                addr_list.append(address)
-
-
-        ## TODO: Move aggregation into a different module
-        street_agg = {}
-        for street in addr_list:
+        ## Format of list: [Street_Name, From_Street_Name, To_Street_Name]
+        for road in roads:
             try:
-                street_agg[street['ST_NAME']] = street_agg[street['ST_NAME']] + 1
-            except KeyError:
-                street_agg[street['ST_NAME']] = 1
+                ## To remove duplicates
+                if [road['St_Name'], road['Fm_St_Name'], road['To_St_Name']] not in route_dict[road['Route_ID']]:
+                    route_dict[road['Route_ID']].append([ road['St_Name'], road['Fm_St_Name'], road['To_St_Name'] ])
+            except Exception as e:
+                route_dict[road['Route_ID']] = [[ road['St_Name'], road['Fm_St_Name'], road['To_St_Name'] ]]
+ 
+        repo.dropCollection('bkin18_cjoe_klovett_sbrz.routes_agg')
+        repo.createCollection('bkin18_cjoe_klovett_sbrz.routes_agg')
+        repo['bkin18_cjoe_klovett_sbrz.routes_agg'].insert(route_dict)
+        repo['bkin18_cjoe_klovett_sbrz.routes_agg'].metadata({'complete': True})
+        # repo.dropCollection('bkin18_cjoe_klovett_sbrz.property_assessment')
 
-        repo.dropCollection('bkin18_cjoe_klovett_sbrz.property_assessment_addresses')
-        repo.createCollection('bkin18_cjoe_klovett_sbrz.property_assessment_addresses')
-        repo['bkin18_cjoe_klovett_sbrz.property_assessment_addresses'].insert(street_agg)
-        repo['bkin18_cjoe_klovett_sbrz.property_assessment_addresses'].metadata({'complete': True})
-  
         repo.logout()
-
         endTime = datetime.datetime.now()
 
         return {"start": startTime, "end": endTime}
@@ -70,21 +62,21 @@ class selectAddresses(dml.Algorithm):
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#DataSet')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/')  # The event log.
 
-        this_script = doc.agent('alg:bkin18_cjoe_klovett_sbrz#selectAddressesColleges',
+        this_script = doc.agent('alg:bkin18_cjoe_klovett_sbrz#aggregateRoutes',
                                 {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
         #This line might need some modification - Keith
-        resource = doc.entity('bdp:062fc6fa-b5ff-4270-86cf-202225e40858', {'prov:label': 'Modified Property Data', prov.model.PROV_TYPE: 'ont:DataResource', 'ont:Extension': 'json'})
-        property_address_db = doc.entity('dat:bkin18_cjoe_klovett_sbrz#property_assessment',
-            {'prov:label': 'property_assessment', prov.model.PROV_TYPE: 'ont:DataSet'})
-        address_db = doc.entity('dat:bkin18_cjoe_klovett_sbrz#property_assessment_addresses',
-                                {'prov:label': 'property_assessment_addresses', prov.model.PROV_TYPE: 'ont:DataSet'})
+        resource = doc.entity('bdp:062fc6fa-b5ff-4270-86cf-202225e40858', {'prov:label': 'Aggregated Route ID', prov.model.PROV_TYPE: 'ont:DataResource', 'ont:Extension': 'json'})
+        property_address_db = doc.entity('dat:bkin18_cjoe_klovett_sbrz#route_agg',
+            {'prov:label': 'route_agg', prov.model.PROV_TYPE: 'ont:DataSet'})
+        address_db = doc.entity('dat:bkin18_cjoe_klovett_sbrz#route_agg',
+                                {'prov:label': 'route_agg', prov.model.PROV_TYPE: 'ont:DataSet'})
         select_address_data = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
         doc.wasAssociatedWith(select_address_data, this_script)
         #I don't think this is actually of type "retrieval," I'm just not sure what the actual name for it is atm. - Keith
         doc.usage(select_address_data, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=address+data&$select=description'
+                  'ont:Query':'db.bkin18_cjoe_klovett_sbrz.roads_inventory.find()'
                   }
                   )
 
