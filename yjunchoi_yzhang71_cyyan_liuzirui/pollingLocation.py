@@ -72,9 +72,9 @@ class pollingLocation(dml.Algorithm):
 
         return doc
 
-#pollingLocation.execute()
-#doc = pollingLocation.provenance()
-#print(doc.get_provn())
-#print(json.dumps(json.loads(doc.serialize()), indent=4))
+pollingLocation.execute()
+doc = pollingLocation.provenance()
+print(doc.get_provn())
+print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof
