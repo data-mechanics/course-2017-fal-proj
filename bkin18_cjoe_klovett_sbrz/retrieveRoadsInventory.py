@@ -33,23 +33,22 @@ class retrieveRoadsInventory(dml.Algorithm):
         removeEntries = ['MHS', 'From_Measure', 'To_Measure', 'From_Date', 'To_Date', 'Med_Type', 'Med_Width', 'Mile_Count', 'NHS', 'Trk_Network' 
         'Trk_Permit', 'Fd_Aid_Rd', 'AADT', 'Shldr_Lt_W', 'Shldr_Lt_T', 'Shldr_Rt_W', 'Shldr_Rt_T', 'AADT_Yearr', 'AADT_Deriv', 'Shldr_UL_W', 'Shldr_UL_T']
 
+        ## Removing unnecessary keys for legibility
         for road in roads_inventory_json:
             if road['attributes']['MPO'] == 'Boston Region':
                 for entry in removeEntries:
                     road['attributes'].pop(entry, None)
-                x.append(road)
+                x.append(road['attributes'])
 
         ## IMPORTANT KEYS: Route_ID, Urban_Type, Number_of_Lanes, Street_Name (duh), Length, Toll_Road (nobody likes tolls), struct_cd(?)
         repo.dropCollection("roads_inventory")
         repo.createCollection("roads_inventory")
         repo['bkin18_cjoe_klovett_sbrz.roads_inventory'].insert_many(x)
         repo['bkin18_cjoe_klovett_sbrz.roads_inventory'].metadata({'complete': True})
-        # print(repo['bkin18_cjoe_klovett_sbrz.roads_inventory'].metadata())
 
         repo.logout()
-
         endTime = datetime.datetime.now()
-
+        
         return {"start": startTime, "end": endTime}
 
     @staticmethod
