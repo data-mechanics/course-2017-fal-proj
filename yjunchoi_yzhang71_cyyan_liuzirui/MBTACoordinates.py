@@ -20,22 +20,19 @@ class MBTACoordinates(dml.Algorithm):
         repo = client.repo
         repo.authenticate('yjunchoi_yzhang71_cyyan_liuzirui', 'yjunchoi_yzhang71_cyyan_liuzirui')
 
-        url = 'http://erikdemaine.org/maps/mbta/mbta.js'
+        url = 'http://erikdemaine.org/maps/mbta/mbta.yaml'
         response = urllib.request.urlopen(url).read().decode("utf-8")
-        print(response)
-        raw = json.loads(response)
-        s = json.dumps(r, sort_keys=True, indent=2)
+        mbta = yaml.loads(response)
+
         repo.dropCollection("MBTACoordinates")
         repo.createCollection("MBTACoordinates")
 
-        coordinates = {}
-        for i in raw['features']:
-            coordinates[i['properties']['STOP_NAME']] = i['geometry']['coordinates']
+        mbtaData = {}
+        for line in mbta:
+            for station in line["stations"]:
+                name = station["title"]
+                
 
-        results = [ {'name': key,  'coordinates': coordinates[key]}  for key in coordinates ]
-
-        repo['yjunchoi_yzhang71_cyyan_liuzirui.bus_stop'].insert(new)
-        repo['yjunchoi_yzhang71_cyyan_liuzirui.bus_stop'].insert_many(results)
 
         repo.logout()
 
