@@ -34,7 +34,8 @@ class get_datasets(dml.Algorithm):
 
 
         # Database 2: Hubway Station Locations
-        url = 'https://boston.opendatasoft.com/explore/dataset/hubway-station-locations/download/?format=geojson&timezone=America/New_York'
+        #url = 'https://boston.opendatasoft.com/explore/dataset/hubway-station-locations/download/?format=geojson&timezone=America/New_York'
+        url = 'http://datamechanics.io/data/jtbloom_rfballes/july-hubway-station-locations.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
@@ -106,11 +107,13 @@ class get_datasets(dml.Algorithm):
         doc.add_namespace('bods', 'https://boston.opendatasoft.com/explore/dataset/')
         doc.add_namespace('ab', 'http://bostonopendata-boston.opendata.arcgis.com/datasets/')
         doc.add_namespace('dm','http://datamechanics.io/data/jt_rf_pr1/')
+        doc.add_namespace('dmi', 'http://datamechanics.io/data/jtbloom_rfballes/')
 
         this_script = doc.agent('alg:get_datasets', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
         resource_electric = doc.entity('mdot:ed1c6fb748a646ac83b210985e1069b5_0', {'prov:label':'Electric Charging Stations', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
-        resource_hubway = doc.entity('bods:hubway-station-locations', {'prov:label':'Hubway Stations', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
+        #resource_hubway = doc.entity('bods:hubway-station-locations', {'prov:label':'Hubway Stations', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
+        resource_hubway = doc.entity('dmi:july-hubway-station-locations', {'prov:label':'Hubway Stations', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
         resource_bike = doc.entity('ab:d02c9d2003af455fbc37f550cc53d3a4_0', {'prov:label':'Bike Network', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
         resource_neighborhoods = doc.entity('bods:boston-neighborhoods', {'prov:label':'Neighborhoods', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
         resource_trips = doc.entity('dm:hubway_trip_history', {'prov:label':'Trips', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
@@ -135,7 +138,7 @@ class get_datasets(dml.Algorithm):
 
         doc.usage(get_hubway, resource_hubway, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'/download/?format=geojson&timezone=America/New_York'
+                  #'ont:Query':'/download/?format=geojson&timezone=America/New_York'
                   }
                   )
 
