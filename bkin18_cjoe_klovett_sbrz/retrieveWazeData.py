@@ -60,22 +60,30 @@ class retrieveWazeData(dml.Algorithm):
         doc.add_namespace('bdp', 'https://data.boston.gov/api/action/')
         doc.add_namespace('cbdp', 'https://data.cityofboston.gov/resource/')
 
-        this_script = doc.agent('alg:bkin18_cjoe_klovett_sbrz#gatherWazeData', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
-        resource = doc.entity('bdp:dih6-az4h.json', {'prov:label': 'Waze Jam Data', prov.model.PROV_TYPE: 'ont:DataResource', 'ont:Extension': 'json'})
-        get_waze_data = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
-        doc.wasAssociatedWith(get_waze_data, this_script)
-        doc.usage(get_waze_data, resource, startTime, None,
+
+        this_script = doc.agent('alg:bkin18_cjoe_klovett_sbrz#gatherWazeData', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
+
+        this_run = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
+
+        resource = doc.entity('bdp:dih6-az4h.json', {'prov:label': 'Waze Jam Data', prov.model.PROV_TYPE: 'ont:DataResource', 'ont:Extension': 'json'})
+        
+        output = doc.entity('dat:bkin18_cjoe_klovett_sbrz#waze_data',
+                {prov.model.PROV_LABEL: 'waze_data', prov.model.PROV_TYPE: 'ont:DataSet'})
+
+        doc.wasAssociatedWith(this_run, this_script)
+
+        doc.usage(this_run, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
                   'ont:Query':'?type=waze+data&$select=description'
                   }
                   )
 
-        waze_db = doc.entity('dat:bkin18_cjoe_klovett_sbrz#waze_data',
-                {prov.model.PROV_LABEL: 'waze_data', prov.model.PROV_TYPE: 'ont:DataSet'})
-        doc.wasAttributedTo(waze_db, this_script)
-        doc.wasGeneratedBy(waze_db,get_waze_data, endTime)
-        doc.wasDerivedFrom(waze_db, resource, get_waze_data)
+        doc.wasAttributedTo(output, this_script)
+
+        doc.wasGeneratedBy(output,this_run, endTime)
+
+        doc.wasDerivedFrom(output, resource, this_run)
 
         repo.logout()
 
