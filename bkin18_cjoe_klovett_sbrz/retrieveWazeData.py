@@ -27,16 +27,23 @@ class retrieveWazeData(dml.Algorithm):
         waze_response = urllib.request.urlopen(waze_url).read().decode("utf-8")
         waze_traffic_json = json_util.loads(waze_response)
 
-        #property_assessment_json = property_assessment_json['result']['records']
+        # Removing unnecessary keys for legibility
+        removeEntries = ['country', 'endtime', 'uuid', 'starttime', 'pubmillis', 'turntype']
+        x = []
+        for data in waze_traffic_json:
+            try:
+                if data['city'] == 'Boston, MA':
+                    for entry in removeEntries:
+                        data.pop(entry, None)
+                    x.append(data)
+            except KeyError:
+                pass
 
         repo.dropCollection("waze_data")
         repo.createCollection("waze_data")
-        repo['bkin18_cjoe_klovett_sbrz.waze_data'].insert_many(waze_traffic_json)
+        repo['bkin18_cjoe_klovett_sbrz.waze_data'].insert_many(x)
         repo['bkin18_cjoe_klovett_sbrz.waze_data'].metadata({'complete': True})
-        print(repo['bkin18_cjoe_klovett_sbrz.waze_data'].metadata())
-
         repo.logout()
-
         endTime = datetime.datetime.now()
 
         return {"start": startTime, "end": endTime}

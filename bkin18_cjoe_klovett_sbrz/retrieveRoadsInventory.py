@@ -30,24 +30,27 @@ class retrieveRoadsInventory(dml.Algorithm):
 
         roads_inventory_json = roads_inventory_json['features']
         x = []
-        removeEntries = ['MHS', 'From_Measure', 'To_Measure', 'From_Date', 'To_Date', 'Med_Type', 'Med_Width', 'Mile_Count', 'NHS', 'Trk_Network' 
-        'Trk_Permit', 'Fd_Aid_Rd', 'AADT', 'Shldr_Lt_W', 'Shldr_Lt_T', 'Shldr_Rt_W', 'Shldr_Rt_T', 'AADT_Yearr', 'AADT_Deriv', 'Shldr_UL_W', 'Shldr_UL_T']
+        removeEntries = ['MHS', 'From_Measure', 'To_Measure', 'From_Date', 'To_Date', 'Med_Type', 'Med_Width', 'Mile_Count', 'NHS', 'Trk_Netwrk', 
+        'Trk_Permit', 'Fd_Aid_Rd', 'AADT', 'Shldr_Lt_W', 'Shldr_Lt_T', 'Shldr_Rt_W', 'Shldr_Rt_T', 'AADT_Year', 'AADT_Deriv', 'Shldr_UL_W', 'Shldr_UL_T',
+        'County', 'Surface_Tp', 'Route_System', 'Surface_Wd', 'Hwy_Dist', 'F_F_Class', 'T_Exc_Time', 'Curb', 'Statn_Num', 'Station', 'Hwy_Subdst', 'Lt_Sidewlk',
+        'Rt_Sidewlk', 'Truck_Rte', 'T_Exc_Type', 'Operation', 'Control', 'Facility', 'F_Class', 'Jurisdictn', 'ROW_Width']
 
+        #Obtains all roads in the Boston region, that have at least some associated street name data, and removes some entries.
         for road in roads_inventory_json:
             if road['attributes']['MPO'] == 'Boston Region':
-                for entry in removeEntries:
-                    road['attributes'].pop(entry, None)
-                x.append(road)
+                if road['attributes']['St_Name'] != '' or road['attributes']['Fm_St_Name'] != '' or road['attributes']['To_St_Name'] != '':
+                    if road['attributes']['St_Name'] is not None or road['attributes']['Fm_St_Name'] is not None or road['attributes']['To_St_Name'] is not None:
+                        for entry in removeEntries:
+                            road['attributes'].pop(entry, None)
+                        x.append(road['attributes'])
 
         ## IMPORTANT KEYS: Route_ID, Urban_Type, Number_of_Lanes, Street_Name (duh), Length, Toll_Road (nobody likes tolls), struct_cd(?)
         repo.dropCollection("roads_inventory")
         repo.createCollection("roads_inventory")
         repo['bkin18_cjoe_klovett_sbrz.roads_inventory'].insert_many(x)
         repo['bkin18_cjoe_klovett_sbrz.roads_inventory'].metadata({'complete': True})
-        # print(repo['bkin18_cjoe_klovett_sbrz.roads_inventory'].metadata())
 
         repo.logout()
-
         endTime = datetime.datetime.now()
 
         return {"start": startTime, "end": endTime}

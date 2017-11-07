@@ -27,9 +27,9 @@ class retrievePropertyAssessmentData(dml.Algorithm):
             ## I changed this to 200 because my laptop could not handle 200k datapoints - Chris
         property_assessment_response = urllib.request.urlopen(property_assessment_url).read().decode("utf-8")
         property_assessment_json = json_util.loads(property_assessment_response)
-
         property_assessment_json = property_assessment_json['result']['records']
 
+        ## Create the collection
         repo.dropCollection("property_assessment")
         repo.createCollection("property_assessment")
         repo['bkin18_cjoe_klovett_sbrz.property_assessment'].insert_many(property_assessment_json)
