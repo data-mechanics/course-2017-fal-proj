@@ -19,9 +19,9 @@ class safetyTranformation(dml.Algorithm):
         keys = {r[0] for r in R}
         return [(key, f([v for (k, v) in R if k == key])) for key in keys]
 
-    contributor = 'jdbrawn_slarbi'
-    reads = ['jdbrawn_slarbi.colleges', 'jdbrawn_slarbi.crime', 'jdbrawn_slarbi.crash']
-    writes = ['jdbrawn_slarbi.safetyAnalysis']
+    contributor = 'jdbrawn_jliang24_slarbi_tpotye'
+    reads = ['jdbrawn_jliang24_slarbi_tpotye.colleges', 'jdbrawn_jliang24_slarbi_tpotye.crime', 'jdbrawn_jliang24_slarbi_tpotye.crash']
+    writes = ['jdbrawn_jliang24_slarbi_tpotye.safetyAnalysis']
 
     @staticmethod
     def execute(trial=False):
@@ -29,11 +29,11 @@ class safetyTranformation(dml.Algorithm):
         startTime = datetime.datetime.now()
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('jdbrawn_slarbi', 'jdbrawn_slarbi')
+        repo.authenticate('jdbrawn_jliang24_slarbi_tpotye', 'jdbrawn_jliang24_slarbi_tpotye')
 
-        colleges = repo['jdbrawn_slarbi.colleges']
-        crime = repo['jdbrawn_slarbi.crime']
-        crash = repo['jdbrawn_slarbi.crash']
+        colleges = repo['jdbrawn_jliang24_slarbi_tpotye.colleges']
+        crime = repo['jdbrawn_jliang24_slarbi_tpotye.crime']
+        crash = repo['jdbrawn_jliang24_slarbi_tpotye.crash']
 
         collegeLocations = []
         crimeLocations = []
@@ -80,7 +80,7 @@ class safetyTranformation(dml.Algorithm):
 
         repo.dropCollection('safetyAnalysis')
         repo.createCollection('safetyAnalysis')
-        repo['jdbrawn_slarbi.safetyAnalysis'].insert_many(transformed_data)
+        repo['jdbrawn_jliang24_slarbi_tpotye.safetyAnalysis'].insert_many(transformed_data)
 
         repo.logout()
         endTime = datetime.datetime.now()
@@ -98,21 +98,21 @@ class safetyTranformation(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('jdbrawn_slarbi', 'jdbrawn_slarbi')
+        repo.authenticate('jdbrawn_jliang24_slarbi_tpotye', 'jdbrawn_jliang24_slarbi_tpotye')
 
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/')  # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/')  # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/')  # The event log.
         doc.add_namespace('bdp', 'https://data.boston.gov/api/action/datastore_search?resource_id=')
-        doc.add_namespace('591', 'http://datamechanics.io/data/jdbrawn_slarbi/')
+        doc.add_namespace('591', 'http://datamechanics.io/data/jdbrawn_jliang24_slarbi_tpotye/')
         doc.add_namespace('bdp1', 'https://data.cityofboston.gov/resource/')
 
-        this_script = doc.agent('alg:jdbrawn_slarbi#safetyTransformation', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
+        this_script = doc.agent('alg:jdbrawn_jliang24_slarbi_tpotye#safetyTransformation', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
 
-        resource_colleges = doc.entity('dat:jdbrawn_slarbi#colleges', {'prov:label': 'Boston Universities and Colleges', prov.model.PROV_TYPE: 'ont:DataSet'})
-        resource_crime = doc.entity('dat:jdbrawn_slarbi#crime', {'prov:label': 'Boston Crime', prov.model.PROV_TYPE: 'ont:DataSet'})
-        resource_crashes = doc.entity('dat:jdbrawn_slarbi#crash', {'prov:label': 'Boston Crashes', prov.model.PROV_TYPE: 'ont:DataSet'})
+        resource_colleges = doc.entity('dat:jdbrawn_jliang24_slarbi_tpotye#colleges', {'prov:label': 'Boston Universities and Colleges', prov.model.PROV_TYPE: 'ont:DataSet'})
+        resource_crime = doc.entity('dat:jdbrawn_jliang24_slarbi_tpotye#crime', {'prov:label': 'Boston Crime', prov.model.PROV_TYPE: 'ont:DataSet'})
+        resource_crashes = doc.entity('dat:jdbrawn_jliang24_slarbi_tpotye#crash', {'prov:label': 'Boston Crashes', prov.model.PROV_TYPE: 'ont:DataSet'})
 
         get_safetyAnalysis = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
@@ -122,7 +122,7 @@ class safetyTranformation(dml.Algorithm):
         doc.usage(get_safetyAnalysis, resource_crime, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
         doc.usage(get_safetyAnalysis, resource_crashes, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
 
-        safety = doc.entity('dat:jdbrawn_slarbi#safetyAnalysis', {prov.model.PROV_LABEL: 'Safety Analysis', prov.model.PROV_TYPE: 'ont:DataSet'})
+        safety = doc.entity('dat:jdbrawn_jliang24_slarbi_tpotye#safetyAnalysis', {prov.model.PROV_LABEL: 'Safety Analysis', prov.model.PROV_TYPE: 'ont:DataSet'})
         doc.wasAttributedTo(safety, this_script)
         doc.wasGeneratedBy(safety, get_safetyAnalysis, endTime)
         doc.wasDerivedFrom(safety, resource_colleges, get_safetyAnalysis, get_safetyAnalysis, get_safetyAnalysis)

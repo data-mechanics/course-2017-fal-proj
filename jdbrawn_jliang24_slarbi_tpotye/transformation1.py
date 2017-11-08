@@ -28,10 +28,10 @@ class transformation1(dml.Algorithm):
         return [x for x in seq if not (x in seen or seen_add(x)) and x != " "]
 
 
-    contributor = 'jdbrawn_slarbi'
-    reads = ['jdbrawn_slarbi.entertain',
-              'jdbrawn_slarbi.food']
-    writes = ['jdbrawn_slarbi.socialAnalysis']
+    contributor = 'jdbrawn_jliang24_slarbi_tpotye'
+    reads = ['jdbrawn_jliang24_slarbi_tpotye.entertain',
+              'jdbrawn_jliang24_slarbi_tpotye.food']
+    writes = ['jdbrawn_jliang24_slarbi_tpotye.socialAnalysis']
 
     @staticmethod
     def execute(trial = False):
@@ -39,10 +39,10 @@ class transformation1(dml.Algorithm):
         startTime = datetime.datetime.now()
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('jdbrawn_slarbi', 'jdbrawn_slarbi')
+        repo.authenticate('jdbrawn_jliang24_slarbi_tpotye', 'jdbrawn_jliang24_slarbi_tpotye')
 
-        entertainmentLoc = repo['jdbrawn_slarbi.entertain']
-        foodLoc = repo['jdbrawn_slarbi.food']
+        entertainmentLoc = repo['jdbrawn_jliang24_slarbi_tpotye.entertain']
+        foodLoc = repo['jdbrawn_jliang24_slarbi_tpotye.food']
 
         #begin transformation
         
@@ -71,7 +71,7 @@ class transformation1(dml.Algorithm):
         #print('DONE!')
         repo.dropCollection('socialAnalysis')
         repo.createCollection('socialAnalysis')
-        repo['jdbrawn_slarbi.socialAnalysis'].insert_many(finalList)
+        repo['jdbrawn_jliang24_slarbi_tpotye.socialAnalysis'].insert_many(finalList)
 
         
         repo.logout()
@@ -90,21 +90,21 @@ class transformation1(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('jdbrawn_slarbi', 'jdbrawn_slarbi')
+        repo.authenticate('jdbrawn_jliang24_slarbi_tpotye', 'jdbrawn_jliang24_slarbi_tpotye')
 
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/')  # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/')  # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/')  # The event log.
         doc.add_namespace('bdp', 'https://data.boston.gov/api/action/datastore_search?resource_id=')
-        doc.add_namespace('591', 'http://datamechanics.io/data/jdbrawn_slarbi/')
+        doc.add_namespace('591', 'http://datamechanics.io/data/jdbrawn_jliang24_slarbi_tpotye/')
         doc.add_namespace('bdp1', 'https://data.cityofboston.gov/resource/')
 
 
-        this_script = doc.agent('alg:jdbrawn_slarbi#transformation1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:jdbrawn_jliang24_slarbi_tpotye#transformation1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
-        resource_entertain = doc.entity('dat:jdbrawn_slarbi#entertain', {'prov:label':'Entertainment Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        resource_food = doc.entity('dat:jdbrawn_slarbi#food', {'prov:label': 'Food Data', prov.model.PROV_TYPE: 'ont:DataSet'})
+        resource_entertain = doc.entity('dat:jdbrawn_jliang24_slarbi_tpotye#entertain', {'prov:label':'Entertainment Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_food = doc.entity('dat:jdbrawn_jliang24_slarbi_tpotye#food', {'prov:label': 'Food Data', prov.model.PROV_TYPE: 'ont:DataSet'})
 
         get_socialAnalysis = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
         
@@ -113,7 +113,7 @@ class transformation1(dml.Algorithm):
         doc.usage(get_socialAnalysis, resource_entertain, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
         doc.usage(get_socialAnalysis, resource_food, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
 
-        social = doc.entity('dat:jdbrawn_slarbi#socialAnalysis', {prov.model.PROV_LABEL: 'Social Analysis', prov.model.PROV_TYPE: 'ont:DataSet'})
+        social = doc.entity('dat:jdbrawn_jliang24_slarbi_tpotye#socialAnalysis', {prov.model.PROV_LABEL: 'Social Analysis', prov.model.PROV_TYPE: 'ont:DataSet'})
         doc.wasAttributedTo(social, this_script)
         doc.wasGeneratedBy(social, get_socialAnalysis, endTime)
         doc.wasDerivedFrom(social, resource_entertain, get_socialAnalysis, get_socialAnalysis, get_socialAnalysis)

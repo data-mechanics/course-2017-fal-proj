@@ -19,9 +19,9 @@ class mbtaTransformation(dml.Algorithm):
         keys = {r[0] for r in R}
         return [(key, f([v for (k, v) in R if k == key])) for key in keys]
 
-    contributor = 'jdbrawn_slarbi'
-    reads = ['jdbrawn_slarbi.colleges', 'jdbrawn_slarbi.mbta']
-    writes = ['jdbrawn_slarbi.mbtaAnalysis']
+    contributor = 'jdbrawn_jliang24_slarbi_tpotye'
+    reads = ['jdbrawn_jliang24_slarbi_tpotye.colleges', 'jdbrawn_jliang24_slarbi_tpotye.mbta']
+    writes = ['jdbrawn_jliang24_slarbi_tpotye.mbtaAnalysis']
 
     @staticmethod
     def execute(trial=False):
@@ -29,10 +29,10 @@ class mbtaTransformation(dml.Algorithm):
         startTime = datetime.datetime.now()
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('jdbrawn_slarbi', 'jdbrawn_slarbi')
+        repo.authenticate('jdbrawn_jliang24_slarbi_tpotye', 'jdbrawn_jliang24_slarbi_tpotye')
 
-        colleges = repo['jdbrawn_slarbi.colleges']
-        mbta = repo['jdbrawn_slarbi.mbta']
+        colleges = repo['jdbrawn_jliang24_slarbi_tpotye.colleges']
+        mbta = repo['jdbrawn_jliang24_slarbi_tpotye.mbta']
 
         collegeLocations = []
         numStudents = []
@@ -67,7 +67,7 @@ class mbtaTransformation(dml.Algorithm):
 
         repo.dropCollection('mbtaAnalysis')
         repo.createCollection('mbtaAnalysis')
-        repo['jdbrawn_slarbi.mbtaAnalysis'].insert_many(transformed_data)
+        repo['jdbrawn_jliang24_slarbi_tpotye.mbtaAnalysis'].insert_many(transformed_data)
 
         repo.logout()
         endTime = datetime.datetime.now()
@@ -85,20 +85,20 @@ class mbtaTransformation(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('jdbrawn_slarbi', 'jdbrawn_slarbi')
+        repo.authenticate('jdbrawn_jliang24_slarbi_tpotye', 'jdbrawn_jliang24_slarbi_tpotye')
 
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/')  # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/')  # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/')  # The event log.
         doc.add_namespace('bdp', 'https://data.boston.gov/api/action/datastore_search?resource_id=')
-        doc.add_namespace('591', 'http://datamechanics.io/data/jdbrawn_slarbi/')
+        doc.add_namespace('591', 'http://datamechanics.io/data/jdbrawn_jliang24_slarbi_tpotye/')
         doc.add_namespace('bdp1', 'https://data.cityofboston.gov/resource/')
 
-        this_script = doc.agent('alg:jdbrawn_slarbi#mbtaTransformation', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
+        this_script = doc.agent('alg:jdbrawn_jliang24_slarbi_tpotye#mbtaTransformation', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
 
-        resource_colleges = doc.entity('dat:jdbrawn_slarbi#colleges', {'prov:label': 'Boston Universities and Colleges', prov.model.PROV_TYPE: 'ont:DataSet'})
-        resource_mbta = doc.entity('dat:jdbrawn_slarbi#mbta', {'prov:label': 'MBTA Bus Stops', prov.model.PROV_TYPE: 'ont:DataSet'})
+        resource_colleges = doc.entity('dat:jdbrawn_jliang24_slarbi_tpotye#colleges', {'prov:label': 'Boston Universities and Colleges', prov.model.PROV_TYPE: 'ont:DataSet'})
+        resource_mbta = doc.entity('dat:jdbrawn_jliang24_slarbi_tpotye#mbta', {'prov:label': 'MBTA Bus Stops', prov.model.PROV_TYPE: 'ont:DataSet'})
 
         get_mbtaAnalysis = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
@@ -107,7 +107,7 @@ class mbtaTransformation(dml.Algorithm):
         doc.usage(get_mbtaAnalysis, resource_colleges, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
         doc.usage(get_mbtaAnalysis, resource_mbta, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
 
-        mbta = doc.entity('dat:jdbrawn_slarbi#mbtaAnalysis', {prov.model.PROV_LABEL: 'MBTA Analysis', prov.model.PROV_TYPE: 'ont:DataSet'})
+        mbta = doc.entity('dat:jdbrawn_jliang24_slarbi_tpotye#mbtaAnalysis', {prov.model.PROV_LABEL: 'MBTA Analysis', prov.model.PROV_TYPE: 'ont:DataSet'})
         doc.wasAttributedTo(mbta, this_script)
         doc.wasGeneratedBy(mbta, get_mbtaAnalysis, endTime)
         doc.wasDerivedFrom(mbta, resource_colleges, get_mbtaAnalysis, get_mbtaAnalysis, get_mbtaAnalysis)
