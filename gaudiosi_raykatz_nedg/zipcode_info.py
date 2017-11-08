@@ -48,7 +48,12 @@ class zipcode_info(dml.Algorithm):
             z["percent_asian"] = demographics["percent_asian"]
             z["percent_pacific"] = demographics["percent_pacific"]
             z["percent_hispanic"] = demographics["percent_hispanic"]
-            
+
+            z["percent_married_households"] = demographics["percent_married_households"]
+            z["percent_unemployed"] = demographics["percent_unemployed"]
+            z["percent_in_labor_force"] = demographics["percent_in_labor_force"]
+            z["percent_public_transit"] = demographics["percent_public_transit"]
+
             z["median_income"] = income["median_income"]
             z["median_rent"] = income["median_rent"]
             z["percent_spending_50_rent"] = income["percent_spending_50_rent"]

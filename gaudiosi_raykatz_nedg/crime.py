@@ -51,7 +51,6 @@ class crime(dml.Algorithm):
 
             r.append(d)
 
-        print(r)
 
 
         s = json.dumps(r, sort_keys=True, indent=2)
@@ -106,10 +105,10 @@ class crime(dml.Algorithm):
         repo.logout()
                   
         return doc
-
+'''
 crime.execute()
 doc = crime.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
-
+'''
 ## eof

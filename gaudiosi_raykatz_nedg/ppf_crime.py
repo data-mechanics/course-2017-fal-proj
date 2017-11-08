@@ -7,8 +7,8 @@ import uuid
 
 class ppf_crime(dml.Algorithm):
     contributor = 'gaudiosi_raykatz'
-    reads = ["gaudiosi_katz.ppf2", "gaudiosi_katz.crimes"]
-    writes = ['gaudiosi_katz. ppf_crime']
+    reads = ["gaudiosi_raykatz.ppf", "gaudiosi_raykatz.crime"]
+    writes = ['gaudiosi_raykatz.ppf_crime']
 
     @staticmethod
     def execute(trial = False):
@@ -32,7 +32,6 @@ class ppf_crime(dml.Algorithm):
                 ppfdict["average_priceperfoot_" + str(2012+i)]=(year_sum / 12)
                 pprasdasd.append(year_sum / 12)
 
-        print(ppfdict)
         fcrime_dict={}
         crime1 = list(repo.gaudiosi_raykatz.crime.find({}))
         crime_dict0=[x for x in crime1 if x['district'] == 'Downtown&Charlestown']
@@ -128,11 +127,11 @@ class ppf_crime(dml.Algorithm):
         
         doc.usage(get_demos, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Demographics&$select=white,black,native_american,asian,pacific_islander,hispanic,total,zipcode'
+                  'ont:Query':'?type=ppf_crime&$select=stuff'
                   }
                   )
         
-        demos = doc.entity('dat:gaudiosi_raykatz#zipcode_info', {prov.model.PROV_LABEL:'Demographics', prov.model.PROV_TYPE:'ont:DataSet'})
+        demos = doc.entity('dat:gaudiosi_raykatz#ppf_crime', {prov.model.PROV_LABEL:'PPF Crime', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(demos, this_script)
         doc.wasGeneratedBy(demos, get_demos, endTime)
         doc.wasDerivedFrom(demos, resource, get_demos, get_demos, get_demos)
@@ -141,9 +140,10 @@ class ppf_crime(dml.Algorithm):
                   
         return doc
 
+'''
 ppf_crime.execute()
 doc = ppf_crime.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
-
+'''
 ## eof

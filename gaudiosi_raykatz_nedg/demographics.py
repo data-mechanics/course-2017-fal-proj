@@ -23,13 +23,11 @@ class demographics(dml.Algorithm):
         
         url2 = "https://api.census.gov/data/2015/acs5?get=B11001_003E,B11001_001E,B23025_005E,B23025_003E,B23025_001E,B08101_025E,B08101_001E&for=zip+code+tabulation+area:02108,02109,02110,02111,02112,02113,02114,02115,02116,02117,02118,02119,02120,02121,02122,02123,02124,02125,02126,02127,02128,02129,02130,02131,02132,02133,02134,02135,02136,02137,02163,02196,02199,02201,02203,02204,02205,02206,02207,02210,02211,02212,02215,02216,02217,02222,02228,02241,02266,02283,02284,02293,02295,02297,02298&key="
 
-        url += "432902274829a00579344cc87ee2c21713f4b476"
-        url2 += "432902274829a00579344cc87ee2c21713f4b476"
+        with open('auth.json') as data_file:    
+                data = json.load(data_file)
+        url += data["census"]
+        url2 += data["census"]
         
-        #with open('auth.json') as data_file:    
-        #        data = json.load(data_file)
-        #url += data["census"]
-        #url2 += data["census"]
         #Returns the ordered by population numbers of [white, black, native american, asian, pacific islander, hispanic, total, state id (25), zipcode]
         response = urllib.request.urlopen(url).read().decode("utf-8")
         result = json.loads(response)
@@ -50,7 +48,6 @@ class demographics(dml.Algorithm):
             d["hispanic"] = int(result[i][5])
             d["total"] = int(result[i][6])
             for j in range(1, len(result2)):
-                print("old zip =", zipcode, " new zip=", result2[j][7])
                 if result2[j][7] == zipcode: 
                     if int(result2[j][6]) == 0:
                         continue
@@ -119,9 +116,10 @@ class demographics(dml.Algorithm):
                   
         return doc
 
+'''
 demographics.execute()
 doc = demographics.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
-
+'''
 ## eof

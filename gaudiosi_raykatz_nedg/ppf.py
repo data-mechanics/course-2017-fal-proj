@@ -1440,7 +1440,6 @@ class ppf(dml.Algorithm):
                 
 
 
-        print(r)
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("ppf")
         repo.createCollection("ppf")
@@ -1494,10 +1493,10 @@ class ppf(dml.Algorithm):
         repo.logout()
                   
         return doc
-
+'''
 ppf.execute()
 doc = ppf.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
-
+'''
 ## eof
