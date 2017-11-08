@@ -13,9 +13,9 @@ If so, the coordinates of the complaint and the site are inserted into a new dat
 '''
 
 class find_nearby_sites(dml.Algorithm):
-    contributor = 'mcaloonj'
-    reads = ['mcaloonj.cleaned_speed_complaints', 'mcaloonj.elderly_homes', 'mcaloonj.schools', 'mcaloonj.open_space']
-    writes = ['mcaloonj.sites_near_complaints']
+    contributor = 'adsouza_bmroach_mcaloonj_mcsmocha'
+    reads = ['adsouza_bmroach_mcaloonj_mcsmocha.cleaned_speed_complaints', 'adsouza_bmroach_mcaloonj_mcsmocha.elderly_homes', 'adsouza_bmroach_mcaloonj_mcsmocha.schools', 'adsouza_bmroach_mcaloonj_mcsmocha.open_space']
+    writes = ['adsouza_bmroach_mcaloonj_mcsmocha.sites_near_complaints']
 
     @staticmethod
     def execute(trial=False):
@@ -23,25 +23,25 @@ class find_nearby_sites(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('mcaloonj', 'mcaloonj')
+        repo.authenticate('adsouza_bmroach_mcaloonj_mcsmocha', 'adsouza_bmroach_mcaloonj_mcsmocha')
 
-        repo.dropCollection('mcaloonj.sites_near_complaints')
-        repo.createCollection('mcaloonj.sites_near_complaints')
+        repo.dropCollection('adsouza_bmroach_mcaloonj_mcsmocha.sites_near_complaints')
+        repo.createCollection('adsouza_bmroach_mcaloonj_mcsmocha.sites_near_complaints')
 
         #projection on schools to get dictionary with coordinates as key and name as value
-        schools = repo["mcaloonj.schools"].find()
+        schools = repo["adsouza_bmroach_mcaloonj_mcsmocha.schools"].find()
         school_dict = dict()
         for s in schools:
             school_dict[tuple(s["fields"]["geo_shape"]["coordinates"])[::-1]] = s["fields"]["sch_name"]
 
         #projection on elderly homes to get dictionary with coordinates as key and name as value
-        homes = repo["mcaloonj.elderly_homes"].find()
+        homes = repo["adsouza_bmroach_mcaloonj_mcsmocha.elderly_homes"].find()
         elderly_dict = dict()
         for h in homes:
             elderly_dict[(h["attributes"]["MatchLatitude"],h["attributes"]["MatchLongitude"])] = h["attributes"]["Project_Name"]
 
         #projection on parks to get dictionary with first coordinate as key and name as value
-        parks = repo["mcaloonj.open_space"].find()
+        parks = repo["adsouza_bmroach_mcaloonj_mcsmocha.open_space"].find()
         park_dict = dict()
         for p in parks:
             if p["geometry"]["type"] == "Polygon":
@@ -50,7 +50,7 @@ class find_nearby_sites(dml.Algorithm):
                 first_coord = (tuple(p["geometry"]["coordinates"][0][0][0]))[::-1]
             park_dict[first_coord] = p["properties"]["SITE_NAME"]
 
-        complaints = repo["mcaloonj.cleaned_speed_complaints"].find()
+        complaints = repo["adsouza_bmroach_mcaloonj_mcsmocha.cleaned_speed_complaints"].find()
         nearby_sites = []
         for c in complaints:
             coord1 = (c["latitude"], c["longitude"])
@@ -68,7 +68,7 @@ class find_nearby_sites(dml.Algorithm):
                     nearby_sites.append({"complaint_coordinates": coord1, "site_coordinates": coord2, "name": name, "distance": dist, "comments": c["comments"]})
 
 
-        repo['mcaloonj.sites_near_complaints'].insert(nearby_sites)
+        repo['adsouza_bmroach_mcaloonj_mcsmocha.sites_near_complaints'].insert(nearby_sites)
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -79,16 +79,16 @@ class find_nearby_sites(dml.Algorithm):
     def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('mcaloonj','mcaloonj')
+        repo.authenticate('adsouza_bmroach_mcaloonj_mcsmocha','adsouza_bmroach_mcaloonj_mcsmocha')
 
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('mcj', 'mcaloonj')
+        doc.add_namespace('mcj', 'adsouza_bmroach_mcaloonj_mcsmocha')
 
         #Agent
-        this_script = doc.agent('alg:mcaloonj#find_nearby_sites', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extenstion':'py'})
+        this_script = doc.agent('alg:adsouza_bmroach_mcaloonj_mcsmocha#find_nearby_sites', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extenstion':'py'})
         #Resources
         complaints_resource = doc.entity('mcj:cleaned_speed_complaints', {'prov:label': 'Cleaned Speed Complaints', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extenstion':'json'})
         elderly_resource = doc.entity('mcj:elderly_homes', {'prov:label': 'Elderly Home Locations', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extenstion':'json'})
@@ -110,7 +110,7 @@ class find_nearby_sites(dml.Algorithm):
                   {prov.model.PROV_TYPE:'ont:Retrieval'})
 
         #New dataset
-        sites_near_complaints = doc.entity('dat:mcaloonj#sites_near_complaints', {prov.model.PROV_LABEL:'Vulnerable sites near speeding complaints',prov.model.PROV_TYPE:'ont:DataSet'})
+        sites_near_complaints = doc.entity('dat:adsouza_bmroach_mcaloonj_mcsmocha#sites_near_complaints', {prov.model.PROV_LABEL:'Vulnerable sites near speeding complaints',prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(sites_near_complaints, this_script)
         doc.wasGeneratedBy(sites_near_complaints, get_nearby_sites, endTime)
         doc.wasDerivedFrom(sites_near_complaints, complaints_resource, get_nearby_sites, get_nearby_sites, get_nearby_sites)
