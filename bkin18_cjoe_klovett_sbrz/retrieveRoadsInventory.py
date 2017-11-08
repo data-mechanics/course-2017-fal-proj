@@ -4,6 +4,7 @@ import dml
 import prov.model
 import datetime
 import uuid
+import sys
 
 
 class retrieveRoadsInventory(dml.Algorithm):
@@ -14,6 +15,10 @@ class retrieveRoadsInventory(dml.Algorithm):
     @staticmethod
     def execute(trial=False):
         '''Retrieve Boston property assessment data set.'''
+
+        print("Retrieving roads inventory...         \n", end='\r')
+        sys.stdout.write("\033[F") # Cursor up one line
+
         startTime = datetime.datetime.now()
 
         # Set up the database connection.
@@ -21,14 +26,22 @@ class retrieveRoadsInventory(dml.Algorithm):
         repo = client.repo
         repo.authenticate('bkin18_cjoe_klovett_sbrz', 'bkin18_cjoe_klovett_sbrz')
 
+        # Setting up our API call
+        SAMPLE_START = 2816
+        TRIAL_NUM = 50
+        
+        # Checks to see whether we are doing a trial execute or not - used a range because our starting data has a lot of empty points
+        if trial:
+            url = "http://gis.massdot.state.ma.us/arcgis/rest/services/Roads/RoadInventory/MapServer/0/query?where=OBJECTID%20%3E%3D%20" + str(SAMPLE_START) + "%20AND%20OBJECTID%20%3C%3D%20" + str(SAMPLE_START + TRIAL_NUM) + "&outFields=*&outSR=4326&f=json"
+        else:
+            url = "http://gis.massdot.state.ma.us/arcgis/rest/services/Roads/RoadInventory/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json"
+
         # Property Assessment Data Set
-        property_assessment_url = urllib.request.Request(
-            "http://gis.massdot.state.ma.us/arcgis/rest/services/Roads/RoadInventory/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json")
-            ## I changed this to 200 because my laptop could not handle 200k datapoints - Chris
+        property_assessment_url = urllib.request.Request(url)
         roads_response = urllib.request.urlopen(property_assessment_url).read().decode("utf-8")
         roads_inventory_json = json_util.loads(roads_response)
-
         roads_inventory_json = roads_inventory_json['features']
+
         x = []
         removeEntries = ['MHS', 'From_Measure', 'To_Measure', 'From_Date', 'To_Date', 'Med_Type', 'Med_Width', 'Mile_Count', 'NHS', 'Trk_Netwrk', 
         'Trk_Permit', 'Fd_Aid_Rd', 'AADT', 'Shldr_Lt_W', 'Shldr_Lt_T', 'Shldr_Rt_W', 'Shldr_Rt_T', 'AADT_Year', 'AADT_Deriv', 'Shldr_UL_W', 'Shldr_UL_T',
@@ -40,6 +53,7 @@ class retrieveRoadsInventory(dml.Algorithm):
             if road['attributes']['MPO'] == 'Boston Region':
                 if road['attributes']['St_Name'] != '' or road['attributes']['Fm_St_Name'] != '' or road['attributes']['To_St_Name'] != '':
                     if road['attributes']['St_Name'] is not None or road['attributes']['Fm_St_Name'] is not None or road['attributes']['To_St_Name'] is not None:
+                        # print(road['attributes']['OBJECTID'])
                         for entry in removeEntries:
                             road['attributes'].pop(entry, None)
                         x.append(road['attributes'])
