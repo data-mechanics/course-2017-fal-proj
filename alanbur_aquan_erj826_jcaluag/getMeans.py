@@ -16,7 +16,7 @@ import requests
 class getComplaints(dml.Algorithm):
     contributor = 'alanbur_aquan_erj826_jcaluag'
     reads = ['alanbur_aquan_erj826_jcaluag.parseaccidents']
-    writes = ['alanbur_aquan_erj826_jcaluag.means']
+    writes = ['alanbur_aquan_erj826_jcaluag.meanAndStdev']
 
     @staticmethod
     def execute(trial = False):
@@ -31,8 +31,8 @@ class getComplaints(dml.Algorithm):
 
         collection = repo.alanbur_aquan_erj826_jcaluag.parseaccidents
 
-        repo.dropCollection("alanbur_aquan_erj826_jcaluag.means")
-        repo.createCollection("alanbur_aquan_erj826_jcaluag.means")
+        repo.dropCollection("alanbur_aquan_erj826_jcaluag.meanAndStdev")
+        repo.createCollection("alanbur_aquan_erj826_jcaluag.meanAndStdev")
 
         timeSum=0
         casualtySum=0
@@ -42,10 +42,10 @@ class getComplaints(dml.Algorithm):
             casualtySum+=entry['total_casualties']
             
             #sum the times, by minute
-            timeEntry = collection['time']
+            timeEntry = entry['time']
             data = timeEntry.split(':')
-            hourMins = data[0] * 60
-            dataSum = hourMins + data[1]
+            hourMins = int(data[0]) * 60
+            dataSum = hourMins + int(data[1])
             timeSum +=dataSum
             
             #count the entries
@@ -58,14 +58,18 @@ class getComplaints(dml.Algorithm):
         theTrueMinute= avgTimeMins%60
         avgTime=str(theTrueHour) + ":" + str(theTrueMinute)  
         
-        n = {}
+        n = {} #the single entry of our dataset that contains statistics
         n['avgCasualties'] = avgCasualties
-        n['avgTime'] = avgTime  
-        repo['alanbur_aquan_erj826_jcaluag.means'].insert(n, check_keys=False)
+        n['avgTime'] = avgTime
+
+        #lets calculate stdev and 
 
 
-        repo['alanbur_aquan_erj826_jcaluag.means'].metadata({'complete':True})
-        print(repo['alanbur_aquan_erj826_jcaluag.means'].metadata())
+        repo['alanbur_aquan_erj826_jcaluag.meanAndStdev'].insert(n, check_keys=False)
+
+
+        repo['alanbur_aquan_erj826_jcaluag.meanAndStdev'].metadata({'complete':True})
+        print(repo['alanbur_aquan_erj826_jcaluag.meanAndStdev'].metadata())
 
         repo.logout()
 
