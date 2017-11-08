@@ -4,7 +4,7 @@ import dml
 import prov.model
 import datetime
 import uuid
-
+import sys
 
 class retrievePropertyAssessmentData(dml.Algorithm):
     contributor = 'bkin18_cjoe_klovett_sbrz'
@@ -16,14 +16,20 @@ class retrievePropertyAssessmentData(dml.Algorithm):
         '''Retrieve Boston property assessment data set.'''
         startTime = datetime.datetime.now()
 
+        print("Retrieving prop assessment...         \n", end='\r')
+        sys.stdout.write("\033[F") # Cursor up one line
+
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate('bkin18_cjoe_klovett_sbrz', 'bkin18_cjoe_klovett_sbrz')
 
+        # Checks to see if trial is active - only takes 50 sample data points
+        TRIAL_NUM = 50 if trial else sys.maxsize
+
         # Property Assessment Data Set
         property_assessment_url = urllib.request.Request(
-            "https://data.boston.gov/api/action/datastore_search?resource_id=062fc6fa-b5ff-4270-86cf-202225e40858&limit=200")
+            "https://data.boston.gov/api/action/datastore_search?resource_id=062fc6fa-b5ff-4270-86cf-202225e40858&limit=" + str(TRIAL_NUM))
             ## I changed this to 200 because my laptop could not handle 200k datapoints - Chris
         property_assessment_response = urllib.request.urlopen(property_assessment_url).read().decode("utf-8")
         property_assessment_json = json_util.loads(property_assessment_response)
@@ -34,7 +40,7 @@ class retrievePropertyAssessmentData(dml.Algorithm):
         repo.createCollection("property_assessment")
         repo['bkin18_cjoe_klovett_sbrz.property_assessment'].insert_many(property_assessment_json)
         repo['bkin18_cjoe_klovett_sbrz.property_assessment'].metadata({'complete': True})
-        print(repo['bkin18_cjoe_klovett_sbrz.property_assessment'].metadata())
+        # print(repo['bkin18_cjoe_klovett_sbrz.property_assessment'].metadata())
 
         repo.logout()
 
