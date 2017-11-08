@@ -4,6 +4,7 @@ import dml
 import prov.model
 import datetime
 import uuid
+import sys
 
 
 class retrieveRoadsInventory(dml.Algorithm):
@@ -15,7 +16,8 @@ class retrieveRoadsInventory(dml.Algorithm):
     def execute(trial=False):
         '''Retrieve Boston property assessment data set.'''
 
-        print("Retrieving roads inventory...")
+        print("Retrieving roads inventory...         \n", end='\r')
+        sys.stdout.write("\033[F") # Cursor up one line
 
         startTime = datetime.datetime.now()
 

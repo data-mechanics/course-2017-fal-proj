@@ -5,6 +5,7 @@ import prov.model
 import datetime
 import uuid
 import pdb
+import sys
 
 
 class retrieveWazeData(dml.Algorithm):
@@ -17,7 +18,8 @@ class retrieveWazeData(dml.Algorithm):
         '''Retrieve Boston property assessment data set.'''
         startTime = datetime.datetime.now()
 
-        print("Retrieving waze data...")
+        print("Retrieving waze data...         \n", end='\r')
+        sys.stdout.write("\033[F") # Cursor up one line
 
         # Set up the database connection.
         client = dml.pymongo.MongoClient()

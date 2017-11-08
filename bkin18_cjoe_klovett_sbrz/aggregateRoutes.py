@@ -2,7 +2,7 @@ import dml
 import prov.model
 import datetime
 import uuid
-
+import sys
 
 class aggregateRoutes(dml.Algorithm):
     contributor = 'bkin18_cjoe_klovett_sbrz'
@@ -14,7 +14,8 @@ class aggregateRoutes(dml.Algorithm):
         '''Aggregate based off of routes in the roads inventory data set'''
         startTime = datetime.datetime.now()
 
-        print("Aggregating routes...")
+        print("Aggregating routes...          \n", end='\r')
+        sys.stdout.write("\033[F") # Cursor up one line
 
         # Set up the database connection.
         client = dml.pymongo.MongoClient()

@@ -6,7 +6,7 @@ import datetime
 import uuid
 import pdb
 import json
-
+import sys
 
 class wazeAggregates(dml.Algorithm):
     contributor = 'bkin18_cjoe_klovett_sbrz'
@@ -20,7 +20,9 @@ class wazeAggregates(dml.Algorithm):
         '''Retrieve Boston property assessment data set.'''
         startTime = datetime.datetime.now()
 
-        print("Aggregating waze data...")
+        print("Aggregating waze data...         \n", end='\r')
+        sys.stdout.write("\033[F") # Cursor up one line
+
 
         # Set up the database connection.
         client = dml.pymongo.MongoClient()

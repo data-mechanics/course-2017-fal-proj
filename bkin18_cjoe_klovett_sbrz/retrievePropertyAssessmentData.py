@@ -16,7 +16,8 @@ class retrievePropertyAssessmentData(dml.Algorithm):
         '''Retrieve Boston property assessment data set.'''
         startTime = datetime.datetime.now()
 
-        print("Retrieving prop assessment...")
+        print("Retrieving prop assessment...         \n", end='\r')
+        sys.stdout.write("\033[F") # Cursor up one line
 
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
@@ -25,7 +26,7 @@ class retrievePropertyAssessmentData(dml.Algorithm):
 
         # Checks to see if trial is active - only takes 50 sample data points
         TRIAL_NUM = 50 if trial else sys.maxsize
-         
+
         # Property Assessment Data Set
         property_assessment_url = urllib.request.Request(
             "https://data.boston.gov/api/action/datastore_search?resource_id=062fc6fa-b5ff-4270-86cf-202225e40858&limit=" + str(TRIAL_NUM))
