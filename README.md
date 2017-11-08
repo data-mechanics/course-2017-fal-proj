@@ -1,18 +1,5 @@
-### Justification
-Boston is a city notorious for extreme winter weather. With a constant threat
-of snowstorms for half the year, it's important to clear the snow  as
-efficently as possible. Therefore, the question we are trying to
-answer is how effectively can storm be cleared? We have classified
-effictiveness in two ways, flow and connections. Flow will address the extent
-to which traffic is slowed by the storm, and connections will be areas of
-importance, for example it is highly important to have access to a hospital. To
-test flow we are using a constraint satisfaction problem will. This will check
-the importance of emergency snow routes within the city. Basically, we see if
-there are any routes which are unecessary by checking if all streets can still
-be accessed after removing one or multiple routes. For connections, we will be
-implimenting a k-means algorithm. Our means will be based on points of high
-importance, we will reccomend beginning to plow from or means to maximize
-efficency.
+## Justification
+Boston is a city notorious for extreme winter weather. With snowstorms potentially causing problems ranging from minor inconveniences like traffic backup to more serious concerns like roads to hospitals being blocked, it's important to clear snow from roads as efficiently as possible. To assist in efficient snow removal efforts, we classify the effectiveness of plowing a particular road in two ways: "flow" and "connections". "Flow" gauges how much plowing a particular road would benefit traversal throughout the city, and is optimized by satisfying constraints concerning [TBD]. "Connections" gauges how plowing a particular road would benefit access to nearby buildings of importance, and is optimized via a run of the K-means algorithm, wherein clusters to be closed in on by K-means are defined by the coordinates of these buildings of importance. Given the two optimal results of "flow" and "connections," we determine places of high importance to plow first.
 
 # course-2017-fal-proj
 Joint repository for the collection of student course projects in the Fall 2017 iteration of the Data Mechanics course at Boston University.
