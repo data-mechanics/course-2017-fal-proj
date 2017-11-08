@@ -5,6 +5,8 @@ import prov.model
 import datetime
 import uuid
 import requests
+import gpxpy.geo
+from ast import literal_eval as make_tuple
 
 
 class transformation1(dml.Algorithm):
@@ -16,9 +18,9 @@ class transformation1(dml.Algorithm):
         return [(t,u) for t in R for u in S]
     def select(R, s):
         return [t for t in R if s(t)]
-    def aggregate(R):
+    def aggregate(R, f):
         keys = {r[0] for r in R}
-        return [(key, [v for (k,v) in R if k == key]) for key in keys]
+        return [(key, f([v for (k, v) in R if k == key])) for key in keys]
     def project(R, p):
         return [p(t) for t in R]
     def removeDuplicates(seq):
@@ -30,7 +32,8 @@ class transformation1(dml.Algorithm):
 
     contributor = 'jdbrawn_jliang24_slarbi_tpotye'
     reads = ['jdbrawn_jliang24_slarbi_tpotye.entertain',
-              'jdbrawn_jliang24_slarbi_tpotye.food']
+              'jdbrawn_jliang24_slarbi_tpotye.food',
+             'jdbrawn_jliang24_slarbi_tpotye.colleges']
     writes = ['jdbrawn_jliang24_slarbi_tpotye.socialAnalysis']
 
     @staticmethod
@@ -43,39 +46,66 @@ class transformation1(dml.Algorithm):
 
         entertainmentLoc = repo['jdbrawn_jliang24_slarbi_tpotye.entertain']
         foodLoc = repo['jdbrawn_jliang24_slarbi_tpotye.food']
+        colleges = repo['jdbrawn_jliang24_slarbi_tpotye.colleges']
 
         #begin transformation
-        
-        foodZips = []
-        entertainmentZips = []
-        finalList = []
+
+        collegeLocations = []
+        foodLocations = []
+        entertainmentLocations = []
+
+        # clean college data to just include name and lat/long
+        for entry in colleges.find():
+            if 'Latitude' in entry and entry['Latitude'] != '0':
+                collegeLocations.append((entry['Name'], float(entry['Latitude']), float(entry['Longitude'])))
+
+        # clean food data to just include id number and lat/long
         for entry in foodLoc.find():
-            if 'zip' in entry:
-                foodZips.append((entry['zip'], entry['businessname']))
+            if 'location' in entry:
+                foodLocations.append((1, float(entry['location']['coordinates'][1]), float(entry['location']['coordinates'][0])))
 
+        # clean entertainment data to just include id number and lat/long
         for entry in entertainmentLoc.find():
-            if 'zip' in entry:
-                entertainmentZips.append((entry['zip'], entry['businessname']))
-#            entertainmentZips.append({'zipcode': entry['zip'], "name": entry['businessname']})
+            if 'location' in entry and entry['location'] != "NULL":
+                lat_long = make_tuple(entry['location'])
+                entertainmentLocations.append(
+                    (1, float(lat_long[0]), float(lat_long[1])))
 
-        both = transformation1.union(foodZips, entertainmentZips)
-        both = transformation1.removeDuplicates(both)
-        combo = transformation1.aggregate(both)
-        for entry in combo:
-            finalList.append({'zipcode':entry[0], 'numSocialBusinesses':len(entry[1])})
-       # print(finalList)
-            
+        # find all food within a mile of each school
+        school_and_food = []
+        for uni in collegeLocations:
+            for act in foodLocations:
+                if gpxpy.geo.haversine_distance(uni[1], uni[2], act[1], act[2]) < 1610:
+                    school_and_food.append((uni[0], 1))
+        school_and_food = transformation1.aggregate(school_and_food, sum)
 
+        # find all entertainment within a mile of each school
+        school_and_entertainment = []
+        for uni in collegeLocations:
+            for act in entertainmentLocations:
+                if gpxpy.geo.haversine_distance(uni[1], uni[2], act[1], act[2]) < 1610:
+                    school_and_entertainment.append((uni[0], 1))
+        school_and_entertainment = transformation1.aggregate(school_and_entertainment, sum)
 
+        # combine the previous two to get (school, number of crimes, number of crashes)
+        product_select_project = transformation1.project(
+            transformation1.select(transformation1.product(school_and_food, school_and_entertainment),
+                                       lambda t: t[0][0] == t[1][0]), lambda t: (t[0][0], t[0][1], t[1][1]))
 
-        #print('DONE!')
+        # format it for MongoDB
+        transformed_data = []
+        for entry in product_select_project:
+            transformed_data.append({'Name': entry[0], 'Number of Food': entry[1], 'Number of Entertainment': entry[2]})
+
+        print(transformed_data)
+
         repo.dropCollection('socialAnalysis')
         repo.createCollection('socialAnalysis')
-        repo['jdbrawn_jliang24_slarbi_tpotye.socialAnalysis'].insert_many(finalList)
+        repo['jdbrawn_jliang24_slarbi_tpotye.socialAnalysis'].insert_many(transformed_data)
 
-        
         repo.logout()
         endTime = datetime.datetime.now()
+
         return {"start":startTime, "end":endTime}
 
 
