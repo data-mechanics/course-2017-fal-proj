@@ -17,20 +17,33 @@ class retrieveWazeData(dml.Algorithm):
         '''Retrieve Boston property assessment data set.'''
         startTime = datetime.datetime.now()
 
+        print("Retrieving waze data...")
+
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate('bkin18_cjoe_klovett_sbrz', 'bkin18_cjoe_klovett_sbrz')
 
         # Waze Data Set
-        waze_url = urllib.request.Request("https://data.cityofboston.gov/resource/dih6-az4h.json")
+        TRIAL_NUM = 50
+        if trial:
+            waze_url = urllib.request.Request("https://data.cityofboston.gov/resource/dih6-az4h.json?$limit=" + str(TRIAL_NUM))
+        else:
+            waze_url = urllib.request.Request("https://data.cityofboston.gov/resource/dih6-az4h.json")
         waze_response = urllib.request.urlopen(waze_url).read().decode("utf-8")
         waze_traffic_json = json_util.loads(waze_response)
 
         # Removing unnecessary keys for legibility
         removeEntries = ['country', 'endtime', 'uuid', 'starttime', 'pubmillis', 'turntype']
         x = []
-        for data in waze_traffic_json:
+
+        TRIAL_NUM = 0
+        if trial:
+            TRIAL_NUM = 10
+        else:
+            TRIAL_NUM = len(waze_traffic_json)
+
+        for data in waze_traffic_json[0:TRIAL_NUM]:
             try:
                 if data['city'] == 'Boston, MA':
                     for entry in removeEntries:

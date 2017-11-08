@@ -8,7 +8,7 @@ import pdb
 import json
 
 
-class wazeAggrigates(dml.Algorithm):
+class wazeAggregates(dml.Algorithm):
     contributor = 'bkin18_cjoe_klovett_sbrz'
     reads = ['bkin18_cjoe_klovett_sbrz.waze_data'] 
             
@@ -20,6 +20,8 @@ class wazeAggrigates(dml.Algorithm):
         '''Retrieve Boston property assessment data set.'''
         startTime = datetime.datetime.now()
 
+        print("Aggregating waze data...")
+
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
@@ -29,7 +31,7 @@ class wazeAggrigates(dml.Algorithm):
 
 
         # Create two seperate aggrigations from waze data:
-        # Aggrigated by street, one for traffic jam level and one for speed 
+        # Aggregated by street, one for traffic jam level and one for speed 
         traffic_data = []
 
         for entry in data:
@@ -65,13 +67,13 @@ class wazeAggrigates(dml.Algorithm):
         repo.createCollection("waze_levels_agg")
         repo['bkin18_cjoe_klovett_sbrz.waze_levels_agg'].insert_one(levels_agg)
         repo['bkin18_cjoe_klovett_sbrz.waze_levels_agg'].metadata({'complete': True})
-        print(repo['bkin18_cjoe_klovett_sbrz.waze_levels_agg'].metadata())
+        # print(repo['bkin18_cjoe_klovett_sbrz.waze_levels_agg'].metadata())
 
         repo.dropCollection("waze_speeds_agg")
         repo.createCollection("waze_speeds_agg")
         repo['bkin18_cjoe_klovett_sbrz.waze_speeds_agg'].insert_one(levels_agg)
         repo['bkin18_cjoe_klovett_sbrz.waze_speeds_agg'].metadata({'complete': True})
-        print(repo['bkin18_cjoe_klovett_sbrz.waze_speeds_agg'].metadata())
+        # print(repo['bkin18_cjoe_klovett_sbrz.waze_speeds_agg'].metadata())
 
         repo.logout()
 
@@ -99,7 +101,7 @@ class wazeAggrigates(dml.Algorithm):
         doc.add_namespace('cbdp', 'https://data.cityofboston.gov/resource/')
 
         this_script = doc.agent(
-            'alg:bkin18_cjoe_klovett_sbrz#wazeAggrigates',{
+            'alg:bkin18_cjoe_klovett_sbrz#wazeAggregates',{
                 prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'],'ont:Extension': 'py'})
 
         this_run = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)

@@ -14,6 +14,8 @@ class aggregateRoutes(dml.Algorithm):
         '''Aggregate based off of routes in the roads inventory data set'''
         startTime = datetime.datetime.now()
 
+        print("Aggregating routes...")
+
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
