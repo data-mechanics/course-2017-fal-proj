@@ -39,7 +39,7 @@ class getDatasets(dml.Algorithm):
         repo['jdbrawn_jliang24_slarbi_tpotye.crime'].insert_many(r['result']['records'])
 
         # Get crash data
-        url = 'http://datamechanics.io/data/jdbrawn_jliang24_slarbi_tpotye/CarCrashData.json'
+        url = 'http://datamechanics.io/data/jdbrawn_slarbi/CarCrashData.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
@@ -48,7 +48,7 @@ class getDatasets(dml.Algorithm):
         repo['jdbrawn_jliang24_slarbi_tpotye.crash'].insert_many(r)
 
         # Get MBTA bus stop data
-        url = 'http://datamechanics.io/data/jdbrawn_jliang24_slarbi_tpotye/MBTA_Bus_Stops.geojson'
+        url = 'http://datamechanics.io/data/jdbrawn_slarbi/MBTA_Bus_Stops.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)['features']
         s = json.dumps(r, sort_keys=True, indent=2)
@@ -98,7 +98,7 @@ class getDatasets(dml.Algorithm):
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/')  # The event log.
         doc.add_namespace('bdp', 'https://data.boston.gov/api/action/datastore_search?resource_id=')
-        doc.add_namespace('591', 'http://datamechanics.io/data/jdbrawn_jliang24_slarbi_tpotye/')
+        doc.add_namespace('591', 'http://datamechanics.io/data/jdbrawn_slarbi/')
         doc.add_namespace('bdp1', 'https://data.cityofboston.gov/resource/')
 
         this_script = doc.agent('alg:jdbrawn_jliang24_slarbi_tpotye#getData', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
