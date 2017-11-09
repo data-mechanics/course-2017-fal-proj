@@ -6,6 +6,9 @@ import datetime
 import uuid
 import requests
 import geojson
+from tqdm import tqdm
+import pdb
+
 
 
 class fzjr_retrievalalgorithm(dml.Algorithm):
@@ -13,12 +16,12 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
     reads = []
     writes = ['francisz_jrashaan.hubways', 'francisz_jrashaan.ChargingStation', 'francisz_jrashaan.bikeNetwork',
               'francisz_jrashaan.openspace', 'francisz_jrashaan.neighborhood']
-
+    
     @staticmethod
     def execute(trial=False):
+        
         '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
         startTime = datetime.datetime.now()
-
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
@@ -30,11 +33,22 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         gj = geojson.loads(response)
         geoDict = dict(gj)
         geoList = geoDict['features']
-        print(geoList)
+        # print(geoList)
         
       
         repo['francisz_jrashaan.hubways'].insert_many(geoList)
         repo['francisz_jrashaan.hubways'].metadata({'complete':True})
+        hubwaysCoords = []
+        for entry in repo.francisz_jrashaan.hubways.find():
+            #print(entry)
+            z = lambda t:({t['geometry']['type']: (t['geometry']['coordinates'])})
+            y = z(entry)
+            hubwaysCoords.append(y)
+        
+        
+        
+        #print(hubwaysCoords)
+        #print("STOP HERE")
         # print(repo['francisz_jrashaan.crime'].metadata())
 
         url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/465e00f9632145a1ad645a27d27069b4_2.geojson'
@@ -47,8 +61,16 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         geoList = geoDict['features']
         repo['francisz_jrashaan.ChargingStation'].insert_many(geoList)
         repo['francisz_jrashaan.ChargingStation'].metadata({'complete':True})
-
-
+        chargingstationCoords = []
+        for entry in repo.francisz_jrashaan.ChargingStation.find():
+            z = lambda t:({t['geometry']['type']: (t['geometry']['coordinates'])})
+            y = z(entry)
+            chargingstationCoords.append(y)
+        # print(chargingstationCoords)
+        #print("Coordinates")
+        #print("NEXT SEQUENCE")
+        
+        
         url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/d02c9d2003af455fbc37f550cc53d3a4_0.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
 
@@ -59,6 +81,22 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         geoList = geoDict['features']
         repo['francisz_jrashaan.bikeNetworks'].insert_many(geoList)
         repo['francisz_jrashaan.bikeNetworks'].metadata({'complete':True})
+        bikeCoords = []
+        bikeCoordsTuple = []
+        for entry in repo.francisz_jrashaan.bikeNetworks.find():
+            #print(entry)
+            z = lambda t:({t['geometry']['type']: (t['geometry']['coordinates'])})
+            y = z(entry)
+            bikeCoords.append(y)
+            bikeCoordsTuple.append(tuple((entry['geometry']['coordinates'])))
+        # print(entry['geometry']['coordinates'])
+        
+        #print("GOD SEND")
+        
+        
+        #print(bikeCoords)
+        
+        
 
 
         url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/3525b0ee6e6b427f9aab5d0a1d0a1a28_0.geojson'
@@ -69,9 +107,34 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         gj = geojson.loads(response)
         geoDict = dict(gj)
         geoList = geoDict['features']
+        
+        
         repo['francisz_jrashaan.neighborhood'].insert(geoList)
         repo['francisz_jrashaan.neighborhood'].metadata({'complete':True})
+        #print(repo['francisz_jrashaan.neighborhood'])
+        neighborhoodCoords = []
+        neighborhoodCoordsTuple = []
+        for entry in repo.francisz_jrashaan.neighborhood.find():
+            z = lambda t:({t['properties']['Name']: (t['geometry']['coordinates'])})
+            neighborhoodCoordsTuple.append(tuple((entry['properties']['Name'],entry['geometry']['coordinates'])))
+            y = z(entry)
+            neighborhoodCoords.append(y)
 
+        for entry in (neighborhoodCoords):
+            print(entry)
+            print("another one")
+        print("THE TEST")
+    
+
+
+        # print("NEIGHBOR YO")
+        
+        
+        #generating neighborhood dictionary with coords
+        
+        
+        
+                                       
         # repo['francisz_jrashaan.capopulation'].metadata({'complete':True})
         # print(repo['francisz_jrashaan.capopulation'].metadata())
         
@@ -84,7 +147,61 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         repo.createCollection("openspace")
         repo['francisz_jrashaan.openspace'].insert_many(geoList)
         repo['francisz_jrashaan.openspace'].metadata({'complete':True})
+        openspaceCoords = []
+        for entry in repo.francisz_jrashaan.openspace.find():
+            z = lambda t:({t['properties']['SITE_NAME']: (t['geometry']['coordinates'])})
+            y = z(entry)
+            openspaceCoords.append(y)
 
+        neighborhoodBikeTally = []
+        for x in tqdm(neighborhoodCoordsTuple):
+            for y in tqdm(bikeCoordsTuple):
+               
+                if x == y:
+                    
+                    neighborhoodBikeTally.append(tuple((x,1,0,0,0)))
+                    print("BOOP")
+
+
+        print(neighborhoodBikeTally)
+    
+        
+        
+#for coordinates in range(len(hubwaysCoords)):
+#           print (hubwaysCoords[coordinates].values())
+#           for coordinates2 in range(len(neighborhoodCoords)):
+            
+            #               if hubwaysCoords[coordinates].values() in neighborhoodCoords[coordinates2].values():
+#       print("yo")
+            
+            #   for x in coordinates:
+                
+                #   if x in openspaceCoords.values():
+                #   print("yo yo yo")
+                
+        # print(openspaceCoords.items())
+        
+        
+        #for x in hubwaysCoords.values():
+            # print("SUP")
+            #print(x)
+            # if x in neighborhoodCoords.values():
+                # print(neighborhoodCoords.values())
+                # print("X IS IN THERE")
+        
+#print("IS THIS EVEN WORKING")
+        #  R = [[i for i in neighborhoodCoords[x]] for x in neighborhoodCoords.keys()]
+        # print(R)
+        #testV = neighborhoodCoords.values()
+        #for X in
+        #X = [(k,1) for (k,v) in testV if v in neighborhoodCoords.values()]
+        #print(X)
+
+        
+         
+        
+        
+       
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -177,7 +294,7 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
 
 fzjr_retrievalalgorithm.execute()
 doc = fzjr_retrievalalgorithm.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+#print(doc.get_provn())
+#print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof
