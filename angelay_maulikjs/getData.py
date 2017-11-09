@@ -6,9 +6,9 @@ import datetime
 import uuid
 
 class getData(dml.Algorithm):
-    contributor = 'angelay'
+    contributor = 'angelay_maulikjs'
     reads = []
-    writes = ['angelay.CarbonIntensity', 'angelay.CO2Emissions', 'angelay.EnergyIntensity', 'angelay.EnergyUse', 'angelay.GDPperCapita', 'angelay.HDI', 'angelay.Population']
+    writes = ['angelay_maulikjs.CarbonIntensity', 'angelay_maulikjs.CO2Emissions', 'angelay_maulikjs.EnergyIntensity', 'angelay_maulikjs.EnergyUse', 'angelay_maulikjs.GDPperCapita', 'angelay_maulikjs.HDI', 'angelay_maulikjs.Population']
 
     @staticmethod
     def execute(trial = False):
@@ -18,7 +18,7 @@ class getData(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('angelay', 'angelay')
+        repo.authenticate('angelay_maulikjs', 'angelay_maulikjs')
 
         url = 'http://datamechanics.io/data/angelay/CarbonIntensity.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -26,9 +26,9 @@ class getData(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("CarbonIntensity")
         repo.createCollection("CarbonIntensity")
-        repo['angelay.CarbonIntensity'].insert(r)
-        repo['angelay.CarbonIntensity'].metadata({'complete':True})
-        print(repo['angelay.CarbonIntensity'].metadata())
+        repo['angelay_maulikjs.CarbonIntensity'].insert(r)
+        repo['angelay_maulikjs.CarbonIntensity'].metadata({'complete':True})
+        print(repo['angelay_maulikjs.CarbonIntensity'].metadata())
 
         url = 'http://datamechanics.io/data/angelay/CO2Emissions.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -36,9 +36,9 @@ class getData(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("CO2Emissions")
         repo.createCollection("CO2Emissions")
-        repo['angelay.CO2Emissions'].insert(r)
-        repo['angelay.CO2Emissions'].metadata({'complete':True})
-        print(repo['angelay.CO2Emissions'].metadata())
+        repo['angelay_maulikjs.CO2Emissions'].insert(r)
+        repo['angelay_maulikjs.CO2Emissions'].metadata({'complete':True})
+        print(repo['angelay_maulikjs.CO2Emissions'].metadata())
 
         url = 'http://datamechanics.io/data/angelay/EnergyIntensity.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -46,9 +46,9 @@ class getData(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("EnergyIntensity")
         repo.createCollection("EnergyIntensity")
-        repo['angelay.EnergyIntensity'].insert(r)
-        repo['angelay.EnergyIntensity'].metadata({'complete':True})
-        print(repo['angelay.EnergyIntensity'].metadata())
+        repo['angelay_maulikjs.EnergyIntensity'].insert(r)
+        repo['angelay_maulikjs.EnergyIntensity'].metadata({'complete':True})
+        print(repo['angelay_maulikjs.EnergyIntensity'].metadata())
 
         url = 'http://datamechanics.io/data/angelay/EnergyUse.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -56,9 +56,9 @@ class getData(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("EnergyUse")
         repo.createCollection("EnergyUse")
-        repo['angelay.EnergyUse'].insert(r)
-        repo['angelay.EnergyUse'].metadata({'complete':True})
-        print(repo['angelay.EnergyUse'].metadata())
+        repo['angelay_maulikjs.EnergyUse'].insert(r)
+        repo['angelay_maulikjs.EnergyUse'].metadata({'complete':True})
+        print(repo['angelay_maulikjs.EnergyUse'].metadata())
 
         url = 'http://datamechanics.io/data/angelay/GDPperCapita.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -66,9 +66,9 @@ class getData(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("GDPperCapita")
         repo.createCollection("GDPperCapita")
-        repo['angelay.GDPperCapita'].insert(r)
-        repo['angelay.GDPperCapita'].metadata({'complete':True})
-        print(repo['angelay.GDPperCapita'].metadata())
+        repo['angelay_maulikjs.GDPperCapita'].insert(r)
+        repo['angelay_maulikjs.GDPperCapita'].metadata({'complete':True})
+        print(repo['angelay_maulikjs.GDPperCapita'].metadata())
 
         url = 'http://datamechanics.io/data/angelay/HDI.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -76,9 +76,9 @@ class getData(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("HDI")
         repo.createCollection("HDI")
-        repo['angelay.HDI'].insert(r)
-        repo['angelay.HDI'].metadata({'complete':True})
-        print(repo['angelay.HDI'].metadata())
+        repo['angelay_maulikjs.HDI'].insert(r)
+        repo['angelay_maulikjs.HDI'].metadata({'complete':True})
+        print(repo['angelay_maulikjs.HDI'].metadata())
 
         url = 'http://datamechanics.io/data/angelay/Population.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -86,9 +86,9 @@ class getData(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("Population")
         repo.createCollection("Population")
-        repo['angelay.Population'].insert(r)
-        repo['angelay.Population'].metadata({'complete':True})
-        print(repo['angelay.Population'].metadata())
+        repo['angelay_maulikjs.Population'].insert(r)
+        repo['angelay_maulikjs.Population'].metadata({'complete':True})
+        print(repo['angelay_maulikjs.Population'].metadata())
 
         repo.logout()
 
@@ -107,7 +107,7 @@ class getData(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('angelay', 'angelay')
+        repo.authenticate('angelay_maulikjs', 'angelay_maulikjs')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.

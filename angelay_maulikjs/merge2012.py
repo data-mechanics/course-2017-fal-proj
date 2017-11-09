@@ -6,9 +6,9 @@ import datetime
 import uuid
 
 class merge2012(dml.Algorithm):
-    contributor = 'angelay'
-    reads = ['angelay.CarbonIntensity', 'angelay.CO2Emissions', 'angelay.EnergyIntensity', 'angelay.EnergyUse', 'angelay.GDPperCapita', 'angelay.HDI', 'angelay.Population']
-    writes = ['angelay.all2012']
+    contributor = 'angelay_maulikjs'
+    reads = ['angelay_maulikjs.CarbonIntensity', 'angelay_maulikjs.CO2Emissions', 'angelay_maulikjs.EnergyIntensity', 'angelay_maulikjs.EnergyUse', 'angelay_maulikjs.GDPperCapita', 'angelay_maulikjs.HDI', 'angelay_maulikjs.Population']
+    writes = ['angelay_maulikjs.all2012']
 
     @staticmethod
     def execute(trial = False):
@@ -16,15 +16,18 @@ class merge2012(dml.Algorithm):
 
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('angelay', 'angelay')
+        repo.authenticate('angelay_maulikjs', 'angelay_maulikjs')
 
-        repo.dropPermanent('angelay')
-        repo.createPermanent('angelay')
+        repo.dropPermanent('angelay_maulikjs')
+        repo.createPermanent('angelay_maulikjs')
+
+        repo.dropCollection("all2012")
+        repo.createCollection("all2012")
 
         l1, l2, l3, l4, l5, l6, l7 = [], [], [], [], [], [], []
         countries = []
 
-        data = repo.angelay.CarbonIntensity.find_one()
+        data = repo.angelay_maulikjs.CarbonIntensity.find_one()
         for key in sorted(data):
             if key != '_id':
                 countries.append(key)
@@ -33,40 +36,41 @@ class merge2012(dml.Algorithm):
             item = data[c]['2012']
             l1.append(item)
 
-        data = repo.angelay.CO2Emissions.find_one()
+        data = repo.angelay_maulikjs.CO2Emissions.find_one()
         for c in countries:
             item = data[c]['2012']
             l2.append(item)
 
-        data = repo.angelay.EnergyIntensity.find_one()
+        data = repo.angelay_maulikjs.EnergyIntensity.find_one()
         for c in countries:
             item = data[c]['2012']
             l3.append(item)
 
-        data = repo.angelay.EnergyUse.find_one()
+        data = repo.angelay_maulikjs.EnergyUse.find_one()
         for c in countries:
             item = data[c]['2012']
             l4.append(item)
 
-        data = repo.angelay.GDPperCapita.find_one()
+        data = repo.angelay_maulikjs.GDPperCapita.find_one()
         for c in countries:
             item = data[c]['2012']
             l5.append(item)
 
-        data = repo.angelay.HDI.find_one()
+        data = repo.angelay_maulikjs.HDI.find_one()
         for c in countries:
             item = data[c]['2012']
             l6.append(item)
 
-        data = repo.angelay.Population.find_one()
+        data = repo.angelay_maulikjs.Population.find_one()
         for c in countries:
             item = data[c]['2012']
             l7.append(item)
         
         for i in range(len(countries)):
+            print("HERE")
             entry = {'CarbonIntensity':l1[i], 'CO2Emissions':l2[i], 'EnergyIntensity':l3[i], 'EnergyUse':l4[i], 'GDPperCapita':l5[i], 'HDI':l6[i], 'Population':l7[i]}
-            res = repo.angelay.all2012.insert_one(entry)        
-                
+            res = repo['angelay_maulikjs.all2012'].insert_one(entry)        
+
         endTime = datetime.datetime.now()
         return {"Start ":startTime, "End ":endTime}
             
@@ -76,7 +80,7 @@ class merge2012(dml.Algorithm):
     def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('angelay', 'angelay')
+        repo.authenticate('angelay_maulikjs', 'angelay_maulikjs')
 
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
