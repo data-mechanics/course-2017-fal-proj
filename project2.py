@@ -47,8 +47,8 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
             hubwaysCoords.append(y)
             hubwayCoordsTuple.append((entry['geometry']['type'],entry['geometry']['coordinates']))
         
-        print(hubwayCoordsTuple)
-        print("HUBWAY COORDINATES")
+        # print(hubwayCoordsTuple)
+        # print("HUBWAY COORDINATES")
         
         
         #print(hubwaysCoords)
@@ -73,10 +73,10 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
             chargingstationCoords.append(y)
             chargingstationTuple.append((entry['geometry']['type'],entry['geometry']['coordinates']))
         
-        print(chargingstationTuple)
-        print("NEW PRINT")
-        print("Coordinates")
-        print("NEXT SEQUENCE")
+        #print(chargingstationTuple)
+        #print("NEW PRINT")
+        #print("Coordinates")
+        #print("NEXT SEQUENCE")
         
         
         url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/d02c9d2003af455fbc37f550cc53d3a4_0.geojson'
@@ -102,10 +102,10 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
             
         # print(entry['geometry']['coordinates'])
         
-        print("GOD SEND")
+        # print("GOD SEND")
         
         
-        print(bikeCoordsTuple)
+        # print(bikeCoordsTuple)
         
         
 
@@ -134,7 +134,6 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
          
             
             for coordinate in entry['geometry']['coordinates']:
-                print(coordinate)
                 coordinateArray.append((entry['properties']['Name'],coordinate))
             y = z(entry)
             neighborhoodCoords.append(y)
@@ -147,13 +146,34 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
                 lastUnpack = coordinate
                 for w in lastUnpack:
                     definiteNeighborhoodCoordinates.append((x[0],w,0,0,0,0))
-            print(definiteNeighborhoodCoordinates)
        
+       
+        for (i,tup) in enumerate(definiteNeighborhoodCoordinates):
+            a,b,c,d,e,f = tup
+            coords = b
+            
+            for (j,tup2) in enumerate(chargingstationTuple):
+                y,z = tup2
+                coords2 = z
+               
+               
+                #coords2[1]= float(str(coords2[1])[:-1])
+                print(coords)
+                print(coords2)
+                print(coords == coords2)
+                print("comparin")
+                if coords == coords2:
+                    print("FOUND IT")
+                    definiteNeighborhoodCoordinates[i] = a,b,1,c,d,e,f
+                    print("FOUND ONE")
+
+#print(definiteNeighborhoodCoordinates)
+
         
         #generating neighborhood dictionary with coords
         
-        
-        
+# heres what i want to do, compare two tuples and if there is a match update the value at current index of the tuple
+
                                        
         # repo['francisz_jrashaan.capopulation'].metadata({'complete':True})
         # print(repo['francisz_jrashaan.capopulation'].metadata())
@@ -173,32 +193,20 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
             y = z(entry)
             
             for coordinate in entry['geometry']['coordinates']:
-                print(coordinate)
                 openspaceCoords.append((entry['properties']['SITE_NAME'],coordinate))
                         
-                            
+        '''
                 definiteopenCoordinates = []
-                for x in tqdm(openspaceCoords):
+                for x in openspaceCoords:
                     y = x[1]
                     for coordinate in y:
                         lastUnpack = coordinate
                         for w in lastUnpack:
-                            definiteopenCoordinates.append((x[0],w,))
-                print(definiteopenCoordinates)
-                print("BOO YAH")
+                            definiteopenCoordinates.append((x[0],w))
 
-        neighborhoodBikeTally = []
-        for x in tqdm(neighborhoodCoordsTuple):
-            for y in tqdm(bikeCoordsTuple):
-               
-                if x == y:
-                    
-                    neighborhoodBikeTally.append(tuple((x,1,0,0,0)))
-                    print("BOOP")
+        '''
 
 
-        print(neighborhoodBikeTally)
-    
         
         
 #for coordinates in range(len(hubwaysCoords)):
