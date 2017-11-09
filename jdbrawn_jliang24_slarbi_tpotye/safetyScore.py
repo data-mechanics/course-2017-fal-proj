@@ -43,7 +43,7 @@ class safetyScore(dml.Algorithm):
         for entry in safety.find():
             crimeScore = float(entry['Number of Crimes'] - minCrimes) / crime_max_minus_min
             crashScore = float(entry['Number of Crashes'] - minCrashes) / crash_max_minus_min
-            safetyScore = crimeScore + crashScore / 2.0
+            safetyScore = (crimeScore + crashScore) / 2.0
             score.append({'Name': entry['Name'], 'Safety Score': safetyScore})
 
         repo.dropCollection('safetyScore')

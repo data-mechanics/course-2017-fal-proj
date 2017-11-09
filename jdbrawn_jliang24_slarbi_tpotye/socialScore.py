@@ -37,13 +37,13 @@ class socialScore(dml.Algorithm):
                 maxEntertainment = entry['Number of Entertainment']
 
         food_max_minus_min = float(maxFood - minFood)
-        entertainment_max_minus_min = float(maxFood - minFood)
+        entertainment_max_minus_min = float(maxEntertainment - minEntertainment)
 
         # calculate score
         for entry in social.find():
             foodScore = float(entry['Number of Food'] - minFood) / food_max_minus_min
             entertainmentScore = float(entry['Number of Entertainment'] - minEntertainment) / entertainment_max_minus_min
-            socialScore = foodScore + entertainmentScore / 2.0
+            socialScore = (foodScore + entertainmentScore) / 2.0
             score.append({'Name': entry['Name'], 'Social Score': socialScore})
 
         repo.dropCollection('socialScore')

@@ -74,6 +74,7 @@ class transformation1(dml.Algorithm):
         # find all food within a mile of each school
         school_and_food = []
         for uni in collegeLocations:
+            school_and_food.append((uni[0], 0))
             for act in foodLocations:
                 if gpxpy.geo.haversine_distance(uni[1], uni[2], act[1], act[2]) < 1610:
                     school_and_food.append((uni[0], 1))
@@ -82,6 +83,7 @@ class transformation1(dml.Algorithm):
         # find all entertainment within a mile of each school
         school_and_entertainment = []
         for uni in collegeLocations:
+            school_and_entertainment.append((uni[0], 0))
             for act in entertainmentLocations:
                 if gpxpy.geo.haversine_distance(uni[1], uni[2], act[1], act[2]) < 1610:
                     school_and_entertainment.append((uni[0], 1))
