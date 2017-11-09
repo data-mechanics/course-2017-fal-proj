@@ -7,9 +7,9 @@ import uuid
 import requests
 
 class fetch_schools(dml.Algorithm):
-    contributor = 'mcaloonj'
+    contributor = 'adsouza_bmroach_mcaloonj_mcsmocha'
     reads = []
-    writes = ['mcaloonj.schools']
+    writes = ['adsouza_bmroach_mcaloonj_mcsmocha.schools']
 
     @staticmethod
     def execute(trial=False):
@@ -17,7 +17,7 @@ class fetch_schools(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('mcaloonj', 'mcaloonj')
+        repo.authenticate('adsouza_bmroach_mcaloonj_mcsmocha', 'adsouza_bmroach_mcaloonj_mcsmocha')
 
         url = 'https://boston.opendatasoft.com/api/records/1.0/search/?dataset=public-schools&rows=-1'
         #response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -26,12 +26,12 @@ class fetch_schools(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         #print (s)
 
-        repo.dropCollection("mcaloonj.schools")
-        repo.createCollection("mcaloonj.schools")
+        repo.dropCollection("adsouza_bmroach_mcaloonj_mcsmocha.schools")
+        repo.createCollection("adsouza_bmroach_mcaloonj_mcsmocha.schools")
 
-        repo['mcaloonj.schools'].insert_many(r["records"])
-        repo['mcaloonj.schools'].metadata({'complete':True})
-        #print(repo['mcaloonj.schools'].metadata())
+        repo['adsouza_bmroach_mcaloonj_mcsmocha.schools'].insert_many(r["records"])
+        repo['adsouza_bmroach_mcaloonj_mcsmocha.schools'].metadata({'complete':True})
+        #print(repo['adsouza_bmroach_mcaloonj_mcsmocha.schools'].metadata())
 
         repo.logout()
 
@@ -43,7 +43,7 @@ class fetch_schools(dml.Algorithm):
     def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('mcaloonj','mcaloonj')
+        repo.authenticate('adsouza_bmroach_mcaloonj_mcsmocha','adsouza_bmroach_mcaloonj_mcsmocha')
 
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
@@ -51,7 +51,7 @@ class fetch_schools(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bods', 'http://boston.opendatasoft.com/api/records/1.0/search/')
 
-        this_script = doc.agent('alg:mcaloonj#fetch_schools', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extenstion':'py'})
+        this_script = doc.agent('alg:adsouza_bmroach_mcaloonj_mcsmocha#fetch_schools', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extenstion':'py'})
         resource = doc.entity('bods:'+str(uuid.uuid4()), {'prov:label': 'Public Schools', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extenstion':'json'})
         get_schools = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_schools, this_script)
@@ -61,7 +61,7 @@ class fetch_schools(dml.Algorithm):
                   }
                   )
 
-        schools = doc.entity('dat:mcaloonj#schools', {prov.model.PROV_LABEL:'Public Schools',prov.model.PROV_TYPE:'ont:DataSet'})
+        schools = doc.entity('dat:adsouza_bmroach_mcaloonj_mcsmocha#schools', {prov.model.PROV_LABEL:'Public Schools',prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(schools, this_script)
         doc.wasGeneratedBy(schools, get_schools, endTime)
         doc.wasDerivedFrom(schools, resource, get_schools, get_schools, get_schools)
