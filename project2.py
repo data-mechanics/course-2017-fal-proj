@@ -96,13 +96,16 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
             z = lambda t:({t['geometry']['type']: (t['geometry']['coordinates'])})
             y = z(entry)
             bikeCoords.append(y)
-            bikeCoordsTuple.append(tuple((entry['geometry']['coordinates'])))
+            for individualCoordinate in entry['geometry']['coordinates']:
+            
+                bikeCoordsTuple.append(("Point",individualCoordinate))
+            
         # print(entry['geometry']['coordinates'])
         
-        #print("GOD SEND")
+        print("GOD SEND")
         
         
-        #print(bikeCoords)
+        print(bikeCoordsTuple)
         
         
 
@@ -168,7 +171,21 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         for entry in repo.francisz_jrashaan.openspace.find():
             z = lambda t:({t['properties']['SITE_NAME']: (t['geometry']['coordinates'])})
             y = z(entry)
-            openspaceCoords.append(y)
+            
+            for coordinate in entry['geometry']['coordinates']:
+                print(coordinate)
+                openspaceCoords.append((entry['properties']['SITE_NAME'],coordinate))
+                        
+                            
+                definiteopenCoordinates = []
+                for x in tqdm(openspaceCoords):
+                    y = x[1]
+                    for coordinate in y:
+                        lastUnpack = coordinate
+                        for w in lastUnpack:
+                            definiteopenCoordinates.append((x[0],w,))
+                print(definiteopenCoordinates)
+                print("BOO YAH")
 
         neighborhoodBikeTally = []
         for x in tqdm(neighborhoodCoordsTuple):
