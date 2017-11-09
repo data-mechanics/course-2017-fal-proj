@@ -67,7 +67,6 @@ class merge2012(dml.Algorithm):
             l7.append(item)
         
         for i in range(len(countries)):
-            print("HERE")
             entry = {'CarbonIntensity':l1[i], 'CO2Emissions':l2[i], 'EnergyIntensity':l3[i], 'EnergyUse':l4[i], 'GDPperCapita':l5[i], 'HDI':l6[i], 'Population':l7[i]}
             res = repo['angelay_maulikjs.all2012'].insert_one(entry)        
 
