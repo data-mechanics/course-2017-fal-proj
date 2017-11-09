@@ -39,12 +39,16 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         repo['francisz_jrashaan.hubways'].insert_many(geoList)
         repo['francisz_jrashaan.hubways'].metadata({'complete':True})
         hubwaysCoords = []
+        hubwayCoordsTuple = []
         for entry in repo.francisz_jrashaan.hubways.find():
             #print(entry)
             z = lambda t:({t['geometry']['type']: (t['geometry']['coordinates'])})
             y = z(entry)
             hubwaysCoords.append(y)
+            hubwayCoordsTuple.append((entry['geometry']['type'],entry['geometry']['coordinates']))
         
+        print(hubwayCoordsTuple)
+        print("HUBWAY COORDINATES")
         
         
         #print(hubwaysCoords)
@@ -62,13 +66,17 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         repo['francisz_jrashaan.ChargingStation'].insert_many(geoList)
         repo['francisz_jrashaan.ChargingStation'].metadata({'complete':True})
         chargingstationCoords = []
+        chargingstationTuple = []
         for entry in repo.francisz_jrashaan.ChargingStation.find():
             z = lambda t:({t['geometry']['type']: (t['geometry']['coordinates'])})
             y = z(entry)
             chargingstationCoords.append(y)
-        # print(chargingstationCoords)
-        #print("Coordinates")
-        #print("NEXT SEQUENCE")
+            chargingstationTuple.append((entry['geometry']['type'],entry['geometry']['coordinates']))
+        
+        print(chargingstationTuple)
+        print("NEW PRINT")
+        print("Coordinates")
+        print("NEXT SEQUENCE")
         
         
         url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/d02c9d2003af455fbc37f550cc53d3a4_0.geojson'
@@ -114,21 +122,30 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         #print(repo['francisz_jrashaan.neighborhood'])
         neighborhoodCoords = []
         neighborhoodCoordsTuple = []
+        coordinateArray = []
         for entry in repo.francisz_jrashaan.neighborhood.find():
             z = lambda t:({t['properties']['Name']: (t['geometry']['coordinates'])})
-            neighborhoodCoordsTuple.append(tuple((entry['properties']['Name'],entry['geometry']['coordinates'])))
+            neighborhoodCoordsTuple.append((entry['properties']['Name'],entry['geometry']['coordinates']))
+            
+           
+         
+            
+            for coordinate in entry['geometry']['coordinates']:
+                print(coordinate)
+                coordinateArray.append((entry['properties']['Name'],coordinate))
             y = z(entry)
             neighborhoodCoords.append(y)
-
-        for entry in (neighborhoodCoords):
-            print(entry)
-            print("another one")
-        print("THE TEST")
-    
-
-
-        # print("NEIGHBOR YO")
         
+        
+        definiteNeighborhoodCoordinates = []
+        for x in coordinateArray:
+            y = x[1]
+            for coordinate in y:
+                lastUnpack = coordinate
+                for w in lastUnpack:
+                    definiteNeighborhoodCoordinates.append((x[0],w,0,0,0,0))
+            print(definiteNeighborhoodCoordinates)
+       
         
         #generating neighborhood dictionary with coords
         
