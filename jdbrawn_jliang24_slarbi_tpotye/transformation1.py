@@ -97,8 +97,6 @@ class transformation1(dml.Algorithm):
         for entry in product_select_project:
             transformed_data.append({'Name': entry[0], 'Number of Food': entry[1], 'Number of Entertainment': entry[2]})
 
-        print(transformed_data)
-
         repo.dropCollection('socialAnalysis')
         repo.createCollection('socialAnalysis')
         repo['jdbrawn_jliang24_slarbi_tpotye.socialAnalysis'].insert_many(transformed_data)
