@@ -3,6 +3,7 @@ import sklearn
 from sklearn.preprocessing import Normalizer, StandardScaler, MinMaxScaler
 from sklearn import metrics 
 from sklearn.cluster import KMeans
+from scipy.cluster.vq import kmeans, vq
 import numpy as np
 import json
 from scipy import stats
@@ -36,25 +37,31 @@ class get_accident_clusters(dml.Algorithm):
             # #print (s)
             # #print ()
 
-            for i in range(10):
-                print('touching Adrianas stuff @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
             
-            da_accidents = repo['adsouza_bmroach_mcaloonj_mcsmocha.clean_triggers'].find()
+            print('touching Adrianas stuff @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
+            
+            da_accidents = repo['adsouza_bmroach_mcaloonj_mcsmocha.clean_triggers'].find_one()
             coords_input = da_accidents['accidents']
-            
-            # coords_input = a dictionary of a list of tuples of lats and longs
+            # print(coords_input)
 
-            n_clusters = 4
+            # initial = [kmeans(coords_input,i) for i in range(1,10)]
+            # plt.plot([var for (cent,var) in initial])
+            # plt.show()
+
+            n_clusters = 20
             X =  np.array(coords_input)
             # looks like [(lat, long), (lat, long), (lat, long)...]
             
             kmeans = KMeans(n_clusters, random_state=0).fit(X)
             centroids = kmeans.cluster_centers_
+            # print(centroids)
+
+            accident_clusters_dict = {'accident_clusters': centroids}
 
             repo.dropCollection("accident_clusters")
             repo.createCollection("accident_clusters")
 
-            repo['adsouza_bmroach_mcaloonj_mcsmocha.accident_clusters'].insert_many(centroids)
+            repo['adsouza_bmroach_mcaloonj_mcsmocha.accident_clusters'].insert_one(accident_clusters_dict)
             repo['adsouza_bmroach_mcaloonj_mcsmocha.accident_clusters'].metadata({'complete':True})
 
             repo.logout()
