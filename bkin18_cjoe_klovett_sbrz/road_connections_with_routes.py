@@ -9,7 +9,7 @@ import sys
 
 class road_connections_with_routes(dml.Algorithm):
     contributor = 'bkin18_cjoe_klovett_sbrz'
-    reads = ['bkin18_cjoe_klovett_sbrz.roads_inventory']
+    reads = ['bkin18_cjoe_klovett_sbrz.roads_inventory', 'bkin18_cjoe_klovett_sbrz.emergency_traffic_aggregate']
     writes = ['bkin18_cjoe_klovett_sbrz.road_connections_with_routes']
 
     @staticmethod
@@ -23,17 +23,37 @@ class road_connections_with_routes(dml.Algorithm):
         repo = client.repo
         repo.authenticate('bkin18_cjoe_klovett_sbrz', 'bkin18_cjoe_klovett_sbrz')
         db = client.repo
+
         roads_collection = db['bkin18_cjoe_klovett_sbrz.roads_inventory']
+        roads = roads_collection.find()
+
+        routes_collection = db['bkin18_cjoe_klovett_sbrz.emergency_traffic_aggregate']
+        routes = routes_collection.find()
 
         x = []
-        roads = roads_collection.find()
 
         # Obtains all roads in the Boston region, that have at least some associated street name data, and removes some entries.
         for road in roads:
             road_name = road['St_Name']
             road_name = road_name.upper().rsplit(' ', 1)[0]
-            if {road_name:[]} not in x:
-                x.append({road_name:[]})
+            route_list = []
+            for route in routes:
+                for street in route:
+                    street_name = street.upper().rsplit(' ', 1)[0]
+                    if street_name == road_name:
+                        route_list.append(street_name)
+            route_list = sorted(route_list)
+            if {road_name: route_list} not in x:
+                x.append({road_name: route_list})
+
+
+
+
+
+
+
+
+
 
         repo.dropCollection("bkin18_cjoe_klovett_sbrz.road_connections_with_routes")
         repo.createCollection("bkin18_cjoe_klovett_sbrz.road_connections_with_routes")
