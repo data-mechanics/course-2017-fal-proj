@@ -32,8 +32,9 @@ class road_connections_with_routes(dml.Algorithm):
         for road in roads:
             road_name = road['St_Name']
             road_name = road_name.upper().rsplit(' ', 1)[0]
-            x.append({road_name:[]})
-        print(x)
+            if {road_name:[]} not in x:
+                x.append({road_name:[]})
+
         repo.dropCollection("bkin18_cjoe_klovett_sbrz.road_connections_with_routes")
         repo.createCollection("bkin18_cjoe_klovett_sbrz.road_connections_with_routes")
         repo['bkin18_cjoe_klovett_sbrz.road_connections_with_routes'].insert_many(x)
