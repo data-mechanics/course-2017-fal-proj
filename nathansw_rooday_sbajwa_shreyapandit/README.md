@@ -33,3 +33,21 @@ The original csv file was converted to a JSON file that follows the format of a 
  ...}
  
 The keys to the JSON object are the dates in which performance data was collected. The values to each key are dictionaries representing each record of data collected for the given date. The data was organized this way because there were multiple entries for each date.
+
+## Analysis 2
+
+* For each neighborhood, 
+  * get all neighborhoods within a N mile distance
+	 * Make a DF with each neighborhood pair as rows, columns being geographical distance between neighborhoods and a demographic dimension such as 		difference in crime incidents between those neighborhoods
+	 * Compute correlation between the two columns of DF
+		* A high positive correlation implies that as geographical distance decreases, the difference in demographic dimensions also decreases, which implies 			that neighborhood A and those around it are similar in crime incidents, and hence serving as a crime hotspot. We can also assume that this hotspot is 			centered at A since we compute the correlation wrt A
+		
+  * We store the correlation value alongside that neighborhood
+  * Once we have a correlation value with each neighborhood, we can build a heat map of neighborhoods, the gradient being how tightly correlated that 			neighborhood is with those around it in terms of different statistics- crime/income/poverty
+	
+ *	How can this help policy makers?
+	
+	Lets take the case for crime. Using the heat map, policy makers can immediately identify key crime areas that have a tight correlation with nearby neighborhoods, and those serve as target/priority focal points for them to implement any reformation policies. The policy can be applied to the highly correlated bunch of neighborhoods in order of priority.
+
+This could be done for many other reformative measures, such as poverty alleviation, 311 Violations, etc
+
