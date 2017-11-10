@@ -26,9 +26,10 @@ class road_connections_with_routes(dml.Algorithm):
         roads_collection = db['bkin18_cjoe_klovett_sbrz.roads_inventory']
 
         x = []
+        roads = roads_collection.find()
 
         # Obtains all roads in the Boston region, that have at least some associated street name data, and removes some entries.
-        for road in roads_collection:
+        for road in roads:
             road_name = road['ST_NAME']
             road_name = road_name.upper().rsplit(' ', 1)[0]
             x.append({road_name:[]})
