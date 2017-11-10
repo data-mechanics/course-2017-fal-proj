@@ -51,7 +51,7 @@ for algorithm in ordered:
     provenance = algorithm.provenance(provenance)
 
 # Display a provenance record of the overall execution process.
-print(provenance.get_provn())
+# print(provenance.get_provn())
 
 # Render the provenance document as an interactive graph.
 prov_json = json.loads(provenance.serialize())
