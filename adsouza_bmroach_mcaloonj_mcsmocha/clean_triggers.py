@@ -18,6 +18,9 @@ class clean_triggers(dml.Algorithm):
         repo = client.repo
         repo.authenticate('adsouza_bmroach_mcaloonj_mcsmocha', 'adsouza_bmroach_mcaloonj_mcsmocha')
 
+        repo.dropCollection('adsouza_bmroach_mcaloonj_mcsmocha.clean_triggers')
+        repo.createCollection('adsouza_bmroach_mcaloonj_mcsmocha.clean_triggers')
+
         accidents = repo['adsouza_bmroach_mcaloonj_mcsmocha.accidents'].find()
         schools = repo['adsouza_bmroach_mcaloonj_mcsmocha.schools'].find()
         parks = repo['adsouza_bmroach_mcaloonj_mcsmocha.open_space'].find()
@@ -51,7 +54,7 @@ class clean_triggers(dml.Algorithm):
                 hosp_coord.append((lat, long))
         
         trigger_dict = {'accidents': acc_coord, 'schools': sch_coord, 'parks': park_coord, 'hospitals': hosp_coord}
-        print(trigger_dict)
+        #print(trigger_dict)
         repo['adsouza_bmroach_mcaloonj_mcsmocha.clean_triggers'].insert_one(trigger_dict)
         repo.logout()
 
