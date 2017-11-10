@@ -52,7 +52,7 @@ class clean_triggers(dml.Algorithm):
         
         trigger_dict = {'accidents': acc_coord, 'schools': sch_coord, 'parks': park_coord, 'hospitals': hosp_coord}
         print(trigger_dict)
-        repo['adsouza_bmroach_mcaloonj_mcsmocha.clean_triggers'].insert(trigger_dict)
+        repo['adsouza_bmroach_mcaloonj_mcsmocha.clean_triggers'].insert_one(trigger_dict)
         repo.logout()
 
         endTime = datetime.datetime.now()

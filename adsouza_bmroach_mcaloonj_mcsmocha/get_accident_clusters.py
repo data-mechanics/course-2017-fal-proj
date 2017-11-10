@@ -35,6 +35,8 @@ class get_accident_clusters(dml.Algorithm):
             # s = json.dumps(r, sort_keys=True, indent=2)
             # #print (s)
             # #print ()
+
+            print('touching Adrianas stuff @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
             
             da_accidents = repo['adsouza_bmroach_mcaloonj_mcsmocha.clean_triggers'].find()
             coords_input = da_accidents['accidents']
@@ -51,7 +53,7 @@ class get_accident_clusters(dml.Algorithm):
             repo.dropCollection("accident_clusters")
             repo.createCollection("accident_clusters")
 
-            repo['adsouza_bmroach_mcaloonj_mcsmocha.accident_clusters'].insert_many(r)
+            repo['adsouza_bmroach_mcaloonj_mcsmocha.accident_clusters'].insert_many(centroids)
             repo['adsouza_bmroach_mcaloonj_mcsmocha.accident_clusters'].metadata({'complete':True})
 
             repo.logout()
