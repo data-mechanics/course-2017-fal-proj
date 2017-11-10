@@ -19,7 +19,7 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
     
     @staticmethod
     def execute(trial=False):
-        
+        print("RUNNING")
         '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
         startTime = datetime.datetime.now()
         # Set up the database connection.
@@ -84,21 +84,26 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         bikeCoordsTuple = []
         for entry in repo.francisz_jrashaan.bikeNetworks.find():
             #print(entry)
-            z = lambda t:({t['geometry']['type']: (t['geometry']['coordinates'])})
-            y = z(entry)
-            bikeCoords.append(y)
-            for individualCoordinate in entry['geometry']['coordinates']:
+           
+            bikeCoords.append((entry['geometry']['type'],entry['geometry']['coordinates']))
             
-                test = individualCoordinate[1]
-                if type(test) is list:
-                    for coordinate in test:
-                        bikeCoordsTuple.append(("Point",[coordinate[0],coordinate[1]]))
-                else:
-                    bikeCoordsTuple.append(("Point",[individualCoordinate[0],individualCoordinate[1]]))
+
+        for x in bikeCoords:
+            y = x[1]
+            if type(y[0]) is list:
+                for coordinate in y:
+                    if type(coordinate[0]) is list:
+                        for realcoordinate in coordinate:
+                            bikeCoordsTuple.append((entry['geometry']['type'], realcoordinate))
+                    else:
+                        bikeCoordsTuple.append((entry['geometry']['type'],coordinate))
+            else:
+                
+                bikeCoordsTuple.append((entry['geometry']['type'],y))
 
 
-        print(bikeCoordsTuple)
-        print("BIKE COORDS TUPLE GO")
+
+
         
         
 
@@ -184,17 +189,20 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
                 
                 if coords == coords2:
                     definiteNeighborhoodCoordinates[i] = a,b,c,1,e,f
-        
-        for (i,tup) in enumerate(definiteNeighborhoodCoordinates):
+
+        abridgedTuple = bikeCoordsTuple[:8000]
+        print(len(definiteNeighborhoodCoordinates))
+        abridgedCoords = definiteNeighborhoodCoordinates[:5000]
+        for (i,tup) in enumerate(abridgedCoords):
             a,b,c,d,e,f = tup
-            
+            #print(len(definiteNeighborhoodCoordinates))
+
             coords = (round(b[0],3), round(b[1],3))
             
             
-            for (j,tup2) in enumerate(bikeCoordsTuple):
+            for (j,tup2) in enumerate(abridgedTuple):
                 y,z = tup2
-                print(z)
-                print("CHECKING Z")
+                assert(len(z) == 2 and type(z[0] is int) and type(z[1] is int))
                 coords2 = (round(z[0],3), round(z[1],3))
                 
                 
@@ -208,7 +216,7 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
 
 
         print(definiteNeighborhoodCoordinates)
-        
+
         
         
 
@@ -216,16 +224,7 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
 
                    
 
-#print(definiteNeighborhoodCoordinates)
 
-        
-        #generating neighborhood dictionary with coords
-        
-# heres what i want to do, compare two tuples and if there is a match update the value at current index of the tuple
-
-                                       
-        # repo['francisz_jrashaan.capopulation'].metadata({'complete':True})
-        # print(repo['francisz_jrashaan.capopulation'].metadata())
         
         url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/2868d370c55d4d458d4ae2224ef8cddd_7.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -242,54 +241,50 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
             y = z(entry)
             
             for coordinate in entry['geometry']['coordinates']:
-                openspaceCoords.append((entry['properties']['SITE_NAME'],coordinate))
+                if type(coordinate[0]) is list:
+                    for realcoordinate in coordinate:
+                        if type(realcoordinate[0]) is list:
+                            for realreal in realcoordinate:
+                                openspaceCoords.append((entry['properties']['SITE_NAME'], realreal))
+                        else:
+                            openspaceCoords.append((entry['properties']['SITE_NAME'], realcoordinate))
+                else:
+                    openspaceCoords.append((entry['properties']['SITE_NAME'],coordinate))
                         
-        '''
-                definiteopenCoordinates = []
-                for x in openspaceCoords:
-                    y = x[1]
-                    for coordinate in y:
-                        lastUnpack = coordinate
-                        for w in lastUnpack:
-                            definiteopenCoordinates.append((x[0],w))
-
-        '''
-
-
-        
-        
-#for coordinates in range(len(hubwaysCoords)):
-#           print (hubwaysCoords[coordinates].values())
-#           for coordinates2 in range(len(neighborhoodCoords)):
+        openspaceAbridged = openspaceCoords[:8000]
+        for (i,tup) in enumerate(definiteNeighborhoodCoordinates[:7000]):
+            a,b,c,d,e,f = tup
+            #print(len(definiteNeighborhoodCoordinates))
             
-            #               if hubwaysCoords[coordinates].values() in neighborhoodCoords[coordinates2].values():
-#       print("yo")
+            coords = (round(b[0],3), round(b[1],3))
             
-            #   for x in coordinates:
+            
+            for (j,tup2) in enumerate(openspaceAbridged):
+                y,z = tup2
+                #print(z)
+                assert(len(z) == 2 and type(z[0] is int) and type(z[1] is int))
+                coords2 = (round(z[0],3), round(z[1],3))
                 
-                #   if x in openspaceCoords.values():
-                #   print("yo yo yo")
                 
-        # print(openspaceCoords.items())
-        
-        
-        #for x in hubwaysCoords.values():
-            # print("SUP")
-            #print(x)
-            # if x in neighborhoodCoords.values():
-                # print(neighborhoodCoords.values())
-                # print("X IS IN THERE")
-        
-#print("IS THIS EVEN WORKING")
-        #  R = [[i for i in neighborhoodCoords[x]] for x in neighborhoodCoords.keys()]
-        # print(R)
-        #testV = neighborhoodCoords.values()
-        #for X in
-        #X = [(k,1) for (k,v) in testV if v in neighborhoodCoords.values()]
-        #print(X)
+                #coords2[1]= float(str(coords2[1])[:-1])
+                
+                
+                if coords == coords2:
+                    definiteNeighborhoodCoordinates[i] = a,b,c,d,e,1
+                    print("FUCKING MATCH")
 
-        
-         
+
+
+        keys = {x[0] for x in definiteNeighborhoodCoordinates}
+    
+        aggregate = [(key,
+                      [sum([c for (a,b,c,d,e,f) in definiteNeighborhoodCoordinates if a == key]),
+                      sum([d for (a,b,c,d,e,f) in definiteNeighborhoodCoordinates if a == key]),
+                      sum([e for (a,b,c,d,e,f) in definiteNeighborhoodCoordinates if a == key]),
+                      sum([f for (a,b,c,d,e,f) in definiteNeighborhoodCoordinates if a == key])]
+                      )
+                      for key in keys]
+        print(aggregate)
         
         
        
