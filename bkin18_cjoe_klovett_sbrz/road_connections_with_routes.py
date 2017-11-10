@@ -39,7 +39,8 @@ class road_connections_with_routes(dml.Algorithm):
             route_list = []
             for route in routes:
                 for street in route:
-                    street_name = street.upper().rsplit(' ', 1)[0]
+                    street_name = street
+                    #street_name = street.upper().rsplit(' ', 1)[0]
                     print(street_name, road_name)
                     if street_name == road_name:
                         route_list.append(street_name)
