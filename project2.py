@@ -47,13 +47,7 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
             hubwaysCoords.append(y)
             hubwayCoordsTuple.append((entry['geometry']['type'],entry['geometry']['coordinates']))
         
-        # print(hubwayCoordsTuple)
-        # print("HUBWAY COORDINATES")
-        
-        
-        #print(hubwaysCoords)
-        #print("STOP HERE")
-        # print(repo['francisz_jrashaan.crime'].metadata())
+     
 
         url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/465e00f9632145a1ad645a27d27069b4_2.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -73,10 +67,7 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
             chargingstationCoords.append(y)
             chargingstationTuple.append((entry['geometry']['type'],entry['geometry']['coordinates']))
         
-        #print(chargingstationTuple)
-        #print("NEW PRINT")
-        #print("Coordinates")
-        #print("NEXT SEQUENCE")
+    
         
         
         url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/d02c9d2003af455fbc37f550cc53d3a4_0.geojson'
@@ -98,14 +89,16 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
             bikeCoords.append(y)
             for individualCoordinate in entry['geometry']['coordinates']:
             
-                bikeCoordsTuple.append(("Point",individualCoordinate))
-            
-        # print(entry['geometry']['coordinates'])
-        
-        # print("GOD SEND")
-        
-        
-        # print(bikeCoordsTuple)
+                test = individualCoordinate[1]
+                if type(test) is list:
+                    for coordinate in test:
+                        bikeCoordsTuple.append(("Point",[coordinate[0],coordinate[1]]))
+                else:
+                    bikeCoordsTuple.append(("Point",[individualCoordinate[0],individualCoordinate[1]]))
+
+
+        print(bikeCoordsTuple)
+        print("BIKE COORDS TUPLE GO")
         
         
 
@@ -129,43 +122,99 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         for entry in repo.francisz_jrashaan.neighborhood.find():
             z = lambda t:({t['properties']['Name']: (t['geometry']['coordinates'])})
             neighborhoodCoordsTuple.append((entry['properties']['Name'],entry['geometry']['coordinates']))
-            
+            #print(entry['geometry']['coordinates'][0])
+            #print("FUCK")
            
          
             
-            for coordinate in entry['geometry']['coordinates']:
+            for coordinate in entry['geometry']['coordinates'][0]:
+                #print(coordinate)
                 coordinateArray.append((entry['properties']['Name'],coordinate))
+            
             y = z(entry)
             neighborhoodCoords.append(y)
         
+        #print(neighborhoodCoordsTuple)
         
         definiteNeighborhoodCoordinates = []
+    
         for x in coordinateArray:
             y = x[1]
-            for coordinate in y:
-                lastUnpack = coordinate
-                for w in lastUnpack:
-                    definiteNeighborhoodCoordinates.append((x[0],w,0,0,0,0))
+            if type(y[0]) is list:
+                for coordinate in y:
+                    definiteNeighborhoodCoordinates.append((x[0],coordinate,0,0,0,0))
+            else:
+                definiteNeighborhoodCoordinates.append((x[0], y, 0,0,0,0))
+
+
        
-       
+
         for (i,tup) in enumerate(definiteNeighborhoodCoordinates):
             a,b,c,d,e,f = tup
-            coords = b
+           
+            coords = (round(b[0],3), round(b[1],3))
+
             
             for (j,tup2) in enumerate(chargingstationTuple):
                 y,z = tup2
-                coords2 = z
-               
+                coords2 = (round(z[0],3), round(z[1],3))
+           
                
                 #coords2[1]= float(str(coords2[1])[:-1])
-                print(coords)
-                print(coords2)
-                print(coords == coords2)
-                print("comparin")
+               
+               
                 if coords == coords2:
-                    print("FOUND IT")
-                    definiteNeighborhoodCoordinates[i] = a,b,1,c,d,e,f
-                    print("FOUND ONE")
+                    definiteNeighborhoodCoordinates[i] = a,b,1,d,e,f
+                    
+                    
+
+        for (i,tup) in enumerate(definiteNeighborhoodCoordinates):
+            a,b,c,d,e,f = tup
+        
+            coords = (round(b[0],3), round(b[1],3))
+            
+            
+            for (j,tup2) in enumerate(hubwayCoordsTuple):
+                y,z = tup2
+                coords2 = (round(z[0],3), round(z[1],3))
+                
+                
+                #coords2[1]= float(str(coords2[1])[:-1])
+                
+                
+                if coords == coords2:
+                    definiteNeighborhoodCoordinates[i] = a,b,c,1,e,f
+        
+        for (i,tup) in enumerate(definiteNeighborhoodCoordinates):
+            a,b,c,d,e,f = tup
+            
+            coords = (round(b[0],3), round(b[1],3))
+            
+            
+            for (j,tup2) in enumerate(bikeCoordsTuple):
+                y,z = tup2
+                print(z)
+                print("CHECKING Z")
+                coords2 = (round(z[0],3), round(z[1],3))
+                
+                
+                #coords2[1]= float(str(coords2[1])[:-1])
+                
+                
+                if coords == coords2:
+                    definiteNeighborhoodCoordinates[i] = a,b,c,d,1,f
+                    print("FUCKING MATCH")
+
+
+
+        print(definiteNeighborhoodCoordinates)
+        
+        
+        
+
+
+
+                   
 
 #print(definiteNeighborhoodCoordinates)
 
