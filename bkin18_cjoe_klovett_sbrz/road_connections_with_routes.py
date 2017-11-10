@@ -25,20 +25,16 @@ class retrieveRoadsInventory(dml.Algorithm):
         db = client.repo
         roads_collection = db['bkin18_cjoe_klovett_sbrz.roads_inventory']
 
-        x = {}
+        x = []
 
         # Obtains all roads in the Boston region, that have at least some associated street name data, and removes some entries.
         for road in roads_collection:
             road_name = roads_collection[road]['ST_NAME']
             road_name = road_name.upper().rsplit(' ', 1)[0]
-            x[road_name] = []
+            x.append({road_name:[]})
 
-        #emergency_routes_collection = db['bkin18_cjoe_klovett_sbrz.emergency_traffic_aggregate']
-
-
-        ## IMPORTANT KEYS: Route_ID, Urban_Type, Number_of_Lanes, Street_Name (duh), Length, Toll_Road (nobody likes tolls), struct_cd(?)
-        repo.dropCollection("road_connections_with_routes")
-        repo.createCollection("road_connections_with_routes")
+        repo.dropCollection("bkin18_cjoe_klovett_sbrz.road_connections_with_routes")
+        repo.createCollection("bkin18_cjoe_klovett_sbrz.road_connections_with_routes")
         repo['bkin18_cjoe_klovett_sbrz.road_connections_with_routes'].insert_many(x)
         repo['bkin18_cjoe_klovett_sbrz.road_connections_with_routes'].metadata({'complete': True})
 
