@@ -6,9 +6,9 @@ import datetime
 import uuid
 
 class clean_accidents(dml.Algorithm):
-    contributor = 'mcaloonj'
-    reads = ['mcaloonj.accidents']
-    writes = ['mcaloonj.cleaned_accidents']
+    contributor = 'adsouza_bmroach_mcaloonj_mcsmocha'
+    reads = ['adsouza_bmroach_mcaloonj_mcsmocha.accidents']
+    writes = ['adsouza_bmroach_mcaloonj_mcsmocha.cleaned_accidents']
 
     @staticmethod
     def execute(trial=False):
@@ -16,12 +16,12 @@ class clean_accidents(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('mcaloonj', 'mcaloonj')
+        repo.authenticate('adsouza_bmroach_mcaloonj_mcsmocha', 'adsouza_bmroach_mcaloonj_mcsmocha')
 
-        repo.dropCollection('mcaloonj.cleaned_accidents')
-        repo.createCollection('mcaloonj.cleaned_accidents')
+        repo.dropCollection('adsouza_bmroach_mcaloonj_mcsmocha.cleaned_accidents')
+        repo.createCollection('adsouza_bmroach_mcaloonj_mcsmocha.cleaned_accidents')
 
-        accidents = repo["mcaloonj.accidents"].find()
+        accidents = repo["adsouza_bmroach_mcaloonj_mcsmocha.accidents"].find()
 
         for a in accidents:
             try:
@@ -32,7 +32,7 @@ class clean_accidents(dml.Algorithm):
                 new_a["longitude"] = longitude
                 new_a["latitude"] = latitude
 
-                repo['mcaloonj.cleaned_accidents'].insert(new_a)
+                repo['adsouza_bmroach_mcaloonj_mcsmocha.cleaned_accidents'].insert(new_a)
             except:
                 None
 
@@ -52,14 +52,14 @@ class clean_accidents(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('mcaloonj', 'mcaloonj')
+        repo.authenticate('adsouza_bmroach_mcaloonj_mcsmocha', 'adsouza_bmroach_mcaloonj_mcsmocha')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('mcj', 'mcaloonj')
+        doc.add_namespace('mcj', 'adsouza_bmroach_mcaloonj_mcsmocha')
 
-        this_script = doc.agent('alg:mcaloonj#clean_accidents', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:adsouza_bmroach_mcaloonj_mcsmocha#clean_accidents', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
         resource = doc.entity('mcj:accidents', {'prov:label':'Accidents', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 
@@ -70,7 +70,7 @@ class clean_accidents(dml.Algorithm):
         doc.usage(get_accidents, get_accidents, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval'})
 
-        clean_accidents = doc.entity('dat:mcaloonj#cleaned_accidents', {prov.model.PROV_LABEL:'Cleaned Accidents', prov.model.PROV_TYPE:'ont:DataSet'})
+        clean_accidents = doc.entity('dat:adsouza_bmroach_mcaloonj_mcsmocha#cleaned_accidents', {prov.model.PROV_LABEL:'Cleaned Accidents', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(clean_accidents, this_script)
         doc.wasGeneratedBy(clean_accidents, get_accidents, endTime)
         doc.wasDerivedFrom(clean_accidents, resource, get_accidents, get_accidents, get_accidents)

@@ -7,9 +7,9 @@ import uuid
 import requests
 
 class fetch_speed_complaints(dml.Algorithm):
-        contributor = 'mcaloonj'
+        contributor = 'adsouza_bmroach_mcaloonj_mcsmocha'
         reads = []
-        writes = ['mcaloonj.speed_complaints']
+        writes = ['adsouza_bmroach_mcaloonj_mcsmocha.speed_complaints']
 
         @staticmethod
         def execute(trial=False):
@@ -17,7 +17,7 @@ class fetch_speed_complaints(dml.Algorithm):
             # Set up the database connection.
             client = dml.pymongo.MongoClient()
             repo = client.repo
-            repo.authenticate('mcaloonj', 'mcaloonj')
+            repo.authenticate('adsouza_bmroach_mcaloonj_mcsmocha', 'adsouza_bmroach_mcaloonj_mcsmocha')
 
             url = 'https://data.boston.gov/api/3/action/datastore_search?resource_id=80322d69-c46f-4b93-9c38-88e78ae59a34&q=people%20speed&limit=5000'
 
@@ -29,9 +29,9 @@ class fetch_speed_complaints(dml.Algorithm):
             repo.dropCollection("speed_complaints")
             repo.createCollection("speed_complaints")
 
-            repo['mcaloonj.speed_complaints'].insert_many(r["result"]["records"])
-            repo['mcaloonj.speed_complaints'].metadata({'complete':True})
-            #print(repo['mcaloonj.speed_complaints'].metadata())
+            repo['adsouza_bmroach_mcaloonj_mcsmocha.speed_complaints'].insert_many(r["result"]["records"])
+            repo['adsouza_bmroach_mcaloonj_mcsmocha.speed_complaints'].metadata({'complete':True})
+            #print(repo['adsouza_bmroach_mcaloonj_mcsmocha.speed_complaints'].metadata())
 
             repo.logout()
 
@@ -43,7 +43,7 @@ class fetch_speed_complaints(dml.Algorithm):
         def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
             client = dml.pymongo.MongoClient()
             repo = client.repo
-            repo.authenticate('mcaloonj','mcaloonj')
+            repo.authenticate('adsouza_bmroach_mcaloonj_mcsmocha','adsouza_bmroach_mcaloonj_mcsmocha')
 
             doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
             doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
@@ -51,7 +51,7 @@ class fetch_speed_complaints(dml.Algorithm):
             doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
             doc.add_namespace('dbg','https://data.boston.gov/api/3/action/datastore_search')
 
-            this_script = doc.agent('alg:mcaloonj#fetch_speed_complaints', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extenstion':'py'})
+            this_script = doc.agent('alg:adsouza_bmroach_mcaloonj_mcsmocha#fetch_speed_complaints', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extenstion':'py'})
             resource = doc.entity('dbg:'+str(uuid.uuid4()), {'prov:label': 'Vision Zero Entry', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extenstion':'json'})
 
             get_speed_complaints = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
@@ -64,7 +64,7 @@ class fetch_speed_complaints(dml.Algorithm):
                       }
                       )
 
-            speed_complaints = doc.entity('dat:mcaloonj#speed_complaints', {prov.model.PROV_LABEL:'Speed Complaints submitted to Vision Zero',prov.model.PROV_TYPE:'ont:DataSet'})
+            speed_complaints = doc.entity('dat:adsouza_bmroach_mcaloonj_mcsmocha#speed_complaints', {prov.model.PROV_LABEL:'Speed Complaints submitted to Vision Zero',prov.model.PROV_TYPE:'ont:DataSet'})
             doc.wasAttributedTo(speed_complaints, this_script)
             doc.wasGeneratedBy(speed_complaints, get_speed_complaints, endTime)
             doc.wasDerivedFrom(speed_complaints, resource, get_speed_complaints, get_speed_complaints, get_speed_complaints)

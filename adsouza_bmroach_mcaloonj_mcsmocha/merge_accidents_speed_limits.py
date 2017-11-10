@@ -9,9 +9,9 @@ import uuid
 For each street, get speed limit and number of accidents
 '''
 class merge_accidents_speed_limits(dml.Algorithm):
-    contributor = 'mcaloonj'
-    reads = ['mcaloonj.accidents', 'mcaloonj.speed_limits']
-    writes = ['mcaloonj.merged_accidents_speed_limits']
+    contributor = 'adsouza_bmroach_mcaloonj_mcsmocha'
+    reads = ['adsouza_bmroach_mcaloonj_mcsmocha.accidents', 'adsouza_bmroach_mcaloonj_mcsmocha.speed_limits']
+    writes = ['adsouza_bmroach_mcaloonj_mcsmocha.merged_accidents_speed_limits']
 
     @staticmethod
     def execute(trial=False):
@@ -19,12 +19,12 @@ class merge_accidents_speed_limits(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('mcaloonj', 'mcaloonj')
+        repo.authenticate('adsouza_bmroach_mcaloonj_mcsmocha', 'adsouza_bmroach_mcaloonj_mcsmocha')
 
-        repo.dropCollection('mcaloonj.merged_accidents_speed_limits')
-        repo.createCollection('mcaloonj.merged_accidents_speed_limits')
+        repo.dropCollection('adsouza_bmroach_mcaloonj_mcsmocha.merged_accidents_speed_limits')
+        repo.createCollection('adsouza_bmroach_mcaloonj_mcsmocha.merged_accidents_speed_limits')
 
-        accidents = repo["mcaloonj.accidents"].find()
+        accidents = repo["adsouza_bmroach_mcaloonj_mcsmocha.accidents"].find()
         streets = [a["STREET"] for a in accidents]
 
         #aggsum street name and number of accidents to get tuples of form (st name, number of accidents)
@@ -35,7 +35,7 @@ class merge_accidents_speed_limits(dml.Algorithm):
         accidents_per_street = dict(accidents_per_street)
 
         #print (accidents_per_street)
-        speed_limits = repo["mcaloonj.speed_limits"].find()
+        speed_limits = repo["adsouza_bmroach_mcaloonj_mcsmocha.speed_limits"].find()
 
         #project to get tuples of form (st name, speed limit)
         cleaned_speed_limits = set()
@@ -56,7 +56,7 @@ class merge_accidents_speed_limits(dml.Algorithm):
             if s in cleaned_speed_limits:
                 combined.append({"street":s,"num_accidents":a,"speed_limit":cleaned_speed_limits[s]})
 
-        repo['mcaloonj.merged_accidents_speed_limits'].insert_many(combined)
+        repo['adsouza_bmroach_mcaloonj_mcsmocha.merged_accidents_speed_limits'].insert_many(combined)
 
         repo.logout()
         endTime = datetime.datetime.now()
@@ -67,16 +67,16 @@ class merge_accidents_speed_limits(dml.Algorithm):
     def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('mcaloonj','mcaloonj')
+        repo.authenticate('adsouza_bmroach_mcaloonj_mcsmocha','adsouza_bmroach_mcaloonj_mcsmocha')
 
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('mcj', 'mcaloonj')
+        doc.add_namespace('mcj', 'adsouza_bmroach_mcaloonj_mcsmocha')
 
         #Agent
-        this_script = doc.agent('alg:mcaloonj#merge_accidents_speed_limits', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extenstion':'py'})
+        this_script = doc.agent('alg:adsouza_bmroach_mcaloonj_mcsmocha#merge_accidents_speed_limits', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extenstion':'py'})
 
         #Resources
         accidents_resource = doc.entity('mcj:accidents', {'prov:label': 'Accidents', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extenstion':'json'})
@@ -95,7 +95,7 @@ class merge_accidents_speed_limits(dml.Algorithm):
                   {prov.model.PROV_TYPE:'ont:Retrieval'})
 
         # New dataset
-        merged_accidents_speed_limits = doc.entity('dat:mcaloonj#merged_accidents_speed_limits', {prov.model.PROV_LABEL:'Streets with number of accidents and speed limit', prov.model.PROV_TYPE:'ont:DataSet'})
+        merged_accidents_speed_limits = doc.entity('dat:adsouza_bmroach_mcaloonj_mcsmocha#merged_accidents_speed_limits', {prov.model.PROV_LABEL:'Streets with number of accidents and speed limit', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(merged_accidents_speed_limits, this_script)
         doc.wasGeneratedBy(merged_accidents_speed_limits, merge_accidents_speed_limits, endTime)
         doc.wasDerivedFrom(merged_accidents_speed_limits, accidents_resource, merge_accidents_speed_limits, merge_accidents_speed_limits, merge_accidents_speed_limits)
