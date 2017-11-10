@@ -40,6 +40,7 @@ class road_connections_with_routes(dml.Algorithm):
             for route in routes:
                 for street in route:
                     street_name = street.upper().rsplit(' ', 1)[0]
+                    print(street_name, road_name)
                     if street_name == road_name:
                         route_list.append(street_name)
             route_list = sorted(route_list)
