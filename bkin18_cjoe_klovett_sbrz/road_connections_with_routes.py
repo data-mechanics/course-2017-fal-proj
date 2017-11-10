@@ -32,7 +32,7 @@ class retrieveRoadsInventory(dml.Algorithm):
             road_name = roads_collection[road]['ST_NAME']
             road_name = road_name.upper().rsplit(' ', 1)[0]
             x.append({road_name:[]})
-
+        print(x)
         repo.dropCollection("bkin18_cjoe_klovett_sbrz.road_connections_with_routes")
         repo.createCollection("bkin18_cjoe_klovett_sbrz.road_connections_with_routes")
         repo['bkin18_cjoe_klovett_sbrz.road_connections_with_routes'].insert_many(x)
