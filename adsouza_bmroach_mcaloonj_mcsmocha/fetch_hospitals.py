@@ -72,10 +72,10 @@ class fetch_hospitals(dml.Algorithm):
 
             repo.logout()
             return doc
-'''
+
 fetch_hospitals.execute()
 doc = fetch_hospitals.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
-'''
+
 ##eof

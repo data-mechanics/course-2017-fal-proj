@@ -72,10 +72,10 @@ class fetch_accidents(dml.Algorithm):
 
             repo.logout()
             return doc
-'''
+
 fetch_accidents.execute()
 doc = fetch_accidents.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
-'''
+
 ##eof

@@ -34,7 +34,7 @@ class clean_triggers(dml.Algorithm):
             if tup != (0,0):
                 acc_coord.append(tup)
         sch_coord = [tuple(s['fields']['geo_shape']['coordinates'])[::-1] for s in schools]
-        
+
         #park_coord = [tuple(p['geometry']['coordinates'][0][0])[::-1] for p in parks]
         park_coord = []
         for p in parks:
@@ -43,7 +43,7 @@ class clean_triggers(dml.Algorithm):
             else:
                 first_coord = (tuple(p["geometry"]["coordinates"][0][0][0]))[::-1]
             park_coord.append(first_coord)
-        
+
         # the coordinates in the hospital dataset make the coordinates strings instead of floats, so cleaning it up
         # to make them usable
         hosp_coord = []
@@ -52,7 +52,7 @@ class clean_triggers(dml.Algorithm):
                 lat = float(h['YCOORD'][:2] + '.' + h['YCOORD'][2:])
                 long = float(h['XCOORD'][:2] + '.' + h['XCOORD'][2:])
                 hosp_coord.append((lat, long))
-        
+
         trigger_dict = {'accidents': acc_coord, 'schools': sch_coord, 'parks': park_coord, 'hospitals': hosp_coord}
         #print(trigger_dict)
         repo['adsouza_bmroach_mcaloonj_mcsmocha.clean_triggers'].insert_one(trigger_dict)
@@ -94,11 +94,11 @@ class clean_triggers(dml.Algorithm):
 
         repo.logout()
         return doc
-
-clean_triggers.execute()
 '''
-doc = fetch_accidents.provenance()
+clean_triggers.execute()
+doc = clean_triggers.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
 '''
+
 ##eof

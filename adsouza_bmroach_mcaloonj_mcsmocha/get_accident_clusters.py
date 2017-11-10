@@ -1,7 +1,7 @@
 import sklearn
 # Import all of the scikit learn stuff
 from sklearn.preprocessing import Normalizer, StandardScaler, MinMaxScaler
-from sklearn import metrics 
+from sklearn import metrics
 from sklearn.cluster import KMeans
 from scipy.cluster.vq import kmeans, vq
 import numpy as np
@@ -30,16 +30,16 @@ class get_accident_clusters(dml.Algorithm):
             repo = client.repo
             repo.authenticate('adsouza_bmroach_mcaloonj_mcsmocha', 'adsouza_bmroach_mcaloonj_mcsmocha')
 
-            
+
             # response = requests.get(url)
             # r = response.json()
             # s = json.dumps(r, sort_keys=True, indent=2)
             # #print (s)
             # #print ()
 
-            
+
             print('touching Adrianas stuff @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
-            
+
             da_accidents = repo['adsouza_bmroach_mcaloonj_mcsmocha.clean_triggers'].find_one()
             coords_input = da_accidents['accidents']
             # print(coords_input)
@@ -51,12 +51,12 @@ class get_accident_clusters(dml.Algorithm):
             n_clusters = 20
             X =  np.array(coords_input)
             # looks like [(lat, long), (lat, long), (lat, long)...]
-            
+
             kmeans = KMeans(n_clusters, random_state=0).fit(X)
             centroids = kmeans.cluster_centers_
             # print(centroids)
 
-            accident_clusters_dict = {'accident_clusters': centroids}
+            accident_clusters_dict = {'accident_clusters': centroids.tolist()}
 
             repo.dropCollection("accident_clusters")
             repo.createCollection("accident_clusters")
@@ -89,7 +89,7 @@ class get_accident_clusters(dml.Algorithm):
 
             doc.wasAssociatedWith(get_accident_hotspots, this_script)
 
-            doc.usage(get_hospitals, resource, startTime, None,
+            doc.usage(get_accident_hotspots, resource, startTime, None,
                       {prov.model.PROV_TYPE:'ont:Retrieval',
                       'ont:Query':'6222085d-ee88-45c6-ae40-0c7464620d64'
                       }

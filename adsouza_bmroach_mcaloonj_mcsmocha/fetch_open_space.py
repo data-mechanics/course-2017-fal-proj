@@ -65,9 +65,8 @@ class fetch_open_space(dml.Algorithm):
         repo.logout()
 
         return doc
-'''
+
 fetch_open_space.execute()
 doc = fetch_open_space.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
-'''
