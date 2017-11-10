@@ -7,7 +7,7 @@ import uuid
 class selectImpBuilds(dml.Algorithm):
     contributor = 'bkin18_cjoe_klovett_sbrz'
     reads = ['bkin18_cjoe_klovett_sbrz.property_assessment']
-    writes = ['bkin18_cjoe_klovett_sbrz.property_assessment_addresses']
+    writes = ['bkin18_cjoe_klovett_sbrz.property_assessment_impBuilds']
 
     @staticmethod
     def execute(trial=False):
@@ -29,27 +29,20 @@ class selectImpBuilds(dml.Algorithm):
         962: Parking Lot, 974: Fire Station, 975: Police Station, 976: School, 977: College, 979: Hospital'''
         property_lookup = ['117', '118', '305', '307', '309', '324', '333', '336', '341', '352', 
         '378', '425', '426', '904', '962', '974', '975', '976', '977', '979']
- 
 
-        ## When we move aggregate sum out of this file, we should change it to insert_many(addr_list)
-        addresses = collection.find({}, {'ST_NAME': 1, 'PTYPE': 1})
-        for address in addresses:
-            if address['PTYPE'] in property_lookup:
-                addr_list.append(address)
+        modifiedDictionary = []
 
+        #Obtains important property types and their latitude and longitudes.
+        for building in repo['bkin18_cjoe_klovett_sbrz.property_assessment'].find():
 
-        ## TODO: Move aggregation into a different module
-        street_agg = {}
-        for street in addr_list:
-            try:
-                street_agg[street['ST_NAME']] = street_agg[street['ST_NAME']] + 1
-            except KeyError:
-                street_agg[street['ST_NAME']] = 1
+            if (building['PTYPE'] in property_lookup):
+
+                modifiedPiece = {'PTYPE': building['PTYPE'], 'LONGITUDE': building['LONGITUDE'], 'LATITUDE': building['LATITUDE']}
+                modifiedDictionary.append(modifiedPiece)
 
         repo.dropCollection('bkin18_cjoe_klovett_sbrz.property_assessment_impBuilds')
         repo.createCollection('bkin18_cjoe_klovett_sbrz.property_assessment_impBuilds')
-        repo['bkin18_cjoe_klovett_sbrz.property_assessment_impBuilds'].insert(street_agg)
-        repo['bkin18_cjoe_klovett_sbrz.property_assessment_impBuilds'].metadata({'complete': True})
+        repo['bkin18_cjoe_klovett_sbrz.property_assessment_impBuilds'].insert_many(modifiedDictionary)
   
         repo.logout()
 

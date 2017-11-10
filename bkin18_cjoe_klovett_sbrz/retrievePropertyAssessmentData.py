@@ -25,11 +25,11 @@ class retrievePropertyAssessmentData(dml.Algorithm):
         repo.authenticate('bkin18_cjoe_klovett_sbrz', 'bkin18_cjoe_klovett_sbrz')
 
         # Checks to see if trial is active - only takes 50 sample data points
-        TRIAL_NUM = 50 if trial else sys.maxsize
+        TRIAL_NUM = 1000 if trial else sys.maxsize
 
         # Property Assessment Data Set
         property_assessment_url = urllib.request.Request(
-            "https://data.boston.gov/api/action/datastore_search?resource_id=062fc6fa-b5ff-4270-86cf-202225e40858&limit=" + str(TRIAL_NUM))
+            "https://data.boston.gov/api/3/action/datastore_search?resource_id=cecdf003-9348-4ddb-94e1-673b63940bb8&limit=" + str(TRIAL_NUM))
             ## I changed this to 200 because my laptop could not handle 200k datapoints - Chris
         property_assessment_response = urllib.request.urlopen(property_assessment_url).read().decode("utf-8")
         property_assessment_json = json_util.loads(property_assessment_response)
