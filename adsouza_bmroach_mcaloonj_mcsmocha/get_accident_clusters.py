@@ -36,7 +36,8 @@ class get_accident_clusters(dml.Algorithm):
             # #print (s)
             # #print ()
 
-            print('touching Adrianas stuff @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
+            for i in range(10):
+                print('touching Adrianas stuff @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
             
             da_accidents = repo['adsouza_bmroach_mcaloonj_mcsmocha.clean_triggers'].find()
             coords_input = da_accidents['accidents']

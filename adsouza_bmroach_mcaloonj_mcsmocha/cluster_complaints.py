@@ -46,9 +46,9 @@ def kmeans(M,P):
         return sorted(M)
 
 class cluster_complaints(dml.Algorithm):
-    contributor = 'mcaloonj'
-    reads = ['mcaloonj.cleaned_speed_complaints']
-    writes = ['mcaloonj.complaint_clusters']
+    contributor = 'adsouza_bmroach_mcaloonj_mcsmocha'
+    reads = ['adsouza_bmroach_mcaloonj_mcsmocha.cleaned_speed_complaints']
+    writes = ['adsouza_bmroach_mcaloonj_mcsmocha.complaint_clusters']
 
     @staticmethod
     def execute(trial=False):
@@ -56,12 +56,12 @@ class cluster_complaints(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('mcaloonj', 'mcaloonj')
+        repo.authenticate('adsouza_bmroach_mcaloonj_mcsmocha', 'adsouza_bmroach_mcaloonj_mcsmocha')
 
-        repo.dropCollection('mcaloonj.complaint_clusters')
-        repo.createCollection('mcaloonj.complaint_clusters')
+        repo.dropCollection('adsouza_bmroach_mcaloonj_mcsmocha.complaint_clusters')
+        repo.createCollection('adsouza_bmroach_mcaloonj_mcsmocha.complaint_clusters')
 
-        cleaned_complaints = repo["mcaloonj.cleaned_speed_complaints"].find()
+        cleaned_complaints = repo["adsouza_bmroach_mcaloonj_mcsmocha.cleaned_speed_complaints"].find()
 
         coords = [(float(a["longitude"]), float(a["latitude"])) for a in cleaned_complaints]
 
@@ -87,7 +87,7 @@ class cluster_complaints(dml.Algorithm):
         #print (result)
 
         for x,y in result:
-            repo["mcaloonj.complaint_clusters"].insert({"cluster":(x,y)})
+            repo["adsouza_bmroach_mcaloonj_mcsmocha.complaint_clusters"].insert({"cluster":(x,y)})
 
         repo.logout()
         endTime = datetime.datetime.now()
@@ -97,16 +97,16 @@ class cluster_complaints(dml.Algorithm):
     def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('mcaloonj','mcaloonj')
+        repo.authenticate('adsouza_bmroach_mcaloonj_mcsmocha','adsouza_bmroach_mcaloonj_mcsmocha')
 
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('mcj', 'mcaloonj')
+        doc.add_namespace('mcj', 'adsouza_bmroach_mcaloonj_mcsmocha')
 
         #Agent
-        this_script = doc.agent('alg:mcaloonj#cluster_complaints', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extenstion':'py'})
+        this_script = doc.agent('alg:adsouza_bmroach_mcaloonj_mcsmocha#cluster_complaints', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extenstion':'py'})
 
         #Resources
         resource = doc.entity('mcj:cleaned_speed_complaints', {'prov:label': 'Cleaned Complaints', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extenstion':'json'})
@@ -120,7 +120,7 @@ class cluster_complaints(dml.Algorithm):
 
         #New dataset
 
-        complaint_clusters = doc.entity('dat:mcaloonj#complaint_clusters', {prov.model.PROV_LABEL:'Complaint Clusters',prov.model.PROV_TYPE:'ont:DataSet'})
+        complaint_clusters = doc.entity('dat:adsouza_bmroach_mcaloonj_mcsmocha#complaint_clusters', {prov.model.PROV_LABEL:'Complaint Clusters',prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(complaint_clusters, this_script)
         doc.wasGeneratedBy(complaint_clusters, cluster_complaints, endTime)
         doc.wasDerivedFrom(complaint_clusters, resource, cluster_complaints, cluster_complaints, cluster_complaints)
