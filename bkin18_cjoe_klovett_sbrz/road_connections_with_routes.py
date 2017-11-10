@@ -7,7 +7,7 @@ import uuid
 import sys
 
 
-class retrieveRoadsInventory(dml.Algorithm):
+class road_connections_with_routes(dml.Algorithm):
     contributor = 'bkin18_cjoe_klovett_sbrz'
     reads = ['bkin18_cjoe_klovett_sbrz.roads_inventory']
     writes = ['bkin18_cjoe_klovett_sbrz.road_connections_with_routes']
