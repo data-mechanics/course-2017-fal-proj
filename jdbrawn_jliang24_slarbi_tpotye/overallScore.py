@@ -30,10 +30,6 @@ class overallScore(dml.Algorithm):
             safetyEntry = safety_score.find_one({"Name": collegeName})
             safetyScore = safetyEntry['Safety Score']
 
-            if transitScore > 1.0: print("Transit Score: " + str(transitScore))
-            if socialScore > 1.0: print("Social Score: " + str(socialScore))
-            if safetyScore > 1.0: print("Safety Score: " + str(safetyScore))
-
             overall_score = (transitScore + socialScore + safetyScore) / 3.0
 
             ranking.append((collegeName, overall_score))
@@ -43,7 +39,7 @@ class overallScore(dml.Algorithm):
         for i in range(len(rankingTemp)):
             ranking.append({'Name': rankingTemp[i][0], 'Score': rankingTemp[i][1], 'Rank': i+1})
 
-        print(ranking)
+        #print(ranking)
 
         repo.dropCollection('ranking')
         repo.createCollection('ranking')
