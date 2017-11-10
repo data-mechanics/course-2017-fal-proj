@@ -30,7 +30,7 @@ class road_connections_with_routes(dml.Algorithm):
 
         # Obtains all roads in the Boston region, that have at least some associated street name data, and removes some entries.
         for road in roads:
-            road_name = road['ST_NAME']
+            road_name = road['St_Name']
             road_name = road_name.upper().rsplit(' ', 1)[0]
             x.append({road_name:[]})
         print(x)
