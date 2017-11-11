@@ -11,7 +11,7 @@ import pandas as pd
 
 class bus_by_ward(dml.Algorithm):
     contributor = 'cyyan_liuzirui_yjunchoi_yzhang71'
-    reads = ['cyyan_liuzirui_yjunchoi_yzhang71.wards', 'cyyan_liuzirui_yjunchoi_yzhang71.busstopCoordinates']
+    reads = ['cyyan_liuzirui_yjunchoi_yzhang71.boston_wards', 'cyyan_liuzirui_yjunchoi_yzhang71.busstopCoordinates']
     writes = ['cyyan_liuzirui_yjunchoi_yzhang71.bus_by_ward']
 
     @staticmethod

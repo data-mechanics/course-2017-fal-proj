@@ -40,7 +40,7 @@ class optPollingLocation(dml.Algorithm):
 
 
         dfMBTA = pd.DataFrame(list(MBTA))
-        dfMBTA['coordinates'] = list(dfMBTA.)
+        #dfMBTA['coordinates'] = list(dfMBTA)
         endTime = datetime.datetime.now()
 
         return {"start":startTime, "end":endTime}

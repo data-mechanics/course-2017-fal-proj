@@ -24,8 +24,8 @@ class boston_wards(dml.Algorithm):
         response = urllib.request.urlopen(url).read().decode("utf-8")
         raw = json.loads(response)
         s = json.dumps(raw, sort_keys=True, indent=2)
-        repo.dropCollection("wards")
-        repo.createCollection("wards")
+        repo.dropCollection("boston_wards")
+        repo.createCollection("boston_wards")
 
         coordinates = {}
         for i in raw['features']:
@@ -33,7 +33,7 @@ class boston_wards(dml.Algorithm):
 
         results = [ {'ward_num': key,  'coordinates': coordinates[key][0]}  for key in coordinates ]
 
-        repo['cyyan_liuzirui_yjunchoi_yzhang71.wards'].insert_many(results)
+        repo['cyyan_liuzirui_yjunchoi_yzhang71.boston_wards'].insert_many(results)
 
         repo.logout()
 
