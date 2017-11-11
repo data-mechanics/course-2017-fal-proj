@@ -25,23 +25,22 @@ class optPollingLocation(dml.Algorithm):
 
         pLocation = repo['yjunchoi_yzhang71_cyyan_liuzirui.pollingLocation'].find()
         busstop = repo['yjunchoi_yzhang71_cyyan_liuzirui.busstopCoordinates'].find()
-        MBTA = repo['yjunchoi_yzhang71_cyyan_liuzirui.MBTACoordinates'].find()
+        MBTA = repo['yjunchoi_yzhang71_cyyan_liuzirui.MBTACoordinates'].find({})
 
         repo.dropCollection("optPollingLocation")
         repo.createCollection("optPollingLocation")
 
         # Adjusting polling locations in Pandas
         pLoc = pd.DataFrame(list(pLocation))
-
         pLoc['coordinates'] = list(pLoc.coordinates)
 
-        print(pLoc['coordinates'])
         # Adjusting bus stops in Pandas
         bStop = pd.DataFrame(list(busstop))
-
         bStop['coordinates'] = list(bStop.coordinates)
 
 
+        dfMBTA = pd.DataFrame(list(MBTA))
+        dfMBTA['coordinates'] = list(dfMBTA.)
         endTime = datetime.datetime.now()
 
         return {"start":startTime, "end":endTime}
