@@ -38,7 +38,7 @@ class pollingLocation(dml.Algorithm):
                 if i == j['properties']['Ward']:
                     coordinate.append(j['geometry']['coordinates'])
                     
-                Ward_coordinates[i] = coordinate
+            Ward_coordinates[i] = coordinate
 
         results = [ {'Ward': key,  'coordinates': Ward_coordinates[key]}  for key in Ward_coordinates ]
 
