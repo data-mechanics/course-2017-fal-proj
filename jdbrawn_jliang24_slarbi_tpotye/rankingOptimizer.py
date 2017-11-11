@@ -13,7 +13,7 @@ class rankingOptimizer(dml.Algorithm):
     @staticmethod
     def execute(trial=False):
 
-        SCHOOL_NAME = 'Boston College'
+        SCHOOL_NAME = 'Simmons'
 
         startTime = datetime.datetime.now()
         client = dml.pymongo.MongoClient()
@@ -34,34 +34,89 @@ class rankingOptimizer(dml.Algorithm):
         finalSafetyWeight = 100/3
         improvedRanking = False
 
-        for transitWeight in tqdm(range(20, 51)):
-            for safetyWeight in range(20, 51):
-                if transitWeight + safetyWeight <= 80 and (100 - (transitWeight + safetyWeight)) < 51:
-                    socialWeight = 100 - (transitWeight + safetyWeight)
+        if not trial:
+            for transitWeight in tqdm(range(20, 51)):
+                for safetyWeight in range(20, 51):
+                    if transitWeight + safetyWeight <= 80 and (100 - (transitWeight + safetyWeight)) < 51:
+                        socialWeight = 100 - (transitWeight + safetyWeight)
 
-                    tempRanking = []
-                    for entry in transit_score.find():
-                        collegeName = entry['Name']
-                        transitScore = entry['Transit Score']
-                        socialEntry = social_score.find_one({"Name": collegeName})
-                        socialScore = socialEntry['Social Score']
-                        safetyEntry = safety_score.find_one({"Name": collegeName})
-                        safetyScore = safetyEntry['Safety Score']
+                        tempRanking = []
+                        for entry in transit_score.find():
 
-                        score = (transitScore * transitWeight/100) + (socialScore * socialWeight/100) + (safetyScore * safetyWeight/100)
+                            collegeName = entry['Name']
+                            transitScore = entry['Transit Score']
+                            socialEntry = social_score.find_one({"Name": collegeName})
+                            socialScore = socialEntry['Social Score']
+                            safetyEntry = safety_score.find_one({"Name": collegeName})
+                            safetyScore = safetyEntry['Safety Score']
 
-                        tempRanking.append((collegeName, score))
+                            score = (transitScore * transitWeight/100) + (socialScore * socialWeight/100) + (safetyScore * safetyWeight/100)
 
-                    tempRankingSorted = sorted(tempRanking, key=lambda x: x[1], reverse=True)
-                    for i in range(len(tempRankingSorted)):
-                        if tempRankingSorted[i][0] == SCHOOL_NAME:
-                            if i+1 < maxRanking:
-                                improvedRanking = True
-                                maxRanking = i+1
-                                optimized_ranking = tempRankingSorted
-                                finalSafetyWeight = safetyWeight
-                                finalSocialWeight = socialWeight
-                                finalTransitWeight = transitWeight
+                            tempRanking.append((collegeName, score))
+
+                        tempRankingSorted = sorted(tempRanking, key=lambda x: x[1], reverse=True)
+                        for i in range(len(tempRankingSorted)):
+                            if tempRankingSorted[i][0] == SCHOOL_NAME:
+                                if i+1 < maxRanking:
+                                    improvedRanking = True
+                                    maxRanking = i+1
+                                    optimized_ranking = tempRankingSorted
+                                    finalSafetyWeight = safetyWeight
+                                    finalSocialWeight = socialWeight
+                                    finalTransitWeight = transitWeight
+
+        else:
+            for transitWeight in tqdm(range(20, 51, 2)):
+                for safetyWeight in range(20, 51, 2):
+                    if transitWeight + safetyWeight <= 80 and (100 - (transitWeight + safetyWeight)) < 51:
+                        socialWeight = 100 - (transitWeight + safetyWeight)
+
+                        tempRanking = []
+                        found = False
+                        limit = 10
+
+                        for entry in transit_score.find():
+                            if limit == 0:
+                                break
+
+                            collegeName = entry['Name']
+                            if collegeName == SCHOOL_NAME:
+                                found = True
+
+                            transitScore = entry['Transit Score']
+                            socialEntry = social_score.find_one({"Name": collegeName})
+                            socialScore = socialEntry['Social Score']
+                            safetyEntry = safety_score.find_one({"Name": collegeName})
+                            safetyScore = safetyEntry['Safety Score']
+
+                            score = (transitScore * transitWeight/100) + (socialScore * socialWeight/100) + (safetyScore * safetyWeight/100)
+
+                            tempRanking.append((collegeName, score))
+                            limit = limit - 1
+
+                        if not found:
+                            transitEntry = transit_score.find_one({"Name": SCHOOL_NAME})
+                            transitScore = transitEntry['Transit Score']
+                            socialEntry = social_score.find_one({"Name": SCHOOL_NAME})
+                            socialScore = socialEntry['Social Score']
+                            safetyEntry = safety_score.find_one({"Name": SCHOOL_NAME})
+                            safetyScore = safetyEntry['Safety Score']
+
+                            score = (transitScore * transitWeight / 100) + (socialScore * socialWeight / 100) + (
+                            safetyScore * safetyWeight / 100)
+
+                            tempRanking.append((SCHOOL_NAME, score))
+
+                        tempRankingSorted = sorted(tempRanking, key=lambda x: x[1], reverse=True)
+                        for i in range(len(tempRankingSorted)):
+                            if tempRankingSorted[i][0] == SCHOOL_NAME:
+                                if i+1 < maxRanking:
+                                    improvedRanking = True
+                                    maxRanking = i+1
+                                    optimized_ranking = tempRankingSorted
+                                    finalSafetyWeight = safetyWeight
+                                    finalSocialWeight = socialWeight
+                                    finalTransitWeight = transitWeight
 
         print(optimized_ranking)
         print("Original Ranking: " + str(currentRanking))
@@ -133,6 +188,9 @@ class rankingOptimizer(dml.Algorithm):
         resource_safetyScore = doc.entity('dat:jdbrawn_jliang24_slarbi_tpotye#safetyScore',
                                           {'prov:label': 'Safety Score',
                                            prov.model.PROV_TYPE: 'ont:DataSet'})
+        resource_ranking = doc.entity('dat:jdbrawn_jliang24_slarbi_tpotye#ranking',
+                                          {'prov:label': 'Overall Score',
+                                           prov.model.PROV_TYPE: 'ont:DataSet'})
 
         get_optimalRanking = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
@@ -141,6 +199,7 @@ class rankingOptimizer(dml.Algorithm):
         doc.usage(get_optimalRanking, resource_socialScore, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
         doc.usage(get_optimalRanking, resource_transitScore, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
         doc.usage(get_optimalRanking, resource_safetyScore, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
+        doc.usage(get_optimalRanking, resource_ranking, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
 
         optimized_ranking = doc.entity('dat:jdbrawn_jliang24_slarbi_tpotye#optimizedRanking',
                                    {prov.model.PROV_LABEL: 'Optimized Ranking', prov.model.PROV_TYPE: 'ont:DataSet'})
@@ -149,6 +208,31 @@ class rankingOptimizer(dml.Algorithm):
         doc.wasDerivedFrom(optimized_ranking, resource_socialScore, get_optimalRanking, get_optimalRanking, get_optimalRanking)
         doc.wasDerivedFrom(optimized_ranking, resource_transitScore, get_optimalRanking, get_optimalRanking, get_optimalRanking)
         doc.wasDerivedFrom(optimized_ranking, resource_safetyScore, get_optimalRanking, get_optimalRanking, get_optimalRanking)
+        doc.wasDerivedFrom(optimized_ranking, resource_ranking, get_optimalRanking, get_optimalRanking, get_optimalRanking)
+
+
+        get_optimalRankingStats = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
+
+        doc.wasAssociatedWith(get_optimalRankingStats, this_script)
+
+        doc.usage(get_optimalRankingStats, resource_socialScore, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
+        doc.usage(get_optimalRankingStats, resource_transitScore, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
+        doc.usage(get_optimalRankingStats, resource_safetyScore, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
+        doc.usage(get_optimalRankingStats, resource_ranking, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
+
+        optimized_ranking_stats = doc.entity('dat:jdbrawn_jliang24_slarbi_tpotye#optimizedRankingStats',
+                                       {prov.model.PROV_LABEL: 'Optimized Ranking Stats',
+                                        prov.model.PROV_TYPE: 'ont:DataSet'})
+        doc.wasAttributedTo(optimized_ranking_stats, this_script)
+        doc.wasGeneratedBy(optimized_ranking_stats, get_optimalRankingStats, endTime)
+        doc.wasDerivedFrom(optimized_ranking_stats, resource_socialScore, get_optimalRankingStats, get_optimalRankingStats,
+                           get_optimalRankingStats)
+        doc.wasDerivedFrom(optimized_ranking_stats, resource_transitScore, get_optimalRankingStats, get_optimalRankingStats,
+                           get_optimalRankingStats)
+        doc.wasDerivedFrom(optimized_ranking_stats, resource_safetyScore, get_optimalRankingStats, get_optimalRankingStats,
+                           get_optimalRankingStats)
+        doc.wasDerivedFrom(optimized_ranking_stats, resource_ranking, get_optimalRankingStats, get_optimalRankingStats,
+                           get_optimalRankingStats)
 
         repo.logout()
 
