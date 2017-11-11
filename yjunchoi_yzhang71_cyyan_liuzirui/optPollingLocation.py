@@ -34,18 +34,14 @@ class optPollingLocation(dml.Algorithm):
         pLoc = pd.DataFrame(list(pLocation))
         #pLoc.set_index('name', inplace=True)
 
-        pLoc['X'] = pLoc['X'].apply(lambda x: float(x)*-0.000001)
-        pLoc['Y'] = pLoc['Y'].apply(lambda x: float(x)*0.000001)
-
-        pLoc['coordinates'] = list(zip(pLoc.X, pLoc.Y))
-
+        pLoc['coordinates'] = list(pLoc.coordinates)
+        
+        print(pLoc['coordinates'])
         # Adjusting bus stops in Pandas
         bStop = pd.DataFrame(list(busstop))
 
+        bStop['coordinates'] = list(bStop.coordinates)
 
-        bStop['coordinates'] = list(bStop.geometry.coordinates)
-
-        print(bStop['coordinates'])
 
         endTime = datetime.datetime.now()
 

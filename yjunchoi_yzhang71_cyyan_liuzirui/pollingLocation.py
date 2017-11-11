@@ -26,9 +26,19 @@ class pollingLocation(dml.Algorithm):
         repo.dropCollection("pollingLocation")
         repo.createCollection("pollingLocation")
 
-        url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/f7c6dc9eb6b14463a3dd87451beba13f_5.csv'
-        urllib.request.urlretrieve(url, 'pollingLocation.csv')
-        vote_df = pd.read_csv('pollingLocation.csv')
+        url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/053b0359485d435abfb525e07e298885_0.geojson'
+        response = urllib.request.urlopen(url).read().decode("utf-8")
+        raw = json.loads(response)
+        s = json.dumps(raw, sort_keys = True, indent = 2)
+
+        coordinates = {}
+
+        for i in raw['features']:
+            coordinates[i['properties']['Location2']] = i['geometry']['coordinates']
+
+        results = [ {'name': key,  'coordinates': coordinates[key]}  for key in coordinates ]
+
+
         repo['yjunchoi_yzhang71_cyyan_liuzirui.pollingLocation'].insert_many(vote_df.to_dict('records'))
         repo.logout()
 
@@ -55,7 +65,7 @@ class pollingLocation(dml.Algorithm):
         doc.add_namespace('bod', 'http://bostonpoendata-boston.opendata.argcis.com/datasets/') # Dataset used
 
         this_script = doc.agent('alg:yjunchoi_yzhang71_cyyan_liuzirui#pollingLocation', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bod:f7c6dc9eb6b14463a3dd87451beba13f_5.csv', {'prov:label':'Polling Location', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'csv'})
+        resource = doc.entity('bod:053b0359485d435abfb525e07e298885_0.geojson', {'prov:label':'Polling Location', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
         get_pollingLocation = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_pollingLocation, this_script)
         doc.usage(get_pollingLocation, resource, startTime, None,
