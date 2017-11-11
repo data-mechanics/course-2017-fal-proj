@@ -10,6 +10,7 @@ class propety(dml.Algorithm):
     contributor = 'lc546_jofranco'
     reads = []
     writes = ['lc546_jofranco.propety']
+    # nov 11
 
     @staticmethod
     def execute(trial = False):
