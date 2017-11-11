@@ -8,10 +8,10 @@ import csv
 import pandas as pd
 
 
-class pollingLocation(dml.Algorithm):
+class optPollingLocation(dml.Algorithm):
     contributor = 'yjunchoi_yzhang71_cyyan_liuzirui'
-    reads = []
-    writes = ['yjunchoi_yzhang71_cyyan_liuzirui.pollingLocation']
+    reads = ['yjunchoi_yzhang71_cyyan_liuzirui.pollingLocation', 'yjunchoi_yzhang71_cyyan_liuzirui.busstopCoordinates', 'yjunchoi_yzhang71_cyyan_liuzirui.MBTACoordinates']
+    writes = ['yjunchoi_yzhang71_cyyan_liuzirui.optPollingLocation']
 
     @staticmethod
     def execute(trial = False):
@@ -23,24 +23,24 @@ class pollingLocation(dml.Algorithm):
         repo = client.repo
         repo.authenticate('yjunchoi_yzhang71_cyyan_liuzirui', 'yjunchoi_yzhang71_cyyan_liuzirui')
 
-        repo.dropCollection("pollingLocation")
-        repo.createCollection("pollingLocation")
+        pLocation = repo['yjunchoi_yzhang71_cyyan_liuzirui.pollingLocation'].find()
+        busstop = repo['yjunchoi_yzhang71_cyyan_liuzirui.busstopCoordinates'].find()
+        MBTA = repo['yjunchoi_yzhang71_cyyan_liuzirui.MBTACoordinates'].find()
 
-        url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/053b0359485d435abfb525e07e298885_0.geojson'
-        response = urllib.request.urlopen(url).read().decode("utf-8")
-        raw = json.loads(response)
-        s = json.dumps(raw, sort_keys = True, indent = 2)
+        repo.dropCollection("optPollingLocation")
+        repo.createCollection("optPollingLocation")
 
-        coordinates = {}
+        # Adjusting polling locations in Pandas
+        pLoc = pd.DataFrame(list(pLocation))
 
-        for i in raw['features']:
-            coordinates[i['properties']['Location2']] = i['geometry']['coordinates']
+        pLoc['coordinates'] = list(pLoc.coordinates)
 
-        results = [ {'name': key,  'coordinates': coordinates[key]}  for key in coordinates ]
+        print(pLoc['coordinates'])
+        # Adjusting bus stops in Pandas
+        bStop = pd.DataFrame(list(busstop))
 
+        bStop['coordinates'] = list(bStop.coordinates)
 
-        repo['yjunchoi_yzhang71_cyyan_liuzirui.pollingLocation'].insert_many(results)
-        repo.logout()
 
         endTime = datetime.datetime.now()
 
@@ -64,26 +64,26 @@ class pollingLocation(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bod', 'http://bostonpoendata-boston.opendata.argcis.com/datasets/') # Dataset used
 
-        this_script = doc.agent('alg:yjunchoi_yzhang71_cyyan_liuzirui#pollingLocation', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bod:053b0359485d435abfb525e07e298885_0.geojson', {'prov:label':'Polling Location', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
-        get_pollingLocation = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_pollingLocation, this_script)
-        doc.usage(get_pollingLocation, resource, startTime, None,
+        this_script = doc.agent('alg:yjunchoi_yzhang71_cyyan_liuzirui#optPollingLocation', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource = doc.entity('bod:f7c6dc9eb6b14463a3dd87451beba13f_5.csv', {'prov:label':'Polling Location', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'csv'})
+        get_optPollingLocation = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(get_optPollingLocation, this_script)
+        doc.usage(get_optPollingLocation, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval'
                   }
                   )
 
-        pollingLocation = doc.entity('dat:yjunchoi_yzhang71_cyyan_liuzirui#pollingLocation', {prov.model.PROV_LABEL:'Polling Location', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(pollingLocation, this_script)
-        doc.wasGeneratedBy(pollingLocation, get_pollingLocation, endTime)
-        doc.wasDerivedFrom(pollingLocation, resource, get_pollingLocation, get_pollingLocation, get_pollingLocation)
+        optPollingLocation = doc.entity('dat:yjunchoi_yzhang71_cyyan_liuzirui#optPollingLocation', {prov.model.PROV_LABEL:'Polling Location', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(optPollingLocation, this_script)
+        doc.wasGeneratedBy(optPollingLocation, get_optPollingLocation, endTime)
+        doc.wasDerivedFrom(optPollingLocation, resource, get_optPollingLocation, get_optPollingLocation, get_optPollingLocation)
 
         repo.logout()
 
         return doc
 
-pollingLocation.execute()
-doc = pollingLocation.provenance()
+optPollingLocation.execute()
+doc = optPollingLocation.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
 
