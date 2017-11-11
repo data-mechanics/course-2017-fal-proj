@@ -6,9 +6,9 @@ import datetime
 import uuid
 
 class busstopCoordinates(dml.Algorithm):
-    contributor = 'yjunchoi_yzhang71_cyyan_liuzirui'
+    contributor = 'cyyan_liuzirui_yjunchoi_yzhang71'
     reads = []
-    writes = ['yjunchoi_yzhang71_cyyan_liuzirui.busstopCoordinates']
+    writes = ['cyyan_liuzirui_yjunchoi_yzhang71.busstopCoordinates']
 
     @staticmethod
     def execute(trial = False):
@@ -18,7 +18,7 @@ class busstopCoordinates(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('yjunchoi_yzhang71_cyyan_liuzirui', 'yjunchoi_yzhang71_cyyan_liuzirui')
+        repo.authenticate('cyyan_liuzirui_yjunchoi_yzhang71', 'cyyan_liuzirui_yjunchoi_yzhang71')
 
         url = 'http://datamechanics.io/data/wuhaoyu_yiran123/MBTA_Bus_Stops.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -33,7 +33,7 @@ class busstopCoordinates(dml.Algorithm):
 
         results = [ {'name': key,  'coordinates': coordinates[key]}  for key in coordinates ]
 
-        repo['yjunchoi_yzhang71_cyyan_liuzirui.busstopCoordinates'].insert_many(results)
+        repo['cyyan_liuzirui_yjunchoi_yzhang71.busstopCoordinates'].insert_many(results)
 
         repo.logout()
 
@@ -52,14 +52,14 @@ class busstopCoordinates(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('yjunchoi_yzhang71_cyyan_liuzirui', 'yjunchoi_yzhang71_cyyan_liuzirui')
-        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/yjunchoi_yzhang71_cyyan_liuzirui') # The scripts are in <folder>#<filename> format.
-        doc.add_namespace('dat', 'http://datamechanics.io/data/yjunchoi_yzhang71_cyyan_liuzirui') # The data sets are in <user>#<collection> format.
+        repo.authenticate('cyyan_liuzirui_yjunchoi_yzhang71', 'cyyan_liuzirui_yjunchoi_yzhang71')
+        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/cyyan_liuzirui_yjunchoi_yzhang71') # The scripts are in <folder>#<filename> format.
+        doc.add_namespace('dat', 'http://datamechanics.io/data/cyyan_liuzirui_yjunchoi_yzhang71') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('oth', 'http://datamechanics.io/data/wuhaoyu_yiran123') #Data Source from the other team
 
-        this_script = doc.agent('alg:yjunchoi_yzhang71_cyyan_liuzirui#busstopCoordinates', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:cyyan_liuzirui_yjunchoi_yzhang71#busstopCoordinates', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('oth:MBTA_Bus_Stops.geojson', {'prov:label':'Bus Stop Coordinates', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_busstopCoordinates = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_busstopCoordinates, this_script)
@@ -69,7 +69,7 @@ class busstopCoordinates(dml.Algorithm):
                   }
                   )
 
-        busstopCoordinates = doc.entity('dat:yjunchoi_yzhang71_cyyan_liuzirui#busstopCoordinates', {prov.model.PROV_LABEL:'Bus Stop Coordinates', prov.model.PROV_TYPE:'ont:DataSet'})
+        busstopCoordinates = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#busstopCoordinates', {prov.model.PROV_LABEL:'Bus Stop Coordinates', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(busstopCoordinates, this_script)
         doc.wasGeneratedBy(busstopCoordinates, get_busstopCoordinates, endTime)
         doc.wasDerivedFrom(busstopCoordinates, resource, get_busstopCoordinates, get_busstopCoordinates, get_busstopCoordinates)
@@ -78,9 +78,9 @@ class busstopCoordinates(dml.Algorithm):
 
         return doc
 
-busstopCoordinates.execute()
-doc = busstopCoordinates.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+# busstopCoordinates.execute()
+# doc = busstopCoordinates.provenance()
+# print(doc.get_provn())
+# print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof

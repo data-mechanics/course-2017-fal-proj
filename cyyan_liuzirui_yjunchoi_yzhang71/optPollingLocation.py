@@ -9,9 +9,9 @@ import pandas as pd
 
 
 class optPollingLocation(dml.Algorithm):
-    contributor = 'yjunchoi_yzhang71_cyyan_liuzirui'
-    reads = ['yjunchoi_yzhang71_cyyan_liuzirui.pollingLocation', 'yjunchoi_yzhang71_cyyan_liuzirui.busstopCoordinates', 'yjunchoi_yzhang71_cyyan_liuzirui.MBTACoordinates']
-    writes = ['yjunchoi_yzhang71_cyyan_liuzirui.optPollingLocation']
+    contributor = 'cyyan_liuzirui_yjunchoi_yzhang71'
+    reads = ['cyyan_liuzirui_yjunchoi_yzhang71.pollingLocation', 'cyyan_liuzirui_yjunchoi_yzhang71.busstopCoordinates', 'cyyan_liuzirui_yjunchoi_yzhang71.MBTACoordinates']
+    writes = ['cyyan_liuzirui_yjunchoi_yzhang71.optPollingLocation']
 
     @staticmethod
     def execute(trial = False):
@@ -21,11 +21,11 @@ class optPollingLocation(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('yjunchoi_yzhang71_cyyan_liuzirui', 'yjunchoi_yzhang71_cyyan_liuzirui')
+        repo.authenticate('cyyan_liuzirui_yjunchoi_yzhang71', 'cyyan_liuzirui_yjunchoi_yzhang71')
 
-        pLocation = repo['yjunchoi_yzhang71_cyyan_liuzirui.pollingLocation'].find()
-        busstop = repo['yjunchoi_yzhang71_cyyan_liuzirui.busstopCoordinates'].find()
-        MBTA = repo['yjunchoi_yzhang71_cyyan_liuzirui.MBTACoordinates'].find({})
+        pLocation = repo['cyyan_liuzirui_yjunchoi_yzhang71.pollingLocation'].find()
+        busstop = repo['cyyan_liuzirui_yjunchoi_yzhang71.busstopCoordinates'].find()
+        MBTA = repo['cyyan_liuzirui_yjunchoi_yzhang71.MBTACoordinates'].find({})
 
         repo.dropCollection("optPollingLocation")
         repo.createCollection("optPollingLocation")
@@ -56,14 +56,14 @@ class optPollingLocation(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('yjunchoi_yzhang71_cyyan_liuzirui', 'yjunchoi_yzhang71_cyyan_liuzirui')
-        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/yjunchoi_yzhang71_cyyan_liuzirui') # The scripts are in <folder>#<filename> format.
-        doc.add_namespace('dat', 'http://datamechanics.io/data/yjunchoi_yzhang71_cyyan_liuzirui') # The data sets are in <user>#<collection> format.
+        repo.authenticate('cyyan_liuzirui_yjunchoi_yzhang71', 'cyyan_liuzirui_yjunchoi_yzhang71')
+        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/cyyan_liuzirui_yjunchoi_yzhang71') # The scripts are in <folder>#<filename> format.
+        doc.add_namespace('dat', 'http://datamechanics.io/data/cyyan_liuzirui_yjunchoi_yzhang71') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bod', 'http://bostonpoendata-boston.opendata.argcis.com/datasets/') # Dataset used
 
-        this_script = doc.agent('alg:yjunchoi_yzhang71_cyyan_liuzirui#optPollingLocation', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:cyyan_liuzirui_yjunchoi_yzhang71#optPollingLocation', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bod:f7c6dc9eb6b14463a3dd87451beba13f_5.csv', {'prov:label':'Polling Location', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'csv'})
         get_optPollingLocation = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_optPollingLocation, this_script)
@@ -72,7 +72,7 @@ class optPollingLocation(dml.Algorithm):
                   }
                   )
 
-        optPollingLocation = doc.entity('dat:yjunchoi_yzhang71_cyyan_liuzirui#optPollingLocation', {prov.model.PROV_LABEL:'Polling Location', prov.model.PROV_TYPE:'ont:DataSet'})
+        optPollingLocation = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#optPollingLocation', {prov.model.PROV_LABEL:'Polling Location', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(optPollingLocation, this_script)
         doc.wasGeneratedBy(optPollingLocation, get_optPollingLocation, endTime)
         doc.wasDerivedFrom(optPollingLocation, resource, get_optPollingLocation, get_optPollingLocation, get_optPollingLocation)
@@ -81,9 +81,9 @@ class optPollingLocation(dml.Algorithm):
 
         return doc
 
-optPollingLocation.execute()
-doc = optPollingLocation.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+# optPollingLocation.execute()
+# doc = optPollingLocation.provenance()
+# print(doc.get_provn())
+# print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof

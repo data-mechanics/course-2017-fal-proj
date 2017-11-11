@@ -6,9 +6,9 @@ import datetime
 import uuid
 
 class countPollingLocationByWard(dml.Algorithm):
-    contributor = 'yjunchoi_yzhang71_cyyan_liuzirui'
-    reads = ['yjunchoi_yzhang71_cyyan_liuzirui.pollingLocation', 'yjunchoi_yzhang71_cyyan_liuzirui.presidentElectionByPrecinct']
-    writes = ['yjunchoi_yzhang71_cyyan_liuzirui.countPollingLocationByWard']
+    contributor = 'cyyan_liuzirui_yjunchoi_yzhang71'
+    reads = ['cyyan_liuzirui_yjunchoi_yzhang71.pollingLocation', 'cyyan_liuzirui_yjunchoi_yzhang71.presidentElectionByPrecinct']
+    writes = ['cyyan_liuzirui_yjunchoi_yzhang71.countPollingLocationByWard']
 
     @staticmethod
     def execute(trial = False):
@@ -19,11 +19,11 @@ class countPollingLocationByWard(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('yjunchoi_yzhang71_cyyan_liuzirui', 'yjunchoi_yzhang71_cyyan_liuzirui')
+        repo.authenticate('cyyan_liuzirui_yjunchoi_yzhang71', 'cyyan_liuzirui_yjunchoi_yzhang71')
 
         # loads the collection
-        PL = repo['yjunchoi_yzhang71_cyyan_liuzirui.pollingLocation'].find()
-        PE = repo['yjunchoi_yzhang71_cyyan_liuzirui.presidentElectionByPrecinct'].find()
+        PL = repo['cyyan_liuzirui_yjunchoi_yzhang71.pollingLocation'].find()
+        PE = repo['cyyan_liuzirui_yjunchoi_yzhang71.presidentElectionByPrecinct'].find()
 
         mapPEList = []
         voterTotal = 0
@@ -35,7 +35,7 @@ class countPollingLocationByWard(dml.Algorithm):
         # Group by Ward and count the number of polling location
         wardList = [] # 22 wards in Boston
         for row in PL:
-        
+
             wardList.append(len(row['coordinates'])) # index starts from 0
         print(wardList)
 
@@ -46,9 +46,9 @@ class countPollingLocationByWard(dml.Algorithm):
 
         repo.dropCollection("countPollingLocationByWard")
         repo.createCollection("countPollingLocationByWard")
-        repo['yjunchoi_yzhang71_cyyan_liuzirui.countPollingLocationByWard'].insert(countLocation)
-        repo['yjunchoi_yzhang71_cyyan_liuzirui.countPollingLocationByWard'].metadata({'complete': True})
-        print("Saved countPollingLocationByWard", repo['yjunchoi_yzhang71_cyyan_liuzirui.countPollingLocationByWard'].metadata())
+        repo['cyyan_liuzirui_yjunchoi_yzhang71.countPollingLocationByWard'].insert(countLocation)
+        repo['cyyan_liuzirui_yjunchoi_yzhang71.countPollingLocationByWard'].metadata({'complete': True})
+        print("Saved countPollingLocationByWard", repo['cyyan_liuzirui_yjunchoi_yzhang71.countPollingLocationByWard'].metadata())
 
         repo.logout()
 
@@ -67,7 +67,7 @@ class countPollingLocationByWard(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('yjunchoi_yzhang71_cyyan_liuzirui', 'yjunchoi_yzhang71_cyyan_liuzirui')
+        repo.authenticate('cyyan_liuzirui_yjunchoi_yzhang71', 'cyyan_liuzirui_yjunchoi_yzhang71')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/')  # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/')  # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
@@ -75,10 +75,10 @@ class countPollingLocationByWard(dml.Algorithm):
 
         this_script = doc.agent('alg:#countPollingLocationByWard',
                                 {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
-        resource_presidentElectionByPrecinct = doc.entity('dat:yjunchoi_yzhang71_cyyan_liuzirui#presidentElectionByPrecinct',
+        resource_presidentElectionByPrecinct = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#presidentElectionByPrecinct',
                                              {'prov:label': 'presidentElectionByPrecinct',
                                               prov.model.PROV_TYPE: 'ont:DataSet'})
-        resource_pollingLocation = doc.entity('dat:yjunchoi_yzhang71_cyyan_liuzirui#pollingLocation',
+        resource_pollingLocation = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#pollingLocation',
                                              {'prov:label': 'pollingLocation',
                                               prov.model.PROV_TYPE: 'ont:DataSet'})
 
@@ -89,7 +89,7 @@ class countPollingLocationByWard(dml.Algorithm):
         doc.usage(get_countPollingLocationByWard, resource_pollingLocation, startTime, None,
                   {prov.model.PROV_TYPE: 'ont:Computation'})
 
-        countPollingLocationByWard = doc.entity('dat:yjunchoi_yzhang71_cyyan_liuzirui#countPollingLocationByWard',
+        countPollingLocationByWard = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#countPollingLocationByWard',
                           {prov.model.PROV_LABEL: 'countPollingLocationByWard',
                            prov.model.PROV_TYPE: 'ont:DataSet'})
         doc.wasAttributedTo(countPollingLocationByWard, this_script)
@@ -101,9 +101,9 @@ class countPollingLocationByWard(dml.Algorithm):
 
         return doc
 
-countPollingLocationByWard.execute()
-doc = countPollingLocationByWard.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+# countPollingLocationByWard.execute()
+# doc = countPollingLocationByWard.provenance()
+# print(doc.get_provn())
+# print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof

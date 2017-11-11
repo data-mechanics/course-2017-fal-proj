@@ -6,9 +6,9 @@ import datetime
 import uuid
 
 class boston_wards(dml.Algorithm):
-    contributor = 'yjunchoi_yzhang71_cyyan_liuzirui'
+    contributor = 'cyyan_liuzirui_yjunchoi_yzhang71'
     reads = []
-    writes = ['yjunchoi_yzhang71_cyyan_liuzirui.boston_wards']
+    writes = ['cyyan_liuzirui_yjunchoi_yzhang71.boston_wards']
 
     @staticmethod
     def execute(trial = False):
@@ -18,7 +18,7 @@ class boston_wards(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('yjunchoi_yzhang71_cyyan_liuzirui', 'yjunchoi_yzhang71_cyyan_liuzirui')
+        repo.authenticate('cyyan_liuzirui_yjunchoi_yzhang71', 'cyyan_liuzirui_yjunchoi_yzhang71')
 
         url = 'http://datamechanics.io/data/yjunchoi_yzhang71/Wards.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -33,7 +33,7 @@ class boston_wards(dml.Algorithm):
 
         results = [ {'ward_num': key,  'coordinates': coordinates[key][0]}  for key in coordinates ]
 
-        repo['yjunchoi_yzhang71_cyyan_liuzirui.wards'].insert_many(results)
+        repo['cyyan_liuzirui_yjunchoi_yzhang71.wards'].insert_many(results)
 
         repo.logout()
 
@@ -52,14 +52,14 @@ class boston_wards(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('yjunchoi_yzhang71_cyyan_liuzirui', 'yjunchoi_yzhang71_cyyan_liuzirui')
-        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/yjunchoi_yzhang71_cyyan_liuzirui') # The scripts are in <folder>#<filename> format.
-        doc.add_namespace('dat', 'http://datamechanics.io/data/yjunchoi_yzhang71_cyyan_liuzirui') # The data sets are in <user>#<collection> format.
+        repo.authenticate('cyyan_liuzirui_yjunchoi_yzhang71', 'cyyan_liuzirui_yjunchoi_yzhang71')
+        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/cyyan_liuzirui_yjunchoi_yzhang71') # The scripts are in <folder>#<filename> format.
+        doc.add_namespace('dat', 'http://datamechanics.io/data/cyyan_liuzirui_yjunchoi_yzhang71') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('oth', 'http://datamechanics.io/data/wuhaoyu_yiran123') #Data Source from the other team
 
-        this_script = doc.agent('alg:yjunchoi_yzhang71_cyyan_liuzirui#boston_wards', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:cyyan_liuzirui_yjunchoi_yzhang71#boston_wards', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('oth:MBTA_Bus_Stops.geojson', {'prov:label':'Bus Stop Coordinates', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_boston_wards = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_boston_wards, this_script)
@@ -69,7 +69,7 @@ class boston_wards(dml.Algorithm):
                   }
                   )
 
-        boston_wards = doc.entity('dat:yjunchoi_yzhang71_cyyan_liuzirui#boston_wards', {prov.model.PROV_LABEL:'Bus Stop Coordinates', prov.model.PROV_TYPE:'ont:DataSet'})
+        boston_wards = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#boston_wards', {prov.model.PROV_LABEL:'Bus Stop Coordinates', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(boston_wards, this_script)
         doc.wasGeneratedBy(boston_wards, get_boston_wards, endTime)
         doc.wasDerivedFrom(boston_wards, resource, get_boston_wards, get_boston_wards, get_boston_wards)
@@ -78,9 +78,9 @@ class boston_wards(dml.Algorithm):
 
         return doc
 
-boston_wards.execute()
-doc = boston_wards.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+# boston_wards.execute()
+# doc = boston_wards.provenance()
+# print(doc.get_provn())
+# print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof

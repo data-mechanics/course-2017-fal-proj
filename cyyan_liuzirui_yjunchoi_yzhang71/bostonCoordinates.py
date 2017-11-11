@@ -7,9 +7,9 @@ import uuid
 import geoql
 
 class bostonCoordinates(dml.Algorithm):
-    contributor = 'yjunchoi_yzhang71_cyyan_liuzirui'
+    contributor = 'cyyan_liuzirui_yjunchoi_yzhang71'
     reads = []
-    writes = ['yjunchoi_yzhang71_cyyan_liuzirui.bostonCoordinates']
+    writes = ['cyyan_liuzirui_yjunchoi_yzhang71.bostonCoordinates']
 
     @staticmethod
     def execute(trial = False):
@@ -19,7 +19,7 @@ class bostonCoordinates(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('yjunchoi_yzhang71_cyyan_liuzirui', 'yjunchoi_yzhang71_cyyan_liuzirui')
+        repo.authenticate('cyyan_liuzirui_yjunchoi_yzhang71', 'cyyan_liuzirui_yjunchoi_yzhang71')
 
         url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/142500a77e2a4dbeb94a86f7e0b568bc_0.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -32,7 +32,7 @@ class bostonCoordinates(dml.Algorithm):
         for key in r:
             delay = {}
             delay[key] = r[key]
-            repo['yjunchoi_yzhang71_cyyan_liuzirui.bostonCoordinates'].insert(delay)
+            repo['cyyan_liuzirui_yjunchoi_yzhang71.bostonCoordinates'].insert(delay)
 
         repo.logout()
 
@@ -51,14 +51,14 @@ class bostonCoordinates(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('yjunchoi_yzhang71_cyyan_liuzirui', 'yjunchoi_yzhang71_cyyan_liuzirui')
-        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/yjunchoi_yzhang71_cyyan_liuzirui') # The scripts are in <folder>#<filename> format.
-        doc.add_namespace('dat', 'http://datamechanics.io/data/yjunchoi_yzhang71_cyyan_liuzirui') # The data sets are in <user>#<collection> format.
+        repo.authenticate('cyyan_liuzirui_yjunchoi_yzhang71', 'cyyan_liuzirui_yjunchoi_yzhang71')
+        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/cyyan_liuzirui_yjunchoi_yzhang71') # The scripts are in <folder>#<filename> format.
+        doc.add_namespace('dat', 'http://datamechanics.io/data/cyyan_liuzirui_yjunchoi_yzhang71') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bod', 'http://bostonpoendata-boston.opendata.argcis.com/datasets/')
 
-        this_script = doc.agent('alg:yjunchoi_yzhang71_cyyan_liuzirui#bostonCoordinates', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:cyyan_liuzirui_yjunchoi_yzhang71#bostonCoordinates', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bod:142500a77e2a4dbeb94a86f7e0b568bc_0.geojson', {'prov:label':'Boston Boundary', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
         get_bostonCoordinates = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_bostonCoordinates, this_script)
@@ -68,7 +68,7 @@ class bostonCoordinates(dml.Algorithm):
                   }
                   )
 
-        bostonCoordinates = doc.entity('dat:yjunchoi_yzhang71_cyyan_liuzirui#bostonCoordinates', {prov.model.PROV_LABEL:'Boston Boundary Coordinate', prov.model.PROV_TYPE:'ont:DataSet'})
+        bostonCoordinates = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#bostonCoordinates', {prov.model.PROV_LABEL:'Boston Boundary Coordinate', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(bostonCoordinates, this_script)
         doc.wasGeneratedBy(bostonCoordinates, get_bostonCoordinates, endTime)
         doc.wasDerivedFrom(bostonCoordinates, resource, get_bostonCoordinates, get_bostonCoordinates, get_bostonCoordinates)
@@ -77,9 +77,9 @@ class bostonCoordinates(dml.Algorithm):
 
         return doc
 
-bostonCoordinates.execute()
-doc = bostonCoordinates.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+# bostonCoordinates.execute()
+# doc = bostonCoordinates.provenance()
+# print(doc.get_provn())
+# print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof
