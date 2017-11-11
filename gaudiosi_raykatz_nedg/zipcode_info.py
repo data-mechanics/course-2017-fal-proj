@@ -34,12 +34,14 @@ class zipcode_info(dml.Algorithm):
             z = {}
             z["zipcode"] = zipcode
             demographics = list(repo.gaudiosi_raykatz_nedg.demographic_percentages.find({"zipcode": zipcode}))
-            if len(demographics) == 0:
+            income =  list(repo.gaudiosi_raykatz_nedg.income_percentages.find({"zipcode": zipcode}))
+            if len(demographics) == 0 or len(income) == 0:
                 continue
             else:
-               demographics = demographics[0]
+                income = income[0]
+                demographics = demographics[0]
             
-            income =  list(repo.gaudiosi_raykatz_nedg.income_percentages.find({"zipcode": zipcode}))[0]
+            
             housing = list(repo.gaudiosi_raykatz_nedg.housing_percentages.find({"zipcode": zipcode}))[0]
             
             
