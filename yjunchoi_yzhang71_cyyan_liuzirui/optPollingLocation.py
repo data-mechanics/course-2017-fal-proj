@@ -32,10 +32,9 @@ class optPollingLocation(dml.Algorithm):
 
         # Adjusting polling locations in Pandas
         pLoc = pd.DataFrame(list(pLocation))
-        #pLoc.set_index('name', inplace=True)
 
         pLoc['coordinates'] = list(pLoc.coordinates)
-        
+
         print(pLoc['coordinates'])
         # Adjusting bus stops in Pandas
         bStop = pd.DataFrame(list(busstop))

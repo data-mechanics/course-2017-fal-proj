@@ -39,7 +39,7 @@ class pollingLocation(dml.Algorithm):
         results = [ {'name': key,  'coordinates': coordinates[key]}  for key in coordinates ]
 
 
-        repo['yjunchoi_yzhang71_cyyan_liuzirui.pollingLocation'].insert_many(vote_df.to_dict('records'))
+        repo['yjunchoi_yzhang71_cyyan_liuzirui.pollingLocation'].insert_many(results)
         repo.logout()
 
         endTime = datetime.datetime.now()
