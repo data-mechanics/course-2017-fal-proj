@@ -8,6 +8,7 @@ import time
 import ssl
 import random
 from math import radians, sin, cos, atan2, sqrt
+import scipy.stats as ss
 
 def union(R, S):
     return R + S
@@ -70,20 +71,39 @@ class setObesityPropertyCorrelation(dml.Algorithm):
         #print(obesityValues)
         propLoc = project(propertyValues, lambda x: (tuple(x['location'].replace("(", "").replace(")", "").split(",")), x['av_total']))
         obesityLoc = project(obesityValues, lambda x: (float(x['geolocation']['latitude']), float(x['geolocation']['longitude'])))
-        distances = [(x, y) for x in propLoc for y in obesityLoc if calculateDist((float(x[0][0]),float(x[0][1])),y) < 0.3]
-        print(distances[0])
+        distances = [(float(x[1]), 1) for x in propLoc for y in obesityLoc if calculateDist((float(x[0][0]),float(x[0][1])),y) < 0.3 and x[1] != '0']
+        obeseCount = aggregate(distances, sum)
+        bucketDict = {}
+        bucket = 100000
+        while (bucket < 5000000):
+            for tup in obeseCount:
+                if (tup[0] <= bucket and tup[0] >= (bucket - 100000)):
+                    if (bucket in bucketDict):
+                        bucketDict[bucket] += tup[1]
+                    else:
+                        bucketDict[bucket] = tup[1]
+
+            bucket+= 100000
+
+        bucketList = list(bucketDict.items())
+        x = [x for (x,y) in bucketList]
+        y = [y for (x,y) in bucketList]
+
+        correlation = ss.pearsonr(x, y)
+        inputs = {}
+        inputs['Correlation-Coefficient'] = correlation[0]
+        inputs['P-Value'] = correlation[1]
         #Now we have all of the obesity to property mappings within .3km of the eachother.
         #Now we must aggregate based on property location and the property value.
         #Then correlation coefficient.
     
         #
-        exit()
 
 
 
         repo.dropCollection("ObesityPropertyCorrelation")
         repo.createCollection("ObesityPropertyCorrelation")
-        repo['biel_otis.ObesityPropertyCorrelation'].insert_many(inputs)
+        repo['biel_otis.ObesityPropertyCorrelation'].insert_many([inputs])
         repo['biel_otis.ObesityPropertyCorrelation'].metadata({'complete':True})
         print(repo['biel_otis.ObesityPropertyCorrelation'].metadata())
         repo.logout()
@@ -109,20 +129,34 @@ class setObesityPropertyCorrelation(dml.Algorithm):
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
 
-        this_script = doc.agent('alg:biel_otis#setObesityMarkets', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        obesity = doc.entity('dat:biel_otis#obesity', {prov.model.PROV_LABEL:'Obesity Data from City of Boston', prov.model.PROV_TYPE:'ont:DataSet'})
-        obesityMarkets = doc.entity('dat:biel_otis#obesity_market_locations', {prov.model.PROV_LABEL:'Dataset containing the optimal locations for healty food markets', prov.model.PROV_TYPE:'ont:DataSet'})
+        this_script = doc.agent('alg:biel_otis#setObesityPropertyCorrelation', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        obesity_resource = doc.entity('dat:biel_otis#ObesityData', {prov.model.PROV_LABEL:'Obesity Data from City of Boston', prov.model.PROV_TYPE:'ont:DataSet'})
+        property_resource = doc.entity('dat:biel_otis#PropertyValues', {prov.model.PROV_LABEL:'Dataset containing property values & locations of properties', prov.model.PROV_TYPE:'ont:DataSet'})
+        correlation_resource = doc.entity('dat:biel_otis#ObesityPropertyCorrelation', {prov.model.PROV_LABEL: 'Dataset containing one entry: the correlation coefficient between number of obese people within proximity to a property, and that properties value', prov.model.PROV_TYPE:'ont:DataSet'})
 
-
-        get_obesityMarkets = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_obesityMarkets, this_script)
+        this_run = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
+    
         
-        doc.usage(get_obesityMarkets, obesity, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Transformation'})
+        #Associations
+        doc.wasAssociatedWith(this_run, this_script)
+     
+        #Usages
+        doc.usage(this_run, obesity_resource, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Retrieval'})
+        doc.usage(this_run, property_resource, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Retrieval'})
 
-        doc.wasAttributedTo(obesityMarkets, this_script)
-        doc.wasGeneratedBy(obesityMarkets, obesityMarkets, endTime)
-        doc.wasDerivedFrom(obesity, get_obesityMarkets, get_obesityMarkets, get_obesityMarkets, get_obesityMarkets, get_obesityMarkets)
+        #Generated
+        doc.wasGeneratedBy(correlation_resource, this_run, endTime)
+
+
+        #Attributions
+        doc.wasAttributedTo(correlation_resource, this_script)
+
+        #Derivations
+        doc.wasDerivedFrom(correlation_resource, obesity_resource, this_run, this_run, this_run)
+        doc.wasDerivedFrom(correlation_resource, property_resource, this_run, this_run, this_run)
+
         repo.logout()
         
         return doc

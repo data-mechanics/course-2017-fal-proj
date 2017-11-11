@@ -27,7 +27,7 @@ path = args.contributor_folder
 algorithms = []
 for r,d,f in os.walk(path):
     for file in f:
-        if file.split(".")[-1] == "py":
+        if file.split(".")[-1] == "py" and file != "setObesityPropertyCorrelation.py":
             name_module = ".".join(file.split(".")[0:-1])
             module = importlib.import_module(path + "." + name_module)
             algorithms.append(module.__dict__[name_module])
