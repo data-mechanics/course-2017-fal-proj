@@ -38,7 +38,8 @@ class zipcode_info(dml.Algorithm):
                 continue
             else:
                demographics = demographics[0]
-            income = list(repo.gaudiosi_raykatz.income_percentages.find({"zipcode": zipcode}))[0]
+            
+            income =  list(repo.gaudiosi_raykatz.income_percentages.find({"zipcode": zipcode}))[0]
             housing = list(repo.gaudiosi_raykatz.housing_percentages.find({"zipcode": zipcode}))[0]
             
             
@@ -62,6 +63,7 @@ class zipcode_info(dml.Algorithm):
             z["percent_homes_occupied"] = housing["percent_homes_occupied"]
             z["percent_homes_vacant"] = housing["percent_homes_vacant"]
             z["percent_homes_built_before_1939"] = housing["percent_homes_built_before_1939"]
+            z["percent_renting"] = housing["percent_renting"]
 
             z["subway_stops"] = repo.gaudiosi_raykatz.mbta_stops.count({"zipcode": zipcode, "mode_name": "Subway"})
             z["commuter_stops"] = repo.gaudiosi_raykatz.mbta_stops.count({"zipcode": zipcode, "mode_name": "Commuter Rail"})

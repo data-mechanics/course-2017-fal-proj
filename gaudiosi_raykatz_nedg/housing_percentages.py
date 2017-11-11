@@ -28,7 +28,8 @@ class housing_percentages(dml.Algorithm):
                                                 "zipcode":1,
                                                 "percent_homes_occupied":{"$divide": ["$occupied_housing", "$total_housing"]},
                                                 "percent_homes_vacant":{"$divide": ["$vacant_housing", "$total_housing"]},
-                                                "percent_homes_built_before_1939":{"$divide": ["$structures_build_before_1939", "$total_structures_built"]},
+                                                "percent_homes_built_before_1939":{"$divide": ["$structures_built_before_1939", "$total_structures_built"]},
+                                                "percent_renting":{"$divide": ["$renter_occupied", "$total_occupied"]},
                                                 }},
                                                 
                                                 {"$out": "gaudiosi_raykatz.housing_percentages"}
