@@ -10,6 +10,7 @@ class propetymap(dml.Algorithm):
     contributor = 'lc546_jofranco'
     reads = []
     writes = ['lc546_jofranco.propety']
+    # nov 11
 
     #longitude = []
     #latitude = []
