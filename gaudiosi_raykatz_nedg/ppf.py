@@ -6,9 +6,9 @@ import datetime
 import uuid
 
 class ppf(dml.Algorithm):
-    contributor = 'gaudiosi_raykatz'
+    contributor = 'gaudiosi_raykatz_nedg'
     reads = []
-    writes = ['gaudiosi_raykatz.ppf']
+    writes = ['gaudiosi_raykatz_nedg.ppf']
 
     @staticmethod
     def execute(trial = False):
@@ -18,7 +18,7 @@ class ppf(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('gaudiosi_raykatz','gaudiosi_raykatz')
+        repo.authenticate('gaudiosi_raykatz_nedg','gaudiosi_raykatz_nedg')
 
         url = 'http://datamechanics.io/data/neighborhoodcrime.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -1443,9 +1443,9 @@ class ppf(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("ppf")
         repo.createCollection("ppf")
-        repo['gaudiosi_raykatz.ppf'].insert_many(r)
-        repo['gaudiosi_raykatz.ppf'].metadata({'complete':True})
-        print(repo['gaudiosi_raykatz.ppf'].metadata())
+        repo['gaudiosi_raykatz_nedg.ppf'].insert_many(r)
+        repo['gaudiosi_raykatz_nedg.ppf'].metadata({'complete':True})
+        print(repo['gaudiosi_raykatz_nedg.ppf'].metadata())
 
 
         repo.logout()
@@ -1465,7 +1465,7 @@ class ppf(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('gaudiosi_raykatz', 'gaudiosi_raykatz')
+        repo.authenticate('gaudiosi_raykatz_nedg', 'gaudiosi_raykatz_nedg')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
@@ -1473,7 +1473,7 @@ class ppf(dml.Algorithm):
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
       
-        this_script = doc.agent('alg:gaudiosi_raykatz#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:gaudiosi_raykatz_nedg#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 
         get_ppf = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
@@ -1485,7 +1485,7 @@ class ppf(dml.Algorithm):
                   )
 
 
-        ppf = doc.entity('dat:gaudiosi_raykatz#ppf', {prov.model.PROV_LABEL:'ppf', prov.model.PROV_TYPE:'ont:DataSet'})
+        ppf = doc.entity('dat:gaudiosi_raykatz_nedg#ppf', {prov.model.PROV_LABEL:'ppf', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(ppf, this_script)
         doc.wasGeneratedBy(ppf, get_ppf, endTime)
         doc.wasDerivedFrom(ppf, resource, get_ppf, get_ppf, get_ppf)

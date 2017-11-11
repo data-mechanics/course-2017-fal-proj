@@ -6,9 +6,9 @@ import datetime
 import uuid
 
 class demographic_percentages(dml.Algorithm):
-    contributor = 'gaudiosi_raykatz'
-    reads = ["gaudiosi_raykatz.demographics"]
-    writes = ['gaudiosi_raykatz.demographic_percentages']
+    contributor = 'gaudiosi_raykatz_nedg'
+    reads = ["gaudiosi_raykatz_nedg.demographics"]
+    writes = ['gaudiosi_raykatz_nedg.demographic_percentages']
 
     @staticmethod
     def execute(trial = False):
@@ -18,7 +18,7 @@ class demographic_percentages(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('gaudiosi_raykatz', 'gaudiosi_raykatz')
+        repo.authenticate('gaudiosi_raykatz_nedg', 'gaudiosi_raykatz_nedg')
        
         
         
@@ -26,7 +26,7 @@ class demographic_percentages(dml.Algorithm):
         repo.createCollection("demographic_percentages")
         
         
-        repo.gaudiosi_raykatz.demographics.aggregate( [ {"$project":{
+        repo.gaudiosi_raykatz_nedg.demographics.aggregate( [ {"$project":{
             "zipcode":1, 
             "percent_white":{"$divide": ["$white", "$total"]},
             "percent_black":{"$divide": ["$black", "$total"]},
@@ -40,13 +40,13 @@ class demographic_percentages(dml.Algorithm):
             "percent_public_transit":{"$divide": ["$public_transit", "$total_transit"]},
             }},
                                                 
-            {"$out": "gaudiosi_raykatz.demographic_percentages"}
+            {"$out": "gaudiosi_raykatz_nedg.demographic_percentages"}
 
                                                 
         ])
         
-        repo['gaudiosi_raykatz.demographic_percentages'].metadata({'complete':True})
-        print(repo['gaudiosi_raykatz.demographic_percentages'].metadata())
+        repo['gaudiosi_raykatz_nedg.demographic_percentages'].metadata({'complete':True})
+        print(repo['gaudiosi_raykatz_nedg.demographic_percentages'].metadata())
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -64,14 +64,14 @@ class demographic_percentages(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('gaudiosi_raykatz', 'gaudiosi_raykatz')
+        repo.authenticate('gaudiosi_raykatz_nedg', 'gaudiosi_raykatz_nedg')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
-        this_script = doc.agent('alg:gaudiosi_raykatz#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:gaudiosi_raykatz_nedg#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_demos = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_demos, this_script)
@@ -82,7 +82,7 @@ class demographic_percentages(dml.Algorithm):
                   }
                   )
         
-        demos = doc.entity('dat:gaudiosi_raykatz#demographic_percentages', {prov.model.PROV_LABEL:'Demographic Percentages', prov.model.PROV_TYPE:'ont:DataSet'})
+        demos = doc.entity('dat:gaudiosi_raykatz_nedg#demographic_percentages', {prov.model.PROV_LABEL:'Demographic Percentages', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(demos, this_script)
         doc.wasGeneratedBy(demos, get_demos, endTime)
         doc.wasDerivedFrom(demos, resource, get_demos, get_demos, get_demos)

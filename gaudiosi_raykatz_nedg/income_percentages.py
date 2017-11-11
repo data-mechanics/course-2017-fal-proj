@@ -6,9 +6,9 @@ import datetime
 import uuid
 
 class income_percentages(dml.Algorithm):
-    contributor = 'gaudiosi_raykatz'
-    reads = ["gaudiosi_raykatz.income"]
-    writes = ['gaudiosi_raykatz.income_percentages']
+    contributor = 'gaudiosi_raykatz_nedg'
+    reads = ["gaudiosi_raykatz_nedg.income"]
+    writes = ['gaudiosi_raykatz_nedg.income_percentages']
 
     @staticmethod
     def execute(trial = False):
@@ -18,13 +18,13 @@ class income_percentages(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('gaudiosi_raykatz', 'gaudiosi_raykatz')
+        repo.authenticate('gaudiosi_raykatz_nedg', 'gaudiosi_raykatz_nedg')
        
         
         repo.dropCollection("income_percentages")
         repo.createCollection("income_percentages")
         
-        repo.gaudiosi_raykatz.income.aggregate( [ {"$project":{
+        repo.gaudiosi_raykatz_nedg.income.aggregate( [ {"$project":{
                                                 "zipcode":1,
                                                 "median_income":1,
                                                 "median_rent":1,
@@ -32,14 +32,14 @@ class income_percentages(dml.Algorithm):
                                                 "percent_poverty":{"$divide": ["$people_in_poverty", "$total_people"]},
                                                 }},
                                                 
-                                                {"$out": "gaudiosi_raykatz.income_percentages"}
+                                                {"$out": "gaudiosi_raykatz_nedg.income_percentages"}
 
                                                 
         ])
  
          
-        repo['gaudiosi_raykatz.income_percentages'].metadata({'complete':True})
-        print(repo['gaudiosi_raykatz.income_percentages'].metadata())
+        repo['gaudiosi_raykatz_nedg.income_percentages'].metadata({'complete':True})
+        print(repo['gaudiosi_raykatz_nedg.income_percentages'].metadata())
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -57,14 +57,14 @@ class income_percentages(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('gaudiosi_raykatz', 'gaudiosi_raykatz')
+        repo.authenticate('gaudiosi_raykatz_nedg', 'gaudiosi_raykatz_nedg')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
-        this_script = doc.agent('alg:gaudiosi_raykatz#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:gaudiosi_raykatz_nedg#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_demos = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_demos, this_script)
@@ -75,7 +75,7 @@ class income_percentages(dml.Algorithm):
                   }
                   )
         
-        demos = doc.entity('dat:gaudiosi_raykatz#income_percentages', {prov.model.PROV_LABEL:'Income Percentages', prov.model.PROV_TYPE:'ont:DataSet'})
+        demos = doc.entity('dat:gaudiosi_raykatz_nedg#income_percentages', {prov.model.PROV_LABEL:'Income Percentages', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(demos, this_script)
         doc.wasGeneratedBy(demos, get_demos, endTime)
         doc.wasDerivedFrom(demos, resource, get_demos, get_demos, get_demos)

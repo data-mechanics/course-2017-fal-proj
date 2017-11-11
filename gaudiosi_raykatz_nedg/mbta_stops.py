@@ -8,9 +8,9 @@ import uuid
 from shapely.geometry import shape, Point
 
 class mbta_stops(dml.Algorithm):
-    contributor = 'gaudiosi_raykatz'
-    reads = ['gaudiosi_raykatz.mbta_routes','gaudiosi_raykatz.zipcode_map']
-    writes = ['gaudiosi_raykatz.mbta_stops']
+    contributor = 'gaudiosi_raykatz_nedg'
+    reads = ['gaudiosi_raykatz_nedg.mbta_routes','gaudiosi_raykatz_nedg.zipcode_map']
+    writes = ['gaudiosi_raykatz_nedg.mbta_stops']
 
     @staticmethod
     def execute(trial = False):
@@ -20,17 +20,17 @@ class mbta_stops(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('gaudiosi_raykatz', 'gaudiosi_raykatz')
+        repo.authenticate('gaudiosi_raykatz_nedg', 'gaudiosi_raykatz_nedg')
         
         
         
         with open('auth.json') as data_file:    
                 data = json.load(data_file)
         
-        routes = list(repo.gaudiosi_raykatz.mbta_routes.find({}))
+        routes = list(repo.gaudiosi_raykatz_nedg.mbta_routes.find({}))
         
         r = []
-        geo_map = list(repo.gaudiosi_raykatz.zipcode_map.find({}))[0]
+        geo_map = list(repo.gaudiosi_raykatz_nedg.zipcode_map.find({}))[0]
 
 
         for route in routes:
@@ -68,9 +68,9 @@ class mbta_stops(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)        
         repo.dropCollection("mbta_stops")
         repo.createCollection("mbta_stops")
-        repo['gaudiosi_raykatz.mbta_stops'].insert_many(r)
-        repo['gaudiosi_raykatz.mbta_stops'].metadata({'complete':True})
-        print(repo['gaudiosi_raykatz.mbta_stops'].metadata())
+        repo['gaudiosi_raykatz_nedg.mbta_stops'].insert_many(r)
+        repo['gaudiosi_raykatz_nedg.mbta_stops'].metadata({'complete':True})
+        print(repo['gaudiosi_raykatz_nedg.mbta_stops'].metadata())
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -88,14 +88,14 @@ class mbta_stops(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('gaudiosi_raykatz', 'gaudiosi_raykatz')
+        repo.authenticate('gaudiosi_raykatz_nedg', 'gaudiosi_raykatz_nedg')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
-        this_script = doc.agent('alg:gaudiosi_raykatz#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:gaudiosi_raykatz_nedg#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_mbta_stops = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_mbta_stops, this_script)
@@ -106,7 +106,7 @@ class mbta_stops(dml.Algorithm):
                   }
                   )
         
-        mbta_stops = doc.entity('dat:gaudiosi_raykatz#mbta_stops', {prov.model.PROV_LABEL:'MBTA Stops', prov.model.PROV_TYPE:'ont:DataSet'})
+        mbta_stops = doc.entity('dat:gaudiosi_raykatz_nedg#mbta_stops', {prov.model.PROV_LABEL:'MBTA Stops', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(mbta_stops, this_script)
         doc.wasGeneratedBy(mbta_stops, get_mbta_stops, endTime)
         doc.wasDerivedFrom(mbta_stops, resource, get_mbta_stops, get_mbta_stops, get_mbta_stops)
