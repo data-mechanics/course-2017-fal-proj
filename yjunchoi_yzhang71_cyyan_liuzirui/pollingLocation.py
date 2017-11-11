@@ -31,12 +31,16 @@ class pollingLocation(dml.Algorithm):
         raw = json.loads(response)
         s = json.dumps(raw, sort_keys = True, indent = 2)
 
-        coordinates = {}
+        Ward_coordinates = {}
+        for i in range(1,23):
+            coordinate=[]
+            for j in raw['features']:
+                if i == j['properties']['Ward']:
+                    coordinate.append(j['geometry']['coordinates'])
+                    
+                Ward_coordinates[i] = coordinate
 
-        for i in raw['features']:
-            coordinates[i['properties']['Location2']] = i['geometry']['coordinates']
-
-        results = [ {'name': key,  'coordinates': coordinates[key]}  for key in coordinates ]
+        results = [ {'Ward': key,  'coordinates': Ward_coordinates[key]}  for key in Ward_coordinates ]
 
 
         repo['yjunchoi_yzhang71_cyyan_liuzirui.pollingLocation'].insert_many(results)

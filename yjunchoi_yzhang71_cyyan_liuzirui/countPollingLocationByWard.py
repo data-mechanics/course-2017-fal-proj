@@ -33,9 +33,11 @@ class countPollingLocationByWard(dml.Algorithm):
                 mapPEList.append({'City/Town':row['City/Town'], 'Ward':row['Ward']})
 
         # Group by Ward and count the number of polling location
-        wardList = [0]*22 # 22 wards in Boston
+        wardList = [] # 22 wards in Boston
         for row in PL:
-            wardList[row['Ward']-1] += 1 # index starts from 0
+        
+            wardList.append(len(row['coordinates'])) # index starts from 0
+        print(wardList)
 
         countLocation = []
         for i in range(22):
