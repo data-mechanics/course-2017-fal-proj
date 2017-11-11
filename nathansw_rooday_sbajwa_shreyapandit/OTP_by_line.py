@@ -105,7 +105,7 @@ class OTP_by_line(dml.Algorithm):
         repo['nathansw_rooday_sbajwa_shreyapandit.OTP_by_line'].insert_one(json_performance)
 
         repo.logout()
-        
+
         endTime = datetime.datetime.now()
 
         return {"start":startTime, "end":endTime}
@@ -116,11 +116,47 @@ class OTP_by_line(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client.repo
 
-        ### Nathan do ya thang
-        
+        ##########################################################
 
-        
+        ## Namespaces
+		doc.add_namespace('alg', 'http://datamechanics.io/algorithm/sbajwa_nathansw/') # The scripts in / format.
+		doc.add_namespace('dat', 'http://datamechanics.io/data/sbajwa_nathansw/') # The data sets in / format.
+		doc.add_namespace('ont', 'http://datamechanics.io/ontology#')
+		doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
 
+		doc.add_namespace('json_data', 'http://datamechanics.io/data/nathansw_rooday_sbajwa_shreyapandit/') 
 
-        
-          
+		## Agents
+		this_script = doc.agent('alg:nathansw_rooday_sbajwa_shreyapandit#OTP_by_line', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+
+		## Activities
+		get_OTP_by_line = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+
+		## Entitites
+		# Data Source
+		resource = doc.entity('json_data:MBTAPerformance.json', {'prov:label':'MBTA Performance Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+		# Data Generated
+		OTP_by_line = doc.entity('dat:nathansw_rooday_sbajwa_shreyapandit#OTP_by_line', {prov.model.PROV_LABEL:'On-Time Performance by Line', prov.model.PROV_TYPE:'ont:DataSet'})
+       
+		############################################################
+
+       	## wasAssociatedWith
+  		doc.wasAssociatedWith(get_OTP_by_line, this_script)     	
+
+		## used
+		doc.usage(get_OTP_by_line, resource, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval',})		
+
+		## wasGeneratedBy
+		doc.wasGeneratedBy(OTP_by_line, get_OTP_by_line, endTime)
+
+		## wasAttributedTo
+		doc.wasAttributedTo(OTP_by_line, this_script)		
+
+		## wasDerivedFrom
+		doc.wasDerivedFrom(OTP_by_line, resource, get_OTP_by_line, get_OTP_by_line, get_OTP_by_line)
+
+		############################################################
+
+		repo.logout()
+
+		return doc
