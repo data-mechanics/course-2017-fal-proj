@@ -12,19 +12,19 @@ from bson import ObjectId
 
 class mbta_stops_lines(dml.Algorithm):
 	contributor = 'nathansw_rooday_sbajwa_shreyapandit'
-    ### Make sure this is the correct dataset file name
-    reads = ['nathansw_rooday_sbajwa_shreyapandit.MBTAPerformance', 'nathansw_rooday_sbajwa_shreyapandit.OTP_by_line']
+    	### Make sure this is the correct dataset file name
+    	reads = ['nathansw_rooday_sbajwa_shreyapandit.MBTAPerformance', 'nathansw_rooday_sbajwa_shreyapandit.OTP_by_line']
    	
    	# Currently it just creates a csv file 
    	writes = []
 
-    @staticmethod
-    def execute(trial=False):
+    	@staticmethod
+    	def execute(trial=False):
 
-    	startTime=datetime.datetime.now()
-    	client = dml.pymongo.MongoClient()
-    	repo = client.repo
-        repo.authenticate('nathansw_rooday_sbajwa_shreyapandit', 'nathansw_rooday_sbajwa_shreyapandit')
+    		startTime=datetime.datetime.now()
+    		client = dml.pymongo.MongoClient()
+    		repo = client.repo
+        	repo.authenticate('nathansw_rooday_sbajwa_shreyapandit', 'nathansw_rooday_sbajwa_shreyapandit')
    	
 		mbta_db = repo['nathansw_rooday_sbajwa_shreyapandit.OTP_by_line']
 		mbta_data = mbta_db.find_one()
