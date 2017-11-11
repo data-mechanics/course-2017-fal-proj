@@ -20,7 +20,8 @@ class propety(dml.Algorithm):
         url = 'https://data.cityofboston.gov/resource/g5b5-xrwi.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
-        zipcode = r['zipcode']
+        for i in r:
+            zipcode += i['zipcode']
 
         s = json.dumps(r, sort_keys= True, indent = 2)
         print(type(s))
