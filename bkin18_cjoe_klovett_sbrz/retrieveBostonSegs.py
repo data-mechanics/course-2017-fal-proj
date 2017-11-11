@@ -7,10 +7,10 @@ import uuid
 import sys
 
 
-class retrieveRoadsInventory(dml.Algorithm):
+class retrieveBostonSegs(dml.Algorithm):
     contributor = 'bkin18_cjoe_klovett_sbrz'
     reads = []
-    writes = ['bkin18_cjoe_klovett_sbrz.roads_inventory']
+    writes = ['bkin18_cjoe_klovett_sbrz.road_segs']
 
     @staticmethod
     def execute(trial=False):
@@ -31,38 +31,41 @@ class retrieveRoadsInventory(dml.Algorithm):
         TRIAL_NUM = 1000
         
         # Checks to see whether we are doing a trial execute or not - used a range because our starting data has a lot of empty points
+        #REMEMBER TO INCLUDE IN TRIAL - Keith
+        '''
         if trial:
             url = "http://gis.massdot.state.ma.us/arcgis/rest/services/Roads/RoadInventory/MapServer/0/query?where=OBJECTID%20%3E%3D%20" + str(SAMPLE_START) + "%20AND%20OBJECTID%20%3C%3D%20" + str(SAMPLE_START + TRIAL_NUM) + "&outFields=*&outSR=4326&f=json"
         else:
-            url = "http://gis.massdot.state.ma.us/arcgis/rest/services/Roads/RoadInventory/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json"
+            url = "http://bostonopendata-boston.opendata.arcgis.com/datasets/cfd1740c2e4b49389f47a9ce2dd236cc_8.geojson"
+        '''
+        url = "http://bostonopendata-boston.opendata.arcgis.com/datasets/cfd1740c2e4b49389f47a9ce2dd236cc_8.geojson"
 
         # Property Assessment Data Set
+        #RENAME THIS STUFF - Keith
         property_assessment_url = urllib.request.Request(url)
         roads_response = urllib.request.urlopen(property_assessment_url).read().decode("utf-8")
         roads_inventory_json = json_util.loads(roads_response)
         roads_inventory_json = roads_inventory_json['features']
 
         x = []
-        removeEntries = ['MHS', 'From_Measure', 'To_Measure', 'From_Date', 'To_Date', 'Med_Type', 'Med_Width', 'Mile_Count', 'NHS', 'Trk_Netwrk', 
-        'Trk_Permit', 'Fd_Aid_Rd', 'AADT', 'Shldr_Lt_W', 'Shldr_Lt_T', 'Shldr_Rt_W', 'Shldr_Rt_T', 'AADT_Year', 'AADT_Deriv', 'Shldr_UL_W', 'Shldr_UL_T',
-        'County', 'Surface_Tp', 'Route_System', 'Surface_Wd', 'Hwy_Dist', 'F_F_Class', 'T_Exc_Time', 'Curb', 'Statn_Num', 'Station', 'Hwy_Subdst', 'Lt_Sidewlk',
-        'Rt_Sidewlk', 'Truck_Rte', 'T_Exc_Type', 'Operation', 'Control', 'Facility', 'F_Class', 'Jurisdictn', 'ROW_Width']
+        removeEntries = ['SEGMENT_ID', 'L_F_ADD', 'L_T_ADD', 'R_F_ADD', 'R_T_ADD', 'PRE_DIR', 'SUF_DIR', 'CFCC', 'SPEEDLIMIT', 'ONEWAY', 'HEIGHT', 
+        'WEIGHT', 'WIDTH', 'F_ZLEV', 'T_ZLEV', 'SHIELD', 'HWY_NUM', 'NBHD_L', 'NBHD_R', 'FT_COST', 'TF_COST', 'TF_DIR', 'FT_DIR', 'STATE00_L', 'STATE00_R', 'COUNTY00_L', 
+        'COUNTY00_R', 'PLACE00_L', 'PLACE00_R', 'TRACT00_L', 'TRACT00_R', 'BLOCK00_L', 'BLOCK00_R', 'MCD00_L', 'MCD00_R', 'MCD00_R', 'STREET_ID', 'OBJECTID', 'SHAPElen']
 
         #Obtains all roads in the Boston region, that have at least some associated street name data, and removes some entries.
         for road in roads_inventory_json:
-            if road['attributes']['MPO'] == 'Boston Region':
-                if road['attributes']['St_Name'] != '' or road['attributes']['Fm_St_Name'] != '' or road['attributes']['To_St_Name'] != '':
-                    if road['attributes']['St_Name'] is not None or road['attributes']['Fm_St_Name'] is not None or road['attributes']['To_St_Name'] is not None:
+            if road['properties']['MUN_L'] == 'Boston' or road['properties']['MUN_R'] == 'Boston':
                         # print(road['attributes']['OBJECTID'])
-                        for entry in removeEntries:
-                            road['attributes'].pop(entry, None)
-                        x.append(road['attributes'])
+                for entry in removeEntries:
+                    road['properties'].pop(entry, None)
+                if road['properties'] not in x and '.' not in road['properties']['ST_NAME']:
+                    x.append(road['properties'])
 
         ## IMPORTANT KEYS: Route_ID, Urban_Type, Number_of_Lanes, Street_Name (duh), Length, Toll_Road (nobody likes tolls), struct_cd(?)
-        repo.dropCollection("roads_inventory")
-        repo.createCollection("roads_inventory")
-        repo['bkin18_cjoe_klovett_sbrz.roads_inventory'].insert_many(x)
-        repo['bkin18_cjoe_klovett_sbrz.roads_inventory'].metadata({'complete': True})
+        repo.dropCollection("road_segs")
+        repo.createCollection("road_segs")
+        repo['bkin18_cjoe_klovett_sbrz.road_segs'].insert_many(x)
+        repo['bkin18_cjoe_klovett_sbrz.road_segs'].metadata({'complete': True})
 
         repo.logout()
         endTime = datetime.datetime.now()

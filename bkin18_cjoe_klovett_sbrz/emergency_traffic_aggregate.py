@@ -22,9 +22,11 @@ class emergency_traffic_aggregate(dml.Algorithm):
         repo = client.repo
         repo.authenticate('bkin18_cjoe_klovett_sbrz', 'bkin18_cjoe_klovett_sbrz') # should probably move this to auth
 
-        traffic_selection = [x for x in repo['bkin18_cjoe_klovett_sbrz.emergency_traffic_selection'].find()]
+        traffic_selection = repo['bkin18_cjoe_klovett_sbrz.emergency_traffic_selection'].find()
 
         traffic_keys, traffic_intersecs, traffic_dicts = [], [], []
+
+        route_names = []
 
         for signals in traffic_selection:
             streets = re.split(", & |, | & | @ ", signals['Location'])
@@ -35,9 +37,34 @@ class emergency_traffic_aggregate(dml.Algorithm):
             traffic_intersecs.append(streets)
 
             if(streets[0] not in traffic_keys):
-                traffic_keys.append(streets[0])
+                route_names.append(streets[0])
+
+        modifiedDictionary = []
+
+        #Loop through all the routes.
+        for i in range(len(route_names)):
+
+            route_name = route_names[i]
+            intersection_list = []
+
+            #Loop through all the intersections
+            for j in range(len(traffic_intersecs)):
+                #If the intersection matches the route name
+                if traffic_intersecs[j][0] == route_name:
+                    #Then for each remaining piece
+                    for k in range(1, len(traffic_intersecs[j])):
+                        #If it's not yet in the array
+                        #if(traffic_intersecs[j][k] not in modifiedDictionary['route_name'][route_name]):
+                        #traffic_dicts[i][key_name].append(traffic_intersecs[j][k])
+                        intersection_list.append(traffic_intersecs[j][k])
+            
+            modifiedPiece = {'RT_NAME': route_name, 'INTERSECTIONS': intersection_list}
+            modifiedDictionary.append(modifiedPiece)
 
 
+
+
+        '''
         # This is terrible, gotta fix it later
         for i in range(len(traffic_keys)):
             key_name = traffic_keys[i]
@@ -47,13 +74,14 @@ class emergency_traffic_aggregate(dml.Algorithm):
                     for k in range(1, len(traffic_intersecs[j])):
                         if(traffic_intersecs[j][k] not in traffic_dicts[i][key_name]): 
                             traffic_dicts[i][key_name].append(traffic_intersecs[j][k])
+        '''
 
         #pdb.set_trace()
 
 
         repo.dropCollection("emergency_traffic_aggregate")
         repo.createCollection("emergency_traffic_aggregate")
-        repo['bkin18_cjoe_klovett_sbrz.emergency_traffic_aggregate'].insert_many(traffic_dicts)
+        repo['bkin18_cjoe_klovett_sbrz.emergency_traffic_aggregate'].insert_many(modifiedDictionary)
 
 
         endTime = datetime.datetime.now()

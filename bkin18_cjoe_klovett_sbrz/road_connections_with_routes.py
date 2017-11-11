@@ -1,3 +1,4 @@
+
 import urllib.request
 from bson import json_util
 import dml
@@ -9,7 +10,7 @@ import sys
 
 class road_connections_with_routes(dml.Algorithm):
     contributor = 'bkin18_cjoe_klovett_sbrz'
-    reads = ['bkin18_cjoe_klovett_sbrz.roads_inventory', 'bkin18_cjoe_klovett_sbrz.emergency_traffic_aggregate']
+    reads = ['bkin18_cjoe_klovett_sbrz.road_segs', 'bkin18_cjoe_klovett_sbrz.emergency_traffic_aggregate']
     writes = ['bkin18_cjoe_klovett_sbrz.road_connections_with_routes']
 
     @staticmethod
@@ -24,7 +25,7 @@ class road_connections_with_routes(dml.Algorithm):
         repo.authenticate('bkin18_cjoe_klovett_sbrz', 'bkin18_cjoe_klovett_sbrz')
         db = client.repo
 
-        roads_collection = db['bkin18_cjoe_klovett_sbrz.roads_inventory']
+        roads_collection = db['bkin18_cjoe_klovett_sbrz.road_segs']
         roads = roads_collection.find()
 
         routes_collection = db['bkin18_cjoe_klovett_sbrz.emergency_traffic_aggregate']
@@ -34,27 +35,19 @@ class road_connections_with_routes(dml.Algorithm):
 
         # Obtains all roads in the Boston region, that have at least some associated street name data, and removes some entries.
         for road in roads:
-            road_name = road['St_Name']
-            road_name = road_name.upper().rsplit(' ', 1)[0]
+            road_name = road['ST_NAME']
+            road_name = road_name.upper()
             route_list = []
             for route in routes:
                 for street in route:
-                    street_name = street.upper().rsplit(' ', 1)[0]
-                    #print(street_name, road_name)
+                    #street_name = street.upper().rsplit(' ', 1)[0]
+                    street_name = street.upper()
+                    print("STREET", street_name, "ROAD", road_name)
                     if street_name == road_name:
-                        route_list.append(street_name)
+                        route_list.append(route)
             route_list = sorted(route_list)
             if {road_name: route_list} not in x:
                 x.append({road_name: route_list})
-
-
-
-
-
-
-
-
-
 
         repo.dropCollection("bkin18_cjoe_klovett_sbrz.road_connections_with_routes")
         repo.createCollection("bkin18_cjoe_klovett_sbrz.road_connections_with_routes")
