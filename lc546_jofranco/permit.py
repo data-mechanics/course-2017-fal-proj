@@ -1,4 +1,3 @@
-
 import urllib.request
 import json
 import dml
@@ -56,4 +55,3 @@ permit.execute()
 doc = permit.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
-

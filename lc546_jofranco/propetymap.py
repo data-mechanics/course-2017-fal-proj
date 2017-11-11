@@ -6,11 +6,13 @@ import prov.model
 import datetime
 import uuid
 
-class propety(dml.Algorithm):
+class propetymap(dml.Algorithm):
     contributor = 'lc546_jofranco'
     reads = []
     writes = ['lc546_jofranco.propety']
 
+    #longitude = []
+    #latitude = []
     @staticmethod
     def execute(trial = False):
         startTime = datetime.datetime.now()
@@ -21,14 +23,14 @@ class propety(dml.Algorithm):
         url = 'https://data.cityofboston.gov/resource/g5b5-xrwi.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
-        longitude= r['LONGITUDE']
-        latitude = r['LATITUDE']
+        #longitude = [int(r['LONGITUDE'])]
+        #latitude = [int(r['LATITUDE'])]
 
         s = json.dumps(r, sort_keys= True, indent = 2)
         print(type(s))
         repo.dropCollection("propety")
         repo.createCollection("propety")
-        repo["lc546_jofranco.propety"].insert_many(stations)
+        repo["lc546_jofranco.propety"].insert_many(r)
         repo["lc546_jofranco.propety"].metadata({'complete':True})
         print(repo["lc546_jofranco.propety"].metadata())
         repo.logout()
@@ -59,7 +61,7 @@ class propety(dml.Algorithm):
 
 
 
-propety.execute()
-doc = propety.provenance()
+propetymap.execute()
+doc = propetymap.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
