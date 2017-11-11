@@ -1,4 +1,3 @@
-
 import urllib.request
 import json
 import dml
@@ -28,7 +27,7 @@ class propetymap(dml.Algorithm):
         #latitude = [int(r['LATITUDE'])]
 
         s = json.dumps(r, sort_keys= True, indent = 2)
-        print(type(s))
+    #    print(type(s))
         repo.dropCollection("propety")
         repo.createCollection("propety")
         repo["lc546_jofranco.propety"].insert_many(r)

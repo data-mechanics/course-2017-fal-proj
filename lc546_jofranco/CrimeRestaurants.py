@@ -16,20 +16,21 @@ class CrimeRestaurants(dml.Algorithm):
 		repo = client.repo
 		repo.authenticate("lc546_jofranco", "lc546_jofranco")
 		crimerateData = repo.lc546_jofranco.crimerate
-		#print(crimerateData)
+		print(crimerateData)
 		foodpermitData = repo.lc546_jofranco.permit
-		print(foodpermitData)
+		permits = foodpermitData.find()
+		print(permits)
 		streetofcrime = crimerateData.find()
-		#rint(streetofcrime)
+		print(streetofcrime)
 		streetsthathadcrimes = []
 		for i in streetofcrime:
 			crimestreet = str.lower(i['streetname'])
 			crimestreet2 = crimestreet.replace(" st", "").replace(" av", "").replace(" wy","").replace(" rd", "").replace( " pl", "").replace(" ln", "").replace(" dr", "")
 			#print(crimestreet2)
 			streetsthathadcrimes.append([crimestreet2])
+	#	print(streetsthathadcrimes)
 
-		permits = foodpermitData.find()
-		#print()
+		print("permits",permits)
 		foodpermitList = []
 
 		'''Clean the data up by removing white spaces and removing
@@ -37,13 +38,14 @@ class CrimeRestaurants(dml.Algorithm):
 		'''
 
 		for i in permits:
+			#print(i)
 			foodstreet = str.lower(i['address'])
 			foodstreet1 = foodstreet.replace(" ","")
 			foodstreet2 = ''.join([j for j in foodstreet1 if not j.isdigit()])
 			foodstreet3 = [foodstreet2]
 			foodpermitList.append(foodstreet3)
-		#print("++++++++++++++")
-		#print(foodpermitList)
+		print("++++++++++++++")
+		print(foodpermitList)
 
 		'''find the intersection of the two databases. We basically
 			want to find the restaurants that are in a street that have had crimes.
@@ -82,7 +84,7 @@ class CrimeRestaurants(dml.Algorithm):
 		doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
 		doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
 		doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-		doc.add_namespace('bdp', 'http://developer.mbta.com/lib/')
+		doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 		this_script = doc.agent('alg:lc546_jofranco#CrimeRestaurants', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 		resource = doc.entity('bdp:t85d-b449', {'prov:label':'All the realtime_MBTA stops in Boston', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 		get_CrimeRestaurants = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)

@@ -18,8 +18,9 @@ class permit(dml.Algorithm):
         repo.authenticate("lc546_jofranco", "lc546_jofranco")
         url = 'https://data.cityofboston.gov/resource/fdxy-gydq.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
+        print("this", response)
         r = json.loads(response)
-        s = json.dumps(r, sort_keys= True, indent = 2)
+        s = json.dumps(r, sort_keys = True, indent = 2)
         repo.dropCollection("permit")
         repo.createCollection("permit")
         repo["lc546_jofranco.permit"].insert_many(r)
