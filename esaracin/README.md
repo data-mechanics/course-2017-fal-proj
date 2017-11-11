@@ -54,7 +54,16 @@ Data Transformation (Project #1):
 
 
 Early Problem Solving (Project #2): 6.29%, note elbow method
-	In thinking of useful ways to consider the data collected and transformed in Project #1, some questions come to mind.	
+	In thinking of useful ways to consider the data collected and transformed in Project #1, some questions come to mind. Namely, how could I apply optimization problems
+	to these datasets in a way that is both variable and still meaningful?
+
+	The first answer that came to mind was to apply K-means. Not only does it have a tunable input (that being the number of clusters you're looking for), but it applies
+	an optimization function on the squared distance from each point to its cluster center. Whats more, it has real world applications here: in clustering the crime incident
+	dataset collected in the previous project by the latitude and longitude each incident took place, I could find "crime centers" where crime was much more likely to happen around Boston.
+	Currently, the algorithm searches for 5 clusters, because this is the number obtained from applying the elbow method to the chart included in this directory: 5 is the number of 
+	clusters after which the error stops markedly decreasing. The beauty, though, is that whoever uses the algorithm could tune this parameter as they see fit; potentially, the City of Boston
+	can only afford some number of patrol cars out and circulating at a given time. Using these crime centers, they could optimize the location of their patrols in a way to perfectly fits however
+	many cars they are able to expend. Note that roughly 6.29% of the crime incidents did NOT include a location for the specified incident, and these data were dropped before clustering.
 
 
 Note that all files pertaining to this submission are included in this directory (/esaracin/). auth.json, along with all other top-level files and directories,
