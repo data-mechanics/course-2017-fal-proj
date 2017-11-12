@@ -22,6 +22,7 @@ import dml
 import pandas as pd, requests, json
 import datetime
 import prov.model
+import uuid
 
 
 class make_graph(dml.Algorithm):
