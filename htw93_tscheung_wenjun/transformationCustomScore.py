@@ -55,7 +55,7 @@ class transformationCustomScore(dml.Algorithm):
         for h in HotelData:
             norm_crime = (h['crime_count']-min_crime)/(max_crime-min_crime)
             norm_mbta = (h['mbta_count']-min_mbta)/(max_mbta-min_mbta)
-            norm_score = (h['rate']-min_rating)/(max_rating_min_rating)
+            norm_score = (h['rate']-min_rating)/(max_rating-min_rating)
             score = (norm_crime+norm_mbta+norm_score)/3
             print(score)
             CustomScore.append({'hotel':h['hotel'],'score':score})
