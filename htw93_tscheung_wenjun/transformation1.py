@@ -10,7 +10,7 @@ from vincenty import vincenty
 
 class transformation1(dml.Algorithm):
     contributor = 'htw93_tscheung_wenjun'
-    reads = ['htw93_tscheung_wenjun.BostonCrime', 'htw93_tscheung_wenjun.BostonHotel','htw93_tscheung_wenjun.MBTAStops']
+    reads = ['htw93_tscheung_wenjun.BostonCrime', 'htw93_tscheung_wenjun.BostonHotel','htw93_tscheung_wenjun.MBTAStops','htw93_tscheung_wenjun.BostonFood','htw93_tscheung_wenjun.BostonGarden']
     writes = ['htw93_tscheung_wenjun.BostonHotelData']
 
     @staticmethod
@@ -26,10 +26,14 @@ class transformation1(dml.Algorithm):
         BostonCrime = repo.htw93_tscheung_wenjun.BostonCrime
         BostonHotel = repo.htw93_tscheung_wenjun.BostonHotel
         MBTAStops = repo.htw93_tscheung_wenjun.MBTAStops
+        BostonFood = repo.htw93_tscheung_wenjun.BostonFood
+        BostonGarden = repo.htw93_tscheung_wenjun.BostonGarden
 
         BosCrime = BostonCrime.find()
         BosHotel = BostonHotel.find()
         MBTA = MBTAStops.find()
+        BosFood = BostonFood.find()
+        BosGarden = BostonGarden.find()
 
         BostonHotelData = []
         
@@ -37,6 +41,8 @@ class transformation1(dml.Algorithm):
         for h in BosHotel:
             count_crime = 0
             count_mbta = 0
+            count_food = 0
+            count_garden = 0
             hLoc = (float(h['lat']),float(h['lon']))
             for c in BosCrime:
                 if 'lat' in c and 'long' in c:
@@ -49,9 +55,26 @@ class transformation1(dml.Algorithm):
                 dis = vincenty(mLoc,hLoc,miles=True)
                 if dis < 0.5:
                     count_mbta+=1
-            BostonHotelData.append({'hotel':h['Hotel_name'],'rate':h['Avg_rate'],'crime_count':count_crime,'mbta_count':count_mbta})
+            for f in BosFood:
+                if f['location'][0] != 0 and f['location'][1] != 0:
+                    fLoc =(float(f['location'][0]),float(f['location'][1]))
+                    dis = vincenty(fLoc,hLoc,miles=True)
+                    if dis < 0.2:
+                        print(f['businessname'])
+                        count_food+=1
+            for g in BosGarden:
+                if g['location'][0] != 0 and g['location'][1] != 0:
+                    gLoc =(float(g['location'][0]),float(g['location'][1]))
+                    dis = vincenty(gLoc,hLoc,miles=True)
+                    print(dis)
+                    if dis < 1:
+                        count_garden+=1         
+                BostonHotelData.append({'hotel':h['Hotel_name'],'rate':h['Avg_rate'],'crime_count':count_crime,'mbta_count':count_mbta,'food_count':count_food,'garden_count':count_garden})
             BosCrime.rewind()
             MBTA.rewind()
+            BosFood.rewind()
+            BosGarden.rewind()
+            break
             
 
         repo.dropCollection("BostonHotelData")

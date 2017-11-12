@@ -22,3 +22,7 @@ Mike |  32
 
 
 ## Algorithm
+
+### Scoring Formula
+
+
