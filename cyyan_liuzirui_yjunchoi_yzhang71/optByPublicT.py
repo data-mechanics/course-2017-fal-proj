@@ -7,10 +7,10 @@ import uuid
 from scipy.cluster.vq import kmeans2
 import numpy as np
 
-class optPollingLocation(dml.Algorithm):
+class optByPublicT(dml.Algorithm):
     contributor = 'cyyan_liuzirui_yjunchoi_yzhang71'
     reads = ['cyyan_liuzirui_yjunchoi_yzhang71.pollingLocation', 'cyyan_liuzirui_yjunchoi_yzhang71.bus_by_ward', 'cyyan_liuzirui_yjunchoi_yzhang71.MBTA_by_ward']
-    writes = ['cyyan_liuzirui_yjunchoi_yzhang71.optPollingLocation']
+    writes = ['cyyan_liuzirui_yjunchoi_yzhang71.optByPublicT']
 
     @staticmethod
     def execute(trial = False):
@@ -26,8 +26,8 @@ class optPollingLocation(dml.Algorithm):
         busstop = repo['cyyan_liuzirui_yjunchoi_yzhang71.bus_by_ward'].find()
         MBTA = repo['cyyan_liuzirui_yjunchoi_yzhang71.MBTA_by_ward'].find()
 
-        repo.dropCollection("optPollingLocation")
-        repo.createCollection("optPollingLocation")
+        repo.dropCollection("optByPublicT")
+        repo.createCollection("optByPublicT")
 
         # Export Data from Dataset
         pLoc = {}
@@ -54,7 +54,7 @@ class optPollingLocation(dml.Algorithm):
             publicT[str(i)] = coordinates
 
 
-        # Use k-mean Algorithm to optimize polling locations by wards
+        # Use k-mean Algorithm to optimize polling locations based on public transportation by wards
         optimized = {}
         for i in range(1,23):
             pLoc[str(i)] = np.asarray(pLoc[str(i)])
@@ -63,7 +63,7 @@ class optPollingLocation(dml.Algorithm):
 
         results = [optimized]
 
-        repo['cyyan_liuzirui_yjunchoi_yzhang71.optPollingLocation'].insert(results)
+        repo['cyyan_liuzirui_yjunchoi_yzhang71.optByPublicT'].insert(results)
 
         repo.logout()
 
@@ -89,26 +89,26 @@ class optPollingLocation(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bod', 'http://bostonpoendata-boston.opendata.argcis.com/datasets/') # Dataset used
 
-        this_script = doc.agent('alg:cyyan_liuzirui_yjunchoi_yzhang71#optPollingLocation', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:cyyan_liuzirui_yjunchoi_yzhang71#optByPublicT', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bod:f7c6dc9eb6b14463a3dd87451beba13f_5.csv', {'prov:label':'Polling Location', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'csv'})
-        get_optPollingLocation = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_optPollingLocation, this_script)
-        doc.usage(get_optPollingLocation, resource, startTime, None,
+        get_optByPublicT = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(get_optByPublicT, this_script)
+        doc.usage(get_optByPublicT, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval'
                   }
                   )
 
-        optPollingLocation = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#optPollingLocation', {prov.model.PROV_LABEL:'Polling Location', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(optPollingLocation, this_script)
-        doc.wasGeneratedBy(optPollingLocation, get_optPollingLocation, endTime)
-        doc.wasDerivedFrom(optPollingLocation, resource, get_optPollingLocation, get_optPollingLocation, get_optPollingLocation)
+        optByPublicT = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#optByPublicT', {prov.model.PROV_LABEL:'Polling Location', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(optByPublicT, this_script)
+        doc.wasGeneratedBy(optByPublicT, get_optByPublicT, endTime)
+        doc.wasDerivedFrom(optByPublicT, resource, get_optByPublicT, get_optByPublicT, get_optByPublicT)
 
         repo.logout()
 
         return doc
 
-optPollingLocation.execute()
-doc = optPollingLocation.provenance()
+optByPublicT.execute()
+doc = optByPublicT.provenance()
 #print(doc.get_provn())
 #print(json.dumps(json.loads(doc.serialize()), indent=4))
 
