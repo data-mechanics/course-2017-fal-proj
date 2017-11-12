@@ -19,14 +19,41 @@ import geojson
 from geoql import geoql
 import geoleaflet
 import dml
+import pandas as pd, requests, json
 
 client = dml.pymongo.MongoClient()
 repo = client.repo
 repo.authenticate('adsouza_bmroach_mcaloonj_mcsmocha', 'adsouza_bmroach_mcaloonj_mcsmocha')
 points = repo['adsouza_bmroach_mcaloonj_mcsmocha.signal_placements'].find()
-repo.logout()
 
-print(points[0])
+coords = points[0]['signal_placements']
+# print(coords)
+
+df_geo = pd.DataFrame(coords, columns=['Lats', "Longs"])
+# print(df_geo)
+
+# Turn a dataframe containing point data into a geojson formatted python dictionary	
+def df_to_geojson(df, properties, lat='Lats', lon='Longs'):
+    geojson = {'type':'FeatureCollection', 'features':[]}
+    for _, row in df.iterrows():
+        feature = {'type':'Feature',
+                   'properties':{},
+                   'geometry':{'type':'Point',
+                               'coordinates':[]}}
+        feature['geometry']['coordinates'] = [row[lon],row[lat]]
+        for prop in properties:
+            feature['properties'][prop] = row[prop]
+        geojson['features'].append(feature)
+    return geojson
+
+placements_geojson = df_to_geojson(df_geo, properties="")
+# print(placements_geojson)
+
+# g = g.node_edge_graph() # Converted into a graph with nodes and edges.
+# g.dump(open('signal_placements.geojson', 'w'))
+open('placements.html', 'w').write(geoleaflet.html(placements_geojson)) # Create visualization.
+
+repo.logout()
 
 """
 #url = 'https://raw.githubusercontent.com/Data-Mechanics/geoql/master/examples/'
