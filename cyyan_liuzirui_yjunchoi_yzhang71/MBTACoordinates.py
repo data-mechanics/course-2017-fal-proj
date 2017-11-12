@@ -55,7 +55,7 @@ class MBTACoordinates(dml.Algorithm):
         doc.add_namespace('eri', 'http://erikdemaine.org/maps/mbta')
 
         this_script = doc.agent('alg:cyyan_liuzirui_yjunchoi_yzhang71#MBTACoordinates', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('eri:mbta.yaml', {'prov:label':'MBTA Coordinates', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource = doc.entity('eri:mbta.yaml', {'prov:label':'MBTA Coordinates', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'yaml'})
         get_MBTACoordinates = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_MBTACoordinates, this_script)
         doc.usage(get_MBTACoordinates, resource, startTime, None,
@@ -64,7 +64,7 @@ class MBTACoordinates(dml.Algorithm):
                   }
                   )
 
-        MBTACoordinates = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#MBTACoordinates', {prov.model.PROV_LABEL:'Bus Stop Coordinates', prov.model.PROV_TYPE:'ont:DataSet'})
+        MBTACoordinates = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#MBTACoordinates', {prov.model.PROV_LABEL:'MBTA Coordinates', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(MBTACoordinates, this_script)
         doc.wasGeneratedBy(MBTACoordinates, get_MBTACoordinates, endTime)
         doc.wasDerivedFrom(MBTACoordinates, resource, get_MBTACoordinates, get_MBTACoordinates, get_MBTACoordinates)
