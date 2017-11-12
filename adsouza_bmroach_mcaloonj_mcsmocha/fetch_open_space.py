@@ -1,3 +1,22 @@
+"""
+Filename: fetch_open_space.py
+
+Last edited by: BMR 11/11/17
+
+Boston University CS591 Data Mechanics Fall 2017 - Project 2
+Team Members:
+Adriana D'Souza     adsouza@bu.edu
+Brian Roach         bmroach@bu.edu
+Jessica McAloon     mcaloonj@bu.edu
+Monica Chiu         mcsmocha@bu.edu
+
+Original skeleton files provided by Andrei Lapets (lapets@bu.edu)
+
+Development Notes: 
+
+
+"""
+
 import urllib.request
 import json
 import dml
@@ -26,6 +45,9 @@ class fetch_open_space(dml.Algorithm):
         repo.createCollection("adsouza_bmroach_mcaloonj_mcsmocha.open_space")
         repo["adsouza_bmroach_mcaloonj_mcsmocha.open_space"].insert_many(r["features"])
 
+        repo.logout()
+        endTime = datetime.datetime.now()
+        return {"start":startTime, "end":endTime}
 
     @staticmethod
     def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
@@ -66,7 +88,7 @@ class fetch_open_space(dml.Algorithm):
 
         return doc
 
-fetch_open_space.execute()
-doc = fetch_open_space.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+# fetch_open_space.execute()
+# doc = fetch_open_space.provenance()
+# print(doc.get_provn())
+# print(json.dumps(json.loads(doc.serialize()), indent=4))

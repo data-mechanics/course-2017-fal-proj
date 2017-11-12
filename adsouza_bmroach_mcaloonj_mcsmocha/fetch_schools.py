@@ -1,3 +1,22 @@
+"""
+Filename: fetch_schools.py
+
+Last edited by: BMR 11/11/17
+
+Boston University CS591 Data Mechanics Fall 2017 - Project 2
+Team Members:
+Adriana D'Souza     adsouza@bu.edu
+Brian Roach         bmroach@bu.edu
+Jessica McAloon     mcaloonj@bu.edu
+Monica Chiu         mcsmocha@bu.edu
+
+Original skeleton files provided by Andrei Lapets (lapets@bu.edu)
+
+Development Notes: 
+
+
+"""
+
 import urllib.request
 import json
 import dml
@@ -20,23 +39,18 @@ class fetch_schools(dml.Algorithm):
         repo.authenticate('adsouza_bmroach_mcaloonj_mcsmocha', 'adsouza_bmroach_mcaloonj_mcsmocha')
 
         url = 'https://boston.opendatasoft.com/api/records/1.0/search/?dataset=public-schools&rows=-1'
-        #response = urllib.request.urlopen(url).read().decode("utf-8")
         response = requests.get(url)
         r = response.json()
         s = json.dumps(r, sort_keys=True, indent=2)
-        #print (s)
 
         repo.dropCollection("adsouza_bmroach_mcaloonj_mcsmocha.schools")
         repo.createCollection("adsouza_bmroach_mcaloonj_mcsmocha.schools")
 
         repo['adsouza_bmroach_mcaloonj_mcsmocha.schools'].insert_many(r["records"])
         repo['adsouza_bmroach_mcaloonj_mcsmocha.schools'].metadata({'complete':True})
-        #print(repo['adsouza_bmroach_mcaloonj_mcsmocha.schools'].metadata())
 
         repo.logout()
-
         endTime = datetime.datetime.now()
-
         return {"start":startTime, "end":endTime}
 
     @staticmethod
@@ -69,11 +83,10 @@ class fetch_schools(dml.Algorithm):
         repo.logout()
         return doc
 
-'''
-fetch_schools.execute()
-doc = fetch_schools.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
-'''
+
+# fetch_schools.execute()
+# doc = fetch_schools.provenance()
+# print(doc.get_provn())
+# print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ##eof

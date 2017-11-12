@@ -1,3 +1,22 @@
+"""
+Filename: fetch_accidents.py
+
+Last edited by: BMR 11/11/17
+
+Boston University CS591 Data Mechanics Fall 2017 - Project 2
+Team Members:
+Adriana D'Souza     adsouza@bu.edu
+Brian Roach         bmroach@bu.edu
+Jessica McAloon     mcaloonj@bu.edu
+Monica Chiu         mcsmocha@bu.edu
+
+Original skeleton files provided by Andrei Lapets (lapets@bu.edu)
+
+Development Notes: 
+
+
+"""
+
 import urllib.request
 import json
 import dml
@@ -24,15 +43,12 @@ class fetch_accidents(dml.Algorithm):
             response = requests.get(url)
             r = response.json()
             s = json.dumps(r, sort_keys=True, indent=2)
-            #print (s)
-            #print ()
 
             repo.dropCollection("accidents")
             repo.createCollection("accidents")
 
             repo['adsouza_bmroach_mcaloonj_mcsmocha.accidents'].insert_many(r["result"]["records"])
             repo['adsouza_bmroach_mcaloonj_mcsmocha.accidents'].metadata({'complete':True})
-            #print(repo['mcaloonj.accidents'].metadata())
 
             repo.logout()
 
@@ -73,9 +89,9 @@ class fetch_accidents(dml.Algorithm):
             repo.logout()
             return doc
 
-fetch_accidents.execute()
-doc = fetch_accidents.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+# fetch_accidents.execute()
+# doc = fetch_accidents.provenance()
+# print(doc.get_provn())
+# print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ##eof

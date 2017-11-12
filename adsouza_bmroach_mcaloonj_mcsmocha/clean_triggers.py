@@ -1,3 +1,22 @@
+"""
+Filename: clean_triggers.py
+
+Last edited by: BMR 11/11/17
+
+Boston University CS591 Data Mechanics Fall 2017 - Project 2
+Team Members:
+Adriana D'Souza     adsouza@bu.edu
+Brian Roach         bmroach@bu.edu
+Jessica McAloon     mcaloonj@bu.edu
+Monica Chiu         mcsmocha@bu.edu
+
+Original skeleton files provided by Andrei Lapets (lapets@bu.edu)
+
+Development Notes: 
+
+
+"""
+
 import urllib.request
 import json
 import dml
@@ -7,7 +26,10 @@ import uuid
 
 class clean_triggers(dml.Algorithm):
     contributor = 'adsouza_bmroach_mcaloonj_mcsmocha'
-    reads = ['adsouza_bmroach_mcaloonj_mcsmocha.accidents', 'adsouza_bmroach_mcaloonj_mcsmocha.hospitals', 'adsouza_bmroach_mcaloonj_mcsmocha.schools', 'adsouza_bmroach_mcaloonj_mcsmocha.open_space']
+    reads = ['adsouza_bmroach_mcaloonj_mcsmocha.accident_clusters', 
+             'adsouza_bmroach_mcaloonj_mcsmocha.hospitals', 
+             'adsouza_bmroach_mcaloonj_mcsmocha.schools', 
+             'adsouza_bmroach_mcaloonj_mcsmocha.open_space']
     writes = ['adsouza_bmroach_mcaloonj_mcsmocha.clean_triggers']
 
     @staticmethod
@@ -21,21 +43,20 @@ class clean_triggers(dml.Algorithm):
         repo.dropCollection('adsouza_bmroach_mcaloonj_mcsmocha.clean_triggers')
         repo.createCollection('adsouza_bmroach_mcaloonj_mcsmocha.clean_triggers')
 
-        accidents = repo['adsouza_bmroach_mcaloonj_mcsmocha.accidents'].find()
+        accident_clusters = repo['adsouza_bmroach_mcaloonj_mcsmocha.accident_clusters'].find()
         schools = repo['adsouza_bmroach_mcaloonj_mcsmocha.schools'].find()
         parks = repo['adsouza_bmroach_mcaloonj_mcsmocha.open_space'].find()
         hospitals = repo['adsouza_bmroach_mcaloonj_mcsmocha.hospitals'].find()
 
-        acc = [a['Location'] for a in accidents]
-        acc_coord = []
-        # change each string tuple to tuple
-        for a in acc:
-            tup = tuple(map(float, a[1:-1].split(',')))
-            if tup != (0,0):
-                acc_coord.append(tup)
+        #What gets added to db.clean_triggers should all be lists of tuples
+
+        # Accident Clusters
+        cluster_coords = [tuple(crd) for crd in accident_clusters[0]['accident_clusters']]
+
+        # Schools
         sch_coord = [tuple(s['fields']['geo_shape']['coordinates'])[::-1] for s in schools]
 
-        #park_coord = [tuple(p['geometry']['coordinates'][0][0])[::-1] for p in parks]
+        # Parks
         park_coord = []
         for p in parks:
             if p["geometry"]["type"] == "Polygon":
@@ -44,22 +65,19 @@ class clean_triggers(dml.Algorithm):
                 first_coord = (tuple(p["geometry"]["coordinates"][0][0][0]))[::-1]
             park_coord.append(first_coord)
 
-        # the coordinates in the hospital dataset make the coordinates strings instead of floats, so cleaning it up
-        # to make them usable
+        # Hospitals
         hosp_coord = []
-        for h in hospitals:
+        for h in hospitals: #convert from strings to floats
             if h['YCOORD'] != 'NULL' or h['XCOORD'] != 'NULL':
                 lat = float(h['YCOORD'][:2] + '.' + h['YCOORD'][2:])
-                long = float(h['XCOORD'][:2] + '.' + h['XCOORD'][2:])
-                hosp_coord.append((lat, long))
+                lng = -1*float(h['XCOORD'][:2] + '.' + h['XCOORD'][2:])
+                hosp_coord.append((lat, lng))
 
-        trigger_dict = {'accidents': acc_coord, 'schools': sch_coord, 'parks': park_coord, 'hospitals': hosp_coord}
-        #print(trigger_dict)
+        trigger_dict = {'accident_clusters': cluster_coords, 'schools': sch_coord, 'parks': park_coord, 'hospitals': hosp_coord}
         repo['adsouza_bmroach_mcaloonj_mcsmocha.clean_triggers'].insert_one(trigger_dict)
+
         repo.logout()
-
         endTime = datetime.datetime.now()
-
         return {"start":startTime, "end":endTime}
 
     @staticmethod
@@ -94,11 +112,11 @@ class clean_triggers(dml.Algorithm):
 
         repo.logout()
         return doc
-'''
-clean_triggers.execute()
-doc = clean_triggers.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
-'''
+
+# clean_triggers.execute()
+# doc = clean_triggers.provenance()
+# print(doc.get_provn())
+# print(json.dumps(json.loads(doc.serialize()), indent=4))
+
 
 ##eof

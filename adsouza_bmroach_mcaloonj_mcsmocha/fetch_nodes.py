@@ -1,3 +1,22 @@
+"""
+Filename: fetch_nodes.py
+
+Last edited by: BMR 11/11/17
+
+Boston University CS591 Data Mechanics Fall 2017 - Project 2
+Team Members:
+Adriana D'Souza     adsouza@bu.edu
+Brian Roach         bmroach@bu.edu
+Jessica McAloon     mcaloonj@bu.edu
+Monica Chiu         mcsmocha@bu.edu
+
+Original skeleton files provided by Andrei Lapets (lapets@bu.edu)
+
+Development Notes: 
+
+
+"""
+
 import geojson
 from geoql import geoql
 import geoleaflet
@@ -9,7 +28,6 @@ import uuid
 import json
 from scipy.spatial import cKDTree
 
-#Extract street data
 class fetch_nodes(dml.Algorithm):
         contributor = 'adsouza_bmroach_mcaloonj_mcsmocha'
         reads = ['adsouza_bmroach_mcaloonj_mcsmocha.accident_clusters']
@@ -41,25 +59,6 @@ class fetch_nodes(dml.Algorithm):
 
             clusters = repo['adsouza_bmroach_mcaloonj_mcsmocha.accident_clusters'].find_one()
             clusters = clusters["accident_clusters"]
-
-            # clusters =  [[ 42.35657779, -71.05989936],
-            # [ 42.31588585, -71.1020072 ],
-            # [ 42.30923647, -71.06225799],
-            # [ 42.25518682, -71.12487349],
-            # [ 42.35224748, -71.13538298],
-            # [ 42.34558858, -71.07971195],
-            # [ 42.38695412, -71.01158449],
-            # [ 42.28634076, -71.12310923],
-            # [ 42.28683856, -71.06414815],
-            # [ 42.27939484, -71.15648171],
-            # [ 42.33405656, -71.04954215],
-            # [ 42.37946809, -71.06687642],
-            # [ 42.33770076, -71.10208356],
-            # [ 42.30389511, -71.08092185],
-            # [ 42.32745237, -71.07741856],
-            # [ 42.28320965, -71.08846939],
-            # [ 42.37609957, -71.03556853],
-            # [ 42.3486924 , -71.15705574]]
 
 
             #Insert clusters into cKDTree
@@ -94,12 +93,9 @@ class fetch_nodes(dml.Algorithm):
 
             repo['adsouza_bmroach_mcaloonj_mcsmocha.nodes'].insert(filtered_nodes)
             repo['adsouza_bmroach_mcaloonj_mcsmocha.nodes'].metadata({'complete':True})
-            #print(repo['adsouza_bmroach_mcaloonj_mcsmocha.hospitals'].metadata())
 
             repo.logout()
-
             endTime = datetime.datetime.now()
-
             return {"start":startTime, "end":endTime}
 
         @staticmethod
@@ -143,9 +139,11 @@ class fetch_nodes(dml.Algorithm):
 
             return doc
 
-'''
-fetch_nodes.execute()
-doc = fetch_nodes.provenance()
-#print(doc.get_provn())
-#print(json.dumps(json.loads(doc.serialize()), indent=4))
-'''
+
+# fetch_nodes.execute()
+# doc = fetch_nodes.provenance()
+# print(doc.get_provn())
+# print(json.dumps(json.loads(doc.serialize()), indent=4))
+
+
+#eof

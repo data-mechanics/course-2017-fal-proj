@@ -1,5 +1,23 @@
+"""
+Filename: get_accident_clusters.py
+
+Last edited by: BMR 11/11/17
+
+Boston University CS591 Data Mechanics Fall 2017 - Project 2
+Team Members:
+Adriana D'Souza     adsouza@bu.edu
+Brian Roach         bmroach@bu.edu
+Jessica McAloon     mcaloonj@bu.edu
+Monica Chiu         mcsmocha@bu.edu
+
+Original skeleton files provided by Andrei Lapets (lapets@bu.edu)
+
+Development Notes: 
+- number of means being used drastically effects runtime, so trying different numbers (line 56)
+
+"""
+
 import sklearn
-# Import all of the scikit learn stuff
 from sklearn.preprocessing import Normalizer, StandardScaler, MinMaxScaler
 from sklearn import metrics
 from sklearn.cluster import KMeans
@@ -15,11 +33,9 @@ import prov.model
 import urllib.request
 import uuid
 
-# This file will cluster accident hotspots using K-Means
-
 class get_accident_clusters(dml.Algorithm):
         contributor = 'adsouza_bmroach_mcaloonj_mcsmocha'
-        reads = ['adsouza_bmroach_mcaloonj_mcsmocha.clean_triggers']
+        reads = ['adsouza_bmroach_mcaloonj_mcsmocha.accidents'] 
         writes = ['adsouza_bmroach_mcaloonj_mcsmocha.accident_clusters']
 
         @staticmethod
@@ -31,32 +47,20 @@ class get_accident_clusters(dml.Algorithm):
             repo.authenticate('adsouza_bmroach_mcaloonj_mcsmocha', 'adsouza_bmroach_mcaloonj_mcsmocha')
 
 
-            # response = requests.get(url)
-            # r = response.json()
-            # s = json.dumps(r, sort_keys=True, indent=2)
-            # #print (s)
-            # #print ()
-
-
-            print('touching Adrianas stuff @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
-
-            da_accidents = repo['adsouza_bmroach_mcaloonj_mcsmocha.clean_triggers'].find_one()
-            coords_input = da_accidents['accidents']
-            # print(coords_input)
-
-            # initial = [kmeans(coords_input,i) for i in range(1,10)]
-            # plt.plot([var for (cent,var) in initial])
-            # plt.show()
-
-            n_clusters = 20
+            accidents = repo['adsouza_bmroach_mcaloonj_mcsmocha.accidents'].find()
+            coords_input = [tuple(row['Location'].replace('(', '').replace(')', '').split(',')) 
+                            for row in accidents if row['Location'] != '(0.00000000, 0.00000000)' ]
+            
+            coords_input = [(float(lat), float(lon)) for (lat, lon) in coords_input]
+            
+            n_clusters = len(coords_input)//10  #Effectively collapses groups of 10 accidents into 1 cluster
             X =  np.array(coords_input)
             # looks like [(lat, long), (lat, long), (lat, long)...]
 
-            kmeans = KMeans(n_clusters, random_state=0).fit(X)
-            centroids = kmeans.cluster_centers_
-            # print(centroids)
-
-            accident_clusters_dict = {'accident_clusters': centroids.tolist()}
+            kmeans_output = KMeans(n_clusters, random_state=0).fit(X)
+            centroids = kmeans_output.cluster_centers_.tolist()
+            del(centroids[1])
+            accident_clusters_dict = {'accident_clusters': centroids}
 
             repo.dropCollection("accident_clusters")
             repo.createCollection("accident_clusters")
@@ -102,9 +106,8 @@ class get_accident_clusters(dml.Algorithm):
 
             repo.logout()
             return doc
-'''
-get_accident_clusters.execute()
-doc = get_accident_clusters.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
-'''
+
+# get_accident_clusters.execute()
+# doc = get_accident_clusters.provenance()
+# print(doc.get_provn())
+# print(json.dumps(json.loads(doc.serialize()), indent=4))
