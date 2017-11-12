@@ -87,6 +87,13 @@ class get_signal_placements(dml.Algorithm):
 
                 for j in range(len(possible_nodes)):
                     if j not in taken:
+                        
+                        # j also cannot be within .25 miles of anything in taken...
+                        for placed in signal_placements:
+                            j_to_placed = vincenty(placed, possible_nodes[j]).miles
+                            if j_to_placed > .25:
+                                continue
+
                         distance = vincenty(centroids[i], possible_nodes[j]).miles
                         if distance < dist_of_closest_node:
                             closest_node = j
