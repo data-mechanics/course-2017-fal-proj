@@ -13,7 +13,7 @@ class getData(dml.Algorithm):
     contributor = 'htw93_tscheung_wenjun'
     reads = []
     writes = ['htw93_tscheung_wenjun.BostonCrime', 'htw93_tscheung_wenjun.BostonHotel',
-            'htw93_tscheung_wenjun.MBTAStops']
+            'htw93_tscheung_wenjun.MBTAStops', 'htw93_tscheung_wenjun.BostonFood','htw93_tscheung_wenjun.BostonGarden']
 
     @staticmethod
     def execute(trial = False):
@@ -65,7 +65,40 @@ class getData(dml.Algorithm):
         repo['htw93_tscheung_wenjun.BostonHotel'].insert_many(r)
         #repo['htw93_tscheung.BostonCrime'].metadata({'complete':True})
         print('Finished rectrieving htw93_tscheung_wenjun.BostonHotel')
-
+        
+        url='https://data.cityofboston.gov/resource/fdxy-gydq.json'
+        response = urllib.request.urlopen(url).read().decode("utf-8")
+        food=json.loads(response)
+        food_info=[]
+        for f in food:
+            try:
+                temp={}
+                temp['businessname']=f['businessname']
+                temp['location']=f['location']['coordinates'][::-1]
+                food_info.append(temp)
+            except KeyError:
+                continue
+        repo['htw93_tscheung_wenjun.BostonFood'].insert_many(food_info)
+        #repo['htw93_tscheung.BostonCrime'].metadata({'complete':True})
+        print('Finished rectrieving htw93_tscheung_wenjun.BostonFood')
+        
+        url='https://data.cityofboston.gov/resource/rdqf-ter7.json'
+        response = urllib.request.urlopen(url).read().decode("utf-8")
+        garden=json.loads(response)
+        garden_info=[]
+        for f in garden:
+            try:
+                temp={}
+                temp['site']=f['site']
+                temp['location']=[float(x) for x in f['coordinates'].split(',')]
+                garden_info.append(temp)
+            except KeyError:
+                continue
+            except ValueError:
+                continue
+        repo['htw93_tscheung_wenjun.BostonGarden'].insert_many(garden_info)
+        #repo['htw93_tscheung.BostonCrime'].metadata({'complete':True})
+        print('Finished rectrieving htw93_tscheung_wenjun.BostonGarden')
 
 
         repo.logout()
