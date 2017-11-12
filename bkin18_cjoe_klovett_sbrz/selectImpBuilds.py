@@ -37,7 +37,7 @@ class selectImpBuilds(dml.Algorithm):
 
             if (building['PTYPE'] in property_lookup):
 
-                modifiedPiece = {'PTYPE': building['PTYPE'], 'LONGITUDE': building['LONGITUDE'], 'LATITUDE': building['LATITUDE']}
+                modifiedPiece = {'PTYPE': building['PTYPE'], 'LATITUDE': building['LATITUDE'], 'LONGITUDE': building['LONGITUDE']}
                 modifiedDictionary.append(modifiedPiece)
 
         repo.dropCollection('bkin18_cjoe_klovett_sbrz.property_assessment_impBuilds')
