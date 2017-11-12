@@ -32,6 +32,9 @@ class fetch_street_info(dml.Algorithm):
     @staticmethod
     def execute(trial = False):
         startTime = datetime.datetime.now()
+
+        if trial:
+            print("in fetch_street_info.py")
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate('adsouza_bmroach_mcaloonj_mcsmocha', 'adsouza_bmroach_mcaloonj_mcsmocha')
@@ -41,10 +44,7 @@ class fetch_street_info(dml.Algorithm):
 
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
-        #print (s)
 
-        #features, properties, SPEEDLIMIT
-        # geometry
 
 
         speed_limits_coordinates = []
