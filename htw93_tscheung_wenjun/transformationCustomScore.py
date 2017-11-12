@@ -24,7 +24,8 @@ class transformationCustomScore(dml.Algorithm):
         repo.authenticate('htw93_tscheung_wenjun', 'htw93_tscheung_wenjun')
 
         BostonHotelData = repo.htw93_tscheung_wenjun.BostonHotelData
-
+        BostonHotelRatingOriginal = repo.htw93_tscheung_wenjun.BostonHotel
+        HotelRaing = BostonHotelRatingOriginal.find()
         HotelData = BostonHotelData.find()
 
         CustomScore = []
@@ -33,21 +34,29 @@ class transformationCustomScore(dml.Algorithm):
         max_crime=HotelData[0]['crime_count']
         max_mbta=HotelData[0]['mbta_count']
         min_crime=HotelData[0]['crime_count']
-        min_mbta=HotelData[0]['mbta_count']        
+        min_mbta=HotelData[0]['mbta_count']
+        max_rating = HotelData[0]['rate']
+        min_rating = HotelData[0]['rate']
         for h in HotelData:
             crime_count = h['crime_count']
             mbta_count = h['mbta_count']
+            rating = h['rate']
             max_crime = max(max_crime,crime_count)
             max_mbta = max(max_mbta,mbta_count)
+            max_rating = max(max_rating, rating)
             min_crime = min(min_crime, crime_count)
             min_mbta = min(min_mbta, mbta_count)
+            min_rating = min(min_rating, rating)
+            
         HotelData.rewind()
 
-        print("here2")
+        
+
         for h in HotelData:
             norm_crime = (h['crime_count']-min_crime)/(max_crime-min_crime)
             norm_mbta = (h['mbta_count']-min_mbta)/(max_mbta-min_mbta)
-            score = (norm_crime+norm_mbta)/2
+            norm_score = (h['rate']-min_rating)/(max_rating_min_rating)
+            score = (norm_crime+norm_mbta+norm_score)/3
             print(score)
             CustomScore.append({'hotel':h['hotel'],'score':score})
             
