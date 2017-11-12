@@ -5,11 +5,13 @@ import prov.model
 import datetime
 import uuid
 
-class propety(dml.Algorithm):
+class propetymap(dml.Algorithm):
     contributor = 'lc546_jofranco'
     reads = []
     writes = ['lc546_jofranco.propety']
 
+    #longitude = []
+    #latitude = []
     @staticmethod
     def execute(trial = False):
         startTime = datetime.datetime.now()
@@ -33,8 +35,10 @@ class propety(dml.Algorithm):
 
         total = {'zipcode': zipcode, 'address': lalo, 'street': street}
 
+
+
         s = json.dumps(r, sort_keys= True, indent = 2)
-        print(type(s))
+    #    print(type(s))
         repo.dropCollection("propety")
         repo.createCollection("propety")
         repo["lc546_jofranco.propety"].insert_many(total)
@@ -66,7 +70,7 @@ class propety(dml.Algorithm):
 
 
 
-propety.execute()
-doc = propety.provenance()
+propetymap.execute()
+doc = propetymap.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
