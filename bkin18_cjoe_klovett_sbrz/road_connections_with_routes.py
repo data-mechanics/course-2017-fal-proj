@@ -31,27 +31,46 @@ class road_connections_with_routes(dml.Algorithm):
         routes_collection = db['bkin18_cjoe_klovett_sbrz.emergency_traffic_aggregate']
         routes = routes_collection.find()
 
-        x = []
-
         # Obtains all roads in the Boston region, that have at least some associated street name data, and removes some entries.
-        for road in roads:
-            road_name = road['ST_NAME']
-            road_name = road_name.upper()
+
+        modifiedDictionary = []
+
+        for route in routes:
+            for street in route['INTERSECTIONS']:
+                modifiedPiece = {"ST_NAME": street, "NUM_INTERSECTIONS": 1, "BELONGS_TO_ROUTE": route['RT_NAME']}
+                modifiedDictionary.append(modifiedPiece)
+
+        finalDictionary = []
+
+        i = 0
+
+        for piece in modifiedDictionary:
+
+            num_intersections = 0
             route_list = []
-            for route in routes:
-                for street in route:
-                    #street_name = street.upper().rsplit(' ', 1)[0]
-                    street_name = street.upper()
-                    print("STREET", street_name, "ROAD", road_name)
-                    if street_name == road_name:
-                        route_list.append(route)
-            route_list = sorted(route_list)
-            if {road_name: route_list} not in x:
-                x.append({road_name: route_list})
+
+            for duplicate in modifiedDictionary:
+                if(duplicate['ST_NAME'] == piece['ST_NAME'] and duplicate['BELONGS_TO_ROUTE'] not in route_list):
+                    num_intersections += 1
+                    route_list += [duplicate['BELONGS_TO_ROUTE']]
+
+            unique = 1
+
+            for uniquePiece in finalDictionary:
+                if (piece['ST_NAME'] == uniquePiece['ST_NAME']):
+                    unique = 0
+
+            finalPiece = {"ST_NAME": piece['ST_NAME'], "NUM_INTERSECTIONS": num_intersections, "ROUTES": route_list}
+            if (finalPiece not in finalDictionary):
+                print(finalPiece)
+                finalDictionary.append(finalPiece)
+            i += 1
+            if (i == 1000):
+                break
 
         repo.dropCollection("bkin18_cjoe_klovett_sbrz.road_connections_with_routes")
         repo.createCollection("bkin18_cjoe_klovett_sbrz.road_connections_with_routes")
-        repo['bkin18_cjoe_klovett_sbrz.road_connections_with_routes'].insert_many(x)
+        repo['bkin18_cjoe_klovett_sbrz.road_connections_with_routes'].insert_many(finalDictionary)
         repo['bkin18_cjoe_klovett_sbrz.road_connections_with_routes'].metadata({'complete': True})
 
         repo.logout()
