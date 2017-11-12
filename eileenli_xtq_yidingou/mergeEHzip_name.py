@@ -7,8 +7,8 @@ import uuid
 
 class mergeHospitalEntertainment(dml.Algorithm):
     contributor = 'yidingou'
-    reads = ['eileenli_yidingou.averageDelay', 'eileenli_yidingou.ename']
-    writes = ['eileenli_yidingou.mergeHospitalEntertainment_data']
+    reads = ['eileenli_xtq_yidingou.averageDelay', 'eileenli_xtq_yidingou.ename']
+    writes = ['eileenli_xtq_yidingou.mergeHospitalEntertainment_data']
 
     @staticmethod
     def execute(trial = False):
@@ -19,11 +19,11 @@ class mergeHospitalEntertainment(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('eileenli_yidingou', 'eileenli_yidingou')
+        repo.authenticate('eileenli_xtq_yidingou', 'eileenli_xtq_yidingou')
 
         # loads the collection
-        EN = repo['eileenli_yidingou.Entertainment'].find()
-        HOS = repo['eileenli_yidingou.hospitals'].find()
+        EN = repo['eileenli_xtq_yidingou.Entertainment'].find()
+        HOS = repo['eileenli_xtq_yidingou.hospitals'].find()
 
         temp1 = []
         temp2 = []
@@ -98,9 +98,9 @@ class mergeHospitalEntertainment(dml.Algorithm):
         repo.dropCollection("EHzip_name")
         repo.createCollection("EHzip_name")
 
-        repo['eileenli_yidingou.EHzip_name'].insert_many(Name)
-        repo['eileenli_yidingou.EHzip_name'].metadata({'complete': True})
-        print("Saved EHzip_name", repo['eileenli_yidingou.EHzip_name'].metadata())
+        repo['eileenli_xtq_yidingou.EHzip_name'].insert_many(Name)
+        repo['eileenli_xtq_yidingou.EHzip_name'].metadata({'complete': True})
+        print("Saved EHzip_name", repo['eileenli_xtq_yidingou.EHzip_name'].metadata())
 
         repo.logout()
 
@@ -119,7 +119,7 @@ class mergeHospitalEntertainment(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('eileenli_yidingou', 'eileenli_yidingou')
+        repo.authenticate('eileenli_xtq_yidingou', 'eileenli_xtq_yidingou')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/')  # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/')  # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont',
@@ -128,10 +128,10 @@ class mergeHospitalEntertainment(dml.Algorithm):
 
         this_script = doc.agent('alg:#mergeHospitalEntertainment',
                                 {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
-        resource_ename = doc.entity('dat:eileenli_yidingou#ename',
+        resource_ename = doc.entity('dat:eileenli_xtq_yidingou#ename',
                                              {'prov:label': 'ename',
                                               prov.model.PROV_TYPE: 'ont:DataSet'})
-        resource_hname = doc.entity('dat:eileenli_yidingou#hname',
+        resource_hname = doc.entity('dat:eileenli_xtq_yidingou#hname',
                                              {'prov:label': 'hname',
                                               prov.model.PROV_TYPE: 'ont:DataSet'})
 
@@ -142,7 +142,7 @@ class mergeHospitalEntertainment(dml.Algorithm):
         doc.usage(getName, resource_ename, startTime, None,
                   {prov.model.PROV_TYPE: 'ont:Computation'})
 
-        Name = doc.entity('dat:eileenli_yidingou#EHzip_name',
+        Name = doc.entity('dat:eileenli_xtq_yidingou#EHzip_name',
                           {prov.model.PROV_LABEL: 'EHname',
                            prov.model.PROV_TYPE: 'ont:DataSet'})
         doc.wasAttributedTo(Name, this_script)

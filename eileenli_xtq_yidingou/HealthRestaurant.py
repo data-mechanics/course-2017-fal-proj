@@ -67,9 +67,9 @@ def counter(ls):
 
 
 class mergeHealthRestaurant(dml.Algorithm):
-    contributor = 'eileenli_yidingou'
-    reads = ['eileenli_yidingou.health', 'eileenli_yidingou.Restaurants']
-    writes = ['eileenli_yidingou.mergeHealthRestaurant_data']
+    contributor = 'eileenli_xtq_yidingou'
+    reads = ['eileenli_xtq_yidingou.health', 'eileenli_xtq_yidingou.Restaurants']
+    writes = ['eileenli_xtq_yidingou.mergeHealthRestaurant_data']
 
 
     @staticmethod
@@ -81,11 +81,11 @@ class mergeHealthRestaurant(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('eileenli_yidingou', 'eileenli_yidingou')
+        repo.authenticate('eileenli_xtq_yidingou', 'eileenli_xtq_yidingou')
 
         # loads the collection
-        HP = repo['eileenli_yidingou.health'].find()
-        RS = repo['eileenli_yidingou.Restaurants'].find()
+        HP = repo['eileenli_xtq_yidingou.health'].find()
+        RS = repo['eileenli_xtq_yidingou.Restaurants'].find()
 
 
         hp_cord = {}
@@ -134,7 +134,7 @@ class mergeHealthRestaurant(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('eileenli_yidingou', 'eileenli_yidingou')
+        repo.authenticate('eileenli_xtq_yidingou', 'eileenli_xtq_yidingou')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/')  # The scripts are in <folder>#<fileEnRestaurants> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/')  # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont',
@@ -143,10 +143,10 @@ class mergeHealthRestaurant(dml.Algorithm):
 
         this_script = doc.agent('alg:#mergeHealthRestaurant',
                                 {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
-        resource_health = doc.entity('dat:eileenli_yidingou#health',
+        resource_health = doc.entity('dat:eileenli_xtq_yidingou#health',
                                              {'prov:label': 'health',
                                               prov.model.PROV_TYPE: 'ont:DataSet'})
-        resource_restaurants = doc.entity('dat:eileenli_yidingou#restaurants',
+        resource_restaurants = doc.entity('dat:eileenli_xtq_yidingou#restaurants',
                                              {'prov:label': 'restaurants',
                                               prov.model.PROV_TYPE: 'ont:DataSet'})
         
@@ -159,7 +159,7 @@ class mergeHealthRestaurant(dml.Algorithm):
                   {prov.model.PROV_TYPE: 'ont:Computation'})
         
 
-        HealthRestaurants = doc.entity('dat:eileenli_yidingou#health_Restaurants',
+        HealthRestaurants = doc.entity('dat:eileenli_xtq_yidingou#health_Restaurants',
                           {prov.model.PROV_LABEL: 'health restaurants',
                            prov.model.PROV_TYPE: 'ont:DataSet'})
         doc.wasAttributedTo(HealthRestaurants, this_script)

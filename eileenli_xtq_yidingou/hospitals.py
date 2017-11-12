@@ -6,9 +6,9 @@ import datetime
 import uuid
 
 class example(dml.Algorithm):
-    contributor = 'eileenli_yidingou'
+    contributor = 'eileenli_xtq_yidingou'
     reads = []
-    writes = ['eileenli_yidingou.hospitals']
+    writes = ['eileenli_xtq_yidingou.hospitals']
 
     @staticmethod
     def execute(trial = False):
@@ -18,7 +18,7 @@ class example(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('eileenli_yidingou', 'eileenli_yidingou')
+        repo.authenticate('eileenli_xtq_yidingou', 'eileenli_xtq_yidingou')
 
         url = 'https://data.cityofboston.gov/resource/u6fv-m8v4.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -26,9 +26,9 @@ class example(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("hospitals")
         repo.createCollection("hospitals")
-        repo['eileenli_yidingou.hospitals'].insert_many(r)
-        repo['eileenli_yidingou.hospitals'].metadata({'complete':True})
-        print(repo['eileenli_yidingou.hospitals'].metadata())
+        repo['eileenli_xtq_yidingou.hospitals'].insert_many(r)
+        repo['eileenli_xtq_yidingou.hospitals'].metadata({'complete':True})
+        print(repo['eileenli_xtq_yidingou.hospitals'].metadata())
 
         repo.logout()
 
@@ -47,14 +47,14 @@ class example(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('eileenli_yidingou', 'eileenli_yidingou')
+        repo.authenticate('eileenli_xtq_yidingou', 'eileenli_xtq_yidingou')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
-        this_script = doc.agent('alg:eileenli_yidingou#example', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:eileenli_xtq_yidingou#example', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_hospitals = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_hospitals, this_script)
@@ -64,7 +64,7 @@ class example(dml.Algorithm):
                   }
                   )
 
-        hospitals = doc.entity('dat:eileenli_yidingou#hospitals', {prov.model.PROV_LABEL:'NightLife hospitals', prov.model.PROV_TYPE:'ont:DataSet'})
+        hospitals = doc.entity('dat:eileenli_xtq_yidingou#hospitals', {prov.model.PROV_LABEL:'NightLife hospitals', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(hospitals, this_script)
         doc.wasGeneratedBy(hospitals, get_hospitals, endTime)
         doc.wasDerivedFrom(hospitals, resource, get_hospitals, get_hospitals, get_hospitals)

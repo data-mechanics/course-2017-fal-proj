@@ -68,9 +68,9 @@ def counter(ls):
 
 
 class mergeCrimeEntertainment(dml.Algorithm):
-    contributor = 'eileenli_yidingou'
-    reads = ['eileenli_yidingou.Entertainment', 'eileenli_yidingou.Crime']
-    writes = ['eileenli_yidingou.mergeCrimeEntertainment_data']
+    contributor = 'eileenli_xtq_yidingou'
+    reads = ['eileenli_xtq_yidingou.Entertainment', 'eileenli_xtq_yidingou.Crime']
+    writes = ['eileenli_xtq_yidingou.mergeCrimeEntertainment_data']
 
 
     @staticmethod
@@ -82,11 +82,11 @@ class mergeCrimeEntertainment(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('eileenli_yidingou', 'eileenli_yidingou')
+        repo.authenticate('eileenli_xtq_yidingou', 'eileenli_xtq_yidingou')
 
         # loads the collection
-        EN = repo['eileenli_yidingou.Entertainment'].find()
-        CR = repo['eileenli_yidingou.Crime'].find()
+        EN = repo['eileenli_xtq_yidingou.Entertainment'].find()
+        CR = repo['eileenli_xtq_yidingou.Crime'].find()
 
 
 
@@ -130,7 +130,7 @@ class mergeCrimeEntertainment(dml.Algorithm):
         repo.dropCollection("Ent_Crime")
         repo.createCollection("Ent_Crime")
 
-        repo['eileenli_yidingou.Ent_Crime'].insert_one(re_cord)
+        repo['eileenli_xtq_yidingou.Ent_Crime'].insert_one(re_cord)
         setdis=[]
 
         repo.logout()
@@ -150,7 +150,7 @@ class mergeCrimeEntertainment(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('eileenli_yidingou', 'eileenli_yidingou')
+        repo.authenticate('eileenli_xtq_yidingou', 'eileenli_xtq_yidingou')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/')  # The scripts are in <folder>#<fileEnCrime> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/')  # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont',
@@ -159,10 +159,10 @@ class mergeCrimeEntertainment(dml.Algorithm):
 
         this_script = doc.agent('alg:#mergeCrimeEntertainment',
                                 {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
-        resource_entertainments = doc.entity('dat:eileenli_yidingou#entertainments',
+        resource_entertainments = doc.entity('dat:eileenli_xtq_yidingou#entertainments',
                                              {'prov:label': 'entertainments',
                                               prov.model.PROV_TYPE: 'ont:DataSet'})
-        resource_crime = doc.entity('dat:eileenli_yidingou#crime',
+        resource_crime = doc.entity('dat:eileenli_xtq_yidingou#crime',
                                              {'prov:label': 'crime',
                                               prov.model.PROV_TYPE: 'ont:DataSet'})
         
@@ -175,7 +175,7 @@ class mergeCrimeEntertainment(dml.Algorithm):
                   {prov.model.PROV_TYPE: 'ont:Computation'})
         
 
-        EnCrime = doc.entity('dat:eileenli_yidingou#Ent_Crime',
+        EnCrime = doc.entity('dat:eileenli_xtq_yidingou#Ent_Crime',
                           {prov.model.PROV_LABEL: 'Entertainment Cirme',
                            prov.model.PROV_TYPE: 'ont:DataSet'})
         doc.wasAttributedTo(EnCrime, this_script)
