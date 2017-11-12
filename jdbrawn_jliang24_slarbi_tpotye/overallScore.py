@@ -93,7 +93,7 @@ class overallScore(dml.Algorithm):
         doc.usage(get_overallScore, resource_transitScore, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
         doc.usage(get_overallScore, resource_safetyScore, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
 
-        overall_score = doc.entity('dat:jdbrawn_jliang24_slarbi_tpotye#overallScore',
+        overall_score = doc.entity('dat:jdbrawn_jliang24_slarbi_tpotye#ranking',
                                   {prov.model.PROV_LABEL: 'Overall Score', prov.model.PROV_TYPE: 'ont:DataSet'})
         doc.wasAttributedTo(overall_score, this_script)
         doc.wasGeneratedBy(overall_score, get_overallScore, endTime)
