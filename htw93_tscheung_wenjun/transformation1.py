@@ -49,7 +49,7 @@ class transformation1(dml.Algorithm):
                 dis = vincenty(mLoc,hLoc,miles=True)
                 if dis < 0.5:
                     count_mbta+=1
-            BostonHotelData.append({'hotel':h['Hotel_name'],'crime_count':count_crime,'mbta_count':count_mbta})
+            BostonHotelData.append({'hotel':h['Hotel_name'],'rate':h['Avg_rate'],'crime_count':count_crime,'mbta_count':count_mbta})
             BosCrime.rewind()
             MBTA.rewind()
             
