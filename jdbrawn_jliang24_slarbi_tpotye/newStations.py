@@ -1,39 +1,13 @@
-
 import dml
 import prov.model
 import datetime
 import uuid
-import gpxpy.geo
-from random import shuffle
-from math import sqrt
+from sklearn.cluster import KMeans
 
 class newStations(dml.Algorithm):
-    def dist(p, q):
-        (x1,y1) = p
-        (x2,y2) = q
-        return (x1-x2)**2 + (y1-y2)**2
-
-    def plus(args):
-        p = [0,0]
-        for (x,y) in args:
-            p[0] += x
-            p[1] += y
-        return tuple(p)
-
-    def scale(p, c):
-        (x,y) = p
-        return (x/c, y/c)
-    
-    def product(R, S):
-        return [(t,u) for t in R for u in S]
-
-    def aggregate(R, f):
-        keys = {r[0] for r in R}
-        return [(key, f([v for (k,v) in R if k == key])) for key in keys]
-
 
     contributor = 'jdbrawn_jliang24_slarbi_tpotye'
-    reads = ['jdbrawn_jliang24_slarbi_tpotye.safetyScore']
+    reads = ['jdbrawn_jliang24_slarbi_tpotye.safetyScore', 'jdbrawn_jliang24_slarbi_tpotye.colleges']
     writes = ['jdbrawn_jliang24_slarbi_tpotye.newStations']
 
     @staticmethod
@@ -44,32 +18,29 @@ class newStations(dml.Algorithm):
         repo = client.repo
         repo.authenticate('jdbrawn_jliang24_slarbi_tpotye', 'jdbrawn_jliang24_slarbi_tpotye')
 
-        safetyScore = repo['jdbrawn_jliang24_slarbi_tpotye.safetyScore'] 
+        safetyScore = repo['jdbrawn_jliang24_slarbi_tpotye.safetyScore']
+        colleges = repo['jdbrawn_jliang24_slarbi_tpotye.colleges']
 
-            
-        M = [(13,1), (2,12)] #change this
-        P = [(1,2),(4,5),(1,3),(10,12),(13,14),(13,9),(11,11)] #change this
+        # get schools with low safety scores
+        P = []
+        for entry in safetyScore.find():
+            if entry['Safety Score'] < 0.5:
+                schoolEntry = colleges.find_one({"Name": entry['Name']})
+                P.append((float(schoolEntry['Latitude']), float(schoolEntry['Longitude'])))
 
-        OLD = []
-        while OLD != M:
-            OLD = M
-
-            MPD = [(m, p, newStations.dist(m,p)) for (m, p) in newStations.product(M, P)]
-            PDs = [(p, newStations.dist(m,p)) for (m, p, d) in MPD]
-            PD = newStations.aggregate(PDs, min)
-            MP = [(m, p) for ((m,p,d), (p2,d2)) in newStations.product(MPD, PD) if p==p2 and d==d2]
-            MT = newStations.aggregate(MP, newStations.plus)
-
-            M1 = [(m, 1) for ((m,p,d), (p2,d2)) in newStations.product(MPD, PD) if p==p2 and d==d2]
-            MC = newStations.aggregate(M1, sum)
-
-            M = [newStations.scale(t,c) for ((m,t),(m2,c)) in newStations.product(MT, MC) if m == m2]
-            print(sorted(M))
+        # run k-means on our school locations
+        kmeans = KMeans(n_clusters=3)
+        kmeans = kmeans.fit(P)
+        labels = kmeans.predict(P)
+        M = kmeans.cluster_centers_
+        print()
+        print(M)
+        print()
 
         #format it for MongoDB
         location_stations = []
         for entry in M:
-            location_stations.append({'New Police Location': entry})
+            location_stations.append({'New Police Location': (entry[0], entry[1])})
 
         repo.dropCollection('newStations')
         repo.createCollection('newStations')
@@ -104,6 +75,7 @@ class newStations(dml.Algorithm):
         this_script = doc.agent('alg:jdbrawn_jliang24_slarbi_tpotye#newStations', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
 
         resource_safetyScore = doc.entity('dat:jdbrawn_jliang24_slarbi_tpotye#safetyScore', {'prov:label': 'Safety Scores', prov.model.PROV_TYPE: 'ont:DataSet'})
+        resource_colleges = doc.entity('dat:jdbrawn_jliang24_slarbi_tpotye#colleges', {'prov:label': 'Boston Universities and Colleges', prov.model.PROV_TYPE: 'ont:DataSet'})
 
 
         get_newStations = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
@@ -111,12 +83,14 @@ class newStations(dml.Algorithm):
         doc.wasAssociatedWith(get_newStations, this_script)
 
         doc.usage(get_newStations, resource_safetyScore, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
+        doc.usage(get_newStations, resource_colleges, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
 
         newLocation = doc.entity('dat:jdbrawn_jliang24_slarbi_tpotye#newStations', {prov.model.PROV_LABEL: 'New Police Stations', prov.model.PROV_TYPE: 'ont:DataSet'})
         
         doc.wasAttributedTo(newLocation, this_script)
         doc.wasGeneratedBy(newLocation, get_newStations, endTime)
         doc.wasDerivedFrom(newLocation, resource_safetyScore, get_newStations, get_newStations, get_newStations)
+        doc.wasDerivedFrom(newLocation, resource_colleges, get_newStations, get_newStations, get_newStations)
 
         repo.logout()
 

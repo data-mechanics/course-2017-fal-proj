@@ -56,7 +56,6 @@ class safetyCorrelation(dml.Algorithm):
         
         x = [xi for (xi, yi) in data]
         y = [yi for (xi, yi) in data]
-
         
         c= safetyCorrelation.corr(x,y)
         pval= safetyCorrelation.p(x,y)
