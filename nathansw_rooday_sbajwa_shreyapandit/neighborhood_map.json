@@ -1,0 +1,141 @@
+{
+		"Allston": [
+			"Brighton",
+			"Fenway"
+		],
+		"Back Bay": [
+			"Fenway",
+			"Beacon Hill",
+			"Downtown",
+			"South End",
+			"Roxbury"
+		],
+		"Beacon Hill": [
+			"West End",
+			"Downtown",
+			"Back Bacy"
+		],
+		"Brighton": [
+			"Allston"
+		],
+		"Charlestown": [
+			"West End",
+			"North End",
+			"East Boston"
+		],
+		"Dorchester": [
+			"South Boston",
+			"Roxbury",
+			"Mattapan"
+		],
+		"Downtown": [
+			"North End",
+			"East Boston",
+			"South Boston Waterfront",
+			"South Boston",
+			"South End",
+			"Back Bay",
+			"Beacon Hill",
+			"West End"
+		],
+		"East Boston": [
+			"Charlestown",
+			"North End",
+			"Downtown",
+			"South Boston Waterfront",
+			"South Boston"
+		],
+		"Fenway": [
+			"Allston",
+			"Back Bay",
+			"South End",
+			"Roxbury",
+			"Mission Hill",
+			"Longwood"
+		],
+		"Hyde Park": [
+			"West Roxbury",
+			"Roslindale",
+			"Mattapan"
+		],
+		"Jamaica Plain": [
+			"Mission Hill",
+			"Roxbury",
+			"Mattapan",
+			"Roslindale",
+			"West Roxbury"
+		],
+		"Longwood": [
+			"Fenway"
+		],
+		"Mattapan": [
+			"Jamaica Plain",
+			"Roxbury",
+			"Dorchester",
+			"Hyde Park",
+			"Roslindale"
+		],
+		"Mission Hill": [
+			"Fenway",
+			"Roxbury",
+			"Jamaica Plain"
+		],
+		"North End": [
+			"Charlestown",
+			"East Boston",
+			"Downtown",
+			"West End"
+		],
+		"Roslindale": [
+			"Jamaica Plain",
+			"Mattapan",
+			"Hyde Park",
+			"West Roxbury"
+		],
+		"Roxbury": [
+			"Fenway",
+			"Back Bay",
+			"South End",
+			"South Boston",
+			"Dorchester",
+			"Mattapan",
+			"Jamaica Plain",
+			"Mission Hill"
+		],
+		"South Boston": [
+			"South Boston Waterfront",
+			"East Boston",
+			"Dorchester",
+			"Roxbury",
+			"South End",
+			"Downtown"
+		],
+		"South Boston Waterfront": [
+			"Downtown",
+			"East Boston",
+			"South Boston"
+		],
+		"South End": [
+			"Fenway",
+			"Back Bay",
+			"Downtown",
+			"South Boston",
+			"Roxbury"
+		],
+		"West End": [
+			"Charlestown",
+			"North End",
+			"Downtown",
+			"Beacon Hill"
+		],
+		"Harbor Islands": [
+			"Dorchester",
+			"South Boston",
+			"East Boston"
+		],
+		"West Roxbury": [
+			"Jamaica Plain",
+			"Roslindale",
+			"Hyde Park"
+		]
+}
