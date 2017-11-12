@@ -41,12 +41,14 @@ Each unique portion of our process is its own extension of the dml library's alg
 * *fetch_nodes.py*
 * *fetch_open_space.py*
 * *fetch_schools.py*
+* *fetch_street_info.py*
 <br><br>
 * *get_accident_clusters.py* - Performs k-means on the input accidents to reduce accidents into accident clusters, which are later used as points of influence as to where feedback signs should be placed.
 * *get_signal_placements.py* - Consumes the triggers produced by clean_triggers (below) to determine the optimal placement of speed 
 <br><br>
-* *clean_triggers.py* - collects and cleans accident clusters, schools, open spaces, hospitals, candidate intersections for placement for use as points in the k-means clustering done in get_signal_placements.
-
+* *clean_triggers.py* - Collects and cleans accident clusters, schools, open spaces, hospitals, candidate intersections for placement for use as points in the k-means clustering done in get_signal_placements.
+<br><br>
+* *make_graph.py* - Plots the determined locations for speed feedback sign placements.
 
 
 ## Notes
