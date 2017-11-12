@@ -57,19 +57,19 @@ class boston_wards(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/cyyan_liuzirui_yjunchoi_yzhang71') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('oth', 'http://datamechanics.io/data/wuhaoyu_yiran123') #Data Source from the other team
+        doc.add_namespace('oth', 'http://datamechanics.io/data/yjunchoi_yzhang71/') #Data Source from the other team
 
         this_script = doc.agent('alg:cyyan_liuzirui_yjunchoi_yzhang71#boston_wards', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('oth:MBTA_Bus_Stops.geojson', {'prov:label':'Bus Stop Coordinates', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource = doc.entity('oth:Wards.geojson', {'prov:label':'boston_wards', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
         get_boston_wards = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_boston_wards, this_script)
         doc.usage(get_boston_wards, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Busstop+Coordinate&$select=Busstop, Coordinate'
+                  'ont:Query':'?type=boston_wards+Coordinate&$select=boston_wards, Coordinate'
                   }
                   )
 
-        boston_wards = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#boston_wards', {prov.model.PROV_LABEL:'Bus Stop Coordinates', prov.model.PROV_TYPE:'ont:DataSet'})
+        boston_wards = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#boston_wards', {prov.model.PROV_LABEL:'boston_wards', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(boston_wards, this_script)
         doc.wasGeneratedBy(boston_wards, get_boston_wards, endTime)
         doc.wasDerivedFrom(boston_wards, resource, get_boston_wards, get_boston_wards, get_boston_wards)
