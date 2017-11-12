@@ -82,6 +82,7 @@ class optByBusstop(dml.Algorithm):
                                               prov.model.PROV_TYPE: 'ont:DataSet'})
         get_optByBusstop = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_optByBusstop, this_script)
+
         doc.usage(get_optByBusstop, resource_pollingLocation, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Computation'
                   }
