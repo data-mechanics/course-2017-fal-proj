@@ -57,7 +57,7 @@ We consider school, hospital, and open space locations, as well as accident clus
 * No Authentication for Transformations
 * The resource libspacialindex is required to run this set of scripts. On macOS, it can be installed with Homebrew: brew install spatialindex. 
 
-### Python modules in use not typically included in standard Python distributions
+### Python modules in use not typically included in standard Python distributions 
 * dml
 * geojson
 * geoql
@@ -66,6 +66,8 @@ We consider school, hospital, and open space locations, as well as accident clus
 * prov
 * scipy
 * sklearn
+* To easily get the environment used, run the following command with the provided environment.yml file (make sure in team folder): conda env create -f environment.yml
+
 
 ### Team Members:
 * Adriana D'Souza .......... adsouza@bu.edu
