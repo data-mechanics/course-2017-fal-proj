@@ -1,8 +1,8 @@
 """
 CS591
 Project 2
-11.2.17
-parseNYAccidents.py
+11.12.17
+getKmeansNY.py
 """
 
 import urllib.request
@@ -12,11 +12,14 @@ import prov.model
 import datetime
 import uuid
 import requests
+import numpy as np
+from sklearn.cluster import KMeans
+
 
 class parseNYAccidents(dml.Algorithm):
     contributor = 'alanbur_aquan_erj826_jcaluag'
-    reads = ['alanbur_aquan_erj826_jcaluag.NYaccidents']
-    writes = ['alanbur_aquan_erj826_jcaluag.parseNYaccidents']
+    reads = ['alanbur_aquan_erj826_jcaluag.parseNYaccidents']
+    writes = ['alanbur_aquan_erj826_jcaluag.kMeansNY']
 
     @staticmethod
     def execute(trial = False):
@@ -29,10 +32,10 @@ class parseNYAccidents(dml.Algorithm):
 
         repo.authenticate('alanbur_aquan_erj826_jcaluag', 'alanbur_aquan_erj826_jcaluag')          
 
-        collection = repo.alanbur_aquan_erj826_jcaluag.NYaccidents
+        collection = repo.alanbur_aquan_erj826_jcaluag.parseNYaccidents
 
-        repo.dropCollection("alanbur_aquan_erj826_jcaluag.parseNYaccidents")
-        repo.createCollection("alanbur_aquan_erj826_jcaluag.parseNYaccidents")
+        repo.dropCollection("alanbur_aquan_erj826_jcaluag.kMeansNY")
+        repo.createCollection("alanbur_aquan_erj826_jcaluag.kMeansNY")
 
         for entry in collection.find():
             n = {}
@@ -43,14 +46,16 @@ class parseNYAccidents(dml.Algorithm):
                 location= (entry['location'])
                 n['longitude']=location['coordinates'][0]
                 n['latitude']=location['coordinates'][1]
+                print(location['coordinates'])
+                #n['latitude'] = double(entry['latitude'])
             except:
                 continue
 
-            repo['alanbur_aquan_erj826_jcaluag.parseNYaccidents'].insert(n, check_keys=False)
+            repo['alanbur_aquan_erj826_jcaluag.kMeansNY'].insert(n, check_keys=False)
 
 
-        repo['alanbur_aquan_erj826_jcaluag.parseNYaccidents'].metadata({'complete':True})
-        print(repo['alanbur_aquan_erj826_jcaluag.parseNYaccidents'].metadata())
+        repo['alanbur_aquan_erj826_jcaluag.kMeansNY'].metadata({'complete':True})
+        print(repo['alanbur_aquan_erj826_jcaluag.kMeansNY'].metadata())
 
         repo.logout()
 
