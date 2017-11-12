@@ -12,7 +12,7 @@ import csv
 class getData(dml.Algorithm):
     contributor = 'htw93_tscheung_wenjun'
     reads = []
-    writes = ['htw93_tscheung_wenjun.BostonCrime', 'htw93_tscheung_wenjun.BostonRestaurant',
+    writes = ['htw93_tscheung_wenjun.BostonCrime', 'htw93_tscheung_wenjun.BostonHotel',
             'htw93_tscheung_wenjun.MBTAStops']
 
     @staticmethod
