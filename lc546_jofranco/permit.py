@@ -18,7 +18,7 @@ class permit(dml.Algorithm):
         repo.authenticate("lc546_jofranco", "lc546_jofranco")
         url = 'https://data.cityofboston.gov/resource/fdxy-gydq.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
-        print("this", response)
+        #print("this", response)
         r = json.loads(response)
         s = json.dumps(r, sort_keys = True, indent = 2)
         repo.dropCollection("permit")
@@ -44,10 +44,10 @@ class permit(dml.Algorithm):
         get_permitinfo = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime, {prov.model.PROV_LABEL:'permit', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAssociatedWith(get_permitinfo, this_script)
         doc.usage(get_permitinfo, resource, startTime)
-        Permitinfo = doc.entity('dat:lc546_jofranco#permitinfo', {prov.model.PROV_LABEL:'restaurant permit', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(Permitinfo, this_script)
-        doc.wasGeneratedBy(Permitinfo, get_permitinfo, endTime)
-        doc.wasDerivedFrom(Permitinfo, resource, get_permitinfo, get_permitinfo, get_permitinfo)
+        permit = doc.entity('dat:lc546_jofranco#permit', {prov.model.PROV_LABEL:'restaurant permit', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(permit, this_script)
+        doc.wasGeneratedBy(permit, get_permitinfo, endTime)
+        doc.wasDerivedFrom(permit, resource, get_permitinfo, get_permitinfo, get_permitinfo)
         return doc
 
 

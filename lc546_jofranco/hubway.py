@@ -9,7 +9,7 @@ import uuid
 class hubway(dml.Algorithm):
     contributor = 'lc546_jofranco'
     reads = []
-    writes = ['lc546_jofranco.hubwaybike']
+    writes = ['lc546_jofranco.hubway']
 
     @staticmethod
     def execute(trial = False):
@@ -62,4 +62,3 @@ hubway.execute()
 doc = hubway.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
-

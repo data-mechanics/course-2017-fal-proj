@@ -7,7 +7,7 @@ import uuid
 
 class CrimeRestaurants(dml.Algorithm):
 	contributor = 'lc546_jofranco'
-	reads = ['lc546_jofranco.crimerate', 'lc546_jofranco.permit']
+	reads = ['lc546_jofranco.permit', 'lc546_jofranco.crimerate']
 	writes = ['lc546_jofranco.CrimeRestaurants']
 	@staticmethod
 	def execute(trial = False):
@@ -15,11 +15,11 @@ class CrimeRestaurants(dml.Algorithm):
 		client = dml.pymongo.MongoClient()
 		repo = client.repo
 		repo.authenticate("lc546_jofranco", "lc546_jofranco")
-		crimerateData = repo.lc546_jofranco.crimerate
-		print(crimerateData)
 		foodpermitData = repo.lc546_jofranco.permit
 		permits = foodpermitData.find()
-		print(permits)
+		#print(permits)
+		crimerateData = repo.lc546_jofranco.crimerate
+		#print(crimerateData)
 		streetofcrime = crimerateData.find()
 		print(streetofcrime)
 		streetsthathadcrimes = []
@@ -28,7 +28,7 @@ class CrimeRestaurants(dml.Algorithm):
 			crimestreet2 = crimestreet.replace(" st", "").replace(" av", "").replace(" wy","").replace(" rd", "").replace( " pl", "").replace(" ln", "").replace(" dr", "")
 			#print(crimestreet2)
 			streetsthathadcrimes.append([crimestreet2])
-	#	print(streetsthathadcrimes)
+		print(streetsthathadcrimes)
 
 		print("permits",permits)
 		foodpermitList = []
@@ -45,7 +45,7 @@ class CrimeRestaurants(dml.Algorithm):
 			foodstreet3 = [foodstreet2]
 			foodpermitList.append(foodstreet3)
 		print("++++++++++++++")
-		print(foodpermitList)
+	#	print(foodpermitList)
 
 		'''find the intersection of the two databases. We basically
 			want to find the restaurants that are in a street that have had crimes.
