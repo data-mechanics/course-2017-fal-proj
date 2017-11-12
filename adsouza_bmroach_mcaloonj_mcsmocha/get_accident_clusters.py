@@ -13,14 +13,11 @@ Monica Chiu         mcsmocha@bu.edu
 Original skeleton files provided by Andrei Lapets (lapets@bu.edu)
 
 Development Notes: 
-- number of means being used drastically effects runtime, so trying different numbers (line 56)
+- Number of means being used drastically effects runtime, so we tried different numbers (line 56)
+- From testing, we have decided to collapse each group of 10 accident spots into a single cluster
 
 """
 
-import sklearn
-from sklearn.preprocessing import Normalizer, StandardScaler, MinMaxScaler
-from sklearn import metrics
-from sklearn.cluster import KMeans
 from scipy.cluster.vq import kmeans, vq
 import numpy as np
 import json

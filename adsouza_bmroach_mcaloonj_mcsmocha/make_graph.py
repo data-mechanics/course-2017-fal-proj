@@ -11,7 +11,7 @@ Jessica McAloon     mcaloonj@bu.edu
 Monica Chiu         mcsmocha@bu.edu
 
 Development Notes: 
-- still in development (not functional)
+- Have to run execute.py in order to get placements.html file. Shouln't run make_graph file separately.
 
 """
 

@@ -10,12 +10,12 @@ Brian Roach         bmroach@bu.edu
 Jessica McAloon     mcaloonj@bu.edu
 Monica Chiu         mcsmocha@bu.edu
 
+Original skeleton files provided by Andrei Lapets (lapets@bu.edu)
+
 Development Notes:
 
+
 """
-
-
-
 
 import urllib.request
 import json

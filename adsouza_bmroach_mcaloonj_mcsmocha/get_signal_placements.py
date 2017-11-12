@@ -13,14 +13,11 @@ Monica Chiu         mcsmocha@bu.edu
 Original skeleton files provided by Andrei Lapets (lapets@bu.edu)
 
 Development Notes: 
--
+- Decided on limiting signals we can plce to 30. 
+- Go to line 61 and change value of n_clusters to desired amount.
 
 """
 
-import sklearn
-from sklearn.preprocessing import Normalizer, StandardScaler, MinMaxScaler
-from sklearn import metrics
-from sklearn.cluster import KMeans
 from scipy.cluster.vq import kmeans, vq
 import numpy as np
 import json
