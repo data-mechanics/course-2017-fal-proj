@@ -72,15 +72,17 @@ class countPollingLocationByWard(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/')  # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/')  # The event log.
+        doc.add_namespace('bpd', 'http://bostonopendata-boston.opendata.arcgis.com/datasets/')
+        doc.add_namespace('dcs', 'http://datamechanics.io/data/yjunchoi_yzhang71/')
 
         this_script = doc.agent('alg:#countPollingLocationByWard',
                                 {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
         resource_presidentElectionByPrecinct = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#presidentElectionByPrecinct',
                                              {'prov:label': 'presidentElectionByPrecinct',
-                                              prov.model.PROV_TYPE: 'ont:DataSet'})
+                                              prov.model.PROV_TYPE: 'ont:DataSet', 'ont:Extension':'csv'})
         resource_pollingLocation = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#pollingLocation',
                                              {'prov:label': 'pollingLocation',
-                                              prov.model.PROV_TYPE: 'ont:DataSet'})
+                                              prov.model.PROV_TYPE: 'ont:DataSet', 'ont:Extension':'geojson'})
 
         get_countPollingLocationByWard = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_countPollingLocationByWard, this_script)

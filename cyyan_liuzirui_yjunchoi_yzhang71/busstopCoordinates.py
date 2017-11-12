@@ -60,7 +60,7 @@ class busstopCoordinates(dml.Algorithm):
         doc.add_namespace('oth', 'http://datamechanics.io/data/wuhaoyu_yiran123') #Data Source from the other team
 
         this_script = doc.agent('alg:cyyan_liuzirui_yjunchoi_yzhang71#busstopCoordinates', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('oth:MBTA_Bus_Stops.geojson', {'prov:label':'Bus Stop Coordinates', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource = doc.entity('oth:MBTA_Bus_Stops.geojson', {'prov:label':'Bus Stop Coordinates', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
         get_busstopCoordinates = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_busstopCoordinates, this_script)
         doc.usage(get_busstopCoordinates, resource, startTime, None,
