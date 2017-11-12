@@ -13,7 +13,7 @@ Monica Chiu         mcsmocha@bu.edu
 Original skeleton files provided by Andrei Lapets (lapets@bu.edu)
 
 Development Notes: 
-- Prov details might be wrong? If so, blame me (Brian)
+-
 
 """
 
@@ -80,20 +80,24 @@ class get_signal_placements(dml.Algorithm):
             
             #find nodes closest to each centroid
             taken = []
-            for i in range(len(centroids)):
+            for i in range(len(centroids)):                     #calculated centroids loop
                 point = centroids[i]
-                closest_node = -1
+                closest_node = None
                 dist_of_closest_node = float('inf')
 
-                for j in range(len(possible_nodes)):
+                for j in range(len(possible_nodes)):            #possible intersections
                     if j not in taken:
                         
-                        # j also cannot be within .25 miles of anything in taken...
-                        for placed in signal_placements:
+                        # j also cannot be within .5 miles of anything in taken...
+                        skip_this = False
+                        for placed in signal_placements:        #already placed signals
+                            
                             j_to_placed = vincenty(placed, possible_nodes[j]).miles
-                            if j_to_placed > .25:
-                                continue
-
+                            if j_to_placed < .5:
+                                skip_this = True
+                                break
+                        if skip_this:
+                            continue
                         distance = vincenty(centroids[i], possible_nodes[j]).miles
                         if distance < dist_of_closest_node:
                             closest_node = j

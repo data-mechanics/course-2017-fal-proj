@@ -23,7 +23,8 @@ We consider school, hospital, and open space locations, as well as accident clus
 * (analysis 3 - tbd)
 
 #### Technical Details
-Each unique portion of our process is its own extension of the dml library's algorithm class, and intermediate data is stored using MongoDB.
+* Each unique portion of our process is its own extension of the dml library's algorithm class, and intermediate data is stored using MongoDB.
+* --trial flag for execute.py is being leveraged as a verbose flag.
 
 ## Statistical Findings
 ...tbd... 
