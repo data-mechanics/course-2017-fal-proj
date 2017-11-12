@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 class kmeans_crime_incidents(dml.Algorithm):
     contributor = 'esaracin'
     reads = ['esaracin.crime_incidents']
-    writes = ['esaracin.crime_clustering']
+    writes = ['esaracin.crime_incident_centers']
 
     @staticmethod
     def execute(trial = False):
@@ -99,25 +99,19 @@ class kmeans_crime_incidents(dml.Algorithm):
         doc.add_namespace('ont', 'http://datamechanics/io/ontology/')
         doc.add_namespace('log', 'http://datamechanics.io/log/')
 
-        # Add this script as a provenance agent to our document
-        this_script = doc.agent('alg:esaracin#join_sets', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        # Add this script as a provenance agent to our document. Also add the
+        # entity and activity utilized and completed by this script.
+        this_script = doc.agent('alg:esaracin#kmeans_crime_incidents', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource_crimes = doc.entity('dat:esaracin#crime_incidents',{'prov:label':'MongoDB Set',prov.model.PROV_TYPE:'ont:DataResource'})
+        clustering = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 
-        resource_police = doc.entity('dat:esaracin#police_stats',{'prov:label':'MongoDB Set',prov.model.PROV_TYPE:'ont:DataResource'})
-        resource_shootings = doc.entity('dat:esaracin#shootings_per_district', {'prov:label': 'MongoDB Set', prov.model.PROV_TYPE:'ont:DataResource'})
-        
-        merge_sets = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(clustering, this_script)
+        doc.usage(clustering, resource_crimes, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
 
-        doc.wasAssociatedWith(merge_sets, this_script)
-        doc.usage(merge_sets, resource_police, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
-        doc.usage(merge_sets, resource_shootings, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
-
-
-        merged = doc.entity('dat:esaracin#district_info', {prov.model.PROV_LABEL:'Merged Set',
-                            prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(merged, this_script)
-        doc.wasGeneratedBy(merged, merge_sets, endTime)
-        doc.wasDerivedFrom(merged, resource_police, merge_sets, merge_sets, merge_sets)
-        doc.wasDerivedFrom(merged, resource_shootings, merge_sets, merge_sets,merge_sets)
+        clustered = doc.entity('dat:esaracin#crime_incident_centers', {prov.model.PROV_LABEL:'Clustered Set', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(clustered, this_script)
+        doc.wasGeneratedBy(clustered, clustering, endTime)
+        doc.wasDerivedFrom(clustered, resource_crimes, clustering, clustering, clustering)
 
 
         repo.logout()
@@ -125,4 +119,4 @@ class kmeans_crime_incidents(dml.Algorithm):
 
 
 kmeans_crime_incidents.execute()
-
+kmeans_crime_incidents.provenance()
