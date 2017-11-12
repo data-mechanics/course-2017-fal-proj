@@ -10,7 +10,7 @@ Our team set out to determine an optimal placement of Speed Feedback Signs in th
 We categorized our approach into two parts. <br>
 **Part 1** - Placement of Speed Feedback Signs
 * Phase 1:<br>
-Cluster accidents into accident hot spots via k-means
+Cluster accidents into accident hot spots via k-means, where the number of means is proportional to the number of input nodes.
 * Phase 2: <br>
 Filter intersections by proximity to accident clusters. For an intersection to be a candidate placement site, the intersection must be in the lower 50th percentile with regards to distance to closest accident cluster. This ensures that final placements are not skewed by proximity to vulnerable sights alone, but must also be close to where accidents are known to occur. 
 * Phase 3:<br>
@@ -24,6 +24,9 @@ We consider school, hospital, and open space locations, as well as accident clus
 
 #### Technical Details
 Each unique portion of our process is its own extension of the dml library's algorithm class, and intermediate data is stored using MongoDB.
+
+## Statistical Findings
+...tbd... 
 
 ## Datasets in Use
 * Motor Vehicle Accidents (Analyze Boston)
@@ -56,6 +59,7 @@ Each unique portion of our process is its own extension of the dml library's alg
 * geojson
 * geoql
 * numpy
+* pandas
 * prov
 * scipy
 * sklearn
