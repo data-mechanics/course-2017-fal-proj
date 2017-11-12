@@ -9,6 +9,7 @@ import ssl
 import random
 from math import radians, sin, cos, atan2, sqrt
 import scipy.stats as ss
+import sys
 
 def union(R, S):
     return R + S
@@ -72,24 +73,44 @@ def compTuples(t1, t2):
 def kmeans(means, points):
     old_compVal = 0
     new_compVal = 1
-    mp = []
+    pd = []
     old = []
+    iter_num = 1
     while (old_compVal != new_compVal):
-        print('iterating')
+        print('Iteration', iter_num, end='')
+        sys.stdout.flush()
         old_compVal = compTuples(old, means)
+        print(' |-', end='')
+        sys.stdout.flush()
         old = means
         mpd = [(m, p, calculateDist(m, p)) for (m,p) in product(means, points)]
+        print('-', end='')
+        sys.stdout.flush()        
         pds = [(p, calculateDist(m,p)) for (m, p, d) in mpd]
+        print('-', end='')
+        sys.stdout.flush()
         pd = aggregate(pds, min)
+        print('-', end='')
+        sys.stdout.flush()
         mp = [(m, p) for ((m,p,d), (p2,d2)) in product(mpd, pd) if p==p2 and d==d2]
+        print('-', end='')
+        sys.stdout.flush()
         mt = aggregate(mp, plus)
+        print('-', end='')
+        sys.stdout.flush()
         m1 = [(m, 1) for ((m,p,d), (p2, d2)) in product(mpd, pd) if p==p2 and d==d2]
+        print('-', end='')
+        sys.stdout.flush()
         mc = aggregate(m1, sum)
-
+        print('-', end='')
+        sys.stdout.flush()
         means = [scale(t, c) for ((m,t), (m2,c)) in product(mt, mc) if m == m2]
+        print('-|')
+        sys.stdout.flush()
         new_compVal = compTuples(old, means)
+        iter_num+=1
 
-    return (means, mp)
+    return (means, pd)
 
 class setOptimalHealthMarkets(dml.Algorithm):
     contributor = 'biel_otis'
@@ -110,7 +131,7 @@ class setOptimalHealthMarkets(dml.Algorithm):
 
         obesityLoc = project(obesityValues, lambda x: (float(x['geolocation']['latitude']), float(x['geolocation']['longitude'])))
         avg_dist = 9999999
-        num_means = 1
+        num_means = 10
         dist_sum = 0
         dists = []
         lats = [x for (x,y) in obesityLoc]
@@ -119,7 +140,7 @@ class setOptimalHealthMarkets(dml.Algorithm):
             means = [(random.uniform(min(lats), max(lats)), random.uniform(min(longs), max(longs))) for x in range(num_means)]
             means, dists = kmeans(means, obesityLoc)
             for p in dists:
-                dist_sum += calculateDist(p[0], p[1])
+                dist_sum += p[1]
             avg_dist = dist_sum / len(dists)
             print(avg_dist)
             num_means += 1             
