@@ -26,7 +26,7 @@ import prov.model
 
 class make_graph(dml.Algorithm):
         contributor = 'adsouza_bmroach_mcaloonj_mcsmocha'
-        reads = ['adsouza_bmroach_mcaloonj_mcsmocha.get_signal_placements']
+        reads = ['adsouza_bmroach_mcaloonj_mcsmocha.signal_placements']
         writes = []
 
         @staticmethod
@@ -48,7 +48,7 @@ class make_graph(dml.Algorithm):
 
             # Turn a dataframe containing point data into a geojson formatted python dictionary	
             def df_to_geojson(df, properties, lat='Lats', lon='Longs'):
-                geojson = {'type':'FeatureCollection', 'features':[]}
+                geo_json = {'type':'FeatureCollection', 'features':[]}
                 for _, row in df.iterrows():
                     feature = {'type':'Feature',
                             'properties':{},
@@ -57,11 +57,12 @@ class make_graph(dml.Algorithm):
                     feature['geometry']['coordinates'] = [row[lon],row[lat]]
                     for prop in properties:
                         feature['properties'][prop] = row[prop]
-                    geojson['features'].append(feature)
-                return geojson
+                    geo_json['features'].append(feature)
+                return geo_json
 
             placements_geojson = df_to_geojson(df_geo, properties="")
-            open('placements.html', 'w').write(geoleaflet.html(placements_geojson)) # Create visualization.
+            with open('placements.html', 'w') as output:
+                output.write(geoleaflet.html(placements_geojson)) # Create visualization.
 
 
             repo.logout()
