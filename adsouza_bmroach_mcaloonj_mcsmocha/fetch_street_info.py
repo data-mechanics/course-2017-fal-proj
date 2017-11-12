@@ -5,7 +5,7 @@ import prov.model
 import datetime
 import uuid
 
-class fetch_speed_info(dml.Algorithm):
+class fetch_street_info(dml.Algorithm):
     contributor = 'adsouza_bmroach_mcaloonj_mcsmocha'
     reads = []
     writes = ['adsouza_bmroach_mcaloonj_mcsmocha.speed_limits']
@@ -35,8 +35,6 @@ class fetch_speed_info(dml.Algorithm):
             speed_limits_coordinates.append([speed_limit, coordinates])
         street_dict = {"streets": speed_limits_coordinates}
 
-        print (street_dict)
-
         repo.dropCollection("adsouza_bmroach_mcaloonj_mcsmocha.street_info")
         repo.createCollection("adsouza_bmroach_mcaloonj_mcsmocha.street_info")
         repo["adsouza_bmroach_mcaloonj_mcsmocha.street_info"].insert(street_dict)
@@ -62,7 +60,7 @@ class fetch_speed_info(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bod', 'http://bostonopendata-boston.opendata.arcgis.com/datasets/')
 
-        this_script = doc.agent('alg:adsouza_bmroach_mcaloonj_mcsmocha#fetch_speed_info', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:adsouza_bmroach_mcaloonj_mcsmocha#fetch_street_info', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bod:cfd1740c2e4b49389f47a9ce2dd236cc_8.geojson', {'prov:label':'Boston Segments', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 
         get_street_info= doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
@@ -81,8 +79,9 @@ class fetch_speed_info(dml.Algorithm):
 
         return doc
 
-
-fetch_speed_info.execute()
-doc = fetch_speed_info.provenance()
-#print(doc.get_provn())
-#print(json.dumps(json.loads(doc.serialize()), indent=4))
+'''
+fetch_street_info.execute()
+doc = fetch_street_info.provenance()
+print(doc.get_provn())
+print(json.dumps(json.loads(doc.serialize()), indent=4))
+'''
