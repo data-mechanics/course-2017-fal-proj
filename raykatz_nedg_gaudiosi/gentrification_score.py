@@ -57,7 +57,8 @@ class gentrification_score(dml.Algorithm):
             score += ((zip_info["percent_homes_built_before_1939"] - standardized["avg_percent_homes_built_before_1939"]) / standardized["std_percent_homes_built_before_1939"])
             score += ((zip_info["percent_renting"] - standardized["avg_percent_renting"]) / standardized["std_percent_renting"])
             score += ((zip_info["subway_stops"] - standardized["avg_subway_stops"]) / standardized["std_subway_stops"])
-            score += ((zip_info["bus_stops"] - standardized["avg_bus_stops"]) / standardized["std_bus_stops"])
+            if not trial:
+                score += ((zip_info["bus_stops"] - standardized["avg_bus_stops"]) / standardized["std_bus_stops"])
             
             z["score"] = score
 

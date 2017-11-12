@@ -14,6 +14,7 @@ class income(dml.Algorithm):
     def execute(trial = False):
         '''Retrieve income and income data from US Census'''
         startTime = datetime.datetime.now()
+        trial_zips = ["02116", "02134", "02215"]
 
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
@@ -32,6 +33,9 @@ class income(dml.Algorithm):
         for i in range(1,len(result)):
             if result[i][0] == None or int(result[i][2]) == 0 or result[i][3] == None or int(result[i][5]) == 0:
                 continue
+            zipcode = result[i][6]
+            if trial and zipcode not in trial_zips:
+                continue
             d = {}
             d["median_income"] = int(result[i][0])
             d["50_income_rent"] = int(result[i][1])
@@ -39,7 +43,7 @@ class income(dml.Algorithm):
             d["median_rent"] = int(result[i][3])
             d["people_in_poverty"] = int(result[i][4]) 
             d["total_people"] = int(result[i][5])
-            d["zipcode"] = result[i][6]
+            d["zipcode"] = zipcode
             r.append(d)
         
         

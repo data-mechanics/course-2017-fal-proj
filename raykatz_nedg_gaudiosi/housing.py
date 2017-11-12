@@ -14,6 +14,7 @@ class housing(dml.Algorithm):
     def execute(trial = False):
         '''Retrieve housing data from US Census'''
         startTime = datetime.datetime.now()
+        trial_zips = ["02116", "02134", "02215"]
 
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
@@ -32,6 +33,10 @@ class housing(dml.Algorithm):
         for i in range(1,len(result)):
             if int(result[i][2]) == 0 or int(result[i][4]) ==0:
                 continue
+            zipcode = result[i][7]
+            if trial and zipcode not in trial_zips:
+                continue 
+
             d = {}
             d["occupied_housing"] = int(result[i][0])
             d["vacant_housing"] = int(result[i][1])
@@ -40,7 +45,7 @@ class housing(dml.Algorithm):
             d["total_structures_built"] = int(result[i][4])
             d["renter_occupied"] = int(result[i][5])
             d["total_occupied"] = int(result[i][6])
-            d["zipcode"] = result[i][7]
+            d["zipcode"] = zipcode
             r.append(d)
         
         s = json.dumps(r, sort_keys=True, indent=2)

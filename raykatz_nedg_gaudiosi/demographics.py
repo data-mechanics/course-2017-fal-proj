@@ -13,6 +13,7 @@ class demographics(dml.Algorithm):
     @staticmethod
     def execute(trial = False):
         '''Retrieve racial demographics from US Census'''
+        trial_zips = ["02116", "02134", "02215"]
         startTime = datetime.datetime.now()
 
         # Set up the database connection.
@@ -39,6 +40,9 @@ class demographics(dml.Algorithm):
             if int(result[i][2]) == 0 or int(result[i][4]) ==0: 
                continue
             zipcode = result[i][8]
+            if trial and zipcode not in trial_zips:
+                continue
+
             d = {}
             d["white"] = int(result[i][0])
             d["black"] = int(result[i][1])

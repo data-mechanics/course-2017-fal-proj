@@ -4,6 +4,7 @@ import dml
 import prov.model
 import datetime
 import uuid
+import random
 
 from shapely.geometry import shape, Point
 
@@ -16,7 +17,8 @@ class mbta_stops(dml.Algorithm):
     def execute(trial = False):
         '''Retrieve mbta_stops data from realtime.mbta.com'''
         startTime = datetime.datetime.now()
-
+        trial_zips = ["02116", "02134", "02215"]
+        
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
@@ -34,6 +36,9 @@ class mbta_stops(dml.Algorithm):
 
 
         for route in routes:
+            if trial and not route["mode_name"] == "Subway":
+                continue
+
             url = "http://realtime.mbta.com/developer/api/v2/stopsbyroute?api_key=" + data["mbta"] + "&route=" + route["route_id"] +  "&format=json"
             response = urllib.request.urlopen(url).read().decode("utf-8")        
             stops = json.loads(response)
@@ -53,11 +58,13 @@ class mbta_stops(dml.Algorithm):
                     s["stop_lon"] = stop["stop_lon"]
                     
                     point = Point(float(s["stop_lon"]),float(s["stop_lat"]))
+                    
                     for feature in geo_map["features"]:
                         polygon = shape(feature['geometry'])
                         inside = polygon.contains(point)
                         if polygon.contains(point):
-                            s["zipcode"] = feature["properties"]["ZIP5"]
+                            zipcode = feature["properties"]["ZIP5"]
+                            s["zipcode"] = zipcode
                             break
                     
                     if not "zipcode" in s:
