@@ -25,7 +25,7 @@ class bus_by_ward(dml.Algorithm):
         repo.authenticate('cyyan_liuzirui_yjunchoi_yzhang71','cyyan_liuzirui_yjunchoi_yzhang71')
 
         # loads ward coordinate
-        raw_ward = repo['cyyan_liuzirui_yjunchoi_yzhang71.wards'].find({})
+        raw_ward = repo['cyyan_liuzirui_yjunchoi_yzhang71.boston_wards'].find({})
 
         # loads bus stop data
         raw_bus = repo['cyyan_liuzirui_yjunchoi_yzhang71.busstopCoordinates'].find()
@@ -44,7 +44,7 @@ class bus_by_ward(dml.Algorithm):
         bStop = pd.DataFrame(list(raw_bus))
         bStop['coordinates'] = bStop.coordinates
 
-        raw_ward = repo['cyyan_liuzirui_yjunchoi_yzhang71.wards'].find({})
+        raw_ward = repo['cyyan_liuzirui_yjunchoi_yzhang71.boston_wards'].find({})
 
         busByWard = {}
         for j in raw_ward:
@@ -86,31 +86,34 @@ class bus_by_ward(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('bdp', 'https://data.cityofboston.gov/')
-        doc.add_namespace('hpa', 'https://data.boston.gov/')
+        doc.add_namespace('bdp', 'http://datamechanics.io/data/wuhaoyu_yiran123/')
+        doc.add_namespace('hpa', 'http://datamechanics.io/data/yjunchoi_yzhang71/')
 
         #define entity to represent resources
-        this_script = doc.agent('alg:cyyan_liuzirui_yjunchoi_yzhang71#amount_of_police_hospital', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource1 = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#police', {prov.model.PROV_LABEL:'police', prov.model.PROV_TYPE:'ont:DataSet'})
-        resource2 = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#hospital', {prov.model.PROV_LABEL:'hospital', prov.model.PROV_TYPE:'ont:DataSet'})
+        this_script = doc.agent('alg:cyyan_liuzirui_yjunchoi_yzhang71#bus_by_ward', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource1 = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#boston_wards', {prov.model.PROV_LABEL:'boston_wards', prov.model.PROV_TYPE:'ont:DataSet', 'ont:Extension':'geojson'})
+        resource2 = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#bostonstopCoordinates', {prov.model.PROV_LABEL:'bostonstopCoordinates', prov.model.PROV_TYPE:'ont:DataSet', 'ont:Extension':'geojson'})
 
-        ph = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(ph, this_script)
+        this_wards = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(this_wards, this_script)
 
-        doc.usage(ph, resource1, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',})
-        doc.usage(ph, resource2, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',})
+        this_busstop = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(this_busstop, this_script)
 
-        p = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#police', {prov.model.PROV_LABEL:'police stations', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.usage(this_wards, resource1, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Computation',})
+        doc.usage(this_busstop, resource2, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Computation',})
+
+        p = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#boston_wards', {prov.model.PROV_LABEL:'boston_wards', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(p, this_script)
-        doc.wasGeneratedBy(p, ph, endTime)
-        doc.wasDerivedFrom(p, resource1, ph, ph, ph)
+        doc.wasGeneratedBy(p, this_wards, endTime)
+        doc.wasDerivedFrom(p, resource1, this_wards, this_wards, this_wards)
 
-        h = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#hospital', {prov.model.PROV_LABEL:'hospitals', prov.model.PROV_TYPE:'ont:DataSet'})
+        h = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#bostonstopCoordinates', {prov.model.PROV_LABEL:'bostonstopCoordinates', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(h, this_script)
-        doc.wasGeneratedBy(h, ph, endTime)
-        doc.wasDerivedFrom(h, resource2, ph, ph, ph)
+        doc.wasGeneratedBy(h, this_busstop, endTime)
+        doc.wasDerivedFrom(h, resource2, this_busstop, this_busstop, this_busstop)
 
         repo.logout()
 

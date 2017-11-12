@@ -96,23 +96,26 @@ class MBTA_by_ward(dml.Algorithm):
         resource1 = doc.entity('bdp:cyyan_liuzirui_yjunchoi_yzhang71#boston_wards', {prov.model.PROV_LABEL:'boston_wards', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
         resource2 = doc.entity('eri:cyyan_liuzirui_yjunchoi_yzhang71#MBTACoordinates', {prov.model.PROV_LABEL:'MBTACoordinates', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'yaml'})
 
-        run_MBTA_by_ward = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(run_MBTA_by_ward, this_script)
+        this_wards = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(this_wards, this_script)
 
-        doc.usage(run_MBTA_by_ward, resource1, startTime, None,
+        this_MBTA = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(this_MBTA, this_script)
+
+        doc.usage(this_wards, resource1, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Computation',})
-        doc.usage(run_MBTA_by_ward, resource2, startTime, None,
+        doc.usage(this_MBTA, resource2, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Computation',})
 
         p = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#boston_wards', {prov.model.PROV_LABEL:'boston_wards', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(p, this_script)
-        doc.wasGeneratedBy(p, run_MBTA_by_ward, endTime)
-        doc.wasDerivedFrom(p, resource1, run_MBTA_by_ward, run_MBTA_by_ward, run_MBTA_by_ward)
+        doc.wasGeneratedBy(p, this_wards, endTime)
+        doc.wasDerivedFrom(p, resource1, this_wards, this_wards, this_wards)
 
         h = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#MBTACoordinates', {prov.model.PROV_LABEL:'MBTACoordinatess', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(h, this_script)
-        doc.wasGeneratedBy(h, run_MBTA_by_ward, endTime)
-        doc.wasDerivedFrom(h, resource2, run_MBTA_by_ward, run_MBTA_by_ward, run_MBTA_by_ward)
+        doc.wasGeneratedBy(h, this_MBTA, endTime)
+        doc.wasDerivedFrom(h, resource2, this_MBTA, this_MBTA, this_MBTA)
 
         repo.logout()
 
