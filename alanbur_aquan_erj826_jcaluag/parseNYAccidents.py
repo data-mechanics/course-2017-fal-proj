@@ -15,7 +15,7 @@ import requests
 
 class parseNYAccidents(dml.Algorithm):
     contributor = 'alanbur_aquan_erj826_jcaluag'
-    reads = []
+    reads = ['alanbur_aquan_erj826_jcaluag.NYaccidents']
     writes = ['alanbur_aquan_erj826_jcaluag.parseNYaccidents']
 
     @staticmethod

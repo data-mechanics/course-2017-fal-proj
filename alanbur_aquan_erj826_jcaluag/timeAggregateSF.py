@@ -15,7 +15,7 @@ import requests
 
 class timeAggregateSF(dml.Algorithm):
     contributor = 'alanbur_aquan_erj826_jcaluag'
-    reads = []
+    reads = ['alanbur_aquan_erj826_jcaluag.SFaccidents']
     writes = ['alanbur_aquan_erj826_jcaluag.timeAggregateSF']
 
     @staticmethod
@@ -35,15 +35,14 @@ class timeAggregateSF(dml.Algorithm):
         repo.createCollection("alanbur_aquan_erj826_jcaluag.timeAggregateSF")
 
 
+        bins = [0 for i in range(24)]
+
+        for entry in collection.find():
+            hour = int(entry["time"][0:entry["time"].index(":")])
+            bins[hour] += 1
 
 
-        ###DO STUFF HERE###
-
-
-
-
-        repo['alanbur_aquan_erj826_jcaluag.timeAggregateSF'].insert(n, check_keys=False)
-
+        repo['alanbur_aquan_erj826_jcaluag.timeAggregateSF'].insert({'data':bins}, check_keys=False)
 
         repo['alanbur_aquan_erj826_jcaluag.timeAggregateSF'].metadata({'complete':True})
         print(repo['alanbur_aquan_erj826_jcaluag.timeAggregateSF'].metadata())
