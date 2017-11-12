@@ -33,16 +33,11 @@ class MBTA_by_ward(dml.Algorithm):
         # Collection ward coordinate
         path = {}
         for i in raw_ward:
-            #print("hi", i['coordinates'][0][0])
             if isinstance(i['coordinates'][0][0], list):
-                #print("hi", i['coordinates'][0])
                 path[i['ward_num']] = mplPath.Path(i['coordinates'][0])
             else:
                 path[i['ward_num']] = mplPath.Path(i['coordinates'])
 
-
-        #MBTAStop = pd.DataFrame(list(raw_MBTA))
-        #print(type(MBTAStop))
         MBTA = []
         for i in raw_MBTA:
             for j in i['stations']:
@@ -51,40 +46,22 @@ class MBTA_by_ward(dml.Algorithm):
                 coordinates.append(j['latitude'])
                 MBTA.append(coordinates)
 
-            #for j in i['stations']:
-            #    MBTA[j] = zip(j['longitude'], j['latitude'])
-
-        #print(MBTA)
-        # bStop['coordinates'] = bStop.coordinates
-
-
-        # bStop = pd.DataFrame(list(raw_bus))
-        # bStop['coordinates'] = bStop.coordinates
-
-
         raw_ward = repo['cyyan_liuzirui_yjunchoi_yzhang71.wards'].find({})
 
         MBTAByWard = {}
         for j in raw_ward:
-            # print("?", i)
             coordinate = []
             for i in range(len(MBTA)):
-                #print(path[j['ward_num']].contains_point(bStop['coordinates'][i]))
-                #print(j['ward_num'])
                 if path[j['ward_num']].contains_point(MBTA[i]):
                     coordinate.append(MBTA[i])
-                    #print("hi")
-            #print(coordinate)
             MBTAByWard[str(j['ward_num'])] = coordinate
 
         results = [MBTAByWard]
-        #print("!!!!!!", busByWard)
-        # results = [busByWard]
-        # drop collection amount_of_police_hospital
+        # drop collection
         repo.dropCollection('MBTA_by_ward')
-        # create collection amount_of_police_hospital
+        # create collection
         repo.createCollection('MBTA_by_ward')
-        # insert data in collection amount_of_police_hospital
+        # insert data in collection
         repo['cyyan_liuzirui_yjunchoi_yzhang71.MBTA_by_ward'].insert(results)
 
         repo.logout()

@@ -4,13 +4,12 @@ import dml
 import prov.model
 import datetime
 import uuid
-import csv
-import pandas as pd
-
+from scipy.cluster.vq import kmeans2
+import numpy as np
 
 class optPollingLocation(dml.Algorithm):
     contributor = 'cyyan_liuzirui_yjunchoi_yzhang71'
-    reads = ['cyyan_liuzirui_yjunchoi_yzhang71.pollingLocation', 'cyyan_liuzirui_yjunchoi_yzhang71.busstopCoordinates', 'cyyan_liuzirui_yjunchoi_yzhang71.MBTACoordinates']
+    reads = ['cyyan_liuzirui_yjunchoi_yzhang71.pollingLocation', 'cyyan_liuzirui_yjunchoi_yzhang71.bus_by_ward', 'cyyan_liuzirui_yjunchoi_yzhang71.MBTA_by_ward']
     writes = ['cyyan_liuzirui_yjunchoi_yzhang71.optPollingLocation']
 
     @staticmethod
@@ -24,23 +23,50 @@ class optPollingLocation(dml.Algorithm):
         repo.authenticate('cyyan_liuzirui_yjunchoi_yzhang71', 'cyyan_liuzirui_yjunchoi_yzhang71')
 
         pLocation = repo['cyyan_liuzirui_yjunchoi_yzhang71.pollingLocation'].find()
-        busstop = repo['cyyan_liuzirui_yjunchoi_yzhang71.busstopCoordinates'].find()
-        MBTA = repo['cyyan_liuzirui_yjunchoi_yzhang71.MBTACoordinates'].find({})
+        busstop = repo['cyyan_liuzirui_yjunchoi_yzhang71.bus_by_ward'].find()
+        MBTA = repo['cyyan_liuzirui_yjunchoi_yzhang71.MBTA_by_ward'].find()
 
         repo.dropCollection("optPollingLocation")
         repo.createCollection("optPollingLocation")
 
-        # Adjusting polling locations in Pandas
-        pLoc = pd.DataFrame(list(pLocation))
-        pLoc['coordinates'] = list(pLoc.coordinates)
+        # Export Data from Dataset
+        pLoc = {}
+        for p in pLocation:
+            pLoc[str(p['Ward'])] = p['coordinates']
 
-        # Adjusting bus stops in Pandas
-        bStop = pd.DataFrame(list(busstop))
-        bStop['coordinates'] = list(bStop.coordinates)
+        bStop = {}
+        for b in busstop:
+            for i in range(1,23):
+                bStop[str(i)] = b[str(i)]
+
+        station = {}
+        for m in MBTA:
+            for i in range(1,23):
+                station[str(i)] = m[str(i)]
 
 
-        dfMBTA = pd.DataFrame(list(MBTA))
-        #dfMBTA['coordinates'] = list(dfMBTA)
+        # Combine the coordinates of public transportation
+        publicT = {}
+        for i in range(1,23):
+            coordinates = []
+            coordinates.extend(station[str(i)])
+            coordinates.extend(bStop[str(i)])
+            publicT[str(i)] = coordinates
+
+
+        # Use k-mean Algorithm to optimize polling locations by wards
+        optimized = {}
+        for i in range(1,23):
+            pLoc[str(i)] = np.asarray(pLoc[str(i)])
+            centroids, labels = kmeans2(publicT[str(i)], k = pLoc[str(i)], iter = 100, minit = 'matrix')
+            optimized[str(i)] = centroids.tolist()
+
+        results = [optimized]
+
+        repo['cyyan_liuzirui_yjunchoi_yzhang71.optPollingLocation'].insert(results)
+
+        repo.logout()
+
         endTime = datetime.datetime.now()
 
         return {"start":startTime, "end":endTime}
@@ -51,7 +77,7 @@ class optPollingLocation(dml.Algorithm):
             Create the provenance document describing everything happening
             in this script. Each run of the script will generate a new
             document describing that invocation event.
-            '''
+        '''
 
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
@@ -81,9 +107,9 @@ class optPollingLocation(dml.Algorithm):
 
         return doc
 
-# optPollingLocation.execute()
-# doc = optPollingLocation.provenance()
-# print(doc.get_provn())
-# print(json.dumps(json.loads(doc.serialize()), indent=4))
+optPollingLocation.execute()
+doc = optPollingLocation.provenance()
+#print(doc.get_provn())
+#print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof
