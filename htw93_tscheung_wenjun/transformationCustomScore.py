@@ -57,13 +57,13 @@ class transformationCustomScore(dml.Algorithm):
             norm_mbta = (h['mbta_count']-min_mbta)/(max_mbta-min_mbta)
             norm_score = (h['rate']-min_rating)/(max_rating-min_rating)
             score = (norm_crime+norm_mbta+norm_score)/3
-            print(score)
-            CustomScore.append({'hotel':h['hotel'],'score':score})
+            #print(score)
+            CustomScore.append({'hotel':h['hotel'],'rate': norm_score, 'score':score})
             
 
         
             
-
+        print(CustomScore)
         repo.dropCollection("BostonHotelCustomScore")
         repo.createCollection("BostonHotelCustomScore")
         repo['htw93_tscheung_wenjun.BostonHotelCustomScore'].insert_many(CustomScore)
