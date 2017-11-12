@@ -4,7 +4,6 @@ Project 2
 11.12.17
 getKmeansNY.py
 """
-
 import urllib.request
 import json
 import dml
@@ -17,9 +16,12 @@ import numpy as np
 from sklearn.cluster import KMeans
 
 #the largest acceptable distance between two data 
-acceptableDistance = 0.05 #this is about 3
-        
-def getMaxDistance(coordinates, kmeans):
+acceptableDistance = 0.05 #this is about 3 miles from degree long//lat conversion to miles
+coordinates = []
+
+#takes all the coordinates and the kmeans cluster and returns the highest distance between
+#any point and its respective centroid    
+def getMaxDistance(kmeans):
     maxDistance = 0
     for i in range(len(coordinates)):
         clusterCenter =kmeans.predict(coordinates[i])
@@ -28,11 +30,11 @@ def getMaxDistance(coordinates, kmeans):
             maxDistance = current
     return maxDistance
 
+#returns the distance between two long/lat points
 def distance(p0, p1):
     return math.sqrt((p0[0] - p1[0])**2 + (p0[1] - p1[1])**2)
 
-
-
+#our algorithm
 class parseNYAccidents(dml.Algorithm):
     contributor = 'alanbur_aquan_erj826_jcaluag'
     reads = ['alanbur_aquan_erj826_jcaluag.parseNYaccidents']
@@ -46,40 +48,47 @@ class parseNYAccidents(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-
         repo.authenticate('alanbur_aquan_erj826_jcaluag', 'alanbur_aquan_erj826_jcaluag')          
-
-        collection = repo.alanbur_aquan_erj826_jcaluag.parseNYaccidents
-
         repo.dropCollection("alanbur_aquan_erj826_jcaluag.kMeansNY")
         repo.createCollection("alanbur_aquan_erj826_jcaluag.kMeansNY")
 
-        coordinates = []
-        for entry in collection.find():
-            n = {}
+        #get coordinates from colleciton
+        collection = repo.alanbur_aquan_erj826_jcaluag.parseNYaccidents
+        #coordinates = []
+        for entry in collection.find():    
             try: #make the array for kmeans
                 datapoint = [entry['longitude'],entry['latitude']]
                 coordinates.append(datapoint)        
             except:
-                continue
-        X = np.array(coordinates)    
+                continue         
+        X = np.array(coordinates)
+        
+        #X = np.array(coordinates).reshape((1,-1),(1,-1))
+        #X= scalar.transform(X)
+        #print(X)
+          
+        #run kmeans with two clusters for starting point
         kmeans = KMeans(n_clusters=2, random_state=0).fit(X)
-        maxDistance = getMaxDistance(coordinates,kmeans)
+        maxDistance = getMaxDistance(kmeans)
         clusters = 2
+        
+        #run kmeans while acceptableDistance is not fulfilled
         while(maxDistance > acceptableDistance):
             clusters+=1
             kmeans = KMeans(n_clusters=clusters, random_state=0).fit(X)
-            maxDistance = getMaxDistance(coordinates,kmeans)
+            maxDistance = getMaxDistance(kmeans)
         print("we're done! max distance is: " + str(maxDistance) + " at " + str(clusters) + " clusters!")
-                   
+    
+        #plug into the centroids into dictionary for returning
+        n={}
+        centroids = kmeans.cluster_centers_
+        for i in range(len(centroids)):
+            n[str(i)]=centroids[i].tolist()
 
         repo['alanbur_aquan_erj826_jcaluag.kMeansNY'].insert(n, check_keys=False)
-
         repo['alanbur_aquan_erj826_jcaluag.kMeansNY'].metadata({'complete':True})
         print(repo['alanbur_aquan_erj826_jcaluag.kMeansNY'].metadata())
-
         repo.logout()
-
         endTime = datetime.datetime.now()
 
         return {"start":startTime, "end":endTime}
