@@ -6,9 +6,9 @@ import datetime
 import uuid
 
 class zipcode_info(dml.Algorithm):
-    contributor = 'gaudiosi_raykatz_nedg'
-    reads = ["gaudiosi_raykatz_nedg.zipcode_map", "gaudiosi_raykatz_nedg.demographic_percentages", "gaudiosi_raykatz_nedg.housing_percentages", "gaudiosi_raykatz_nedg.income_percentages", "gaudiosi_raykatz_nedg.mbta_stops"]
-    writes = ['gaudiosi_raykatz_nedg.zipcode_info']
+    contributor = 'raykatz_nedg_gaudiosi'
+    reads = ["raykatz_nedg_gaudiosi.zipcode_map", "raykatz_nedg_gaudiosi.demographic_percentages", "raykatz_nedg_gaudiosi.housing_percentages", "raykatz_nedg_gaudiosi.income_percentages", "raykatz_nedg_gaudiosi.mbta_stops"]
+    writes = ['raykatz_nedg_gaudiosi.zipcode_info']
 
     @staticmethod
     def execute(trial = False):
@@ -18,11 +18,11 @@ class zipcode_info(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('gaudiosi_raykatz_nedg', 'gaudiosi_raykatz_nedg')
+        repo.authenticate('raykatz_nedg_gaudiosi', 'raykatz_nedg_gaudiosi')
        
         r = []
         
-        zipcode_data = list(repo.gaudiosi_raykatz_nedg.zipcode_map.find({}))[0]
+        zipcode_data = list(repo.raykatz_nedg_gaudiosi.zipcode_map.find({}))[0]
 
         zipcode_list = []
         for feature in zipcode_data["features"]:
@@ -33,8 +33,8 @@ class zipcode_info(dml.Algorithm):
         for zipcode in zipcode_list:
             z = {}
             z["zipcode"] = zipcode
-            demographics = list(repo.gaudiosi_raykatz_nedg.demographic_percentages.find({"zipcode": zipcode}))
-            income =  list(repo.gaudiosi_raykatz_nedg.income_percentages.find({"zipcode": zipcode}))
+            demographics = list(repo.raykatz_nedg_gaudiosi.demographic_percentages.find({"zipcode": zipcode}))
+            income =  list(repo.raykatz_nedg_gaudiosi.income_percentages.find({"zipcode": zipcode}))
             if len(demographics) == 0 or len(income) == 0:
                 continue
             else:
@@ -42,7 +42,7 @@ class zipcode_info(dml.Algorithm):
                 demographics = demographics[0]
             
             
-            housing = list(repo.gaudiosi_raykatz_nedg.housing_percentages.find({"zipcode": zipcode}))[0]
+            housing = list(repo.raykatz_nedg_gaudiosi.housing_percentages.find({"zipcode": zipcode}))[0]
             
             
             z["percent_white"] = demographics["percent_white"]
@@ -67,9 +67,9 @@ class zipcode_info(dml.Algorithm):
             z["percent_homes_built_before_1939"] = housing["percent_homes_built_before_1939"]
             z["percent_renting"] = housing["percent_renting"]
 
-            z["subway_stops"] = repo.gaudiosi_raykatz_nedg.mbta_stops.count({"zipcode": zipcode, "mode_name": "Subway"})
-            z["commuter_stops"] = repo.gaudiosi_raykatz_nedg.mbta_stops.count({"zipcode": zipcode, "mode_name": "Commuter Rail"})
-            z["bus_stops"] = repo.gaudiosi_raykatz_nedg.mbta_stops.count({"zipcode": zipcode, "mode_name": "Bus"})
+            z["subway_stops"] = repo.raykatz_nedg_gaudiosi.mbta_stops.count({"zipcode": zipcode, "mode_name": "Subway"})
+            z["commuter_stops"] = repo.raykatz_nedg_gaudiosi.mbta_stops.count({"zipcode": zipcode, "mode_name": "Commuter Rail"})
+            z["bus_stops"] = repo.raykatz_nedg_gaudiosi.mbta_stops.count({"zipcode": zipcode, "mode_name": "Bus"})
             
             
             r.append(z)
@@ -77,9 +77,9 @@ class zipcode_info(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("zipcode_info")
         repo.createCollection("zipcode_info")
-        repo['gaudiosi_raykatz_nedg.zipcode_info'].insert_many(r)
-        repo['gaudiosi_raykatz_nedg.zipcode_info'].metadata({'complete':True})
-        print(repo['gaudiosi_raykatz_nedg.zipcode_info'].metadata())
+        repo['raykatz_nedg_gaudiosi.zipcode_info'].insert_many(r)
+        repo['raykatz_nedg_gaudiosi.zipcode_info'].metadata({'complete':True})
+        print(repo['raykatz_nedg_gaudiosi.zipcode_info'].metadata())
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -97,18 +97,18 @@ class zipcode_info(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('gaudiosi_raykatz_nedg', 'gaudiosi_raykatz_nedg')
+        repo.authenticate('raykatz_nedg_gaudiosi', 'raykatz_nedg_gaudiosi')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
 
-        this_script = doc.agent('alg:gaudiosi_raykatz_nedg#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource =  doc.entity('dat:gaudiosi_raykatz_nedg#demographics_percentages', {'prov:label':'Demographic Percentages', prov.model.PROV_TYPE:'ont:DataSet'})
-        resource2 = doc.entity('dat:gaudiosi_raykatz_nedg#housing_percentages', {'prov:label':'Housing Percentages', prov.model.PROV_TYPE:'ont:DataSet'})
-        resource3 = doc.entity('dat:gaudiosi_raykatz_nedg#income_percentages', {'prov:label':'Income Percentages', prov.model.PROV_TYPE:'ont:DataSet'})
-        resource4 = doc.entity('dat:gaudiosi_raykatz_nedg#zipcode_map', {'prov:label':'Zipcode Map', prov.model.PROV_TYPE:'ont:DataSet'}) 
-        resource5 = doc.entity('dat:gaudiosi_raykatz_nedg#mbta_stops', {'prov:label':'MBTA Stops', prov.model.PROV_TYPE:'ont:DataSet'})
+        this_script = doc.agent('alg:raykatz_nedg_gaudiosi#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource =  doc.entity('dat:raykatz_nedg_gaudiosi#demographics_percentages', {'prov:label':'Demographic Percentages', prov.model.PROV_TYPE:'ont:DataSet'})
+        resource2 = doc.entity('dat:raykatz_nedg_gaudiosi#housing_percentages', {'prov:label':'Housing Percentages', prov.model.PROV_TYPE:'ont:DataSet'})
+        resource3 = doc.entity('dat:raykatz_nedg_gaudiosi#income_percentages', {'prov:label':'Income Percentages', prov.model.PROV_TYPE:'ont:DataSet'})
+        resource4 = doc.entity('dat:raykatz_nedg_gaudiosi#zipcode_map', {'prov:label':'Zipcode Map', prov.model.PROV_TYPE:'ont:DataSet'}) 
+        resource5 = doc.entity('dat:raykatz_nedg_gaudiosi#mbta_stops', {'prov:label':'MBTA Stops', prov.model.PROV_TYPE:'ont:DataSet'})
         
 
         get_demos = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
@@ -134,7 +134,7 @@ class zipcode_info(dml.Algorithm):
                   {prov.model.PROV_TYPE:'ont:Computation'}
                   )       
         
-        demos = doc.entity('dat:gaudiosi_raykatz_nedg#zipcode_info', {prov.model.PROV_LABEL:'Zipcode Info', prov.model.PROV_TYPE:'ont:DataSet'})
+        demos = doc.entity('dat:raykatz_nedg_gaudiosi#zipcode_info', {prov.model.PROV_LABEL:'Zipcode Info', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(demos, this_script)
         doc.wasGeneratedBy(demos, get_demos, endTime)
         doc.wasDerivedFrom(demos, resource, get_demos, get_demos, get_demos)

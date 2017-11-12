@@ -5,39 +5,41 @@ import prov.model
 import datetime
 import uuid
 
-class housing_percentages(dml.Algorithm):
-    contributor = 'gaudiosi_raykatz_nedg'
-    reads = ["gaudiosi_raykatz_nedg.housing"]
-    writes = ['gaudiosi_raykatz_nedg.housing_percentages']
+class income_percentages(dml.Algorithm):
+    contributor = 'raykatz_nedg_gaudiosi'
+    reads = ["raykatz_nedg_gaudiosi.income"]
+    writes = ['raykatz_nedg_gaudiosi.income_percentages']
 
     @staticmethod
     def execute(trial = False):
-        '''Merge zipcode info'''
+        '''Get income percentages'''
         startTime = datetime.datetime.now()
 
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('gaudiosi_raykatz_nedg', 'gaudiosi_raykatz_nedg')
+        repo.authenticate('raykatz_nedg_gaudiosi', 'raykatz_nedg_gaudiosi')
        
         
-        repo.dropCollection("housing_percentages")
-        repo.createCollection("housing_percentages")
-
-        repo.gaudiosi_raykatz_nedg.housing.aggregate( [ {"$project":{
+        repo.dropCollection("income_percentages")
+        repo.createCollection("income_percentages")
+        
+        repo.raykatz_nedg_gaudiosi.income.aggregate( [ {"$project":{
                                                 "zipcode":1,
-                                                "percent_homes_occupied":{"$divide": ["$occupied_housing", "$total_housing"]},
-                                                "percent_homes_vacant":{"$divide": ["$vacant_housing", "$total_housing"]},
-                                                "percent_homes_built_before_1939":{"$divide": ["$structures_built_before_1939", "$total_structures_built"]},
-                                                "percent_renting":{"$divide": ["$renter_occupied", "$total_occupied"]},
+                                                "median_income":1,
+                                                "median_rent":1,
+                                                "percent_spending_50_rent":{"$divide": ["$50_income_rent", "$total_renters"]},
+                                                "percent_poverty":{"$divide": ["$people_in_poverty", "$total_people"]},
                                                 }},
                                                 
-                                                {"$out": "gaudiosi_raykatz_nedg.housing_percentages"}
+                                                {"$out": "raykatz_nedg_gaudiosi.income_percentages"}
 
+                                                
         ])
+ 
          
-        repo['gaudiosi_raykatz_nedg.housing_percentages'].metadata({'complete':True})
-        print(repo['gaudiosi_raykatz_nedg.housing_percentages'].metadata())
+        repo['raykatz_nedg_gaudiosi.income_percentages'].metadata({'complete':True})
+        print(repo['raykatz_nedg_gaudiosi.income_percentages'].metadata())
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -55,15 +57,15 @@ class housing_percentages(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('gaudiosi_raykatz_nedg', 'gaudiosi_raykatz_nedg')
+        repo.authenticate('raykatz_nedg_gaudiosi', 'raykatz_nedg_gaudiosi')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
-        this_script = doc.agent('alg:gaudiosi_raykatz_nedg#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('dat:gaudiosi_raykatz_nedg#housing', {'prov:label':'Housing', prov.model.PROV_TYPE:'ont:DataSet'})
+        this_script = doc.agent('alg:raykatz_nedg_gaudiosi#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource = doc.entity('dat:raykatz_nedg_gaudiosi#income', {'prov:label':'Income', prov.model.PROV_TYPE:'ont:DataSet'})
         get_demos = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_demos, this_script)
         
@@ -71,7 +73,7 @@ class housing_percentages(dml.Algorithm):
                   {prov.model.PROV_TYPE:'ont:Computation'}
                   )
         
-        demos = doc.entity('dat:gaudiosi_raykatz_nedg#housing_percentages', {prov.model.PROV_LABEL:'Housing Percentages', prov.model.PROV_TYPE:'ont:DataSet'})
+        demos = doc.entity('dat:raykatz_nedg_gaudiosi#income_percentages', {prov.model.PROV_LABEL:'Income Percentages', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(demos, this_script)
         doc.wasGeneratedBy(demos, get_demos, endTime)
         doc.wasDerivedFrom(demos, resource, get_demos, get_demos, get_demos)
@@ -80,8 +82,8 @@ class housing_percentages(dml.Algorithm):
                   
         return doc
 '''
-housing_percentages.execute()
-doc = housing_percentages.provenance()
+income_percentages.execute()
+doc = income_percentages.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
 '''

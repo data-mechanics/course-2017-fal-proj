@@ -7,9 +7,9 @@ import uuid
 import numpy
 
 class stat_cor:
-    contributor = 'gaudiosi_raykatz_nedg'
-    reads = ['gaudiosi_raykatz_nedg.zipcode_info']
-    writes = ['gaudiosi_raykatz_nedg.stat_cor']
+    contributor = 'raykatz_nedg_gaudiosi'
+    reads = ['raykatz_nedg_gaudiosi.zipcode_info']
+    writes = ['raykatz_nedg_gaudiosi.stat_cor']
 
     @staticmethod
     def execute(trial = False):
@@ -20,9 +20,9 @@ class stat_cor:
 
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('gaudiosi_raykatz_nedg', 'gaudiosi_raykatz_nedg')
+        repo.authenticate('raykatz_nedg_gaudiosi', 'raykatz_nedg_gaudiosi')
 
-        zipcode_data = list(repo.gaudiosi_raykatz_nedg.zipcode_map.find({}))[0]
+        zipcode_data = list(repo.raykatz_nedg_gaudiosi.zipcode_map.find({}))[0]
 
         zipcode_list = []
         for feature in zipcode_data["features"]:
@@ -45,8 +45,8 @@ class stat_cor:
             z = {}
             z["zipcode"] = zipcode
 
-            if(not (len(list(repo.gaudiosi_raykatz_nedg.zipcode_info.find({'zipcode': zipcode}))) == 0)):
-                data.append(list(repo.gaudiosi_raykatz_nedg.zipcode_info.find({'zipcode': zipcode}))[0])
+            if(not (len(list(repo.raykatz_nedg_gaudiosi.zipcode_info.find({'zipcode': zipcode}))) == 0)):
+                data.append(list(repo.raykatz_nedg_gaudiosi.zipcode_info.find({'zipcode': zipcode}))[0])
         for i in range(len(data)):
             median_income.append(float(data[i]['median_income']))
             percent_transit.append(float(data[i]['percent_public_transit']))
@@ -69,9 +69,9 @@ class stat_cor:
 
         repo.dropCollection("stat_cor")
         repo.createCollection("stat_cor")
-        repo['gaudiosi_raykatz_nedg.stat_cor'].insert_one(corDict)
-        repo['gaudiosi_raykatz_nedg.stat_cor'].metadata({'complete':True})
-        print(repo['gaudiosi_raykatz_nedg.stat_cor'].metadata())
+        repo['raykatz_nedg_gaudiosi.stat_cor'].insert_one(corDict)
+        repo['raykatz_nedg_gaudiosi.stat_cor'].metadata({'complete':True})
+        print(repo['raykatz_nedg_gaudiosi.stat_cor'].metadata())
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -83,20 +83,20 @@ class stat_cor:
 
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('gaudiosi_raykatz_nedg', 'gaudiosi_raykatz_nedg')
+        repo.authenticate('raykatz_nedg_gaudiosi', 'raykatz_nedg_gaudiosi')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
 
-        this_script = doc.agent('alg:gaudiosi_raykatz_nedg#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('dat:gaudiosi_raykatz_nedg#zipcode_info', {'prov:label':'Zipcode Info', prov.model.PROV_TYPE:'ont:DataSet'})
+        this_script = doc.agent('alg:raykatz_nedg_gaudiosi#proj2', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource = doc.entity('dat:raykatz_nedg_gaudiosi#zipcode_info', {'prov:label':'Zipcode Info', prov.model.PROV_TYPE:'ont:DataSet'})
         get_demos = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_demos, this_script)
 
         doc.usage(get_demos, resource, startTime, None,{prov.model.PROV_TYPE:'ont:computation'})
 
-        demos = doc.entity('dat:gaudiosi_raykatz_nedg#stat_cor', {prov.model.PROV_LABEL:'Statistics Correlations', prov.model.PROV_TYPE:'ont:DataSet'})
+        demos = doc.entity('dat:raykatz_nedg_gaudiosi#stat_cor', {prov.model.PROV_LABEL:'Statistics Correlations', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(demos, this_script)
         doc.wasGeneratedBy(demos, get_demos, endTime)
         doc.wasDerivedFrom(demos, resource, get_demos, get_demos, get_demos)

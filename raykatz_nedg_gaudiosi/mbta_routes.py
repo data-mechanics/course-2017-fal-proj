@@ -6,9 +6,9 @@ import datetime
 import uuid
 
 class mbta_routes(dml.Algorithm):
-    contributor = 'gaudiosi_raykatz_nedg'
+    contributor = 'raykatz_nedg_gaudiosi'
     reads = []
-    writes = ['gaudiosi_raykatz_nedg.mbta_routes']
+    writes = ['raykatz_nedg_gaudiosi.mbta_routes']
 
     @staticmethod
     def execute(trial = False):
@@ -18,7 +18,7 @@ class mbta_routes(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('gaudiosi_raykatz_nedg', 'gaudiosi_raykatz_nedg')
+        repo.authenticate('raykatz_nedg_gaudiosi', 'raykatz_nedg_gaudiosi')
         
         with open('auth.json') as data_file:    
             data = json.load(data_file)
@@ -44,9 +44,9 @@ class mbta_routes(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("mbta_routes")
         repo.createCollection("mbta_routes")
-        repo['gaudiosi_raykatz_nedg.mbta_routes'].insert_many(r)
-        repo['gaudiosi_raykatz_nedg.mbta_routes'].metadata({'complete':True})
-        print(repo['gaudiosi_raykatz_nedg.mbta_routes'].metadata())
+        repo['raykatz_nedg_gaudiosi.mbta_routes'].insert_many(r)
+        repo['raykatz_nedg_gaudiosi.mbta_routes'].metadata({'complete':True})
+        print(repo['raykatz_nedg_gaudiosi.mbta_routes'].metadata())
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -64,14 +64,14 @@ class mbta_routes(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('gaudiosi_raykatz_nedg', 'gaudiosi_raykatz_nedg')
+        repo.authenticate('raykatz_nedg_gaudiosi', 'raykatz_nedg_gaudiosi')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('mbta', 'http://realtime.mbta.com/developer/api/v2/')
 
-        this_script = doc.agent('alg:gaudiosi_raykatz_nedg#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:raykatz_nedg_gaudiosi#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('mbta:routes', {'prov:label':'MBTA Routes', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_mbta_routes = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_mbta_routes, this_script)
@@ -82,7 +82,7 @@ class mbta_routes(dml.Algorithm):
                   }
                   )
         
-        mbta_routes = doc.entity('dat:gaudiosi_raykatz_nedg#mbta_routes', {prov.model.PROV_LABEL:'MBTA Routes', prov.model.PROV_TYPE:'ont:DataSet'})
+        mbta_routes = doc.entity('dat:raykatz_nedg_gaudiosi#mbta_routes', {prov.model.PROV_LABEL:'MBTA Routes', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(mbta_routes, this_script)
         doc.wasGeneratedBy(mbta_routes, get_mbta_routes, endTime)
         doc.wasDerivedFrom(mbta_routes, resource, get_mbta_routes, get_mbta_routes, get_mbta_routes)
