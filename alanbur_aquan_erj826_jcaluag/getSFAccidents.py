@@ -37,7 +37,13 @@ class getSFAccidents(dml.Algorithm):
 
         repo.dropCollection("SFaccidents")
         repo.createCollection("SFaccidents")
-        repo['alanbur_aquan_erj826_jcaluag.SFaccidents'].insert(r, check_keys=False)
+
+        data = []
+        for item in r:
+            data.append({"time": item["time"], \
+                      "type": item["descript"]})
+
+        repo['alanbur_aquan_erj826_jcaluag.SFaccidents'].insert(data, check_keys=False)
         repo['alanbur_aquan_erj826_jcaluag.SFaccidents'].metadata({'complete':True})
         print(repo['alanbur_aquan_erj826_jcaluag.SFaccidents'].metadata())
 
