@@ -25,7 +25,7 @@ class MBTA_by_ward(dml.Algorithm):
         repo.authenticate('cyyan_liuzirui_yjunchoi_yzhang71','cyyan_liuzirui_yjunchoi_yzhang71')
 
         # loads ward coordinate
-        raw_ward = repo['cyyan_liuzirui_yjunchoi_yzhang71.wards'].find({})
+        raw_ward = repo['cyyan_liuzirui_yjunchoi_yzhang71.boston_wards'].find({})
 
         # loads MBTA data
         raw_MBTA = repo['cyyan_liuzirui_yjunchoi_yzhang71.MBTACoordinates'].find({})
@@ -46,7 +46,7 @@ class MBTA_by_ward(dml.Algorithm):
                 coordinates.append(j['latitude'])
                 MBTA.append(coordinates)
 
-        raw_ward = repo['cyyan_liuzirui_yjunchoi_yzhang71.wards'].find({})
+        raw_ward = repo['cyyan_liuzirui_yjunchoi_yzhang71.boston_wards'].find({})
 
         MBTAByWard = {}
         for j in raw_ward:
@@ -88,31 +88,31 @@ class MBTA_by_ward(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('bdp', 'https://data.cityofboston.gov/')
-        doc.add_namespace('hpa', 'https://data.boston.gov/')
+        doc.add_namespace('bdp', 'http://datamechanics.io/data/yjunchoi_yzhang71/')
+        doc.add_namespace('eri', 'http://erikdemaine.org/maps/mbta')
 
         #define entity to represent resources
-        this_script = doc.agent('alg:cyyan_liuzirui_yjunchoi_yzhang71#amount_of_police_hospital', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource1 = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#police', {prov.model.PROV_LABEL:'police', prov.model.PROV_TYPE:'ont:DataSet'})
-        resource2 = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#hospital', {prov.model.PROV_LABEL:'hospital', prov.model.PROV_TYPE:'ont:DataSet'})
+        this_script = doc.agent('alg:cyyan_liuzirui_yjunchoi_yzhang71#MBTA_by_ward', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource1 = doc.entity('bdp:cyyan_liuzirui_yjunchoi_yzhang71#boston_wards', {prov.model.PROV_LABEL:'boston_wards', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
+        resource2 = doc.entity('eri:cyyan_liuzirui_yjunchoi_yzhang71#MBTACoordinates', {prov.model.PROV_LABEL:'MBTACoordinates', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'yaml'})
 
-        ph = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(ph, this_script)
+        run_MBTA_by_ward = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(run_MBTA_by_ward, this_script)
 
-        doc.usage(ph, resource1, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',})
-        doc.usage(ph, resource2, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',})
+        doc.usage(run_MBTA_by_ward, resource1, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Computation',})
+        doc.usage(run_MBTA_by_ward, resource2, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Computation',})
 
-        p = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#police', {prov.model.PROV_LABEL:'police stations', prov.model.PROV_TYPE:'ont:DataSet'})
+        p = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#boston_wards', {prov.model.PROV_LABEL:'boston_wards', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(p, this_script)
-        doc.wasGeneratedBy(p, ph, endTime)
-        doc.wasDerivedFrom(p, resource1, ph, ph, ph)
+        doc.wasGeneratedBy(p, run_MBTA_by_ward, endTime)
+        doc.wasDerivedFrom(p, resource1, run_MBTA_by_ward, run_MBTA_by_ward, run_MBTA_by_ward)
 
-        h = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#hospital', {prov.model.PROV_LABEL:'hospitals', prov.model.PROV_TYPE:'ont:DataSet'})
+        h = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#MBTACoordinates', {prov.model.PROV_LABEL:'MBTACoordinatess', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(h, this_script)
-        doc.wasGeneratedBy(h, ph, endTime)
-        doc.wasDerivedFrom(h, resource2, ph, ph, ph)
+        doc.wasGeneratedBy(h, run_MBTA_by_ward, endTime)
+        doc.wasDerivedFrom(h, resource2, run_MBTA_by_ward, run_MBTA_by_ward, run_MBTA_by_ward)
 
         repo.logout()
 
