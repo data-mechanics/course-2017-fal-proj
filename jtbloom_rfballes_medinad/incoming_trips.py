@@ -6,9 +6,9 @@ import datetime
 import uuid
 
 class incoming_trips(dml.Algorithm):
-	contributor = 'jtbloom_rfballes'
-	reads = ['jtbloom_rfballes.tripHistory']
-	writes = ['jtbloom_rfballes.incoming_trips']
+	contributor = 'jtbloom_rfballes_medinad'
+	reads = ['jtbloom_rfballes_medinad.tripHistory']
+	writes = ['jtbloom_rfballes_medinad.incoming_trips']
 
 	
 	def project(tripset, item):
@@ -36,17 +36,17 @@ class incoming_trips(dml.Algorithm):
     	# Set up the database connection.
 		client = dml.pymongo.MongoClient()
 		repo = client.repo
-		repo.authenticate('jtbloom_rfballes', 'jtbloom_rfballes')
+		repo.authenticate('jtbloom_rfballes_medinad', 'jtbloom_rfballes_medinad')
 
-		repo.dropCollection('jtbloom_rfballes.incoming_trips')
-		repo.createCollection('jtbloom_rfballes.incoming_trips')
+		repo.dropCollection('jtbloom_rfballes_medinad.incoming_trips')
+		repo.createCollection('jtbloom_rfballes_medinad.incoming_trips')
 
 
-		trip_history = repo.jtbloom_rfballes.tripHistory.find()
+		trip_history = repo.jtbloom_rfballes_medinad.tripHistory.find()
 
 		trip_list = []
 
-    	#selecting from jtbloom_rfballes.tripHistory
+    	#selecting from jtbloom_rfballes_medinad.tripHistory
 		for trip_dict in trip_history:
 			trip_selection = {}
 			for item in trip_dict:
@@ -60,7 +60,7 @@ class incoming_trips(dml.Algorithm):
 
 		num_trips = incoming_trips.aggregate(incoming, incoming_trips.count_trips)
 		num_trips = [{'# incoming trips': n, 'station': s} for (s, n) in num_trips]
-		repo['jtbloom_rfballes.incoming_trips'].insert_many(num_trips)
+		repo['jtbloom_rfballes_medinad.incoming_trips'].insert_many(num_trips)
 
 			
 
@@ -69,4 +69,4 @@ class incoming_trips(dml.Algorithm):
 	def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
 		pass
 
-#incoming_trips.execute()
+incoming_trips.execute()

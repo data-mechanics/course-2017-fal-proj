@@ -6,9 +6,9 @@ import datetime
 import uuid
 
 class boston_hubway_stations(dml.Algorithm):
-    contributor = 'jtbloom_rfballes'
-    reads = ['jtbloom_rfballes.hubway_stations']
-    writes = ['jtbloom_rfballes.boston_hubway_stations']
+    contributor = 'jtbloom_rfballes_medinad'
+    reads = ['jtbloom_rfballes_medinad.hubway_stations']
+    writes = ['jtbloom_rfballes_medinad.boston_hubway_stations']
 
 
     def project(x,y):
@@ -27,14 +27,14 @@ class boston_hubway_stations(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('jtbloom_rfballes', 'jtbloom_rfballes')
+        repo.authenticate('jtbloom_rfballes_medinad_medinad', 'jtbloom_rfballes_medinad_medinad')
 
-        repo.dropCollection("jtbloom_rfballes.boston_hubway_stations")
-        repo.createCollection("jtbloom_rfballes.boston_hubway_stations")
+        repo.dropCollection("jtbloom_rfballes_medinad_medinad.boston_hubway_stations")
+        repo.createCollection("jtbloom_rfballes_medinad_medinad.boston_hubway_stations")
 
         hubway_list = []
         
-        for item in repo.jtbloom_rfballes.hubway_stations.find():
+        for item in repo.jtbloom_rfballes_medinad_medinad.hubway_stations.find():
             new_dict = {}
             new_dict['Station Name'] = item['Station']
             new_dict['Longitude'] = item['Longitude']
@@ -51,7 +51,7 @@ class boston_hubway_stations(dml.Algorithm):
         num_docks_per_municipality = [{'# of Docks': n, 'Municipality': m} for (m,n) in num_docks_per_municipality]
         print(num_docks_per_municipality)
 
-        repo['jtbloom_rfballes.boston_hubway_stations'].insert_many(num_docks_per_municipality)
+        repo['jtbloom_rfballes_medinad_medinad.boston_hubway_stations'].insert_many(num_docks_per_municipality)
 
 
     @staticmethod
