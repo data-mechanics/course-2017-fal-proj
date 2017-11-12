@@ -16,7 +16,7 @@ import requests
 class getComplaints(dml.Algorithm):
     contributor = 'alanbur_aquan_erj826_jcaluag'
     reads = ['alanbur_aquan_erj826_jcaluag.parseaccidents']
-    writes = ['alanbur_aquan_erj826_jcaluag.meanAndStdev']
+    writes = ['alanbur_aquan_erj826_jcaluag.baseStats']
 
     @staticmethod
     def execute(trial = False):
@@ -32,8 +32,8 @@ class getComplaints(dml.Algorithm):
         # collection = repo.alanbur_aquan_erj826_jcaluag.parseaccidents
         collection = repo['alanbur_aquan_erj826_jcaluag.parseaccidents'].find()
 
-        repo.dropCollection("alanbur_aquan_erj826_jcaluag.meanAndStdev")
-        repo.createCollection("alanbur_aquan_erj826_jcaluag.meanAndStdev")
+        repo.dropCollection("alanbur_aquan_erj826_jcaluag.baseStats")
+        repo.createCollection("alanbur_aquan_erj826_jcaluag.baseStats")
 
         SampleSize=1000
 
@@ -53,7 +53,7 @@ class getComplaints(dml.Algorithm):
         itemCount=0
         for entry in collection:
             #sum the casualties
-            casualtySum+=entry['total_casualties']
+            casualtySum+=int(entry['total_casualties'])
             
             #sum the times, by minute
             timeEntry = entry['time']
@@ -68,7 +68,7 @@ class getComplaints(dml.Algorithm):
         #average calculations    
         avgCasualties = casualtySum/itemCount
         avgTimeMins = timeSum/itemCount
-        theTrueHour = (int)(avgTimeMins/60)
+        theTrueHour = int(avgTimeMins/60)
         theTrueMinute= avgTimeMins%60
         avgTime=str(theTrueHour) + ":" + str(theTrueMinute)  
         
@@ -76,14 +76,26 @@ class getComplaints(dml.Algorithm):
         n['avgCasualties'] = avgCasualties
         n['avgTime'] = avgTime
 
-        #lets calculate stdev and 
+        #lets calculate stdev 
+        timeSumOfDifferences = 0
+        casualtiesSumOfDifferences = 0
+        for entry in collection.find():
+            timeDif = abs(int(n['avgTime'])-int(entry['time']))
+            timeDif = timeDif**timeDif
+            timeSumOfDifferences +=timeDif
+
+            casDif = abs(int(n['avgCasualties'])-int(entry['total_casualties']))
+            casDif = casDif ** casDif
+            casualtiesSumOfDifferences+=casDif
+
+        n['casualtiesStdev']= (casualtiesSumOfDifferences/itemCount)**(1/2.0)
+        n['timeStdev']=(timeSumOfDifferences/itemCount)**(1/2.0)
+
+        repo['alanbur_aquan_erj826_jcaluag.baseStats'].insert(n, check_keys=False)
 
 
-        repo['alanbur_aquan_erj826_jcaluag.meanAndStdev'].insert(n, check_keys=False)
-
-
-        repo['alanbur_aquan_erj826_jcaluag.meanAndStdev'].metadata({'complete':True})
-        print(repo['alanbur_aquan_erj826_jcaluag.meanAndStdev'].metadata())
+        repo['alanbur_aquan_erj826_jcaluag.baseStats'].metadata({'complete':True})
+        print(repo['alanbur_aquan_erj826_jcaluag.baseStats'].metadata())
 
         repo.logout()
 
