@@ -86,18 +86,18 @@ class crime(dml.Algorithm):
 
       
         this_script = doc.agent('alg:gaudiosi_raykatz_nedg#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource = doc.entity('bdp:crime.json', {'prov:label':'Crime Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 
         get_crime = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_crime, this_script)
         doc.usage(get_crime, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'
+                  'ont:Query':''
                   }
                   )
 
 
-        crime = doc.entity('dat:gaudiosi_raykatz_nedg#crime', {prov.model.PROV_LABEL:'crime', prov.model.PROV_TYPE:'ont:DataSet'})
+        crime = doc.entity('dat:gaudiosi_raykatz_nedg#crime', {prov.model.PROV_LABEL:'Crime', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(crime, this_script)
         doc.wasGeneratedBy(crime, get_crime, endTime)
         doc.wasDerivedFrom(crime, resource, get_crime, get_crime, get_crime)

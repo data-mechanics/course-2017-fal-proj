@@ -69,17 +69,14 @@ class demographic_percentages(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
         this_script = doc.agent('alg:gaudiosi_raykatz_nedg#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource = doc.entity('dat:gaudiosi_raykatz_nedg#demographics', {'prov:label':'Demographics', prov.model.PROV_TYPE:'ont:DataSet'})
         get_demos = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_demos, this_script)
         
         doc.usage(get_demos, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Demographic Percentages&$select=percent_white,percent_black,percent_native,percent_asian,percent_pacific,percent_hispanic'
-                  }
+                  {prov.model.PROV_TYPE:'ont:Computation'}
                   )
         
         demos = doc.entity('dat:gaudiosi_raykatz_nedg#demographic_percentages', {prov.model.PROV_LABEL:'Demographic Percentages', prov.model.PROV_TYPE:'ont:DataSet'})

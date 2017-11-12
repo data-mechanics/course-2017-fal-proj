@@ -102,23 +102,46 @@ class zipcode_info(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
         this_script = doc.agent('alg:gaudiosi_raykatz_nedg#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource =  doc.entity('dat:gaudiosi_raykatz_nedg#demographics_percentages', {'prov:label':'Demographic Percentages', prov.model.PROV_TYPE:'ont:DataSet'})
+        resource2 = doc.entity('dat:gaudiosi_raykatz_nedg#housing_percentages', {'prov:label':'Housing Percentages', prov.model.PROV_TYPE:'ont:DataSet'})
+        resource3 = doc.entity('dat:gaudiosi_raykatz_nedg#income_percentages', {'prov:label':'Income Percentages', prov.model.PROV_TYPE:'ont:DataSet'})
+        resource4 = doc.entity('dat:gaudiosi_raykatz_nedg#zipcode_map', {'prov:label':'Zipcode Map', prov.model.PROV_TYPE:'ont:DataSet'}) 
+        resource5 = doc.entity('dat:gaudiosi_raykatz_nedg#mbta_stops', {'prov:label':'MBTA Stops', prov.model.PROV_TYPE:'ont:DataSet'})
+        
+
         get_demos = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_demos, this_script)
         
         doc.usage(get_demos, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Zipcode Info&$select=zipcode,percent_white,percent_black,percent_native,percent_asian,percent_pacific,percent_hispanic,median_income,median_rent,percent_spending_50_rent,percent_poverty,percent_homes_occupied,percent_homes_vacant,percent_homes_built_before_1939,subway_stops,commuter_stops,bus_stops'
-                  }
+                  {prov.model.PROV_TYPE:'ont:Computation'}
                   )
+ 
+        doc.usage(get_demos, resource2, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Computation'}
+                  )
+
+        doc.usage(get_demos, resource3, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Computation'}
+                  )
+
+        doc.usage(get_demos, resource4, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Computation'}
+                  )
+
+        doc.usage(get_demos, resource5, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Computation'}
+                  )       
         
-        demos = doc.entity('dat:gaudiosi_raykatz_nedg#zipcode_info', {prov.model.PROV_LABEL:'Demographics', prov.model.PROV_TYPE:'ont:DataSet'})
+        demos = doc.entity('dat:gaudiosi_raykatz_nedg#zipcode_info', {prov.model.PROV_LABEL:'Zipcode Info', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(demos, this_script)
         doc.wasGeneratedBy(demos, get_demos, endTime)
         doc.wasDerivedFrom(demos, resource, get_demos, get_demos, get_demos)
+        doc.wasDerivedFrom(demos, resource2, get_demos, get_demos, get_demos)
+        doc.wasDerivedFrom(demos, resource3, get_demos, get_demos, get_demos)
+        doc.wasDerivedFrom(demos, resource4, get_demos, get_demos, get_demos)
+        doc.wasDerivedFrom(demos, resource5, get_demos, get_demos, get_demos)
 
         repo.logout()
                   

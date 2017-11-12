@@ -93,16 +93,24 @@ class mbta_stops(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
+        doc.add_namespace('mbta', 'http://realtime.mbta.com/developer/api/v2/')
 
         this_script = doc.agent('alg:gaudiosi_raykatz_nedg#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource = doc.entity('dat:gaudiosi_raykatz_nedg#mbta_routes', {'prov:label':'MBTA Routes', prov.model.PROV_TYPE:'ont:DataSet'})
+        resource2 = doc.entity('mbta:stopsbyroute', {'prov:label':'MBTA Stops By Route', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+               
+        #stopsbyroute?api_key=" + data["mbta"] + "&route=" + route["route_id"] +  "&format=json"
+        
         get_mbta_stops = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_mbta_stops, this_script)
         
         doc.usage(get_mbta_stops, resource, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Computation'}
+                  )
+
+        doc.usage(get_mbta_stops, resource2, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=MBTA_Stops&$select=mode_name,route_id,route_name,direction,stop_order,stop_id,stop_name,parent_station,parent_station_name,stop_lat,stop_lon'
+                  'ont:Query':'?api_key=KEY&route=ROUTE&format=json'
                   }
                   )
         
@@ -110,7 +118,7 @@ class mbta_stops(dml.Algorithm):
         doc.wasAttributedTo(mbta_stops, this_script)
         doc.wasGeneratedBy(mbta_stops, get_mbta_stops, endTime)
         doc.wasDerivedFrom(mbta_stops, resource, get_mbta_stops, get_mbta_stops, get_mbta_stops)
-
+        doc.wasDerivedFrom(mbta_stops, resource2, get_mbta_stops, get_mbta_stops, get_mbta_stops)
         repo.logout()
                   
         return doc

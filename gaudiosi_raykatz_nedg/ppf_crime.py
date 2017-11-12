@@ -78,7 +78,7 @@ class ppf_crime(dml.Algorithm):
         r.append(pprasdasd[8])
         r.append(crime_dict9)
         r.append(pprasdasd[39])
-        print(finaldict)
+        #print(finaldict)
 
 
 
@@ -121,20 +121,24 @@ class ppf_crime(dml.Algorithm):
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
         this_script = doc.agent('alg:gaudiosi_raykatz_nedg#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource = doc.entity('dat:gaudiosi_raykatz_nedg#ppf', {'prov:label':'PPF', prov.model.PROV_TYPE:'ont:DataSet'})
+        resource2 = doc.entity('dat:gaudiosi_raykatz_nedg#crime', {'prov:label':'Crime', prov.model.PROV_TYPE:'ont:DataSet'})
         get_demos = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_demos, this_script)
         
         doc.usage(get_demos, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=ppf_crime&$select=stuff'
-                  }
+                  {prov.model.PROV_TYPE:'ont:Computation'}
                   )
-        
+       
+        doc.usage(get_demos, resource2, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Computation'}
+                  )
+
         demos = doc.entity('dat:gaudiosi_raykatz_nedg#ppf_crime', {prov.model.PROV_LABEL:'PPF Crime', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(demos, this_script)
         doc.wasGeneratedBy(demos, get_demos, endTime)
         doc.wasDerivedFrom(demos, resource, get_demos, get_demos, get_demos)
+        doc.wasDerivedFrom(demos, resource2, get_demos, get_demos, get_demos)
 
         repo.logout()
                   

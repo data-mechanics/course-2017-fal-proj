@@ -65,14 +65,12 @@ class income_percentages(dml.Algorithm):
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
         this_script = doc.agent('alg:gaudiosi_raykatz_nedg#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource = doc.entity('dat:gaudiosi_raykatz_nedg#income', {'prov:label':'Income', prov.model.PROV_TYPE:'ont:DataSet'})
         get_demos = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_demos, this_script)
         
         doc.usage(get_demos, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Income Percentages&$select=median_income,median_rent,percent_spending_50_rent,percent_poverty'
-                  }
+                  {prov.model.PROV_TYPE:'ont:Computation'}
                   )
         
         demos = doc.entity('dat:gaudiosi_raykatz_nedg#income_percentages', {prov.model.PROV_LABEL:'Income Percentages', prov.model.PROV_TYPE:'ont:DataSet'})

@@ -63,17 +63,15 @@ class housing_percentages(dml.Algorithm):
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
         this_script = doc.agent('alg:gaudiosi_raykatz_nedg#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource = doc.entity('dat:gaudiosi_raykatz_nedg#housing', {'prov:label':'Housing', prov.model.PROV_TYPE:'ont:DataSet'})
         get_demos = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_demos, this_script)
         
         doc.usage(get_demos, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Housing Percentages&$select=occupied,vacant,total,before_1939,total_structs'
-                  }
+                  {prov.model.PROV_TYPE:'ont:Computation'}
                   )
         
-        demos = doc.entity('dat:gaudiosi_raykatz_nedg#housing_percentages', {prov.model.PROV_LABEL:'Housing', prov.model.PROV_TYPE:'ont:DataSet'})
+        demos = doc.entity('dat:gaudiosi_raykatz_nedg#housing_percentages', {prov.model.PROV_LABEL:'Housing Percentages', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(demos, this_script)
         doc.wasGeneratedBy(demos, get_demos, endTime)
         doc.wasDerivedFrom(demos, resource, get_demos, get_demos, get_demos)

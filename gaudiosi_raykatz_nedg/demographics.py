@@ -94,16 +94,16 @@ class demographics(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
+        doc.add_namespace('census', 'https://api.census.gov/data/')
 
         this_script = doc.agent('alg:gaudiosi_raykatz_nedg#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource = doc.entity('census:2010', {'prov:label':'Demographics', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_demos = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_demos, this_script)
         
         doc.usage(get_demos, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Demographics&$select=white,black,native_american,asian,pacific_islander,hispanic,total,married_households,total_households,unemployed,labor_force,employment_count,public_transit,total_transit,zipcode'
+                      'ont:Query':'/sf1?get=P016A001,P016B001,P016C001,P016D001,P016E001,P016H001,P0160001&for=zip+code+tabulation+area:*&in=state:25:'
                   }
                   )
         
