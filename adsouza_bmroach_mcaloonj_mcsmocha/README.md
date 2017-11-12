@@ -1,24 +1,67 @@
-# Optimal Placement of Speed Feedback Signs
+# Optimal Placement of Speed Feedback Signs in the City of Boston
+<img src='https://www.boston.gov/sites/default/files/speed-limit-3.jpg' height='200' width='auto'><br>
+*source: City of Boston*
 
-I have retrieved and combined datasets to find optimal locations to place speed feedback signs in Boston (inspired by a Vision Zero’s Data Challenge: https://www.boston.gov/calendar/vision-zero-data-challenge-final-presentations).  I retrieved datasets with locations of parks, schools, and elderly homes, because these areas are more vulnerable and more likely to have many pedestrians or people who might not look before crossing the street. I also queried crime reports for motor vehicle accidents. I combined the accident dataset with a dataset of streets and their speed limits, because it might be optimal to place speed feedback signs on streets with many accidents and high speed limits.
 
-Also, Vision Zero has an app where people can submit suggestions regarding safety issues (http://app01.cityofboston.gov/VZSafety/), and I queried that dataset for complaints about people speeding. I then combined this dataset with the locations of parks, schools, and elderly homes to see which complaints had coordinates within half a mile of those sites. I also ran k means to create two clusters of complaints. In the future, I would take into account which locations had the most complaints, as well as which complaints were closest to the vulnerable sites I mentioned earlier, in order to determine where speed feedback signs should be placed.
+## The Problem
+#### Introduction and Motivation
+Our team set out to determine an optimal placement of Speed Feedback Signs in the City of Boston. To do this, we analyzed where accident hotspots were around the city (further referred to as clusters), and where vulnerable areas are. Despite a plethora of types of potentially vulnerable areas, we decided to focus on schools, hospitals, and open spaces, such as parks. We used these locations collectively as 'triggers', or sites of equal weight in our scoring algorithm. This problem was previously hosted as an [open data challenge](https://docs.google.com/document/d/11QtIfhwWJEDumRgzKkkH68bzh9qrra15vVwvuNsz_oY/mobilebasi), but we sought to give it an additional look
+#### Explanation of Process
+We categorized our approach into two parts. <br>
+**Part 1** - Placement of Speed Feedback Signs
+* Phase 1:<br>
+Cluster accidents into accident hot spots via k-means
+* Phase 2: <br>
+Filter intersections by proximity to accident clusters. For an intersection to be a candidate placement site, the intersection must be in the lower 50th percentile with regards to distance to closest accident cluster. This ensures that final placements are not skewed by proximity to vulnerable sights alone, but must also be close to where accidents are known to occur. 
+* Phase 3:<br>
+We consider school, hospital, and open space locations, as well as accident cluster locations, as equally weighted 'triggers', or data points. We then run k-means on this data set, with k = 30 (hard-coded, imagining 30 of these signs are available). We then find the candidate intersection closest to each of these determined means (output of k-means), and output these 30 intersections as the sites of the speed feedback sign placements.
+<br>
 
-To Run:
-* Some of the url's I requested did not have appropriate suffixes to put in the doc.entity part of the provenance funciton, so I generated a unique uuid in that case, as suggested in lecture.
-* You will need to import the "requests" and "geopy" libraries
+**Part 2** - Statistical Analysis
+* (analysis 1 - tbd)
+* (analysis 2 - tbd)
+* (analysis 3 - tbd)
 
-Datasets:
- * Boston open spaces: http://bostonopendata-boston.opendata.arcgis.com/datasets/2868d370c55d4d458d4ae2224ef8cddd_7.geojson (from ArcGIS Open Data)
+#### Technical Details
+Each unique portion of our process is its own extension of the dml library's algorithm class, and intermediate data is stored using MongoDB.
 
- * Boston Segments (for speed limits): http://bostonopendata-boston.opendata.arcgis.com/datasets/cfd1740c2e4b49389f47a9ce2dd236cc_8.geojson (from ArcGIS Open Data)
- * Boston Elderly Housing: http://services.arcgis.com/sFnw0xNflSi8J0uh/ArcGIS/rest/services/ElderyHousing/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=Project_Name%2C+Housing_Type%2C+Parcel_Address%2C+MatchLatitude%2C+MatchLongitude&returnGeometry=true&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&returnIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnDistinctValues=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pjson&token=  (from ArcGIS REST service)
- * Boston Public Schools: https://boston.opendatasoft.com/api/records/1.0/search/?dataset=public-schools&rows=-1 (from Boston Wicked Open Data)
+## Datasets in Use
+* Motor Vehicle Accidents (Analyze Boston)
+* Hospital Locations (Analyze Boston)
+* Street Intersections (Boston Open Data - opendata.arcgis.com)
+* Open Spaces (Boston Open Data - opendata.arcgis.com)
+* Schools (boston.opendatasoft.com)
 
- * Car Accidents in Boston: https://data.boston.gov/api/3/action/datastore_search?resource_id=12cb3883-56f5-47de-afa5-3b1cf61b257b&q=Motor%20Vehicle%20Accident%20Response&limit=50000 (from data.boston.gov)
- * Vision Zero Entries: https://data.boston.gov/api/3/action/datastore_search?resource_id=80322d69-c46f-4b93-9c38-88e78ae59a34&q=people%20speed&limit=5000 (from data.boston.gov)
+## Scripts
+* *fetch_accidents.py*
+* *fetch_hospitals.py*
+* *fetch_nodes.py*
+* *fetch_open_space.py*
+* *fetch_schools.py*
+<br><br>
+* *get_accident_clusters.py* - Performs k-means on the input accidents to reduce accidents into accident clusters, which are later used as points of influence as to where feedback signs should be placed.
+* *get_signal_placements.py* - Consumes the triggers produced by clean_triggers (below) to determine the optimal placement of speed 
+<br><br>
+* *clean_triggers.py* - collects and cleans accident clusters, schools, open spaces, hospitals, candidate intersections for placement for use as points in the k-means clustering done in get_signal_placements.
 
-Transformations:
-* merge_accidents_speed_limits.py: For each street, get speed limit and number of accidents
-* find_nearby_sites.py: For each speeding complaint submitted to Vision Zero, see if their is a school, park, or elderly home within half a mile of where the complaint refers to
-* cluster_complaints.py: Run k-means on complaints submitted to Vision Zero
+
+
+## Notes
+* No Authentication for Datasets
+* No Authentication for Transformations
+* The resource libspacialindex is required to run this set of scripts. On macOS, it can be installed with Homebrew: brew install spatialindex. 
+
+### Python modules in use not typically included in standard Python distributions
+* dml
+* geojson
+* geoql
+* numpy
+* prov
+* scipy
+* sklearn
+
+### Team Members:
+* Adriana D'Souza .......... adsouza@bu.edu
+* Brian Roach ................. bmroach@bu.edu
+* Jessica McAloon ......... mcaloonj@bu.edu
+* Monica Chiu ................ mcsmocha@bu.edu
