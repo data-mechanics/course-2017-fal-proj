@@ -20,14 +20,24 @@ class propety(dml.Algorithm):
         url = 'https://data.cityofboston.gov/resource/g5b5-xrwi.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
+
+        zipcode = []
+        lalo = []
+        street = []
         for i in r:
             zipcode += i['zipcode']
+            lalo += [i['latitude'], i['longitude']]
+           # latitude += i['latitude']
+           # longitude += i['longitude']
+            street += i['st_name']
+
+        total = {'zipcode': zipcode, 'address': lalo, 'street': street}
 
         s = json.dumps(r, sort_keys= True, indent = 2)
         print(type(s))
         repo.dropCollection("propety")
         repo.createCollection("propety")
-        repo["lc546_jofranco.propety"].insert_many(zipcode)
+        repo["lc546_jofranco.propety"].insert_many(total)
         repo["lc546_jofranco.propety"].metadata({'complete':True})
         print(repo["lc546_jofranco.propety"].metadata())
         repo.logout()
@@ -48,7 +58,7 @@ class propety(dml.Algorithm):
         get_propetyinfo = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime, {prov.model.PROV_LABEL:'propety', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAssociatedWith(get_propetyinfo, this_script)
         doc.usage(get_propetyinfo, resource, startTime)
-        propetyinfo = doc.entity('dat:lc546_jofranco#propetyinfo', {prov.model.PROV_LABEL:'propety Bike info', prov.model.PROV_TYPE:'ont:DataSet'})
+        propetyinfo = doc.entity('dat:lc546_jofranco#propetyinfo', {prov.model.PROV_LABEL:'propety info', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(propetyinfo, this_script)
         doc.wasGeneratedBy(propetyinfo, get_propetyinfo, endTime)
         doc.wasDerivedFrom(propetyinfo, resource, get_propetyinfo, get_propetyinfo, get_propetyinfo)
