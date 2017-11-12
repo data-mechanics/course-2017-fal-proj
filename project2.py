@@ -14,7 +14,7 @@ import pdb
 class fzjr_retrievalalgorithm(dml.Algorithm):
     contributor = 'francisz_jrashaan'
     reads = []
-    writes = ['francisz_jrashaan.hubways', 'francisz_jrashaan.ChargingStation', 'francisz_jrashaan.bikeNetwork',
+    writes = ['francisz_jrashaan.Hubways', 'francisz_jrashaan.ChargingStation', 'francisz_jrashaan.bikeNetwork',
               'francisz_jrashaan.openspace', 'francisz_jrashaan.neighborhood']
     
     @staticmethod
@@ -26,8 +26,8 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate('francisz_jrashaan', 'francisz_jrashaan')
-        repo.dropCollection("hubways")
-        repo.createCollection("hubways")
+        repo.dropCollection("Hubways")
+        repo.createCollection("Hubways")
         url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/ee7474e2a0aa45cbbdfe0b747a5eb032_0.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         gj = geojson.loads(response)
@@ -52,8 +52,8 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/465e00f9632145a1ad645a27d27069b4_2.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
        
-        repo.dropCollection("ChargingStation")
-        repo.createCollection("ChargingStation")
+        repo.dropCollection("ChargingStations")
+        repo.createCollection("ChargingStations")
         gj = geojson.loads(response)
         geoDict = dict(gj)
         geoList = geoDict['features']
@@ -211,7 +211,7 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
                 
                 if coords == coords2:
                     definiteNeighborhoodCoordinates[i] = a,b,c,d,1,f
-                    print("FUCKING MATCH")
+#print("FUCKING MATCH")
 
 
 
@@ -315,31 +315,31 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         
         
         this_script = doc.agent('alg:francisz_jrashaan#fzjr_retrievalalgorithm', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource_crime = doc.entity('bdp:12cb3883-56f5-47de-afa5-3b1cf61b257b', {'prov:label':'Crime', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        resource_streetlights = doc.entity('bdp:c2fcc1e3-c38f-44ad-a0cf-e5ea2a6585b5', {'prov:label':'Streetlights', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        resource_landuse = doc.entity('cam:srp4-fhjz/rows.json', {'prov:label':'Landuse', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_chargeStations = doc.entity('bdp:12cb3883-56f5-47de-afa5-3b1cf61b257b', {'prov:label':'chargeStations', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_Hubways = doc.entity('bdp:c2fcc1e3-c38f-44ad-a0cf-e5ea2a6585b5', {'prov:label':'Hubways', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_bikeNetwork = doc.entity('cam:srp4-fhjz/rows.json', {'prov:label':'bikeNetworks', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         resource_capopulation = doc.entity('cam:r4pm-qqje/rows', {'prov:label':'Cambridge Population Density', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         resource_openspace = doc.entity('bdp:769c0a21-9e35-48de-a7b0-2b7dfdefd35e', {'prov:label':'Openspace', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         
-        get_crime = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        get_streetlights = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        get_landuse = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        get_chargeStations = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        get_Hubways = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        get_bikeNetworks = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         get_capopulation = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         get_openspace = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_crime, this_script)
-        doc.wasAssociatedWith(get_streetlights, this_script)
-        doc.wasAssociatedWith(get_landuse, this_script)
+        doc.wasAssociatedWith(get_chargeStations, this_script)
+        doc.wasAssociatedWith(get_Hubways, this_script)
+        doc.wasAssociatedWith(get_bikeNetworks, this_script)
         doc.wasAssociatedWith(get_capopulation, this_script)
         doc.wasAssociatedWith(get_openspace, this_script)
-        doc.usage(get_crime, resource_crime, startTime, None,
+        doc.usage(get_chargeStations, resource_chargeStations, startTime, None,
         {prov.model.PROV_TYPE:'ont:Retrieval'}
         )
-        doc.usage(get_streetlights, resource_streetlights, startTime, None,
+        doc.usage(get_Hubways, resource_Hubways, startTime, None,
         {prov.model.PROV_TYPE:'ont:Retrieval'
         }
         )
           
-        doc.usage(get_landuse, resource_landuse, startTime, None,
+        doc.usage(get_bikeNetworks, resource_bikeNetwork, startTime, None,
         {prov.model.PROV_TYPE:'ont:Retrieval'}
         )
         doc.usage(get_capopulation, resource_capopulation, startTime, None,
@@ -349,20 +349,20 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         {prov.model.PROV_TYPE:'ont:Retrieval'
         }
         )
-        crime = doc.entity('dat:francisz_jrashaan#crime', {prov.model.PROV_LABEL:'crime', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(crime, this_script)
-        doc.wasGeneratedBy(crime, get_crime, endTime)
-        doc.wasDerivedFrom(crime, resource_crime, get_crime, get_crime, get_crime)
+        chargeStations = doc.entity('dat:francisz_jrashaan#chargeStations', {prov.model.PROV_LABEL:'chargeStations', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(chargeStations, this_script)
+        doc.wasGeneratedBy(crime, get_chargeStations, endTime)
+        doc.wasDerivedFrom(crime, resource_chargeStations, get_chargeStations, get_chargeStations, get_chargeStations)
       
-        streetlights = doc.entity('dat:francisz_jrashaan#streetlights', {prov.model.PROV_LABEL:'streetlights', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(streetlights, this_script)
-        doc.wasGeneratedBy(streetlights, get_streetlights, endTime)
-        doc.wasDerivedFrom(streetlights, resource_streetlights, get_streetlights, get_streetlights, get_streetlights)
+        Hubways = doc.entity('dat:francisz_jrashaan#Hubways', {prov.model.PROV_LABEL:'Hubways', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(Hubways, this_script)
+        doc.wasGeneratedBy(Hubways, get_streetlights, endTime)
+        doc.wasDerivedFrom(Hubways, resource_Hubways, get_Hubways, get_Hubways, get_Hubways)
       
-        landuse = doc.entity('dat:francisz_jrashaan#landuse', {prov.model.PROV_LABEL:'landuse', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(landuse, this_script)
-        doc.wasGeneratedBy(landuse, get_landuse, endTime)
-        doc.wasDerivedFrom(landuse, resource_landuse, get_landuse, get_landuse, get_landuse)
+        bikeNetwork = doc.entity('dat:francisz_jrashaan#bikeNetwork', {prov.model.PROV_LABEL:'bikeNetwork', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(bikeNetwork, this_script)
+        doc.wasGeneratedBy(bikeNetwork, get_bikeNetworks, endTime)
+        doc.wasDerivedFrom(bikeNetwork, resource_bikeNetwork, get_bikeNetworks, get_bikeNetworks, get_bikeNetworks)
       
         capopulation = doc.entity('dat:francisz_jrashaan#capopulation', {prov.model.PROV_LABEL:'capopulation', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(capopulation, this_script)
