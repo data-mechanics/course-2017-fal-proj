@@ -29,15 +29,29 @@ class getComplaints(dml.Algorithm):
 
         repo.authenticate('alanbur_aquan_erj826_jcaluag', 'alanbur_aquan_erj826_jcaluag')          
 
-        collection = repo.alanbur_aquan_erj826_jcaluag.parseaccidents
+        # collection = repo.alanbur_aquan_erj826_jcaluag.parseaccidents
+        collection = repo['alanbur_aquan_erj826_jcaluag.parseaccidents'].find()
 
         repo.dropCollection("alanbur_aquan_erj826_jcaluag.meanAndStdev")
         repo.createCollection("alanbur_aquan_erj826_jcaluag.meanAndStdev")
 
+        SampleSize=1000
+
+
+        if trial:
+            TrialSample=collection[:SampleSize]
+            for i in range(SampleSize+1,len(collection)):
+                j=random.randint(1,i)
+                if j<kSize:
+                    TrialSample[j] = self.Allreviews[i]
+            print('Running in trial mode')
+            collection=TrialSample
+
+        print(len(collection))
         timeSum=0
         casualtySum=0
         itemCount=0
-        for entry in collection.find():
+        for entry in collection:
             #sum the casualties
             casualtySum+=entry['total_casualties']
             
