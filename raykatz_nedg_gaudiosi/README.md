@@ -29,7 +29,12 @@ pip install shapely
 # Data Mechanics Project 2
 Project by Ben Gaudiosi, Ned Geeslin, and Ray Katz
 
+The first computation we performed is creating a scoring system for gentrification for each zip code, specifically done in averages.py and gentrification_score.py.
+The second computation attempts to find correlations between the variables we have. This is done in stat_cor.py.
+
 
 ## Write Up
 
-We decided to stick with the original project we chose of studying gentrification.
+We decided to stick with the original project we chose of studying gentrification. We found a paper that details some of the indicators of gentrification:
+https://communityinnovation.berkeley.edu/reports/Gentrification-Report.pdf
+We used this paper to model our computations and to create a scoring system for gentrification, along with some of our own inputs. We first standardized most of the data that we collected in our first project, stored in the zipcode_info DB. Then, we found the number of standard deviations each indicator was from the mean for each zipcode, and summed these differences (multiplying by -1 for a few negative indicators). Our second computation is used to find correlations between the variables that we have in order to determine which factors are more or less significant when it comes to gentrification. For the most part, our results aligned with our intuitions: areas like the North End and Finanical District had low suspecibility to gentrification, while areas like Allston and Dorchester were more suspectible. Thus, we've created a way to rank the risk of gentrification in the various neighborhoods of Boston using the factors available to us. 
