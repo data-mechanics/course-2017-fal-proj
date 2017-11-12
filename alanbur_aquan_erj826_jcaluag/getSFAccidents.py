@@ -12,7 +12,7 @@ import prov.model
 import datetime
 import uuid
 import requests
-
+import random
 class getSFAccidents(dml.Algorithm):
     contributor = 'alanbur_aquan_erj826_jcaluag'
     reads = []
@@ -42,6 +42,17 @@ class getSFAccidents(dml.Algorithm):
         for item in r:
             data.append({"time": item["time"], \
                       "type": item["descript"]})
+
+        SampleSize=100
+        if trial:
+            TrialSample=data[:SampleSize]
+            for i in range(SampleSize+1,len(data)):
+                j=random.randint(1,i)
+                if j<SampleSize:
+                    TrialSample[j] = data[i]
+            print('Running in trial mode')
+            data=TrialSample
+
 
         repo['alanbur_aquan_erj826_jcaluag.SFaccidents'].insert(data, check_keys=False)
         repo['alanbur_aquan_erj826_jcaluag.SFaccidents'].metadata({'complete':True})
@@ -102,6 +113,6 @@ class getSFAccidents(dml.Algorithm):
                   
         return doc
 
-getSFAccidents.execute()
+getSFAccidents.execute(True)
 ## eof
 

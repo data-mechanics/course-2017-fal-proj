@@ -32,16 +32,17 @@ class getStats(dml.Algorithm):
 
         repo.authenticate('alanbur_aquan_erj826_jcaluag', 'alanbur_aquan_erj826_jcaluag')          
 
-        timeNY = repo.alanbur_aquan_erj826_jcaluag.timeAggregateNY.find()
-        timeSF = repo.alanbur_aquan_erj826_jcaluag.timeAggregateSF.find()
-        timeNY=[1,2,3,4,5,6]
-        timeSF=[2,4,6,8,10,12]
+        timeNY = [entry['data'] for entry in repo.alanbur_aquan_erj826_jcaluag.timeAggregateNY.find()][0]
+        timeSF = [entry['data'] for entry in repo.alanbur_aquan_erj826_jcaluag.timeAggregateSF.find()][0]
+        # timeNY=[1,2,3,4,5,6]
+        # timeSF=[2,4,6,8,10,10]
         print("New York: ",timeNY)
         print("San Fran: ",timeSF)
         
-        X = np.vstack((timeNY,timeSF))
-        print(np.cov(X))
 
+        print(np.corrcoef(timeNY,timeSF))
+        cov= np.corrcoef(timeNY,timeSF)[0][1]
+  
 
         repo.logout()
 
