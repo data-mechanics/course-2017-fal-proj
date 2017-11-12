@@ -87,18 +87,36 @@ class optByPublicT(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/cyyan_liuzirui_yjunchoi_yzhang71') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('bod', 'http://bostonpoendata-boston.opendata.argcis.com/datasets/') # Dataset used
+
 
         this_script = doc.agent('alg:cyyan_liuzirui_yjunchoi_yzhang71#optByPublicT', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bod:f7c6dc9eb6b14463a3dd87451beba13f_5.csv', {'prov:label':'Polling Location', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'csv'})
+        resource_pollingLocation = doc.entity('dat:yjunchoi_yzhang71#pollingLocation',
+                                             {'prov:label': 'pollingLocation',
+                                              prov.model.PROV_TYPE: 'ont:DataSet'})
+        resource_bus_by_ward = doc.entity('dat:yjunchoi_yzhang71#bus_by_ward',
+                                             {'prov:label': 'bus_by_ward',
+                                              prov.model.PROV_TYPE: 'ont:DataSet'})
+
+        resource_MBTA_by_ward = doc.entity('dat:yjunchoi_yzhang71#MBTA_by_ward',
+                                             {'prov:label': 'MBTA_by_ward',
+                                              prov.model.PROV_TYPE: 'ont:DataSet'})
         get_optByPublicT = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_optByPublicT, this_script)
-        doc.usage(get_optByPublicT, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval'
+        doc.usage(get_optByPublicT, resource_pollingLocation, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Computation'
+                  }
+                  )
+        doc.usage(get_optByPublicT, resource_bus_by_ward, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Computation'
+                  }
+                  )
+        doc.usage(get_optByPublicT, resource_MBTA_by_ward, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Computation'
                   }
                   )
 
-        optByPublicT = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#optByPublicT', {prov.model.PROV_LABEL:'Polling Location', prov.model.PROV_TYPE:'ont:DataSet'})
+        optByPublicT = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#optByPublicT',
+        {prov.model.PROV_LABEL:'Optimized Polling Location based on Public Transportation', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(optByPublicT, this_script)
         doc.wasGeneratedBy(optByPublicT, get_optByPublicT, endTime)
         doc.wasDerivedFrom(optByPublicT, resource, get_optByPublicT, get_optByPublicT, get_optByPublicT)
@@ -107,8 +125,8 @@ class optByPublicT(dml.Algorithm):
 
         return doc
 
-optByPublicT.execute()
-doc = optByPublicT.provenance()
+# optByPublicT.execute()
+# doc = optByPublicT.provenance()
 #print(doc.get_provn())
 #print(json.dumps(json.loads(doc.serialize()), indent=4))
 
