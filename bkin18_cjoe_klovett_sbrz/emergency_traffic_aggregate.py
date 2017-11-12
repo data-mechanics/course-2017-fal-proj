@@ -58,8 +58,23 @@ class emergency_traffic_aggregate(dml.Algorithm):
                         #traffic_dicts[i][key_name].append(traffic_intersecs[j][k])
                         intersection_list.append(traffic_intersecs[j][k])
             
+            '''
             modifiedPiece = {'RT_NAME': route_name, 'INTERSECTIONS': intersection_list}
-            modifiedDictionary.append(modifiedPiece)
+            if (modifiedPiece not in modifiedDictionary):
+                modifiedDictionary.append(modifiedPiece)
+            '''
+
+            modifiedPiece = {'RT_NAME': route_name, 'INTERSECTIONS': intersection_list}
+
+            unique = 1
+
+            for uniquePiece in modifiedDictionary:
+                if (uniquePiece['RT_NAME'] == modifiedPiece['RT_NAME']):
+                    unique = 0
+
+            if (unique == 1):
+                modifiedDictionary.append(modifiedPiece)
+
 
 
 
@@ -133,4 +148,3 @@ class emergency_traffic_aggregate(dml.Algorithm):
         return doc
 
 ## eof
-
