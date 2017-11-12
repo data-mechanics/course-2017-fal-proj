@@ -40,6 +40,8 @@ class getComplaints(dml.Algorithm):
                 n['borough'] = entry['borough']
                 n['time'] = entry['time']
                 n['total_casualties'] = int(entry['number_of_persons_injured']) + int(entry['number_of_persons_killed'])
+                n['longitude'] = double(entry['longitude'])
+                n['latitude'] = double(entry['latitude'])
             except:
                 continue
 
