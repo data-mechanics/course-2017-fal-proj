@@ -8,7 +8,7 @@ import uuid
 class getDatasets(dml.Algorithm):
     contributor = 'jdbrawn_jliang24_slarbi_tpotye'
     reads = []
-    writes = ['jdbrawn_jliang24_slarbi_tpotye.colleges', 'jdbrawn_jliang24_slarbi_tpotye.crime', 'jdbrawn_jliang24_slarbi_tpotye.crash', 'jdbrawn_jliang24_slarbi_tpotye.mbta', 'jdbrawn_jliang24_slarbi_tpotye.food', 'jdbrawn_jliang24_slarbi_tpotye.entertain']
+    writes = ['jdbrawn_jliang24_slarbi_tpotye.colleges', 'jdbrawn_jliang24_slarbi_tpotye.crime', 'jdbrawn_jliang24_slarbi_tpotye.crash', 'jdbrawn_jliang24_slarbi_tpotye.mbta', 'jdbrawn_jliang24_slarbi_tpotye.food', 'jdbrawn_jliang24_slarbi_tpotye.entertain', 'jdbrawn_jliang24_slarbi_tpotye.police']
 
     @staticmethod
     def execute(trial = False):
@@ -74,6 +74,15 @@ class getDatasets(dml.Algorithm):
         repo.createCollection("food")
         repo['jdbrawn_jliang24_slarbi_tpotye.food'].insert_many(a)
 
+        #Get police data
+        url = 'https://data.cityofboston.gov/resource/pyxn-r3i2.json'
+        response = urllib.request.urlopen(url).read().decode("utf-8")
+        r = json.loads(response)
+        s = json.dumps(r, sort_keys=True, indent=2)
+        repo.dropCollection("police")
+        repo.createCollection("police")
+        repo['jdbrawn_jliang24_slarbi_tpotye.police'].insert_many(r)
+
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -109,7 +118,7 @@ class getDatasets(dml.Algorithm):
         resource_mbta = doc.entity('591:MBTA_Bus_Stops', {'prov:label':'MBTA Bus Stops', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
         resource_entertain = doc.entity('bdp1:cz6t-w69j', {'prov:label':'Entertainment Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         resource_food = doc.entity('bdp1:fdxy-gydq', {'prov:label':'Food License Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-
+        resource_police= doc.entity('bdp1:pyxn-r3i2' , {'prov:label':'Police Stations', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         
         get_colleges = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
         get_crime = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
@@ -117,6 +126,7 @@ class getDatasets(dml.Algorithm):
         get_mbta = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
         get_entertainment_data = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         get_food_license = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        get_police= doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 
 
         doc.wasAssociatedWith(get_colleges, this_script)
@@ -125,6 +135,7 @@ class getDatasets(dml.Algorithm):
         doc.wasAssociatedWith(get_mbta, this_script)
         doc.wasAssociatedWith(get_entertainment_data, this_script)
         doc.wasAssociatedWith(get_food_license, this_script)
+        doc.wasAssociatedWith(get_police, this_script)
 
 
         doc.usage(get_colleges, resource_colleges, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval', 'ont:Query':'&limit=80'})
@@ -133,6 +144,7 @@ class getDatasets(dml.Algorithm):
         doc.usage(get_mbta, resource_mbta, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval'})
         doc.usage(get_entertainment_data, resource_entertain, startTime, None,{prov.model.PROV_TYPE:'ont:Retrieval',})
         doc.usage(get_food_license, resource_food, startTime, None,{prov.model.PROV_TYPE:'ont:Retrieval',})
+        doc.usage(get_police, resource_police, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval',})
 
         colleges = doc.entity('dat:jdbrawn_jliang24_slarbi_tpotye#colleges', {prov.model.PROV_LABEL: 'Boston Universities and Colleges', prov.model.PROV_TYPE: 'ont:DataSet'})
         doc.wasAttributedTo(colleges, this_script)
@@ -163,6 +175,11 @@ class getDatasets(dml.Algorithm):
         doc.wasAttributedTo(food_license, this_script)
         doc.wasGeneratedBy(food_license, get_food_license, endTime)
         doc.wasDerivedFrom(food_license, resource_food, get_food_license, get_food_license, get_food_license)
+
+        police = doc.entity('dat:jdbrawn_jliang24_slarbi_tpotye#police', {prov.model.PROV_LABEL:'Police Data', prov.model.PROV_TYPE:'ont:DataSet', 'ont:Extension':'json'})
+        doc.wasAttributedTo(police, this_script)
+        doc.wasGeneratedBy(police, get_police, endTime)
+        doc.wasDerivedFrom(police, resource_police, get_police, get_police, get_police)
 
         repo.logout()
 
