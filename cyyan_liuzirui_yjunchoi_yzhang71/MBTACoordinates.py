@@ -60,7 +60,7 @@ class MBTACoordinates(dml.Algorithm):
         doc.wasAssociatedWith(get_MBTACoordinates, this_script)
         doc.usage(get_MBTACoordinates, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Station+Coordinate&$select=Station, Coordinate'
+                  'ont:Query':'?type=MBTA+Coordinate&$select=MBTA, Coordinate'
                   }
                   )
 
