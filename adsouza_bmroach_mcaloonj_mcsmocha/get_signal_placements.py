@@ -118,19 +118,19 @@ class get_signal_placements(dml.Algorithm):
             this_script = doc.agent('alg:adsouza_bmroach_mcaloonj_mcsmocha#get_signal_placements', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extenstion':'py'})
             resource = doc.entity('dbg:'+str(uuid.uuid4()), {'prov:label': 'Signal Placements', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extenstion':'json'})
 
-            get_accident_hotspots = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+            get_signal_placements = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 
-            doc.wasAssociatedWith(get_accident_hotspots, this_script)
+            doc.wasAssociatedWith(get_signal_placements, this_script)
 
-            doc.usage(get_accident_hotspots, resource, startTime, None,
+            doc.usage(get_signal_placements, resource, startTime, None,
                       {prov.model.PROV_TYPE:'ont:Retrieval',
                       'ont:Query':'6222085d-ee88-45c6-ae40-0c7464620d64'
                       }
                       )
 
-            signal_placements = doc.entity('dat:adsouza_bmroach_mcaloonj_mcsmocha#signal_placements', {prov.model.PROV_LABEL:'Accident Clusters',prov.model.PROV_TYPE:'ont:DataSet'})
+            signal_placements = doc.entity('dat:adsouza_bmroach_mcaloonj_mcsmocha#signal_placements', {prov.model.PROV_LABEL:'Signal Placements',prov.model.PROV_TYPE:'ont:DataSet'})
             doc.wasAttributedTo(signal_placements, this_script)
-            doc.wasGeneratedBy(signal_placements, get_accident_hotspots, endTime)
+            doc.wasGeneratedBy(signal_placements, get_signal_placements, endTime)
             doc.wasDerivedFrom(signal_placements, resource, get_signal_placements, get_signal_placements, get_signal_placements)
 
             repo.logout()
