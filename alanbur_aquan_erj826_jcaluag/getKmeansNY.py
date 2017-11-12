@@ -12,8 +12,25 @@ import prov.model
 import datetime
 import uuid
 import requests
+import math
 import numpy as np
 from sklearn.cluster import KMeans
+
+#the largest acceptable distance between two data 
+acceptableDistance = 0.05 #this is about 3
+        
+def getMaxDistance(coordinates, kmeans):
+    maxDistance = 0
+    for i in range(len(coordinates)):
+        clusterCenter =kmeans.predict(coordinates[i])
+        current = distance(kmeans.cluster_centers_[clusterCenter][0],coordinates[i])
+        if(current > maxDistance):
+            maxDistance = current
+    return maxDistance
+
+def distance(p0, p1):
+    return math.sqrt((p0[0] - p1[0])**2 + (p0[1] - p1[1])**2)
+
 
 
 class parseNYAccidents(dml.Algorithm):
@@ -37,22 +54,26 @@ class parseNYAccidents(dml.Algorithm):
         repo.dropCollection("alanbur_aquan_erj826_jcaluag.kMeansNY")
         repo.createCollection("alanbur_aquan_erj826_jcaluag.kMeansNY")
 
+        coordinates = []
         for entry in collection.find():
             n = {}
-            try:
-                n['borough'] = entry['borough']
-                n['time'] = entry['time']
-                n['total_casualties'] = int(entry['number_of_persons_injured']) + int(entry['number_of_persons_killed'])
-                location= (entry['location'])
-                n['longitude']=location['coordinates'][0]
-                n['latitude']=location['coordinates'][1]
-                print(location['coordinates'])
-                #n['latitude'] = double(entry['latitude'])
+            try: #make the array for kmeans
+                datapoint = [entry['longitude'],entry['latitude']]
+                coordinates.append(datapoint)        
             except:
                 continue
+        X = np.array(coordinates)    
+        kmeans = KMeans(n_clusters=2, random_state=0).fit(X)
+        maxDistance = getMaxDistance(coordinates,kmeans)
+        clusters = 2
+        while(maxDistance > acceptableDistance):
+            clusters+=1
+            kmeans = KMeans(n_clusters=clusters, random_state=0).fit(X)
+            maxDistance = getMaxDistance(coordinates,kmeans)
+        print("we're done! max distance is: " + str(maxDistance) + " at " + str(clusters) + " clusters!")
+                   
 
-            repo['alanbur_aquan_erj826_jcaluag.kMeansNY'].insert(n, check_keys=False)
-
+        repo['alanbur_aquan_erj826_jcaluag.kMeansNY'].insert(n, check_keys=False)
 
         repo['alanbur_aquan_erj826_jcaluag.kMeansNY'].metadata({'complete':True})
         print(repo['alanbur_aquan_erj826_jcaluag.kMeansNY'].metadata())
@@ -63,8 +84,8 @@ class parseNYAccidents(dml.Algorithm):
 
         return {"start":startTime, "end":endTime}
 
-    @staticmethod
 
+    @staticmethod
     def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
         '''
             Create the provenance document describing everything happening
@@ -111,6 +132,10 @@ class parseNYAccidents(dml.Algorithm):
         repo.logout()
                   
         return doc
+
+
+
+
 
 parseNYAccidents.execute()
 
