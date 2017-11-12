@@ -53,9 +53,9 @@ Data Transformation (Project #1):
 	To complete this projection, I effectively append this new column to the dataset, create the final, district_info, dataset.
 
 
-Early Problem Solving (Project #2): 6.29%, note elbow method
-	In thinking of useful ways to consider the data collected and transformed in Project #1, some questions come to mind. Namely, how could I apply optimization problems
-	to these datasets in a way that is both variable and still meaningful?
+Early Problem Solving (Project #2):
+	In thinking of useful ways to consider the data collected and transformed in Project #1, some questions come to mind. Namely, how could I apply optimization problems and statistical analysis
+	to these datasets in ways that are both variable and still meaningful?
 
 	The first answer that came to mind was to apply K-means. Not only does it have a tunable input (that being the number of clusters you're looking for), but it applies
 	an optimization function on the squared distance from each point to its cluster center. Whats more, it has real world applications here: in clustering the crime incident
@@ -64,6 +64,11 @@ Early Problem Solving (Project #2): 6.29%, note elbow method
 	clusters after which the error stops markedly decreasing. The beauty, though, is that whoever uses the algorithm could tune this parameter as they see fit; potentially, the City of Boston
 	can only afford some number of patrol cars out and circulating at a given time. Using these crime centers, they could optimize the location of their patrols in a way to perfectly fits however
 	many cars they are able to expend. Note that roughly 6.29% of the crime incidents did NOT include a location for the specified incident, and these data were dropped before clustering.
+
+	To get a closer look at how the BPD is dealing with crime in Boston, I also aquired a new dataset that documents FIOs, or Field Interrogation and Observations (essentially, stop and frisks) conducted
+	by the BPD. Using this set, I'll consider any potential correlations between the targets chosen by the BPD for stop and frisk and the racial consistency of a given policing district. This has some
+	interesting implications, such as whether or not the BPD is biased in who it targets for stop and frisks, and how they might improve their current system.
+
 
 
 Note that all files pertaining to this submission are included in this directory (/esaracin/). auth.json, along with all other top-level files and directories,

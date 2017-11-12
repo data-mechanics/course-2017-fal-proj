@@ -9,11 +9,8 @@ import uuid
 import sys
 from bson import json_util
 from sklearn.cluster import KMeans
-import matplotlib as mp
-mp.use('Agg')
-import matplotlib.pyplot as plt
 
-class kmeans_crime_incidents(dml.Algorithm):
+class crime_correlation(dml.Algorithm):
     contributor = 'esaracin'
     reads = ['esaracin.crime_incidents']
     writes = ['esaracin.crime_incident_centers']
