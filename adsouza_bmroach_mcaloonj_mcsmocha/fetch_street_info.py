@@ -27,7 +27,7 @@ import uuid
 class fetch_street_info(dml.Algorithm):
     contributor = 'adsouza_bmroach_mcaloonj_mcsmocha'
     reads = []
-    writes = ['adsouza_bmroach_mcaloonj_mcsmocha.speed_limits']
+    writes = ['adsouza_bmroach_mcaloonj_mcsmocha.street_info']
 
     @staticmethod
     def execute(trial = False):
@@ -57,7 +57,7 @@ class fetch_street_info(dml.Algorithm):
         repo.dropCollection("adsouza_bmroach_mcaloonj_mcsmocha.street_info")
         repo.createCollection("adsouza_bmroach_mcaloonj_mcsmocha.street_info")
         repo["adsouza_bmroach_mcaloonj_mcsmocha.street_info"].insert(street_dict)
-        repo['adsouza_bmroach_mcaloonj_mcsmocha.accident_clusters'].metadata({'complete':True})
+        repo['adsouza_bmroach_mcaloonj_mcsmocha.street_info'].metadata({'complete':True})
 
         repo.logout()
 
