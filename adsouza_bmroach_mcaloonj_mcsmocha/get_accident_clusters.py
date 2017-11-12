@@ -41,6 +41,10 @@ class get_accident_clusters(dml.Algorithm):
         @staticmethod
         def execute(trial=False):
             startTime = datetime.datetime.now()
+
+            if trial:
+                print("in get_accident_clusters.py")
+
             # Set up the database connection.
             client = dml.pymongo.MongoClient()
             repo = client.repo

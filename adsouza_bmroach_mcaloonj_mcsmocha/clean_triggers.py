@@ -35,6 +35,8 @@ class clean_triggers(dml.Algorithm):
     @staticmethod
     def execute(trial=False):
         startTime = datetime.datetime.now()
+        if trial:
+            print("in clean_triggers.py")
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo

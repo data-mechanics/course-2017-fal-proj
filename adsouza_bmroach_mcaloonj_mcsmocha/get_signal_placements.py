@@ -44,6 +44,9 @@ class get_signal_placements(dml.Algorithm):
         def execute(trial=False):
             startTime = datetime.datetime.now()
             
+            if trial:
+                print("in get_signal_placements.py")
+
             # Set up the database connection.
             client = dml.pymongo.MongoClient()
             repo = client.repo

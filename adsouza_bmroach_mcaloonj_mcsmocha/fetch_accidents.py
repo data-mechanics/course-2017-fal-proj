@@ -33,6 +33,10 @@ class fetch_accidents(dml.Algorithm):
         @staticmethod
         def execute(trial=False):
             startTime = datetime.datetime.now()
+            
+            if trial:
+                print("in fetch_accidents.py")
+
             # Set up the database connection.
             client = dml.pymongo.MongoClient()
             repo = client.repo

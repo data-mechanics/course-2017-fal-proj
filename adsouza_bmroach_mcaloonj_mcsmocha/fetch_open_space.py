@@ -32,6 +32,10 @@ class fetch_open_space(dml.Algorithm):
     @staticmethod
     def execute(trial = False):
         startTime = datetime.datetime.now()
+
+        if trial:
+                print("in fetch_open_space.py")
+
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate('adsouza_bmroach_mcaloonj_mcsmocha', 'adsouza_bmroach_mcaloonj_mcsmocha')

@@ -33,6 +33,10 @@ class fetch_hospitals(dml.Algorithm):
         @staticmethod
         def execute(trial=False):
             startTime = datetime.datetime.now()
+            
+            if trial:
+                print("in fetch_hospitals.py")
+            
             # Set up the database connection.
             client = dml.pymongo.MongoClient()
             repo = client.repo
