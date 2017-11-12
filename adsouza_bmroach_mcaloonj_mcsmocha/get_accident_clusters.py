@@ -18,6 +18,7 @@ Development Notes:
 
 """
 
+from sklearn.cluster import KMeans
 from scipy.cluster.vq import kmeans, vq
 import numpy as np
 import json
