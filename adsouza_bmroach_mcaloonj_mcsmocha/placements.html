@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.css" />
+  </head>
+  <body style="width:100%; height:100%; margin:0; padding:0;">
+	<div id="leaflet" style="width:100vw; height:100vh;"></div>
+	<script>
+var obj = {
+  "features": [
+    {
+      "geometry": {
+        "coordinates": [
+          -71.10418737680145,
+          42.35085745435645
+        ],
+        "type": "Point"
+      },
+      "properties": {},
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          -71.07621503980585,
+          42.327818348418596
+        ],
+        "type": "Point"
+      },
+      "properties": {},
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          -71.03741583982034,
+          42.33560830163937
+        ],
+        "type": "Point"
+      },
+      "properties": {},
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          -71.05903479183382,
+          42.358226424182924
+        ],
+        "type": "Point"
+      },
+      "properties": {},
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          -71.085200544217,
+          42.33061184033176
+        ],
+        "type": "Point"
+      },
+      "properties": {},
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          -71.05860758907502,
+          42.32763266755893
+        ],
+        "type": "Point"
+      },
+      "properties": {},
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          -71.08153065981378,
+          42.32920041615287
+        ],
+        "type": "Point"
+      },
+      "properties": {},
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          -71.0366370938701,
+          42.37430874343674
+        ],
+        "type": "Point"
+      },
+      "properties": {},
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          -71.08501030703971,
+          42.3308498858156
+        ],
+        "type": "Point"
+      },
+      "properties": {},
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          -71.0291465977726,
+          42.3459347427312
+        ],
+        "type": "Point"
+      },
+      "properties": {},
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          -71.0701081075789,
+          42.328488700845
+        ],
+        "type": "Point"
+      },
+      "properties": {},
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          -71.08469897288275,
+          42.331234994250735
+        ],
+        "type": "Point"
+      },
+      "properties": {},
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          -71.03714858412327,
+          42.37411567669451
+        ],
+        "type": "Point"
+      },
+      "properties": {},
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          -71.07270629107408,
+          42.34478708506218
+        ],
+        "type": "Point"
+      },
+      "properties": {},
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          -71.07776103700714,
+          42.32875854817754
+        ],
+        "type": "Point"
+      },
+      "properties": {},
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          -71.06389155244466,
+          42.378265032330894
+        ],
+        "type": "Point"
+      },
+      "properties": {},
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          -71.07624498041535,
+          42.32874832208883
+        ],
+        "type": "Point"
+      },
+      "properties": {},
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          -71.09643279203073,
+          42.33805472044726
+        ],
+        "type": "Point"
+      },
+      "properties": {},
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          -71.0499293863026,
+          42.339594391800745
+        ],
+        "type": "Point"
+      },
+      "properties": {},
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          -71.08795818618098,
+          42.332987312217895
+        ],
+        "type": "Point"
+      },
+      "properties": {},
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          -71.08000334342648,
+          42.32903792541646
+        ],
+        "type": "Point"
+      },
+      "properties": {},
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          -71.05482097443554,
+          42.3280474994946
+        ],
+        "type": "Point"
+      },
+      "properties": {},
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          -71.10413351160373,
+          42.350922016888106
+        ],
+        "type": "Point"
+      },
+      "properties": {},
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          -71.10365867617523,
+          42.349559383922355
+        ],
+        "type": "Point"
+      },
+      "properties": {},
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          -71.08045488544106,
+          42.32963742084623
+        ],
+        "type": "Point"
+      },
+      "properties": {},
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          -71.02915387297422,
+          42.34655147271741
+        ],
+        "type": "Point"
+      },
+      "properties": {},
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          -71.08824051405416,
+          42.333174936789604
+        ],
+        "type": "Point"
+      },
+      "properties": {},
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          -71.09688213531285,
+          42.33903936071387
+        ],
+        "type": "Point"
+      },
+      "properties": {},
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          -71.05916658842696,
+          42.32797366729715
+        ],
+        "type": "Point"
+      },
+      "properties": {},
+      "type": "Feature"
+    }
+  ],
+  "type": "FeatureCollection"
+};
+    </script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.js"></script>
+	<script>
+      function randomColor() {
+        var color = '', letters = '0123456'; //789ABCDEF
+        for (var i=0; i<6; i++) {color += letters[Math.floor(Math.random() * letters.length)];}
+        return '#' + color;
+      }
+      var leaflet = L.map('leaflet').setView([42.340345768711252, -71.071254490756573], 13);
+      L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom:18, attribution:'', id:'mapbox.light'
+      }).addTo(leaflet);
+      function onEachFeature(feature, layer) {
+        if (feature.properties) {
+          var popupContent = "<p>" + feature.properties.name + '-' + feature.properties.osm_id + ".</p>";
+          if (feature.properties.popupContent)
+              popupContent += feature.properties.popupContent;
+          layer.bindPopup(popupContent);
+        }
+      }
+      L.geoJson(obj, {
+        filter: function (feature, layer) { return true; },
+        onEachFeature: onEachFeature,
+        style: function (feature) { return {"color": randomColor()}; },
+        pointToLayer:
+          function (feature, latlng) {
+            return L.circleMarker(latlng, {radius:4, weight:0.1, fillColor:"#6666AA", color:"#6666AA", opacity:1, fillOpacity:1});
+          }
+      }).addTo(leaflet);
+	</script>
+  </body>
+</html>
