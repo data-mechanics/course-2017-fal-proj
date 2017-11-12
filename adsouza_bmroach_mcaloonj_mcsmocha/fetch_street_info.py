@@ -1,3 +1,22 @@
+"""
+Filename: make_graph.py
+
+Last edited by: JM 11/11/17
+
+Boston University CS591 Data Mechanics Fall 2017 - Project 2
+Team Members:
+Adriana D'Souza     adsouza@bu.edu
+Brian Roach         bmroach@bu.edu
+Jessica McAloon     mcaloonj@bu.edu
+Monica Chiu         mcsmocha@bu.edu
+
+Development Notes:
+
+"""
+
+
+
+
 import urllib.request
 import json
 import dml
@@ -38,6 +57,13 @@ class fetch_street_info(dml.Algorithm):
         repo.dropCollection("adsouza_bmroach_mcaloonj_mcsmocha.street_info")
         repo.createCollection("adsouza_bmroach_mcaloonj_mcsmocha.street_info")
         repo["adsouza_bmroach_mcaloonj_mcsmocha.street_info"].insert(street_dict)
+        repo['adsouza_bmroach_mcaloonj_mcsmocha.accident_clusters'].metadata({'complete':True})
+
+        repo.logout()
+
+        endTime = datetime.datetime.now()
+
+        return {"start":startTime, "end":endTime}
 
 
     @staticmethod
