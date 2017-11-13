@@ -31,16 +31,58 @@ class Correlation(dml.Algorithm):
         scores =  repo.francisz_jrashaan.neighborhoodScores.find()
 
         #scores = [('North End', [0, 3, 236, 240]), ('Bay Village', [0, 0, 24, 42]), ('East Boston', [0, 19, 222, 3544]), ('Leather District', [8, 8, 34, 43]), ('Allston', [0, 1, 1888, 1994]), ('Hyde Park', [0, 0, 569, 1163]), ('Roslindale', [0, 0, 450, 608]), ('Charlestown', [0, 7, 189, 455]), ('Back Bay', [4, 17, 432, 817]), ('South End', [0, 0, 116, 150]), ('Downtown', [4, 33, 160, 420]), ('Dorchester', [0, 7, 1382, 3710]), ('South Boston Waterfront', [15, 7, 102, 222]), ('West Roxbury', [0, 0, 559, 708]), ('Longwood Medical Area', [0, 11, 136, 154]), ('Mission Hill', [0, 11, 135, 161]), ('Roxbury', [0, 7, 315, 525]), ('Beacon Hill', [1, 16, 149, 391]), ('Mattapan', [0, 0, 348, 627]), ('Harbor Islands', [0, 0, 0, 155]), ('Brighton', [0, 0, 983, 1466]), ('South Boston', [0, 1, 410, 1061]), ('West End', [0, 5, 387, 549]), ('Fenway', [4, 21, 893, 1034]), ('Chinatown', [11, 21, 74, 112]), ('Jamaica Plain', [0, 0, 356, 919])]
-        relationdata = []
+        relationdata1 = []
+        relationdata2 = []
+        relationdata3 = []
+        relationdata4 = []
+        relationdata5 = []
+        relationdata6 = []
+      
+
+
         Correlations = []
 
         for i in scores:
             a = lambda t: ((t[1][0], t[1][1]))
-            y = a(i)
-            relationdata.append(y)
+            b = lambda t: ((t[1][0], t[1][2]))    
+            c = lambda t: ((t[1][0], t[1][3]))     
+            d = lambda t: ((t[1][1], t[1][2])) 
+            e = lambda t: ((t[1][1], t[1][3]))
+            f = lambda t: ((t[1][2], t[1][3]))  
+           
+    
 
-        x = [xi for (xi, yi) in relationdata]
-        y = [yi for (xi, yi) in relationdata]
+ 
+            co1 = a(i)
+            co2 = b(i)
+            co3 = c(i)
+            co4 = d(i)
+            co5 = e(i)
+            co6 = f(i)
+
+            relationdata1.append(co1)
+            relationdata2.append(co2)
+            relationdata3.append(co3)
+            relationaldata4.append(co4)
+            relationaldata5.append(co5)
+            relationaldata6.append(co6)
+
+
+
+            x1 = [xi for (xi, yi) in relationdata1]
+            y1 = [yi for (xi, yi) in relationdata1]
+            x2 = [xi for (xi, yi) in relationdata2]
+            y2 = [yi for (xi, yi) in relationdata2]
+            x3 = [xi for (xi, yi) in relationdata3]
+            y3 = [yi for (xi, yi) in relationdata3]
+            x4 = [xi for (xi, yi) in relationdata4]
+            y4 = [yi for (xi, yi) in relationdata4]
+            x5 = [xi for (xi, yi) in relationdata5]
+            y5 = [yi for (xi, yi) in relationdata5]
+            x6 = [xi for (xi, yi) in relationdata6]
+            y6 = [yi for (xi, yi) in relationdata6]
+
+
 
     
 
@@ -71,8 +113,17 @@ class Correlation(dml.Algorithm):
             corrs.append(corr(x, y_permuted))
         return len([c for c in corrs if abs(c) > c0])/len(corrs)
     score = []
-    score.append(p(x,y))
-    print(score[0])
+    score.append(("charging station & hubway",p(x1,y1)))
+    score.append(("charging station & bikenetwork",p(x2,y2)))
+    score.append(("charging station & openspace",p(x3,y3)))
+    score.append(("hubway & bikenetwork",p(x4,y4)))
+    score.append(("hubway & openspace",p(x5,y5)))
+    score.append(("bikenetwork & openspace",p(x6,y6)))
+
+
+
+
+
     repo['francisz_jrashaan.correlationScore'].insert_many(score)
     repo['francisz_jrashaan.correlationScore'].metadata({'complete':True})
 
@@ -97,7 +148,7 @@ class Correlation(dml.Algorithm):
         doc.add_namespace('bdp', 'http://bostonopendata-boston.opendata.arcgis.com/')
         
         
-        this_script = doc.agent('alg:francisz_jrashaan#Correlation', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:francisz_jrashaan#correlationScore', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource_neighborhoodscores = doc.entity('dat:francisz_jrashaan#NeighborhoodScores', {'prov:label':'Neighborhood Scores', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'BSON'})
         
         compute_correlation = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
