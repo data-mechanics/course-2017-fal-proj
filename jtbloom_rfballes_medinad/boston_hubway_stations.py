@@ -27,19 +27,18 @@ class boston_hubway_stations(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('jtbloom_rfballes_medinad_medinad', 'jtbloom_rfballes_medinad_medinad')
+        repo.authenticate('jtbloom_rfballes_medinad', 'jtbloom_rfballes_medinad')
 
-        repo.dropCollection("jtbloom_rfballes_medinad_medinad.boston_hubway_stations")
-        repo.createCollection("jtbloom_rfballes_medinad_medinad.boston_hubway_stations")
+        repo.dropCollection("jtbloom_rfballes_medinad.boston_hubway_stations")
+        repo.createCollection("jtbloom_rfballes_medinad.boston_hubway_stations")
 
         hubway_list = []
         
-        for item in repo.jtbloom_rfballes_medinad_medinad.hubway_stations.find():
+        for item in repo.jtbloom_rfballes_medinad.hubway_stations.find():
             new_dict = {}
             new_dict['Station Name'] = item['Station']
             new_dict['Longitude'] = item['Longitude']
             new_dict['Latitude'] = item['Latitude']
-            new_dict['Station Name'] = item['Station']
             new_dict['Municipality'] = item['Municipality']
             new_dict['Number of Docks'] = item['# of Docks']    
             hubway_list.append(new_dict)
@@ -51,7 +50,7 @@ class boston_hubway_stations(dml.Algorithm):
         num_docks_per_municipality = [{'# of Docks': n, 'Municipality': m} for (m,n) in num_docks_per_municipality]
         print(num_docks_per_municipality)
 
-        repo['jtbloom_rfballes_medinad_medinad.boston_hubway_stations'].insert_many(num_docks_per_municipality)
+        repo['jtbloom_rfballes_medinad.boston_hubway_stations'].insert_many(num_docks_per_municipality)
 
 
     @staticmethod

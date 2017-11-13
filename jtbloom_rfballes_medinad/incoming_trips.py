@@ -12,11 +12,14 @@ class incoming_trips(dml.Algorithm):
 
 	
 	def project(tripset, item):
-		return {item(t) for t in tripset}	
+		return [item(t) for t in tripset]	
+
+	def product(R, S):
+		return [(t,u) for t in R for u in S]
 
 	def aggregate(R, f):
-		keys = {r[0] for r in R}
-		return {(key, f([v for (k,v) in R if k == key])) for key in keys}	
+		keys = {r[0][0] for r in R}
+		return [(key, f([v for ((k,v), lat, lon) in R if k == key])) for key in keys]	
 
 	def count_trips(iterable):
 		num = 0
@@ -52,13 +55,17 @@ class incoming_trips(dml.Algorithm):
 			for item in trip_dict:
 				trip_selection['start station name'] = trip_dict['start station name']
 				trip_selection['end station name'] = trip_dict['end station name']
+				trip_selection['end station latitude'] = trip_dict['end station latitude']
+				trip_selection['end station longitude'] = trip_dict['end station longitude']
 				trip_selection['bikeid'] = trip_dict['bikeid']
 			trip_list.append(trip_selection)
 
 
-		incoming = incoming_trips.project(trip_list, lambda t: (t['end station name'], t['bikeid']))
-
+		incoming = incoming_trips.project(trip_list, lambda t: ((t['end station name'], t['bikeid']), t['end station latitude'], t['end station longitude']))
+		#print(incoming)
 		num_trips = incoming_trips.aggregate(incoming, incoming_trips.count_trips)
+		#num_trips = incoming_trips.product(incoming, num_trips)
+		#print(num_trips)
 		num_trips = [{'# incoming trips': n, 'station': s} for (s, n) in num_trips]
 		repo['jtbloom_rfballes_medinad.incoming_trips'].insert_many(num_trips)
 

@@ -34,8 +34,8 @@ class get_datasets(dml.Algorithm):
 
 
         # Database 2: Hubway Station Locations
-        url = 'https://boston.opendatasoft.com/explore/dataset/hubway-station-locations/download/?format=geojson&timezone=America/New_York'
-        #url = 'http://datamechanics.io/data/jtbloom_rfballes_medinad/july-hubway-station-locations.geojson'
+        #url = 'https://boston.opendatasoft.com/explore/dataset/hubway-station-locations/download/?format=geojson&timezone=America/New_York'
+        url = 'http://datamechanics.io/data/jtbloom_rfballes/july-hubway-station-locations.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
