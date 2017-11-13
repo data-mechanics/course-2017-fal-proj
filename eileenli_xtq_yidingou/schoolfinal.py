@@ -11,6 +11,18 @@ from collections import defaultdict
 def map(f, R):
     return [t for (k,v) in R for t in f(k,v)]
 
+def finde(x,y):
+    all_e = []
+    for k,v in x.items():
+        # print(k)
+        # print(v)
+        for c in y:
+            m = distance(v,c)
+            if m < 2:
+                all_e.append((k,c))
+    return all_e
+
+
 def cro(x,y):
     all_cord = []
     for key,value in x.items():
@@ -24,7 +36,13 @@ def project(R, p):
 def comb(ls):
     result ={}
     for k,v in ls:
-        result.setdefault(k,[]).append(v)
+        if k in result:
+            if v not in result[k]:
+                result[k].append(v)
+        else:
+            result[k] = []
+
+    # print(result)
     return result
 
 
@@ -90,6 +108,8 @@ class schoolfinal(dml.Algorithm):
         SF = repo['eileenli_xtq_yidingou.safety'].find()
         TR = repo['eileenli_xtq_yidingou.traffic'].find()
 
+        final_dic = {}
+
 
         name_cord = {}
         c = []
@@ -106,7 +126,7 @@ class schoolfinal(dml.Algorithm):
                     # name = i['NAME']
             for m in k['geometry']:
                 if m =="coordinates":
-                    print(m)
+                    # print(m)
                     l.append(k['geometry']["coordinates"])
 
 
@@ -119,11 +139,133 @@ class schoolfinal(dml.Algorithm):
         #         print(n)
         #         if n == "coordinates":
         #             print(n)
-                    
+                        
+        entertainment_list = []
+
+        for k in CM:
+            # print(k)
+            for v in k:
+                if v == "entertainment":
+                    # print(v)
+                    entertainment_list = k["entertainment"]
+
+        en_sc = finde(name_cord, entertainment_list)
+        en_sc = comb(en_sc) #school: coordinate of entertainment within 2 miles
+        print('entertainment finished')
+
+        CM.rewind()
+
+
+        restaurants_list = []
+
+        print('restaurant start')
+
+        # print(CM)
+        for k in CM:
+            # print(k)
+            for v in k:
+                if v == "restaurants":
+                    # print(v)
+                    restaurants_list = k["restaurants"]
+
+        re_sc = finde(name_cord, restaurants_list)
+        re_sc = comb(re_sc)#school: coordinates of restaurants within 2 miles
+
+
+        #crime starts
+        crime_list = []
+
+        for k in SF:
+            for v in k:
+                if v == "crimes":
+                    # print(v)
+                    crime_list = k["crimes"]
+
+        cr_sc = finde(name_cord, crime_list)
+        cr_sc = comb(cr_sc)#school: coordinates of crimes within 2 miles
+
+        #hospital starts
+        SF.rewind()
+
+        hospital_list = []
+
+        for k in SF:
+            for v in k:
+                if v == "hospitals":
+                    # print(v)
+                    hospital_list = k["hospitals"]
+
+        hos_sc = finde(name_cord, hospital_list)
+        hos_sc = comb(hos_sc)#school: coordinates of hospitals within 2 miles
+
+        #crash starts
+        SF.rewind()
+
+        crash_list = []
+
+        for k in SF:
+            for v in k:
+                if v == "crash":
+                    # print(v)
+                    crash_list = k["crash"]
+
+        crash_sc = finde(name_cord, crash_list)
+        crash_sc = comb(crash_sc)#school: coordinates of crashs within 2 miles
+
+        #hubway starts
+        hubway_list = []
+
+        for k in TR:
+            for v in k:
+                if v == "hubway":
+                    # print(v)
+                    hubway_list = k["hubway"]
+
+        hub_sc = finde(name_cord, hubway_list)
+        hub_sc = comb(hub_sc)#school: coordinates of hubways within 2 miles
+
+        TR.rewind()
+
+        #signals starts
+        signal_list = []
+
+        for k in TR:
+            for v in k:
+                if v == "signals":
+                    # print(v)
+                    signal_list = k["signals"]
+
+        sig_sc = finde(name_cord, signal_list)
+        sig_sc = comb(sig_sc)#school: coordinates of signals within 2 miles
+
+        TR.rewind()
+
+        #MBTA starts
+        MBTA_list = []
+
+        for k in TR:
+            for v in k:
+                if v == "MBTA":
+                    # print(v)
+                    MBTA_list = k["MBTA"]
+
+        mb_sc = finde(name_cord, MBTA_list)
+        mb_sc = comb(mb_sc)#school: coordinates of MBTA within 2 miles
+                
+
+                
+                
 
 
 
-        print(name_cord)
+
+
+
+
+
+
+
+        print(mb_sc)
 
 
 
@@ -170,7 +312,7 @@ class schoolfinal(dml.Algorithm):
         repo.dropCollection("schoolfinal")
         repo.createCollection("schoolfinal")
 
-        repo['eileenli_xtq_yidingou.schoolfinal'].insert_one(name_cord)
+        repo['eileenli_xtq_yidingou.schoolfinal'].insert_one(re_sc)
         setdis=[]
 
         repo.logout()
