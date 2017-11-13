@@ -5,10 +5,10 @@ import prov.model
 import datetime
 import uuid
 
-class removeOutliers(dml.Algorithm):
+class removeOutliers2013(dml.Algorithm):
     contributor = 'angelay_maulikjs'
-    reads = ['angelay_maulikjs.all2012']
-    writes = ['angelay_maulikjs.clean2012']
+    reads = ['angelay_maulikjs.all2013']
+    writes = ['angelay_maulikjs.clean2013']
 
     @staticmethod
     def execute(trial = False):
@@ -22,7 +22,7 @@ class removeOutliers(dml.Algorithm):
         repo.createPermanent('angelay_maulikjs')
 
         l1, l2, l3, l4, l5, l6, l7 = [], [], [], [], [], [], []
-        data = repo.angelay_maulikjs.all2012.find()
+        data = repo.angelay_maulikjs.all2013.find()
         for document in data:
             d = dict(document)
             l1.append(d['CarbonIntensity'])
@@ -33,14 +33,14 @@ class removeOutliers(dml.Algorithm):
             l6.append(d['HDI'])
             l7.append(d['Population'])
 
-        data = repo.angelay_maulikjs.all2012.find()
+        data = repo.angelay_maulikjs.all2013.find()
         for document in data:
             d = dict(document)
-            if removeOutliers.isOutlier(d['CarbonIntensity'], l1) or removeOutliers.isOutlier(d['CO2Emissions'], l2) or removeOutliers.isOutlier(d['EnergyIntensity'], l3) or removeOutliers.isOutlier(d['EnergyUse'], l4) or removeOutliers.isOutlier(d['GDPperCapita'], l5) or removeOutliers.isOutlier(d['HDI'], l6) or removeOutliers.isOutlier(d['Population'], l7):
+            if removeOutliers2013.isOutlier(d['CarbonIntensity'], l1) or removeOutliers2013.isOutlier(d['CO2Emissions'], l2) or removeOutliers2013.isOutlier(d['EnergyIntensity'], l3) or removeOutliers2013.isOutlier(d['EnergyUse'], l4) or removeOutliers2013.isOutlier(d['GDPperCapita'], l5) or removeOutliers2013.isOutlier(d['HDI'], l6) or removeOutliers2013.isOutlier(d['Population'], l7):
                 continue
             else:
                 entry = {'CarbonIntensity':d['CarbonIntensity'], 'CO2Emissions':d['CO2Emissions'], 'EnergyIntensity':d['EnergyIntensity'], 'EnergyUse':d['EnergyUse'], 'GDPperCapita':d['GDPperCapita'], 'HDI': d['HDI'], 'Population':d['Population']}
-                res = repo.angelay_maulikjs.clean2012.insert_one(entry)
+                res = repo.angelay_maulikjs.clean2013.insert_one(entry)
  
         endTime = datetime.datetime.now()
         return {"Start ":startTime, "End ":endTime}
@@ -71,21 +71,21 @@ class removeOutliers(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('ang', 'http://datamechanics.io/data/angelay_maulikjs/')
 
-        this_script = doc.agent('dat:angelay_maulikjs#removeOutliers', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        removeOutliers = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime, {'prov:label':'Remove Outliers from Merged 2012 Data', prov.model.PROV_TYPE:'ont:Computation'})
-        doc.wasAssociatedWith(removeOutliers, this_script)
+        this_script = doc.agent('dat:angelay_maulikjs#removeOutliers2013', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        removeOutliers2013 = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime, {'prov:label':'Remove Outliers from Merged 2013 Data', prov.model.PROV_TYPE:'ont:Computation'})
+        doc.wasAssociatedWith(removeOutliers2013, this_script)
         
-        resource_all2012 = doc.entity('dat:angelay_maulikjs#all2012', {'prov:label':'All Data from 2012', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        doc.usage(removeOutliers, resource_all2012, startTime)
+        resource_all2013 = doc.entity('dat:angelay_maulikjs#all2013', {'prov:label':'All Data from 2013', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        doc.usage(removeOutliers2013, resource_all2013, startTime)
 
-        clean2012 = doc.entity('dat:angelay_maulikjs#clean2012', {'prov:label':'All Data from 2012 with Outliers Removed', prov.model.PROV_TYPE:'ont:Dataset'})
+        clean2013 = doc.entity('dat:angelay_maulikjs#clean2013', {'prov:label':'All Data from 2013 with Outliers Removed', prov.model.PROV_TYPE:'ont:Dataset'})
 
-        doc.wasAttributedTo(clean2012, this_script)
-        doc.wasGeneratedBy(clean2012, removeOutliers, endTime)
-        doc.wasDerivedFrom(clean2012, resource_all2012, removeOutliers, removeOutliers, removeOutliers)
+        doc.wasAttributedTo(clean2013, this_script)
+        doc.wasGeneratedBy(clean2013, removeOutliers2013, endTime)
+        doc.wasDerivedFrom(clean2013, resource_all2013, removeOutliers2013, removeOutliers2013, removeOutliers2013)
 
         repo.logout()
 
         return doc
 
-#removeOutliers.execute()
+#removeOutliers2013.execute()
