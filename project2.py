@@ -11,7 +11,7 @@ import pdb
 
 
 
-class fzjr_retrievalalgorithm(dml.Algorithm):
+class neighborhoodScores(dml.Algorithm):
     contributor = 'francisz_jrashaan'
     reads = []
     writes = ['francisz_jrashaan.Hubways', 'francisz_jrashaan.ChargingStation', 'francisz_jrashaan.bikeNetwork',
@@ -33,7 +33,6 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         gj = geojson.loads(response)
         geoDict = dict(gj)
         geoList = geoDict['features']
-        # print(geoList)
         
       
         repo['francisz_jrashaan.hubways'].insert_many(geoList)
@@ -298,11 +297,10 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
-        doc.add_namespace('cam','https://data.cambridgema.gov/api/views/')
+        doc.add_namespace('bdp', 'http://bostonopendata-boston.opendata.arcgis.com/')
         
         
-        this_script = doc.agent('alg:francisz_jrashaan#fzjr_retrievalalgorithm', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:francisz_jrashaan#neighborhoodScores', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource_chargeStations = doc.entity('bdp:12cb3883-56f5-47de-afa5-3b1cf61b257b', {'prov:label':'chargeStations', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         resource_Hubways = doc.entity('bdp:c2fcc1e3-c38f-44ad-a0cf-e5ea2a6585b5', {'prov:label':'Hubways', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         resource_bikeNetwork = doc.entity('cam:srp4-fhjz/rows.json', {'prov:label':'bikeNetworks', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
@@ -314,11 +312,15 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         get_bikeNetworks = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         get_capopulation = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         get_openspace = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+
+
         doc.wasAssociatedWith(get_chargeStations, this_script)
         doc.wasAssociatedWith(get_Hubways, this_script)
         doc.wasAssociatedWith(get_bikeNetworks, this_script)
         doc.wasAssociatedWith(get_capopulation, this_script)
         doc.wasAssociatedWith(get_openspace, this_script)
+
+
         doc.usage(get_chargeStations, resource_chargeStations, startTime, None,
         {prov.model.PROV_TYPE:'ont:Retrieval'}
         )
@@ -366,9 +368,9 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
           
         return doc
 
-fzjr_retrievalalgorithm.execute()
-doc = fzjr_retrievalalgorithm.provenance()
-#print(doc.get_provn())
-#print(json.dumps(json.loads(doc.serialize()), indent=4))
+neighborhoodScores.execute()
+doc = neighborhoodScores.provenance()
+print(doc.get_provn())
+print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof
