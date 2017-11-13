@@ -8,7 +8,6 @@ import requests
 import geojson
 #from tqdm import tqdm
 import pdb
-import scipy.stats
 from random import shuffle
 from math import sqrt
 
@@ -29,8 +28,10 @@ class Correlation(dml.Algorithm):
         repo.dropCollection("correlationScore")
         repo.createCollection("correlationScore")
         scores =  repo.francisz_jrashaan.neighborhoodScores.find()
+        print(scores)
+        print(scores[0])
         scoreArray = []
-        for x in scores.items():
+        for x in scores:
             scoreArray.append(x)
 
 
@@ -43,7 +44,7 @@ class Correlation(dml.Algorithm):
         relationdata6 = []
       
 
-
+        """
         Correlations = []
 
         for i in scoreArray:
@@ -73,64 +74,68 @@ class Correlation(dml.Algorithm):
 
 
 
-            x1 = [xi for (xi, yi) in relationdata1]
-            y1 = [yi for (xi, yi) in relationdata1]
-            x2 = [xi for (xi, yi) in relationdata2]
-            y2 = [yi for (xi, yi) in relationdata2]
-            x3 = [xi for (xi, yi) in relationdata3]
-            y3 = [yi for (xi, yi) in relationdata3]
-            x4 = [xi for (xi, yi) in relationdata4]
-            y4 = [yi for (xi, yi) in relationdata4]
-            x5 = [xi for (xi, yi) in relationdata5]
-            y5 = [yi for (xi, yi) in relationdata5]
-            x6 = [xi for (xi, yi) in relationdata6]
-            y6 = [yi for (xi, yi) in relationdata6]
+        x1 = [xi for (xi, yi) in relationdata1]
+        y1 = [yi for (xi, yi) in relationdata1]
+        x2 = [xi for (xi, yi) in relationdata2]
+        y2 = [yi for (xi, yi) in relationdata2]
+        x3 = [xi for (xi, yi) in relationdata3]
+        y3 = [yi for (xi, yi) in relationdata3]
+        x4 = [xi for (xi, yi) in relationdata4]
+        y4 = [yi for (xi, yi) in relationdata4]
+        x5 = [xi for (xi, yi) in relationdata5]
+        y5 = [yi for (xi, yi) in relationdata5]
+        x6 = [xi for (xi, yi) in relationdata6]
+        y6 = [yi for (xi, yi) in relationdata6]
+        
 
 
 
     
 
-    def permute(x):
-        shuffled = [xi for xi in x]
-        shuffle(shuffled)
-        return shuffled
+        def permute(x):
+            shuffled = [xi for xi in x]
+            shuffle(shuffled)
+            return shuffled
 
-    def avg(x): # Average
-        return sum(x)/len(x)
+        def avg(x): # Average
+            return sum(x)/len(x)
 
-    def stddev(x): # Standard deviation.
-        m = avg(x)
-        return sqrt(sum([(xi-m)**2 for xi in x])/len(x))
+        def stddev(x): # Standard deviation.
+            m = avg(x)
+            return sqrt(sum([(xi-m)**2 for xi in x])/len(x))
 
-    def cov(x, y): # Covariance.
-        return sum([(xi-avg(x))*(yi-avg(y)) for (xi,yi) in zip(x,y)])/len(x)
+        def cov(x, y): # Covariance.
+            return sum([(xi-avg(x))*(yi-avg(y)) for (xi,yi) in zip(x,y)])/len(x)
 
-    def corr(x, y): # Correlation coefficient.
-        if stddev(x)*stddev(y) != 0:
-            return cov(x, y)/(stddev(x)*stddev(y))
+        def corr(x, y): # Correlation coefficient.
+            if stddev(x)*stddev(y) != 0:
+                return cov(x, y)/(stddev(x)*stddev(y))
 
-    def p(x, y):
-        c0 = corr(x, y)
-        corrs = []
-        for k in range(0, 2000):
-            y_permuted = permute(y)
-            corrs.append(corr(x, y_permuted))
-        return len([c for c in corrs if abs(c) > c0])/len(corrs)
-    score = []
-    score.append(("charging station & hubway",p(x1,y1)))
-    score.append(("charging station & bikenetwork",p(x2,y2)))
-    score.append(("charging station & openspace",p(x3,y3)))
-    score.append(("hubway & bikenetwork",p(x4,y4)))
-    score.append(("hubway & openspace",p(x5,y5)))
-    score.append(("bikenetwork & openspace",p(x6,y6)))
+        def p(x, y):
+            c0 = corr(x, y)
+            corrs = []
+            for k in range(0, 2000):
+                y_permuted = permute(y)
+                corrs.append(corr(x, y_permuted))
+            return len([c for c in corrs if abs(c) > c0])/len(corrs)
 
 
 
+        score = []
+        score.append(("correlation between charging stations & hubway stations ",p(x1,y1)))
+        score.append(("correlation between charging stations & bikenetworks",p(x2,y2)))
+        score.append(("correlation between charging stations & openspaces",p(x3,y3)))
+        score.append(("correlation between hubway stations   & bikenetworks",p(x4,y4)))
+        score.append(("correlation between hubway stations & openspaces",p(x5,y5)))
+        score.append(("correlation between bikenetworks & openspaces",p(x6,y6)))
+    
 
 
-    repo['francisz_jrashaan.correlationScore'].insert_many(score)
-    repo['francisz_jrashaan.correlationScore'].metadata({'complete':True})
 
+
+        repo['francisz_jrashaan.correlationScore'].insert_many(score)
+        repo['francisz_jrashaan.correlationScore'].metadata({'complete':True})
+        """
 
 
     @staticmethod
@@ -163,18 +168,18 @@ class Correlation(dml.Algorithm):
      
                   
         correlationscore = doc.entity('dat:francisz_jrashaan#Correlation', {prov.model.PROV_LABEL:'Correlation Score', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(correlationScore, this_script)
-        doc.wasGeneratedBy(correlationScore, compute_correlation, endTime)
-        doc.wasDerivedFrom(correlationScore, resource_neighborhoodscores, compute_correlation, compute_correlation, compute_correlation)
+        doc.wasAttributedTo(correlationscore, this_script)
+        doc.wasGeneratedBy(correlationscore, compute_correlation, endTime)
+        doc.wasDerivedFrom(correlationscore, resource_neighborhoodscores, compute_correlation, compute_correlation, compute_correlation)
                   
         repo.logout()
                   
         return doc
 
-correlation.execute()
-doc = correlation.provenance()
-#print(doc.get_provn())
-#print(json.dumps(json.loads(doc.serialize()), indent=4))
+Correlation.execute()
+doc = Correlation.provenance()
+print(doc.get_provn())
+print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof
 
