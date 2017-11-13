@@ -99,6 +99,7 @@ class get_avg_distance(dml.Algorithm):
             clust_dict = {}
             clust_dict['cluster_num'] = cluster_list[i]
             clust_dict['overall_average'] = average_dist[i]
+            output_ldict.append(clust_dict)
 
         repo['adsouza_bmroach_mcaloonj_mcsmocha.avg_distance'].insert_many(output_ldict)
         repo['adsouza_bmroach_mcaloonj_mcsmocha.avg_distance'].metadata({'complete':True})
