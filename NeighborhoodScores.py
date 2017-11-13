@@ -14,7 +14,7 @@ import pdb
 class NeighborhoodScores(dml.Algorithm):
     contributor = 'francisz_jrashaan'
     reads = []
-    writes = ['francisz_jrashaan.Hubways', 'francisz_jrashaan.ChargingStation', 'francisz_jrashaan.bikeNetwork',
+    writes = ['francisz_jrashaan.hubways', 'francisz_jrashaan.ChargingStation', 'francisz_jrashaan.bikeNetwork',
               'francisz_jrashaan.openspace', 'francisz_jrashaan.neighborhood', 'francisz_jrashaan.neighborhoodScores']
     
     @staticmethod
@@ -26,8 +26,8 @@ class NeighborhoodScores(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate('francisz_jrashaan', 'francisz_jrashaan')
-        repo.dropCollection("Hubways")
-        repo.createCollection("Hubways")
+        repo.dropCollection("hubways")
+        repo.createCollection("hubways")
         url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/ee7474e2a0aa45cbbdfe0b747a5eb032_0.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         gj = geojson.loads(response)
@@ -51,8 +51,8 @@ class NeighborhoodScores(dml.Algorithm):
         url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/465e00f9632145a1ad645a27d27069b4_2.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
        
-        repo.dropCollection("ChargingStations")
-        repo.createCollection("ChargingStations")
+        repo.dropCollection("ChargingStation")
+        repo.createCollection("ChargingStation")
         gj = geojson.loads(response)
         geoDict = dict(gj)
         geoList = geoDict['features']
@@ -77,11 +77,11 @@ class NeighborhoodScores(dml.Algorithm):
         gj = geojson.loads(response)
         geoDict = dict(gj)
         geoList = geoDict['features']
-        repo['francisz_jrashaan.bikeNetworks'].insert_many(geoList)
-        repo['francisz_jrashaan.bikeNetworks'].metadata({'complete':True})
+        repo['francisz_jrashaan.bikeNetwork'].insert_many(geoList)
+        repo['francisz_jrashaan.bikeNetwork'].metadata({'complete':True})
         bikeCoords = []
         bikeCoordsTuple = []
-        for entry in repo.francisz_jrashaan.bikeNetworks.find():
+        for entry in repo.francisz_jrashaan.bikeNetwork.find():
             #print(entry)
            
             bikeCoords.append((entry['geometry']['type'],entry['geometry']['coordinates']))
@@ -312,6 +312,7 @@ class NeighborhoodScores(dml.Algorithm):
         get_bikeNetworks = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         get_neighborhood = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         get_openspace = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        compute_score = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 
 
         doc.wasAssociatedWith(get_chargeStations, this_script)
@@ -319,6 +320,8 @@ class NeighborhoodScores(dml.Algorithm):
         doc.wasAssociatedWith(get_bikeNetworks, this_script)
         doc.wasAssociatedWith(get_neighborhood, this_script)
         doc.wasAssociatedWith(get_openspace, this_script)
+        doc.wasAssociatedWith(compute_score, this_script)
+
 
 
         doc.usage(get_chargeStations, resource_chargeStations, startTime, None,
@@ -338,14 +341,17 @@ class NeighborhoodScores(dml.Algorithm):
         {prov.model.PROV_TYPE:'ont:Retrieval'
         }
         )
+        doc.usage(compute_score, resource_neighborhood, startTime, None, {prov.model.PROV_TYPE:'ont:Used for Computation'})
+
+
 
         
-        chargeStations = doc.entity('dat:francisz_jrashaan#chargeStations', {prov.model.PROV_LABEL:'chargeStations', prov.model.PROV_TYPE:'ont:DataSet'})
+        chargeStations = doc.entity('dat:francisz_jrashaan#ChargingStation', {prov.model.PROV_LABEL:'chargeStations', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(chargeStations, this_script)
         doc.wasGeneratedBy(chargeStations, get_chargeStations, endTime)
         doc.wasDerivedFrom(chargeStations, resource_chargeStations, get_chargeStations, get_chargeStations, get_chargeStations)
       
-        Hubways = doc.entity('dat:francisz_jrashaan#Hubways', {prov.model.PROV_LABEL:'Hubways', prov.model.PROV_TYPE:'ont:DataSet'})
+        Hubways = doc.entity('dat:francisz_jrashaan#hubways', {prov.model.PROV_LABEL:'Hubways', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(Hubways, this_script)
         doc.wasGeneratedBy(Hubways, get_Hubways, endTime)
         doc.wasDerivedFrom(Hubways, resource_Hubways, get_Hubways, get_Hubways, get_Hubways)
@@ -365,6 +371,13 @@ class NeighborhoodScores(dml.Algorithm):
         doc.wasGeneratedBy(openspace, get_openspace, endTime)
         doc.wasDerivedFrom(openspace, resource_openspace, get_openspace, get_openspace, get_openspace)
       
+
+        neighborhoodS = doc.entity('dat:francisz_jrashaan#neighborhoodScores', {prov.model.PROV_LABEL:'Computed Neighborhood Scores', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(neighborhoodS, this_script)
+        doc.wasGeneratedBy(neighborhoodS, compute_score, endTime)
+        doc.wasDerivedFrom(neighborhoodS, neighborhood, compute_score, compute_score, compute_score)
+         
+
         repo.logout()
           
         return doc

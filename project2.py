@@ -14,7 +14,7 @@ import pdb
 class NeighborhoodScores(dml.Algorithm):
     contributor = 'francisz_jrashaan'
     reads = []
-    writes = ['francisz_jrashaan.Hubways', 'francisz_jrashaan.ChargingStation', 'francisz_jrashaan.bikeNetwork',
+    writes = ['francisz_jrashaan.hubways', 'francisz_jrashaan.ChargingStation', 'francisz_jrashaan.bikeNetwork',
               'francisz_jrashaan.openspace', 'francisz_jrashaan.neighborhood', 'francisz_jrashaan.neighborhoodScores']
     
     @staticmethod
@@ -339,7 +339,7 @@ class NeighborhoodScores(dml.Algorithm):
         }
         )
 
-        
+
         chargeStations = doc.entity('dat:francisz_jrashaan#chargeStations', {prov.model.PROV_LABEL:'chargeStations', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(chargeStations, this_script)
         doc.wasGeneratedBy(chargeStations, get_chargeStations, endTime)
