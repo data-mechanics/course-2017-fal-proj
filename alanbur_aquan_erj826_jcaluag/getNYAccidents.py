@@ -45,6 +45,8 @@ class getNYAccidents(dml.Algorithm):
             print('Running in trial mode')
             data=TrialSample
 
+
+
         repo.dropCollection("NYaccidents")
         repo.createCollection("NYaccidents")
         repo['alanbur_aquan_erj826_jcaluag.NYaccidents'].insert(data, check_keys=False)

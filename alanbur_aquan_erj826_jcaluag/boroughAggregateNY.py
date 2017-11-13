@@ -2,7 +2,7 @@
 CS591
 Project 2
 11.2.17
-parseNYAccidents.py
+timeAggregateNY.py
 """
 
 import urllib.request
@@ -13,10 +13,10 @@ import datetime
 import uuid
 import requests
 
-class parseNYAccidents(dml.Algorithm):
+class boroughAggregateNY(dml.Algorithm):
     contributor = 'alanbur_aquan_erj826_jcaluag'
-    reads = ['alanbur_aquan_erj826_jcaluag.NYaccidents']
-    writes = ['alanbur_aquan_erj826_jcaluag.parseNYaccidents']
+    reads = ['alanbur_aquan_erj826_jcaluag.parseNYaccidents']
+    writes = ['alanbur_aquan_erj826_jcaluag.boroughAggregateNY']
 
     @staticmethod
     def execute(trial = False):
@@ -29,29 +29,33 @@ class parseNYAccidents(dml.Algorithm):
 
         repo.authenticate('alanbur_aquan_erj826_jcaluag', 'alanbur_aquan_erj826_jcaluag')          
 
-        collection = repo.alanbur_aquan_erj826_jcaluag.NYaccidents
+        collection = repo.alanbur_aquan_erj826_jcaluag.parseNYaccidents
 
-        repo.dropCollection("alanbur_aquan_erj826_jcaluag.parseNYaccidents")
-        repo.createCollection("alanbur_aquan_erj826_jcaluag.parseNYaccidents")
+        repo.dropCollection("alanbur_aquan_erj826_jcaluag.boroughAggregateNY")
+        repo.createCollection("alanbur_aquan_erj826_jcaluag.boroughAggregateNY")
+
+
+        borough = {}
 
         for entry in collection.find():
-            n = {}
-            try:
-                n['borough'] = entry['borough']
-                n['time'] = entry['time']
-                n['total_casualties'] = int(entry['number_of_persons_injured']) + int(entry['number_of_persons_killed'])
-                location= (entry['location'])
-                n['longitude']=location['coordinates'][0]
-                n['latitude']=location['coordinates'][1]
-                print(n)
-            except:
-                continue
-
-            repo['alanbur_aquan_erj826_jcaluag.parseNYaccidents'].insert(n, check_keys=False)
+            bins = [0 for i in range(24)]
+            borough[entry['borough']] = bins
+        for entry in collection.find():
+            borough[entry['borough']][int(entry["time"][0:entry["time"].index(":")])] += 1
 
 
-        repo['alanbur_aquan_erj826_jcaluag.parseNYaccidents'].metadata({'complete':True})
-        print(repo['alanbur_aquan_erj826_jcaluag.parseNYaccidents'].metadata())
+
+        print(borough)
+
+
+
+
+
+        repo['alanbur_aquan_erj826_jcaluag.boroughAggregateNY'].insert(borough, check_keys=False)
+
+
+        repo['alanbur_aquan_erj826_jcaluag.boroughAggregateNY'].metadata({'complete':True})
+        print(repo['alanbur_aquan_erj826_jcaluag.boroughAggregateNY'].metadata())
 
         repo.logout()
 
@@ -108,6 +112,6 @@ class parseNYAccidents(dml.Algorithm):
                   
         return doc
 
-parseNYAccidents.execute()
+boroughAggregateNY.execute()
 
 ## eof

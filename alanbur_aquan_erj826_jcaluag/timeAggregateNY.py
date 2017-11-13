@@ -41,6 +41,8 @@ class timeAggregateNY(dml.Algorithm):
             hour = int(entry["time"][0:entry["time"].index(":")])
             bins[hour] += 1
 
+        print(bins)
+
 
 
         repo['alanbur_aquan_erj826_jcaluag.timeAggregateNY'].insert({'data':bins}, check_keys=False)
