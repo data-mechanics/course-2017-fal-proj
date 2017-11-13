@@ -52,7 +52,7 @@ class getSFAccidents(dml.Algorithm):
                     TrialSample[j] = data[i]
             print('Running in trial mode')
             data=TrialSample
-
+        print(data)
 
         repo['alanbur_aquan_erj826_jcaluag.SFaccidents'].insert(data, check_keys=False)
         repo['alanbur_aquan_erj826_jcaluag.SFaccidents'].metadata({'complete':True})

@@ -2,7 +2,10 @@
 CS591
 Project 2
 11.2.17
-timeAggregateSF.py
+timeAnalyzer.py
+
+reads the two collections with [time, accident] data
+returns correlation coefficient
 """
 
 import urllib.request
@@ -12,15 +15,15 @@ import prov.model
 import datetime
 import uuid
 import requests
+import numpy as np
 
-class timeAggregateSF(dml.Algorithm):
+class getStats(dml.Algorithm):
     contributor = 'alanbur_aquan_erj826_jcaluag'
-    reads = ['alanbur_aquan_erj826_jcaluag.SFaccidents']
-    writes = ['alanbur_aquan_erj826_jcaluag.timeAggregateSF']
+    reads = ['alanbur_aquan_erj826_jcaluag.boroughAggregateNY', 'alanbur_aquan_erj826_jcaluag.timeAggregateSF']
+    writes = []
 
     @staticmethod
     def execute(trial = False):
-        '''Retrieve crime incident report information from Boston.'''
         startTime = datetime.datetime.now()
 
         # Set up the database connection.
@@ -29,24 +32,23 @@ class timeAggregateSF(dml.Algorithm):
 
         repo.authenticate('alanbur_aquan_erj826_jcaluag', 'alanbur_aquan_erj826_jcaluag')          
 
-        collection = repo.alanbur_aquan_erj826_jcaluag.SFaccidents
-
-        repo.dropCollection("alanbur_aquan_erj826_jcaluag.timeAggregateSF")
-        repo.createCollection("alanbur_aquan_erj826_jcaluag.timeAggregateSF")
+        ny = [entry for entry in repo.alanbur_aquan_erj826_jcaluag.boroughAggregateNY.find()][0]
+        sf = [entry['data'] for entry in repo.alanbur_aquan_erj826_jcaluag.timeAggregateSF.find()][0]
 
 
-        bins = [0 for i in range(24)]
+        m= ny['MANHATTAN']
+        b = ny['BROOKLYN']
+        q = ny['QUEENS']
+        bronx = ny['BRONX']
+        s = ny['STATEN ISLAND']
+        cov = np.corrcoef([sf,m,b,q,bronx,s])
 
-        for entry in collection.find():
-            hour = int(entry["time"][0:entry["time"].index(":")])
-            bins[hour] += 1
-        print(bins)
+        cov = np.cov([sf,m,b,q,bronx, s])
+        print(cov)
 
 
-        repo['alanbur_aquan_erj826_jcaluag.timeAggregateSF'].insert({'data':bins}, check_keys=False)
+        
 
-        repo['alanbur_aquan_erj826_jcaluag.timeAggregateSF'].metadata({'complete':True})
-        print(repo['alanbur_aquan_erj826_jcaluag.timeAggregateSF'].metadata())
 
         repo.logout()
 
@@ -103,6 +105,6 @@ class timeAggregateSF(dml.Algorithm):
                   
         return doc
 
-timeAggregateSF.execute()
+getStats.execute()
 
 ## eof
