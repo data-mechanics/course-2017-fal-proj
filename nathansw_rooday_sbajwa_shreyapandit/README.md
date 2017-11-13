@@ -36,6 +36,8 @@ The keys to the JSON object are the dates in which performance data was collecte
 
 ## Analysis 2
 
+#TODO clean this up and add heatmaps from analysis with explanation.
+
 * For each neighborhood, 
   * get all neighborhoods within a N mile distance
 	 * Make a DF with each neighborhood pair as rows, columns being geographical distance between neighborhoods and a demographic dimension such as 		difference in crime incidents between those neighborhoods
