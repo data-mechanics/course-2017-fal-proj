@@ -12,8 +12,8 @@ Monica Chiu         mcsmocha@bu.edu
 
 Original skeleton files provided by Andrei Lapets (lapets@bu.edu)
 
-Development Notes: 
-- Decided on limiting signals we can plce to 30. 
+Development Notes:
+- Decided on limiting signals we can plce to 30.
 - Go to line 61 and change value of n_clusters to desired amount.
 
 """
@@ -35,7 +35,7 @@ from geopy.distance import vincenty
 
 class get_signal_placements(dml.Algorithm):
         contributor = 'adsouza_bmroach_mcaloonj_mcsmocha'
-        reads = ['adsouza_bmroach_mcaloonj_mcsmocha.clean_triggers', 'adsouza_bmroach_mcaloonj_mcsmocha.nodes'] 
+        reads = ['adsouza_bmroach_mcaloonj_mcsmocha.clean_triggers', 'adsouza_bmroach_mcaloonj_mcsmocha.nodes']
         writes = ['adsouza_bmroach_mcaloonj_mcsmocha.signal_placements']
 
         @staticmethod
@@ -44,7 +44,7 @@ class get_signal_placements(dml.Algorithm):
 
             #__________________________
             #Parameters
-            
+
             speed_feedback_sign_count = 30
             # ^ Varies the number of signs which can be placed
 
@@ -56,11 +56,11 @@ class get_signal_placements(dml.Algorithm):
             buffer_size = .5
             # ^ disallows signs to be placed within this radius (in miles) from already placed signs
             # Use caution increasing this too much - it may cause the inability to find a candidate intersection
-            
+
 
             #End Parameters
             #__________________________
-            
+
             if logging:
                 print("in get_signal_placements.py")
 
@@ -73,7 +73,7 @@ class get_signal_placements(dml.Algorithm):
 
             input_data = repo['adsouza_bmroach_mcaloonj_mcsmocha.clean_triggers'].find()[0]
             triggers = []
-            
+
             for field, coords in input_data.items():
                 if field != '_id':
                     for crd in coords:
@@ -85,16 +85,16 @@ class get_signal_placements(dml.Algorithm):
             kmeans_output = KMeans(n_clusters, random_state=0).fit(X)
             centroids = kmeans_output.cluster_centers_.tolist()
             del(centroids[1])
- 
+
             #Now need to find the closest node to each centroid
             signal_placements = []
             possible_nodes_temp = repo['adsouza_bmroach_mcaloonj_mcsmocha.nodes'].find()[0]['nodes']
-            
+
             #Convert to dictionary
             possible_nodes = dict()
             for i in range(len(possible_nodes_temp)):
                 possible_nodes[i] = possible_nodes_temp[i]
-            
+
             #find nodes closest to each centroid
             taken = []
             failed_count = 0
@@ -105,11 +105,11 @@ class get_signal_placements(dml.Algorithm):
 
                 for j in range(len(possible_nodes)):            #possible intersections
                     if j not in taken:
-                        
+
                         # j also cannot be within .5 miles of anything in taken...
                         skip_this = False
                         for placed in signal_placements:        #already placed signals
-                            
+
                             j_to_placed = vincenty(placed, possible_nodes[j]).miles
                             if j_to_placed <= buffer_size:
                                 skip_this = True
@@ -120,7 +120,7 @@ class get_signal_placements(dml.Algorithm):
                         if distance < dist_of_closest_node:
                             closest_node = j
                             dist_of_closest_node = distance
-                
+
                 try:
                     taken.append(closest_node)
                     signal_placements.append(possible_nodes[closest_node])
@@ -130,9 +130,9 @@ class get_signal_placements(dml.Algorithm):
                         print("A suitable intersection was not found.\nCurrently, there are",failed_count,\
                         "centroids that were not able to be placed on intersections.")
 
-                
 
-            signal_placement_dict = {'signal_placements': signal_placements} 
+
+            signal_placement_dict = {'signal_placements': signal_placements}
             repo['adsouza_bmroach_mcaloonj_mcsmocha.signal_placements'].insert_one(signal_placement_dict)
             repo['adsouza_bmroach_mcaloonj_mcsmocha.signal_placements'].metadata({'complete':True})
 
@@ -146,29 +146,32 @@ class get_signal_placements(dml.Algorithm):
             repo = client.repo
             repo.authenticate('adsouza_bmroach_mcaloonj_mcsmocha','adsouza_bmroach_mcaloonj_mcsmocha')
 
-            doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
-            doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
+            doc.add_namespace('alg', 'http://datamechanics.io/algorithm/adsouza_bmroach_mcaloonj_mcsmocha')
+            doc.add_namespace('dat', 'http://datamechanics.io/data/adsouza_bmroach_mcaloonj_mcsmocha')
             doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
-            doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-            doc.add_namespace('dbg','https://data.boston.gov')
+            doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
 
-            this_script = doc.agent('alg:adsouza_bmroach_mcaloonj_mcsmocha#get_signal_placements', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extenstion':'py'})
-            resource = doc.entity('dbg:'+str(uuid.uuid4()), {'prov:label': 'Signal Placements', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extenstion':'json'})
+            #Agent
+            this_script = doc.agent('alg:get_signal_placements', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extenstion':'py'})
 
-            get_signal_placements = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+            #Resources
+            signal_placements = doc.entity('dat:signal_placements', {'prov:label': 'Signal Placements', prov.model.PROV_TYPE:'ont:DataResource'})
+            nodes = doc.entity('dat:signal_placements', {'prov:nodes': 'Nodes', prov.model.PROV_TYPE:'ont:DataResource'})
 
-            doc.wasAssociatedWith(get_signal_placements, this_script)
+            #Activities
+            this_run = doc.activity('log:a'+str(uuid.uuid4()), startTime, endTime, {prov.model.PROV_TYPE:'ont:Computation'})
 
-            doc.usage(get_signal_placements, resource, startTime, None,
-                      {prov.model.PROV_TYPE:'ont:Retrieval',
-                      'ont:Query':'6222085d-ee88-45c6-ae40-0c7464620d64'
-                      }
-                      )
+            #Usage
+            doc.wasAssociatedWith(this_run, this_script)
 
-            signal_placements = doc.entity('dat:adsouza_bmroach_mcaloonj_mcsmocha#signal_placements', {prov.model.PROV_LABEL:'Signal Placements',prov.model.PROV_TYPE:'ont:DataSet'})
+            doc.used(this_run, signal_placements, startTime)
+            doc.used(this_run, nodes, startTime)
+
+            signal_placements = doc.entity('dat:signal_placements', {prov.model.PROV_LABEL:'Signal Placements',prov.model.PROV_TYPE:'ont:DataSet'})
             doc.wasAttributedTo(signal_placements, this_script)
-            doc.wasGeneratedBy(signal_placements, get_signal_placements, endTime)
-            doc.wasDerivedFrom(signal_placements, resource, get_signal_placements, get_signal_placements, get_signal_placements)
+            doc.wasGeneratedBy(signal_placements, this_run, endTime)
+            doc.wasDerivedFrom(signal_placements, signal_placements, this_run, this_run, this_run)
+            doc.wasDerivedFrom(signal_placements, nodes, this_run, this_run, this_run)
 
             repo.logout()
             return doc

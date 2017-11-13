@@ -42,7 +42,7 @@ class get_accident_clusters(dml.Algorithm):
 
             #__________________________
             #Parameters
-            cluster_divisor = 200 
+            cluster_divisor = 200
             # ^ meaning divides accident count by this, and there's that many clusters
             # Ex 200 accidents divided by cluster_divisor of 10 is 20 clusters, or means
 
@@ -91,29 +91,30 @@ class get_accident_clusters(dml.Algorithm):
             repo = client.repo
             repo.authenticate('adsouza_bmroach_mcaloonj_mcsmocha','adsouza_bmroach_mcaloonj_mcsmocha')
 
-            doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
-            doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
+            doc.add_namespace('alg', 'http://datamechanics.io/algorithm/adsouza_bmroach_mcaloonj_mcsmocha/') # The scripts are in <folder>#<filename> format.
+            doc.add_namespace('dat', 'http://datamechanics.io/data/adsouza_bmroach_mcaloonj_mcsmocha/') # The data sets are in <user>#<collection> format.
             doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
-            doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-            doc.add_namespace('dbg','https://data.boston.gov')
+            doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
 
-            this_script = doc.agent('alg:adsouza_bmroach_mcaloonj_mcsmocha#get_accident_clusters', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extenstion':'py'})
-            resource = doc.entity('dbg:'+str(uuid.uuid4()), {'prov:label': 'Accident Centroids', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extenstion':'json'})
+            #Agent
+            this_script = doc.agent('alg:get_accident_clusters', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extenstion':'py'})
 
-            get_accident_hotspots = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+            #Resource
+            resource = doc.entity('dat:accidents', {'prov:label': 'Accidents', prov.model.PROV_TYPE:'ont:DataResource'})
 
-            doc.wasAssociatedWith(get_accident_hotspots, this_script)
+            #Activities
+            this_run = doc.activity('log:a'+str(uuid.uuid4()), startTime, endTime, {prov.model.PROV_TYPE:'ont:Computation'})
 
-            doc.usage(get_accident_hotspots, resource, startTime, None,
-                      {prov.model.PROV_TYPE:'ont:Retrieval',
-                      'ont:Query':'6222085d-ee88-45c6-ae40-0c7464620d64'
-                      }
-                      )
+            #Usage
+            doc.wasAssociatedWith(this_run, this_script)
 
-            accident_clusters = doc.entity('dat:adsouza_bmroach_mcaloonj_mcsmocha#accident_clusters', {prov.model.PROV_LABEL:'Accident Clusters',prov.model.PROV_TYPE:'ont:DataSet'})
+            doc.used(this_run, resource, startTime)
+
+            #New dataset
+            accident_clusters = doc.entity('dat:accident_clusters', {prov.model.PROV_LABEL:'Accident Clusters',prov.model.PROV_TYPE:'ont:DataSet'})
             doc.wasAttributedTo(accident_clusters, this_script)
-            doc.wasGeneratedBy(accident_clusters, get_accident_hotspots, endTime)
-            doc.wasDerivedFrom(accident_clusters, resource, get_accident_hotspots, get_accident_hotspots, get_accident_hotspots)
+            doc.wasGeneratedBy(accident_clusters, this_run, endTime)
+            doc.wasDerivedFrom(accident_clusters, resource, this_run, this_run, this_run)
 
             repo.logout()
             return doc

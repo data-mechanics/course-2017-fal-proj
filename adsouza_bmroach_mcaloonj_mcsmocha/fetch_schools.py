@@ -12,7 +12,7 @@ Monica Chiu         mcsmocha@bu.edu
 
 Original skeleton files provided by Andrei Lapets (lapets@bu.edu)
 
-Development Notes: 
+Development Notes:
 
 
 """
@@ -63,34 +63,39 @@ class fetch_schools(dml.Algorithm):
         repo = client.repo
         repo.authenticate('adsouza_bmroach_mcaloonj_mcsmocha','adsouza_bmroach_mcaloonj_mcsmocha')
 
-        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
-        doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
+        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/adsouza_bmroach_mcaloonj_mcsmocha/')
+        doc.add_namespace('dat', 'http://datamechanics.io/data/adsouza_bmroach_mcaloonj_mcsmocha/')
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
-        doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
+        doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
         doc.add_namespace('bods', 'http://boston.opendatasoft.com/api/records/1.0/search/')
 
-        this_script = doc.agent('alg:adsouza_bmroach_mcaloonj_mcsmocha#fetch_schools', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extenstion':'py'})
-        resource = doc.entity('bods:'+str(uuid.uuid4()), {'prov:label': 'Public Schools', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extenstion':'json'})
-        get_schools = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_schools, this_script)
-        doc.usage(get_schools, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?dataset=public-schools&rows=-1'
-                  }
-                  )
 
-        schools = doc.entity('dat:adsouza_bmroach_mcaloonj_mcsmocha#schools', {prov.model.PROV_LABEL:'Public Schools',prov.model.PROV_TYPE:'ont:DataSet'})
+        #Agent
+        this_script = doc.agent('alg:fetch_schools', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extenstion':'py'})
+
+        #Resources
+        resource = doc.entity('bods:'+str(uuid.uuid4()), {'prov:label': 'Public Schools', prov.model.PROV_TYPE:'ont:DataResource'})
+
+        #Activities
+        this_run = doc.activity('log:a'+str(uuid.uuid4()), startTime, endTime, {prov.model.PROV_TYPE:'ont:Retrieval', 'ont:Query':'?dataset=public-schools&rows=-1'})
+
+        #Usage
+        doc.wasAssociatedWith(this_run, this_script)
+        doc.used(this_run, resource, startTime)
+
+        #New dataset
+        schools = doc.entity('dat:schools', {prov.model.PROV_LABEL:'Public Schools',prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(schools, this_script)
-        doc.wasGeneratedBy(schools, get_schools, endTime)
-        doc.wasDerivedFrom(schools, resource, get_schools, get_schools, get_schools)
+        doc.wasGeneratedBy(schools, this_run, endTime)
+        doc.wasDerivedFrom(schools, resource, this_run, this_run, this_run)
 
         repo.logout()
         return doc
 
 
-# fetch_schools.execute()
-# doc = fetch_schools.provenance()
-# print(doc.get_provn())
-# print(json.dumps(json.loads(doc.serialize()), indent=4))
+fetch_schools.execute()
+doc = fetch_schools.provenance()
+print(doc.get_provn())
+print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ##eof

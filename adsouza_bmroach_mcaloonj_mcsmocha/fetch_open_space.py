@@ -12,7 +12,7 @@ Monica Chiu         mcsmocha@bu.edu
 
 Original skeleton files provided by Andrei Lapets (lapets@bu.edu)
 
-Development Notes: 
+Development Notes:
 
 
 """
@@ -67,26 +67,30 @@ class fetch_open_space(dml.Algorithm):
 
         repo.authenticate('adsouza_bmroach_mcaloonj_mcsmocha', 'adsouza_bmroach_mcaloonj_mcsmocha')
 
-        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
-        doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
-        doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
-        doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
+        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/adsouza_bmroach_mcaloonj_mcsmocha/')
+        doc.add_namespace('dat', 'http://datamechanics.io/data/adsouza_bmroach_mcaloonj_mcsmocha/')
+        doc.add_namespace('ont', 'http://datamechanics.io/ontology#')
+        doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
         doc.add_namespace('bod', 'http://bostonopendata-boston.opendata.arcgis.com/datasets/')
 
-        this_script = doc.agent('alg:adsouza_bmroach_mcaloonj_mcsmocha#fetch_open_space', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bod:2868d370c55d4d458d4ae2224ef8cddd_7.geojson', {'prov:label':'Open Spaces', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        #Agent
+        this_script = doc.agent('alg:fetch_open_space', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
-        get_open_space = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        #Resource
+        resource = doc.entity('bod:2868d370c55d4d458d4ae2224ef8cddd_7', {'prov:label':'Open Spaces', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
 
-        doc.wasAssociatedWith(get_open_space, this_script)
+        #Activities
+        this_run = doc.activity('log:a'+str(uuid.uuid4()), startTime, endTime,  {prov.model.PROV_TYPE:'ont:Retrieval'})
 
-        doc.usage(get_open_space, resource, startTime, None,
-            {prov.model.PROV_TYPE:'ont:Retrieval'})
+        #Usage
+        doc.wasAssociatedWith(this_run, this_script)
+        doc.used(this_run, resource, startTime)
 
-        open_space = doc.entity('dat:adsouza_bmroach_mcaloonj_mcsmocha#open_space', {prov.model.PROV_LABEL:'Open Spaces', prov.model.PROV_TYPE:'ont:DataSet'})
+        #New dataset
+        open_space = doc.entity('dat:open_space', {prov.model.PROV_LABEL:'Open Spaces', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(open_space, this_script)
-        doc.wasGeneratedBy(open_space, get_open_space, endTime)
-        doc.wasDerivedFrom(open_space, resource, get_open_space, get_open_space, get_open_space)
+        doc.wasGeneratedBy(open_space, this_run, endTime)
+        doc.wasDerivedFrom(open_space, resource, this_run, this_run, this_run)
 
         repo.logout()
 

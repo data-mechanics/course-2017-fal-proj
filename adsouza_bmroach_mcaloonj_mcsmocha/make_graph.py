@@ -10,7 +10,7 @@ Brian Roach         bmroach@bu.edu
 Jessica McAloon     mcaloonj@bu.edu
 Monica Chiu         mcsmocha@bu.edu
 
-Development Notes: 
+Development Notes:
 - Have to run execute.py in order to get placements.html file. Shouln't run make_graph file separately.
 
 """
@@ -47,7 +47,7 @@ class make_graph(dml.Algorithm):
             coords = points[0]['signal_placements']
             df_geo = pd.DataFrame(coords, columns=['Lats', "Longs"])
 
-            # Turn a dataframe containing point data into a geojson formatted python dictionary	
+            # Turn a dataframe containing point data into a geojson formatted python dictionary
             def df_to_geojson(df, properties, lat='Lats', lon='Longs'):
                 geo_json = {'type':'FeatureCollection', 'features':[]}
                 for _, row in df.iterrows():
@@ -76,29 +76,30 @@ class make_graph(dml.Algorithm):
             repo = client.repo
             repo.authenticate('adsouza_bmroach_mcaloonj_mcsmocha','adsouza_bmroach_mcaloonj_mcsmocha')
 
-            doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
-            doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
+            doc.add_namespace('alg', 'http://datamechanics.io/algorithm/adsouza_bmroach_mcaloonj_mcsmocha/')
+            doc.add_namespace('dat', 'http://datamechanics.io/data/adsouza_bmroach_mcaloonj_mcsmocha/')
             doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
-            doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-            doc.add_namespace('dbg','https://data.boston.gov/api/3/action/datastore_search')
+            doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
 
-            this_script = doc.agent('alg:adsouza_bmroach_mcaloonj_mcsmocha#make_graph', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extenstion':'py'})
-            resource = doc.entity('dbg:'+str(uuid.uuid4()), {'prov:label': 'make_graph', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extenstion':'json'})
+            #Agent
+            this_script = doc.agent('alg:make_graph', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extenstion':'py'})
 
-            make_graph = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+            #Resources
+            resource = doc.entity('dat:signal_placements', {'prov:label': 'Signal Placements', prov.model.PROV_TYPE:'ont:DataResource'})
 
-            doc.wasAssociatedWith(make_graph, this_script)
+            #Activities
+            this_run = doc.activity('log:a'+str(uuid.uuid4()), startTime, endTime, {prov.model.PROV_TYPE:'ont:Computation'})
 
-            doc.usage(make_graph, resource, startTime, None,
-                      {prov.model.PROV_TYPE:'ont:Retrieval',
-                      'ont:Query':'?resource_id=12cb3883-56f5-47de-afa5-3b1cf61b257b&q=Motor%20Vehicle%20Accident%20Response&limit=50000'
-                      }
-                      )
+            #Usage
+            doc.wasAssociatedWith(this_run, this_script)
 
-            graph = doc.entity('dat:adsouza_bmroach_mcaloonj_mcsmocha#graph', {prov.model.PROV_LABEL:'Graph',prov.model.PROV_TYPE:'ont:DataSet'})
+            doc.used(this_run, resource, startTime)
+
+            #New dataset
+            graph = doc.entity('dat:graph', {prov.model.PROV_LABEL:'Graph',prov.model.PROV_TYPE:'ont:DataSet'})
             doc.wasAttributedTo(graph, this_script)
-            doc.wasGeneratedBy(graph, make_graph, endTime)
-            doc.wasDerivedFrom(graph, resource, make_graph, make_graph, make_graph)
+            doc.wasGeneratedBy(graph, this_run, endTime)
+            doc.wasDerivedFrom(graph, resource, this_run, this_run, this_run)
 
             repo.logout()
             return doc

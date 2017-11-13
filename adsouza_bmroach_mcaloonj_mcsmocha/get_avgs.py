@@ -112,47 +112,39 @@ class get_avgs(dml.Algorithm):
         repo = client.repo
         repo.authenticate('adsouza_bmroach_mcaloonj_mcsmocha','adsouza_bmroach_mcaloonj_mcsmocha')
 
-        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
-        doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
+        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/adsouza_bmroach_mcaloonj_mcsmocha/')
+        doc.add_namespace('dat', 'http://datamechanics.io/data/adsouza_bmroach_mcaloonj_mcsmocha/')
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
-        doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('dat','adsouza_bmroach_mcaloonj_mcsmocha#clean_triggers')
-        doc.add_namespace('dat','adsouza_bmroach_mcaloonj_mcsmocha#signal_placements')
+        doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
 
-        this_script = doc.agent('alg:adsouza_bmroach_mcaloonj_mcsmocha#get_avgs', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extenstion':'py'})
+        #Agent
+        this_script = doc.agent('alg:get_avgs', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extenstion':'py'})
 
         #Resources
-        clean_triggers = doc.entity('dat:adsouza_bmroach_mcaloonj_mcsmocha#clean_triggers', {'prov:label': 'Clean Triggers', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extenstion':'json'})
-        signal_placements = doc.entity('dat:adsouza_bmroach_mcaloonj_mcsmocha#signal_placements', {'prov:label': 'Signal Placements', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extenstion':'json'})
+        clean_triggers = doc.entity('dat:clean_triggers', {'prov:label': 'Clean Triggers', prov.model.PROV_TYPE:'ont:DataResource'})
+        signal_placements = doc.entity('dat:signal_placements', {'prov:label': 'Signal Placements', prov.model.PROV_TYPE:'ont:DataResource'})
 
+        #Activities
+        this_run = doc.activity('log:a'+str(uuid.uuid4()), startTime, endTime, {prov.model.PROV_TYPE:'ont:Computation'})
 
-        get_avgs = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        #Usage
+        doc.wasAssociatedWith(this_run, this_script)
 
-        doc.wasAssociatedWith(get_avgs, this_script)
+        doc.used(this_run, clean_triggers, startTime)
+        doc.used(this_run, signal_placements, startTime)
 
-        doc.usage(get_avgs, clean_triggers, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'6222085d-ee88-45c6-ae40-0c7464620d64'
-                  }
-                  )
-
-        doc.usage(get_avgs, signal_placements, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'6222085d-ee88-45c6-ae40-0c7464620d64'
-                  }
-                  )
-
-        school_stats = doc.entity('dat:adsouza_bmroach_mcaloonj_mcsmocha#school_stats', {prov.model.PROV_LABEL:'School Statistics',prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(school_stats, this_script)
-        doc.wasGeneratedBy(school_stats, school_stats, endTime)
-        doc.wasDerivedFrom(school_stats, clean_triggers, get_avgs, get_avgs, get_avgs)
-        doc.wasDerivedFrom(school_stats, signal_placements, get_avgs, get_avgs, get_avgs)
+        #New dataset
+        num_clusters_stats = doc.entity('dat:num_clusters_stats', {prov.model.PROV_LABEL:'Num Clusters Stats',prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(num_clusters_stats, this_script)
+        doc.wasGeneratedBy(num_clusters_stats, num_clusters_stats, endTime)
+        doc.wasDerivedFrom(num_clusters_stats, clean_triggers, this_run, this_run, this_run)
+        doc.wasDerivedFrom(num_clusters_stats, signal_placements, this_run, this_run, this_run)
 
         repo.logout()
         return doc
 
 
-#get_avgs.execute()
-#doc = get_avgs.provenance()
-#print(doc.get_provn())
-#print(json.dumps(json.loads(doc.serialize()), indent=4))
+get_avgs.execute()
+doc = get_avgs.provenance()
+print(doc.get_provn())
+print(json.dumps(json.loads(doc.serialize()), indent=4))

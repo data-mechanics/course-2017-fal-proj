@@ -12,7 +12,7 @@ Monica Chiu         mcsmocha@bu.edu
 
 Original skeleton files provided by Andrei Lapets (lapets@bu.edu)
 
-Development Notes: 
+Development Notes:
 
 
 """
@@ -33,10 +33,10 @@ class fetch_hospitals(dml.Algorithm):
         @staticmethod
         def execute(trial=False, logging=True):
             startTime = datetime.datetime.now()
-            
+
             if logging:
                 print("in fetch_hospitals.py")
-            
+
             # Set up the database connection.
             client = dml.pymongo.MongoClient()
             repo = client.repo
@@ -64,29 +64,30 @@ class fetch_hospitals(dml.Algorithm):
             repo = client.repo
             repo.authenticate('adsouza_bmroach_mcaloonj_mcsmocha','adsouza_bmroach_mcaloonj_mcsmocha')
 
-            doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
-            doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
+            doc.add_namespace('alg', 'http://datamechanics.io/algorithm/adsouza_bmroach_mcaloonj_mcsmocha/')
+            doc.add_namespace('dat', 'http://datamechanics.io/data/adsouza_bmroach_mcaloonj_mcsmocha/')
             doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
-            doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-            doc.add_namespace('dbg','https://data.boston.gov')
+            doc.add_namespace('log', 'http://datamechanics.io/log#')
+            doc.add_namespace('dbg','https://data.boston.gov/export/622/208/')
 
-            this_script = doc.agent('alg:adsouza_bmroach_mcaloonj_mcsmocha#fetch_hospitals', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extenstion':'py'})
-            resource = doc.entity('dbg:'+str(uuid.uuid4()), {'prov:label': 'Hospital Locations', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extenstion':'json'})
+            #Agent
+            this_script = doc.agent('alg:fetch_hospitals', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extenstion':'py'})
 
-            get_hospitals = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+            #Resources
+            resource = doc.entity('dbg:6222085d-ee88-45c6-ae40-0c7464620d64', {'prov:label': 'Hospitals', prov.model.PROV_TYPE:'ont:DataResource','ont:Extension':'json' })
 
-            doc.wasAssociatedWith(get_hospitals, this_script)
+            #Activities
+            this_run = doc.activity('log:a'+str(uuid.uuid4()), startTime, endTime, {prov.model.PROV_TYPE:'ont:Retrieval'})
 
-            doc.usage(get_hospitals, resource, startTime, None,
-                      {prov.model.PROV_TYPE:'ont:Retrieval',
-                      'ont:Query':'6222085d-ee88-45c6-ae40-0c7464620d64'
-                      }
-                      )
+            #Usage
+            doc.wasAssociatedWith(this_run, this_script)
+            doc.used(this_run, resource, startTime)
 
-            hospitals = doc.entity('dat:adsouza_bmroach_mcaloonj_mcsmocha#hospitals', {prov.model.PROV_LABEL:'hospitals',prov.model.PROV_TYPE:'ont:DataSet'})
+            hospitals = doc.entity('dat:hospitals', {prov.model.PROV_LABEL:'hospitals',prov.model.PROV_TYPE:'ont:DataSet'})
             doc.wasAttributedTo(hospitals, this_script)
-            doc.wasGeneratedBy(hospitals, get_hospitals, endTime)
-            doc.wasDerivedFrom(hospitals, resource, get_hospitals, get_hospitals, get_hospitals)
+            doc.wasGeneratedBy(hospitals, this_run, endTime)
+            doc.wasDerivedFrom(hospitals, resource, this_run, this_run, this_run)
+
 
             repo.logout()
             return doc
