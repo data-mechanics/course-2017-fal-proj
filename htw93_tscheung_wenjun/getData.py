@@ -37,11 +37,9 @@ class getData(dml.Algorithm):
         
         url='http://datamechanics.io/data/htw93_tscheung_wenjun/MBTA_Stops.txt'
         stops = urllib.request.urlopen(url).readlines()
-        #transport=[]
         transport = []
         for stop in stops[1:]:
             s=str(stop).split(',')
-            #transport={}
             temp = {}
             temp['station']=s[2]
             temp['type'] = 'transport'
@@ -78,6 +76,8 @@ class getData(dml.Algorithm):
                 food_info.append(temp)
             except KeyError:
                 continue
+        repo.dropCollection("BostonFood")
+        repo.createCollection("BostonFood")
         repo['htw93_tscheung_wenjun.BostonFood'].insert_many(food_info)
         #repo['htw93_tscheung.BostonCrime'].metadata({'complete':True})
         print('Finished rectrieving htw93_tscheung_wenjun.BostonFood')
@@ -96,6 +96,8 @@ class getData(dml.Algorithm):
                 continue
             except ValueError:
                 continue
+        repo.dropCollection("BostonGarden")
+        repo.createCollection("BostonGarden")
         repo['htw93_tscheung_wenjun.BostonGarden'].insert_many(garden_info)
         #repo['htw93_tscheung.BostonCrime'].metadata({'complete':True})
         print('Finished rectrieving htw93_tscheung_wenjun.BostonGarden')
@@ -128,23 +130,32 @@ class getData(dml.Algorithm):
         # define entity to represent resources
         this_script = doc.agent('alg:htw93_tscheung_wenjun#getData', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource_BostonCrime = doc.entity('bdp:29yf-ye7nf', {'prov:label':'BostonCrime', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_BostonFood = doc.entity('bdp:fdxy-gydq', {'prov:label':'BostonFood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_BostonGarden = doc.entity('bdp:rdqf-ter7', {'prov:label':'BostonGarden', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         resource_MBTAStops = doc.entity('dat:htw93_tscheung_wenjun#MBTA_Stops', {'prov:label':'MBTAStops', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'txt'})
         resource_BostonHotel = doc.entity('dat:htw93_tscheung_wenjun#Hotel_ratings', {'prov:label':'BostonHotel', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        
         
         # define activity to represent invocation of the script
         get_BostonCrime = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         get_MBTAStops = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         get_BostonHotel =  doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        get_BostonFood =  doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        get_BostonGarden =  doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         
         # associate the activity with the script
         doc.wasAssociatedWith(get_BostonCrime, this_script)
         doc.wasAssociatedWith(get_MBTAStops, this_script)
         doc.wasAssociatedWith(get_BostonHotel, this_script)
+        doc.wasAssociatedWith(get_BostonFood, this_script)
+        doc.wasAssociatedWith(get_BostonGarden, this_script)
         
         # indicate that an activity used the entity
         doc.usage(get_BostonCrime, resource_BostonCrime, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
         doc.usage(get_MBTAStops, resource_MBTAStops, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
         doc.usage(get_BostonHotel, resource_BostonHotel, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
+        doc.usage(get_BostonFood, resource_BostonFood, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
+        doc.usage(get_BostonGarden, resource_BostonGarden, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
         
         BostonCrime = doc.entity('dat:htw93_tscheung_wenjun#BostonCrime', {prov.model.PROV_LABEL:'BostonCrime', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(BostonCrime, this_script)
@@ -160,6 +171,16 @@ class getData(dml.Algorithm):
         doc.wasAttributedTo(BostonHotel, this_script)
         doc.wasGeneratedBy(BostonHotel, get_BostonHotel, endTime)
         doc.wasDerivedFrom(BostonHotel, resource_BostonHotel, get_BostonHotel, get_BostonHotel, get_BostonHotel)
+        
+        BostonFood = doc.entity('dat:htw93_tscheung_wenjun#BostonFood', {prov.model.PROV_LABEL:'BostonFood', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(BostonFood, this_script)
+        doc.wasGeneratedBy(BostonFood, get_BostonFood, endTime)
+        doc.wasDerivedFrom(BostonFood, resource_BostonFood, get_BostonFood, get_BostonFood, get_BostonFood)
+        
+        BostonGarden = doc.entity('dat:htw93_tscheung_wenjun#BostonGarden', {prov.model.PROV_LABEL:'BostonGarden', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(BostonGarden, this_script)
+        doc.wasGeneratedBy(BostonGarden, get_BostonHotel, endTime)
+        doc.wasDerivedFrom(BostonGarden, resource_BostonGarden, get_BostonGarden, get_BostonGarden, get_BostonGarden)
         
         repo.logout()
                   
