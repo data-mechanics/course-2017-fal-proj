@@ -28,19 +28,29 @@ class optByBusstop(dml.Algorithm):
         repo.dropCollection("optByBusstop")
         repo.createCollection("optByBusstop")
 
+        if trial == True:
+            fWard = 10
+            lWard = 14
+        else:
+            fWard = 1
+            lWard = 23
+
         # Export Data from Dataset
         pLoc = {}
         for p in pLocation:
-            pLoc[str(p['Ward'])] = p['coordinates']
+            if int(p['Ward']) < fWard and int(p['Ward']) >= lWard:
+                continue
+            else:
+                pLoc[str(p['Ward'])] = p['coordinates']
 
         bStop = {}
         for b in busstop:
-            for i in range(1,23):
+            for i in range(fWard,lWard):
                 bStop[str(i)] = b[str(i)]
 
         # Use k-mean Algorithm to optimize polling locations based on public transportation by wards
         optimized = {}
-        for i in range(1,23):
+        for i in range(fWard,lWard):
             pLoc[str(i)] = np.asarray(pLoc[str(i)])
             centroids, labels = kmeans2(bStop[str(i)], k = pLoc[str(i)], iter = 100, minit = 'matrix')
             optimized[str(i)] = centroids.tolist()
@@ -74,12 +84,13 @@ class optByBusstop(dml.Algorithm):
 
 
         this_script = doc.agent('alg:cyyan_liuzirui_yjunchoi_yzhang71#optByBusstop', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource_pollingLocation = doc.entity('dat:yjunchoi_yzhang71#pollingLocation',
+        resource_pollingLocation = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#pollingLocation',
                                              {'prov:label': 'pollingLocation',
                                               prov.model.PROV_TYPE: 'ont:DataSet'})
-        resource_bus_by_ward = doc.entity('dat:yjunchoi_yzhang71#bus_by_ward',
+        resource_bus_by_ward = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#bus_by_ward',
                                              {'prov:label': 'bus_by_ward',
                                               prov.model.PROV_TYPE: 'ont:DataSet'})
+
         get_optByBusstop = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_optByBusstop, this_script)
 

@@ -29,25 +29,35 @@ class optByPublicT(dml.Algorithm):
         repo.dropCollection("optByPublicT")
         repo.createCollection("optByPublicT")
 
+        if trial == True:
+            fWard = 10
+            lWard = 14
+        else:
+            fWard = 1
+            lWard = 23
+
         # Export Data from Dataset
         pLoc = {}
         for p in pLocation:
-            pLoc[str(p['Ward'])] = p['coordinates']
+            if int(p['Ward']) < fWard and int(p['Ward']) >= lWard:
+                continue
+            else:
+                pLoc[str(p['Ward'])] = p['coordinates']
 
         bStop = {}
         for b in busstop:
-            for i in range(1,23):
+            for i in range(fWard,lWard):
                 bStop[str(i)] = b[str(i)]
 
         station = {}
         for m in MBTA:
-            for i in range(1,23):
+            for i in range(fWard,lWard):
                 station[str(i)] = m[str(i)]
 
 
         # Combine the coordinates of public transportation
         publicT = {}
-        for i in range(1,23):
+        for i in range(fWard, lWard):
             coordinates = []
             coordinates.extend(station[str(i)])
             coordinates.extend(bStop[str(i)])
@@ -56,7 +66,7 @@ class optByPublicT(dml.Algorithm):
 
         # Use k-mean Algorithm to optimize polling locations based on public transportation by wards
         optimized = {}
-        for i in range(1,23):
+        for i in range(fWard,lWard):
             pLoc[str(i)] = np.asarray(pLoc[str(i)])
             centroids, labels = kmeans2(publicT[str(i)], k = pLoc[str(i)], iter = 100, minit = 'matrix')
             optimized[str(i)] = centroids.tolist()

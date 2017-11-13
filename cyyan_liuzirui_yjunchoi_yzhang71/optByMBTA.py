@@ -28,19 +28,29 @@ class optByMBTA(dml.Algorithm):
         repo.dropCollection("optByMBTA")
         repo.createCollection("optByMBTA")
 
+        if trial == True:
+            fWard = 10
+            lWard = 14
+        else:
+            fWard = 1
+            lWard = 23
+
         # Export Data from Dataset
         pLoc = {}
         for p in pLocation:
-            pLoc[str(p['Ward'])] = p['coordinates']
+            if int(p['Ward']) < fWard and int(p['Ward']) >= lWard:
+                continue
+            else:
+                pLoc[str(p['Ward'])] = p['coordinates']
 
         station = {}
         for m in MBTA:
-            for i in range(1,23):
+            for i in range(fWard,lWard):
                 station[str(i)] = m[str(i)]
 
         # Use k-mean Algorithm to optimize polling locations based on public transportation by wards
         optimized = {}
-        for i in range(1,23):
+        for i in range(fWard,lWard):
             if station[str(i)] != []:
                 pLoc[str(i)] = np.asarray(pLoc[str(i)])
                 centroids, labels = kmeans2(station[str(i)], k = pLoc[str(i)], iter = 100, minit = 'matrix')
