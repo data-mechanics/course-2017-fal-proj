@@ -301,11 +301,11 @@ class neighborhoodScores(dml.Algorithm):
         
         
         this_script = doc.agent('alg:francisz_jrashaan#neighborhoodScores', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource_chargeStations = doc.entity('bdp:12cb3883-56f5-47de-afa5-3b1cf61b257b', {'prov:label':'chargeStations', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        resource_Hubways = doc.entity('bdp:c2fcc1e3-c38f-44ad-a0cf-e5ea2a6585b5', {'prov:label':'Hubways', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        resource_bikeNetwork = doc.entity('cam:srp4-fhjz/rows.json', {'prov:label':'bikeNetworks', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        resource_capopulation = doc.entity('cam:r4pm-qqje/rows', {'prov:label':'Cambridge Population Density', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        resource_openspace = doc.entity('bdp:769c0a21-9e35-48de-a7b0-2b7dfdefd35e', {'prov:label':'Openspace', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_chargeStations = doc.entity('bdp:465e00f9632145a1ad645a27d27069b4_2', {'prov:label':'Charging Stations', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
+        resource_Hubways = doc.entity('bdp:ee7474e2a0aa45cbbdfe0b747a5eb032_0', {'prov:label':'Hubways', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'gepjson'})
+        resource_bikeNetwork = doc.entity('bdp:d02c9d2003af455fbc37f550cc53d3a4_0', {'prov:label':'Bike Networks', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_neighborhood = doc.entity('bdp:3525b0ee6e6b427f9aab5d0a1d0a1a28_0', {'prov:label':'Neighborhood Coordinates', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
+        resource_openspace = doc.entity('bdp:2868d370c55d4d458d4ae2224ef8cddd_7', {'prov:label':'Open Space', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
         
         get_chargeStations = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         get_Hubways = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
