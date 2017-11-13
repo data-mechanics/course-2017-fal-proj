@@ -70,8 +70,8 @@ class find_buildings_and_centroids(dml.Algorithm):
             closest_buildings_to_centroid.append(this_building)
 
         repo.dropCollection('bkin18_cjoe_klovett_sbrz.closest_buildings')
-        repo.dropCollection('bkin18_cjoe_klovett_sbrz.closest_buildings_to_centroid')
-        repo.createCollection('bkin18_cjoe_klovett_sbrz.closest_buildings_to_centroid')
+        repo.dropCollection('bkin18_cjoe_klovett_sbrz.closest_buildings_to_centroids')
+        repo.createCollection('bkin18_cjoe_klovett_sbrz.closest_buildings_to_centroids')
         repo['bkin18_cjoe_klovett_sbrz.closest_buildings_to_centroids'].insert_many(closest_buildings_to_centroid)
         repo.logout()
 
