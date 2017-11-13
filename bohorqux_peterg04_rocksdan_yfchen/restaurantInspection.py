@@ -7,9 +7,9 @@ import uuid
 from builtins import staticmethod
 
 class restaurantInspection(dml.Algorithm):
-    contributor = 'peterg04_yfchen'
+    contributor = 'bohorqux_peterg04_rocksdan_yfchen'
     reads = []
-    writes = ['peterg04_yfchen.restaurants']
+    writes = ['bohorqux_peterg04_rocksdan_yfchen.restaurants']
     
     @staticmethod
     def execute(trial = False):
@@ -18,7 +18,7 @@ class restaurantInspection(dml.Algorithm):
         # Set up the db connection
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('peterg04_yfchen', 'peterg04_yfchen')
+        repo.authenticate('bohorqux_peterg04_rocksdan_yfchen', 'bohorqux_peterg04_rocksdan_yfchen')
         
         url = 'https://data.cityofboston.gov/resource/427a-3cn5.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -26,9 +26,9 @@ class restaurantInspection(dml.Algorithm):
 #         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("restaurants")
         repo.createCollection("restaurants")
-        repo['peterg04_yfchen.restaurants'].insert_many(r)
-        repo['peterg04_yfchen.restaurants'].metadata({'complete':True})
-        print(repo['peterg04_yfchen.restaurants'].metadata())
+        repo['bohorqux_peterg04_rocksdan_yfchen.restaurants'].insert_many(r)
+        repo['bohorqux_peterg04_rocksdan_yfchen.restaurants'].metadata({'complete':True})
+        print(repo['bohorqux_peterg04_rocksdan_yfchen.restaurants'].metadata())
         
         repo.logout()
         
@@ -46,7 +46,7 @@ class restaurantInspection(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('peterg04_yfchen', 'peterg04_yfchen')
+        repo.authenticate('bohorqux_peterg04_rocksdan_yfchen', 'bohorqux_peterg04_rocksdan_yfchen')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
