@@ -1,5 +1,5 @@
 ## Justification
-Boston is a city notorious for extreme winter weather. With snowstorms potentially causing problems ranging from minor inconveniences like traffic backup to more serious concerns like roads to hospitals being blocked, it's important to clear snow from roads as efficiently as possible. To assist in efficient snow removal efforts, we classify the effectiveness of plowing a particular road in two ways: "flow" and "connections". "Flow" gauges how much plowing a particular road would benefit traversal throughout the city, and is optimized by satisfying constraints concerning [TBD]. "Connections" gauges how plowing a particular road would benefit access to nearby buildings of importance, and is optimized via a run of the K-means algorithm, wherein clusters to be closed in on by K-means are defined by the coordinates of these buildings of importance. Given the two optimal results of "flow" and "connections," we determine places of high importance to plow first.
+Boston is a city notorious for extreme winter weather. With snowstorms potentially causing problems ranging from minor inconveniences like traffic backup to more serious concerns like roads to hospitals being blocked, it's important to clear snow from roads as efficiently as possible. To assist in efficient snow removal efforts, we classify the effectiveness of plowing a particular road in two ways: "flow" and "connections". "Flow" gauges how much plowing a particular road would benefit traversal throughout the city, and is optimized by satisfying constraints concerning the number of roads connected to each snow route. "Connections" gauges how plowing a particular road would benefit access to nearby buildings of importance, and is optimized via a run of the K-means algorithm, wherein clusters to be closed in on by K-means are defined by the coordinates of these buildings of importance. Given the two optimal results of "flow" and "connections," we determine places of high importance to plow first.
 
 ## Requirements
 * Our code was designed and tested to run with Python 3.6
@@ -7,6 +7,7 @@ Boston is a city notorious for extreme winter weather. With snowstorms potential
     * numpy
     * scipy
     * sklearn
+    * z3-solver
 
 # course-2017-fal-proj
 Joint repository for the collection of student course projects in the Fall 2017 iteration of the Data Mechanics course at Boston University.
