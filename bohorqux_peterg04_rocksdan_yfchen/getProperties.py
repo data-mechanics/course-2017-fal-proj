@@ -74,9 +74,9 @@ class getProperties(dml.Algorithm):
                   
         return doc
 
-getProperties.execute()
-doc = getProperties.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+# getProperties.execute()
+# doc = getProperties.provenance()
+# print(doc.get_provn())
+# print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof

@@ -90,9 +90,9 @@ class mbta_ln(dml.Algorithm):
                   
         return doc
 
-mbta_ln.execute()
-doc = mbta_ln.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+# mbta_ln.execute()
+# doc = mbta_ln.provenance()
+# print(doc.get_provn())
+# print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof
