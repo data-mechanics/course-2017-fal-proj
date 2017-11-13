@@ -114,3 +114,6 @@ auth.json
 
 # exclude node_modules
 node_modules/
+
+#z3
+z3/
