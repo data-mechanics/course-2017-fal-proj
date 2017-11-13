@@ -1,7 +1,7 @@
 """
 Filename: get_signal_placements.py
 
-Last edited by: BMR 11/11/17
+Last edited by: BMR 11/12/17
 
 Boston University CS591 Data Mechanics Fall 2017 - Project 2
 Team Members:
@@ -39,10 +39,29 @@ class get_signal_placements(dml.Algorithm):
         writes = ['adsouza_bmroach_mcaloonj_mcsmocha.signal_placements']
 
         @staticmethod
-        def execute(trial=False):
+        def execute(trial=False, logging=True):
             startTime = datetime.datetime.now()
+
+            #__________________________
+            #Parameters
             
+            speed_feedback_sign_count = 30
+            # ^ Varies the number of signs which can be placed
+
             if trial:
+                speed_feedback_sign_count = 5
+            # ^ you'll disallow signs to be placed if you alter this too much. Smaller area, fewer signs.
+            # It'll soft fail via a caught exception, but still not ideal
+
+            buffer_size = .5
+            # ^ disallows signs to be placed within this radius (in miles) from already placed signs
+            # Use caution increasing this too much - it may cause the inability to find a candidate intersection
+            
+
+            #End Parameters
+            #__________________________
+            
+            if logging:
                 print("in get_signal_placements.py")
 
             # Set up the database connection.
@@ -60,7 +79,7 @@ class get_signal_placements(dml.Algorithm):
                     for crd in coords:
                         triggers.append(crd)
 
-            n_clusters = 30
+            n_clusters = speed_feedback_sign_count
             X =  np.array(triggers)
 
             kmeans_output = KMeans(n_clusters, random_state=0).fit(X)
@@ -78,6 +97,7 @@ class get_signal_placements(dml.Algorithm):
             
             #find nodes closest to each centroid
             taken = []
+            failed_count = 0
             for i in range(len(centroids)):                     #calculated centroids loop
                 point = centroids[i]
                 closest_node = None
@@ -91,7 +111,7 @@ class get_signal_placements(dml.Algorithm):
                         for placed in signal_placements:        #already placed signals
                             
                             j_to_placed = vincenty(placed, possible_nodes[j]).miles
-                            if j_to_placed < .5:
+                            if j_to_placed <= buffer_size:
                                 skip_this = True
                                 break
                         if skip_this:
@@ -101,8 +121,16 @@ class get_signal_placements(dml.Algorithm):
                             closest_node = j
                             dist_of_closest_node = distance
                 
-                taken.append(closest_node)
-                signal_placements.append(possible_nodes[closest_node])
+                try:
+                    taken.append(closest_node)
+                    signal_placements.append(possible_nodes[closest_node])
+                except KeyError:
+                    failed_count += 1
+                    if logging:
+                        print("A suitable intersection was not found.\nCurrently, there are",failed_count,\
+                        "centroids that were not able to be placed on intersections.")
+
+                
 
             signal_placement_dict = {'signal_placements': signal_placements} 
             repo['adsouza_bmroach_mcaloonj_mcsmocha.signal_placements'].insert_one(signal_placement_dict)

@@ -30,10 +30,10 @@ class fetch_open_space(dml.Algorithm):
     writes = ['adsouza_bmroach_mcaloonj_mcsmocha.open_space']
 
     @staticmethod
-    def execute(trial = False):
+    def execute(trial = False, logging=True):
         startTime = datetime.datetime.now()
 
-        if trial:
+        if logging:
                 print("in fetch_open_space.py")
 
         client = dml.pymongo.MongoClient()
