@@ -42,10 +42,11 @@ class find_buildings_and_centroids(dml.Algorithm):
         # Build kmeans 
         kmeans = KMeans(n_clusters=K)
         kmeans.fit(building_list)
-
+        
         # Build the input list (kmean_list) and the output list (closest_buildings_to_centroids)
         kmean_list = kmeans.cluster_centers_.tolist()
         closest_buildings_to_centroids = []
+
 
         # This is kind of repetitive we can probably try and find a better solution
         for p1 in kmean_list:
@@ -63,17 +64,22 @@ class find_buildings_and_centroids(dml.Algorithm):
                         last_building = building
 
             # Rebuild buildings to include its ID and the centroids it is closest to
+
             this_building = {}
             this_building['_id'] = last_building
             this_building['NEARBY_CENTROID'] = p2 
             this_building["DIST_TO_CENTROID"] = min_dist
+            
             closest_buildings_to_centroids.append(this_building)
+
 
         repo.dropCollection('bkin18_cjoe_klovett_sbrz.closest_buildings')
         repo.dropCollection('bkin18_cjoe_klovett_sbrz.closest_buildings_to_centroid')
         repo.dropCollection('bkin18_cjoe_klovett_sbrz.closest_buildings_to_centroids')
         repo.createCollection('bkin18_cjoe_klovett_sbrz.closest_buildings_to_centroids')
+        
         repo['bkin18_cjoe_klovett_sbrz.closest_buildings_to_centroids'].insert_many(closest_buildings_to_centroids)
+
         repo.logout()
 
         endTime = datetime.datetime.now()

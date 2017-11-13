@@ -30,6 +30,7 @@ class road_connections_with_routes(dml.Algorithm):
 
         # Obtains all roads in the Boston region, that have at least some associated street name data, and removes some entries.
 
+
         modifiedDictionary = []
 
         for route in routes:
@@ -64,7 +65,7 @@ class road_connections_with_routes(dml.Algorithm):
             i += 1
             if (i == 1000):
                 break
-
+                
         repo.dropCollection("bkin18_cjoe_klovett_sbrz.road_connections_with_routes")
         repo.createCollection("bkin18_cjoe_klovett_sbrz.road_connections_with_routes")
         repo['bkin18_cjoe_klovett_sbrz.road_connections_with_routes'].insert_many(finalDictionary)
@@ -97,6 +98,7 @@ class road_connections_with_routes(dml.Algorithm):
 
         this_script = doc.agent('alg:bkin18_cjoe_klovett_sbrz#road_connections_with_routes',
                                 {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
+
 
         this_run = doc.activity('log:a'+str(uuid.uuid4()), startTime, endTime, 
             { prov.model.PROV_TYPE:'ont:Retrieval', 'ont:Query':'.find()'})
