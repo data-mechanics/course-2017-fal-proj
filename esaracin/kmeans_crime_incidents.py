@@ -31,8 +31,14 @@ class kmeans_crime_incidents(dml.Algorithm):
         repo.authenticate('esaracin', 'esaracin')
 
         # Grab all of our two databases that we're reading from.
+        # Note that, if trial is set to True, we only take a random, 5% sample
+        # of our overall crime_incidents, to speed things up.
         dataset = repo['esaracin.crime_incidents'].find()
         df_crime = pd.DataFrame(list(dataset))
+        if(trial == True):
+            df_crime = df_crime.sample(frac=.05)
+
+
 
         # Extract the lat/long tuples.
         location = df_crime['Location']
@@ -117,4 +123,4 @@ class kmeans_crime_incidents(dml.Algorithm):
         repo.logout()
         return doc
 
-
+kmeans_crime_incidents.execute(trial=True)
