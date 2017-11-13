@@ -6,7 +6,7 @@ import datetime
 import uuid
 import requests
 import geojson
-#from tqdm import tqdm
+from tqdm import tqdm
 import pdb
 
 
@@ -266,11 +266,20 @@ class NeighborhoodScores(dml.Algorithm):
                       sum([f for (a,b,c,d,e,f) in definiteNeighborhoodCoordinates if a == key])]
                       )
                       for key in keys]
+
+        agg = []
+        for x in aggregate:
+             print(x)
+             y = lambda t: ({"Neighborhood":t[0],'Charging Station':t[1][0],'Hubway Stations':t[1][1],'Bike Networks':t[1][2],'Open Space':t[1][3]})
+             z = y(x)
+             agg.append(z)
+             
+
         print(aggregate)
 
         repo.dropCollection("neighborhoodScores")
         repo.createCollection("neighborhoodScores")
-        repo['francisz_jrashaan.neighborhoodScores'].insert_many(neighborhoodScores)
+        repo['francisz_jrashaan.neighborhoodScores'].insert_many(agg)
         repo['francisz_jrashaan.neighborhoodScores'].metadata({'complete':True})
         
         
@@ -334,7 +343,7 @@ class NeighborhoodScores(dml.Algorithm):
         doc.usage(get_bikeNetworks, resource_bikeNetwork, startTime, None,
         {prov.model.PROV_TYPE:'ont:Retrieval'}
         )
-        doc.usage(get_capopulation, resource_capopulation, startTime, None,
+        doc.usage(get_neighborhood, resource_neighborhood, startTime, None,
         {prov.model.PROV_TYPE:'ont:Retrieval'}
         )
         doc.usage(get_openspace, resource_openspace, startTime, None,

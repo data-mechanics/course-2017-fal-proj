@@ -8,7 +8,6 @@ import requests
 import geojson
 #from tqdm import tqdm
 import pdb
-import scipy.stats
 from random import shuffle
 from math import sqrt
 
@@ -29,53 +28,122 @@ class Correlation(dml.Algorithm):
         repo.dropCollection("correlationScore")
         repo.createCollection("correlationScore")
         scores =  repo.francisz_jrashaan.neighborhoodScores.find()
+        print(scores)
+        print(scores[0])
+        scoreArray = []
+        for x in scores:
+            scoreArray.append(x)
+
 
         #scores = [('North End', [0, 3, 236, 240]), ('Bay Village', [0, 0, 24, 42]), ('East Boston', [0, 19, 222, 3544]), ('Leather District', [8, 8, 34, 43]), ('Allston', [0, 1, 1888, 1994]), ('Hyde Park', [0, 0, 569, 1163]), ('Roslindale', [0, 0, 450, 608]), ('Charlestown', [0, 7, 189, 455]), ('Back Bay', [4, 17, 432, 817]), ('South End', [0, 0, 116, 150]), ('Downtown', [4, 33, 160, 420]), ('Dorchester', [0, 7, 1382, 3710]), ('South Boston Waterfront', [15, 7, 102, 222]), ('West Roxbury', [0, 0, 559, 708]), ('Longwood Medical Area', [0, 11, 136, 154]), ('Mission Hill', [0, 11, 135, 161]), ('Roxbury', [0, 7, 315, 525]), ('Beacon Hill', [1, 16, 149, 391]), ('Mattapan', [0, 0, 348, 627]), ('Harbor Islands', [0, 0, 0, 155]), ('Brighton', [0, 0, 983, 1466]), ('South Boston', [0, 1, 410, 1061]), ('West End', [0, 5, 387, 549]), ('Fenway', [4, 21, 893, 1034]), ('Chinatown', [11, 21, 74, 112]), ('Jamaica Plain', [0, 0, 356, 919])]
-        relationdata = []
+        relationdata1 = []
+        relationdata2 = []
+        relationdata3 = []
+        relationdata4 = []
+        relationdata5 = []
+        relationdata6 = []
+      
+
+        
         Correlations = []
 
-        for i in scores:
-            a = lambda t: ((t[1][0], t[1][1]))
-            y = a(i)
-            relationdata.append(y)
+        for i in scoreArray:
+            a = lambda t: ((t[1], t[2]))
+            b = lambda t: ((t[1], t[3]))    
+            c = lambda t: ((t[1], t[4]))     
+            d = lambda t: ((t[2], t[3])) 
+            e = lambda t: ((t[2], t[3]))
+            f = lambda t: ((t[3], t[4]))  
+           
+    
 
-        x = [xi for (xi, yi) in relationdata]
-        y = [yi for (xi, yi) in relationdata]
+ 
+            co1 = a(i)
+            co2 = b(i)
+            co3 = c(i)
+            co4 = d(i)
+            co5 = e(i)
+            co6 = f(i)
+
+            relationdata1.append(co1)
+            relationdata2.append(co2)
+            relationdata3.append(co3)
+            relationaldata4.append(co4)
+            relationaldata5.append(co5)
+            relationaldata6.append(co6)
+
+
+
+        x1 = [xi for (xi, yi) in relationdata1]
+        y1 = [yi for (xi, yi) in relationdata1]
+        x2 = [xi for (xi, yi) in relationdata2]
+        y2 = [yi for (xi, yi) in relationdata2]
+        x3 = [xi for (xi, yi) in relationdata3]
+        y3 = [yi for (xi, yi) in relationdata3]
+        x4 = [xi for (xi, yi) in relationdata4]
+        y4 = [yi for (xi, yi) in relationdata4]
+        x5 = [xi for (xi, yi) in relationdata5]
+        y5 = [yi for (xi, yi) in relationdata5]
+        x6 = [xi for (xi, yi) in relationdata6]
+        y6 = [yi for (xi, yi) in relationdata6]
+        
+
+
 
     
 
-    def permute(x):
-        shuffled = [xi for xi in x]
-        shuffle(shuffled)
-        return shuffled
+        def permute(x):
+            shuffled = [xi for xi in x]
+            shuffle(shuffled)
+            return shuffled
 
-    def avg(x): # Average
-        return sum(x)/len(x)
+        def avg(x): # Average
+            return sum(x)/len(x)
 
-    def stddev(x): # Standard deviation.
-        m = avg(x)
-        return sqrt(sum([(xi-m)**2 for xi in x])/len(x))
+        def stddev(x): # Standard deviation.
+            m = avg(x)
+            return sqrt(sum([(xi-m)**2 for xi in x])/len(x))
 
-    def cov(x, y): # Covariance.
-        return sum([(xi-avg(x))*(yi-avg(y)) for (xi,yi) in zip(x,y)])/len(x)
+        def cov(x, y): # Covariance.
+            return sum([(xi-avg(x))*(yi-avg(y)) for (xi,yi) in zip(x,y)])/len(x)
 
-    def corr(x, y): # Correlation coefficient.
-        if stddev(x)*stddev(y) != 0:
-            return cov(x, y)/(stddev(x)*stddev(y))
+        def corr(x, y): # Correlation coefficient.
+            if stddev(x)*stddev(y) != 0:
+                return cov(x, y)/(stddev(x)*stddev(y))
 
-    def p(x, y):
-        c0 = corr(x, y)
-        corrs = []
-        for k in range(0, 2000):
-            y_permuted = permute(y)
-            corrs.append(corr(x, y_permuted))
-        return len([c for c in corrs if abs(c) > c0])/len(corrs)
-    score = []
-    score.append(p(x,y))
-    print(score[0])
-    repo['francisz_jrashaan.correlationScore'].insert_many(score)
-    repo['francisz_jrashaan.correlationScore'].metadata({'complete':True})
+        def p(x, y):
+            c0 = corr(x, y)
+            corrs = []
+            for k in range(0, 2000):
+                y_permuted = permute(y)
+                corrs.append(corr(x, y_permuted))
+            return len([c for c in corrs if abs(c) > c0])/len(corrs)
 
+
+
+        score = []
+        score.append(("correlation between charging stations & hubway stations ",p(x1,y1)))
+        score.append(("correlation between charging stations & bikenetworks",p(x2,y2)))
+        score.append(("correlation between charging stations & openspaces",p(x3,y3)))
+        score.append(("correlation between hubway stations   & bikenetworks",p(x4,y4)))
+        score.append(("correlation between hubway stations & openspaces",p(x5,y5)))
+        score.append(("correlation between bikenetworks & openspaces",p(x6,y6)))
+
+        fixedScore= []
+        for x in score:
+             print(x)
+             y = lambda t: ({t[0],t[1]})
+             z = y(x)
+             fixedScore.append(z)
+             
+    
+
+
+
+
+        repo['francisz_jrashaan.correlationScore'].insert_many(fixedScore)
+        repo['francisz_jrashaan.correlationScore'].metadata({'complete':True})
+        
 
 
     @staticmethod
@@ -94,33 +162,32 @@ class Correlation(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('bdp', 'http://bostonopendata-boston.opendata.arcgis.com/')
         
         
         this_script = doc.agent('alg:francisz_jrashaan#Correlation', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource_neighborhoodscores = doc.entity('dat:francisz_jrashaan#NeighborhoodScores', {'prov:label':'Neighborhood Scores', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'BSON'})
+        resource_neighborhoodscores = doc.entity('dat:francisz_jrashaan#neighborhoodScores', {'prov:label':'Neighborhood Scores', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'BSON'})
         
         compute_correlation = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         
 
         doc.wasAssociatedWith(compute_correlation, this_script)
        
-        doc.usage(compute_correlation, resource_neighborhood, startTime, None, {prov.model.PROV_TYPE:'ont:Used for Computation'})
+        doc.usage(compute_correlation, resource_neighborhoodscores, startTime, None, {prov.model.PROV_TYPE:'ont:Used for Computation'})
      
                   
-        correlationscore = doc.entity('dat:francisz_jrashaan#correlationScore', {prov.model.PROV_LABEL:'Correlation Score', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(correlationScore, this_script)
-        doc.wasGeneratedBy(correlationScore, compute_correlation, endTime)
-        doc.wasDerivedFrom(correlationScore, resource_neighborhood, compute_correlation, compute_correlation, compute_correlation)
+        correlationscore = doc.entity('dat:francisz_jrashaan#Correlation', {prov.model.PROV_LABEL:'Correlation Score', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(correlationscore, this_script)
+        doc.wasGeneratedBy(correlationscore, compute_correlation, endTime)
+        doc.wasDerivedFrom(correlationscore, resource_neighborhoodscores, compute_correlation, compute_correlation, compute_correlation)
                   
         repo.logout()
                   
         return doc
 
-correlation.execute()
-doc = correlation.provenance()
-#print(doc.get_provn())
-#print(json.dumps(json.loads(doc.serialize()), indent=4))
+Correlation.execute()
+doc = Correlation.provenance()
+print(doc.get_provn())
+print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof
 
