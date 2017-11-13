@@ -10,7 +10,7 @@ import sys
 
 class road_connections_with_routes(dml.Algorithm):
     contributor = 'bkin18_cjoe_klovett_sbrz'
-    reads = ['bkin18_cjoe_klovett_sbrz.road_segs', 'bkin18_cjoe_klovett_sbrz.emergency_traffic_aggregate']
+    reads = ['bkin18_cjoe_klovett_sbrz.emergency_traffic_aggregate']
     writes = ['bkin18_cjoe_klovett_sbrz.road_connections_with_routes']
 
     @staticmethod
@@ -24,9 +24,6 @@ class road_connections_with_routes(dml.Algorithm):
         repo = client.repo
         repo.authenticate('bkin18_cjoe_klovett_sbrz', 'bkin18_cjoe_klovett_sbrz')
         db = client.repo
-
-        roads_collection = db['bkin18_cjoe_klovett_sbrz.road_segs']
-        roads = roads_collection.find()
 
         routes_collection = db['bkin18_cjoe_klovett_sbrz.emergency_traffic_aggregate']
         routes = routes_collection.find()
@@ -62,7 +59,7 @@ class road_connections_with_routes(dml.Algorithm):
 
             finalPiece = {"ST_NAME": piece['ST_NAME'], "NUM_INTERSECTIONS": num_intersections, "ROUTES": route_list}
             if (finalPiece not in finalDictionary):
-                print(finalPiece)
+                #print(finalPiece)
                 finalDictionary.append(finalPiece)
             i += 1
             if (i == 1000):
@@ -92,30 +89,31 @@ class road_connections_with_routes(dml.Algorithm):
         repo.authenticate('bkin18_cjoe_klovett_sbrz', 'bkin18_cjoe_klovett_sbrz')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/')  # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/')  # The data sets are in <user>#<collection> format.
-        doc.add_namespace('ont',
-                          'http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
+        doc.add_namespace('ont', 'http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/')  # The event log.
         doc.add_namespace('bdp', 'http://gis.massdot.state.ma.us/arcgis/rest/services/')
 
-        this_script = doc.agent('alg:bkin18_cjoe_klovett_sbrz#retrieveRoadsInventory',
+
+
+        this_script = doc.agent('alg:bkin18_cjoe_klovett_sbrz#road_connections_with_routes',
                                 {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
-        resource = doc.entity('bdp:Roads/RoadInventory/MapServer/',
-                              {'prov:label': 'Roads Inventory', prov.model.PROV_TYPE: 'ont:DataResource',
-                               'ont:Extension': 'json'})
-        get_property_data = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
-        doc.wasAssociatedWith(get_property_data, this_script)
-        doc.usage(get_property_data, resource, startTime, None,
-                  {prov.model.PROV_TYPE: 'ont:Retrieval',
-                   'ont:Query': '?where=1%3D1&outFields=*&outSR=4326&f=json'
-                   }
-                  )
+        this_run = doc.activity('log:a'+str(uuid.uuid4()), startTime, endTime, 
+            { prov.model.PROV_TYPE:'ont:Retrieval', 'ont:Query':'.find()'})
 
-        property_db = doc.entity('dat:bkin18_cjoe_klovett_sbrz#roads_inventory',
-                                 {prov.model.PROV_LABEL: 'roads_inventory', prov.model.PROV_TYPE: 'ont:DataSet'})
-        doc.wasAttributedTo(property_db, this_script)
-        doc.wasGeneratedBy(property_db, get_property_data, endTime)
-        doc.wasDerivedFrom(property_db, resource, get_property_data)
+        selection_input = doc.entity('dat:bkin18_cjoe_klovett_sbrz.emergency_traffic_aggregate', 
+                { prov.model.PROV_LABEL:'Emergency Traffic Selection', prov.model.PROV_TYPE:'ont:DataSet'})
+
+        output = doc.entity('dat:bkin18_cjoe_klovett_sbrz.road_connections_with_routes', 
+            { prov.model.PROV_LABEL:'Emergency Traffic Aggregation', prov.model.PROV_TYPE:'ont:DataSet'})
+
+
+        doc.wasAssociatedWith(this_run, this_script)
+        doc.used(this_run, selection_input, startTime)
+
+        doc.wasAttributedTo(output, this_script)
+        doc.wasGeneratedBy(output, this_run, endTime)
+        doc.wasDerivedFrom(output, selection_input, this_run, this_run, this_run)
 
         repo.logout()
 
