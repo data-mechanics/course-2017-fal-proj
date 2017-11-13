@@ -13,7 +13,8 @@ class rankingOptimizer(dml.Algorithm):
     @staticmethod
     def execute(trial=False):
 
-        SCHOOL_NAME = 'Simmons'
+        SCHOOL_NAME = 'Boston University School of Medicine'
+        #SCHOOL_NAME = 'Boston College'
 
         startTime = datetime.datetime.now()
         client = dml.pymongo.MongoClient()
@@ -118,13 +119,13 @@ class rankingOptimizer(dml.Algorithm):
                                     finalSocialWeight = socialWeight
                                     finalTransitWeight = transitWeight
 
-        print(optimized_ranking)
+        #print(optimized_ranking)
+        print("\nOptimized Ranking for " + SCHOOL_NAME)
         print("Original Ranking: " + str(currentRanking))
         print("Max Ranking: " + str(maxRanking))
         print("New Transit Weight: " + str(finalTransitWeight))
         print("New Safety Weight: " + str(finalSafetyWeight))
-        print("New Social Weight: " + str(finalSocialWeight))
-        #print(optimized_ranking)
+        print("New Social Weight: " + str(finalSocialWeight) + "\n")
 
         if improvedRanking:
             finalRanking = []

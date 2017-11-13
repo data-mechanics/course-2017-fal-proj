@@ -30,7 +30,7 @@ class getDatasets(dml.Algorithm):
         repo['jdbrawn_jliang24_slarbi_tpotye.colleges'].insert_many(r['result']['records'])
 
         # Get crime data
-        url = 'https://data.boston.gov/api/action/datastore_search?resource_id=12cb3883-56f5-47de-afa5-3b1cf61b257b&limit=10000'
+        url = 'https://data.boston.gov/api/action/datastore_search?resource_id=12cb3883-56f5-47de-afa5-3b1cf61b257b&limit=50000'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
@@ -139,7 +139,7 @@ class getDatasets(dml.Algorithm):
 
 
         doc.usage(get_colleges, resource_colleges, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval', 'ont:Query':'&limit=80'})
-        doc.usage(get_crime, resource_crime, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval', 'ont:Query':'&limit=10000'})
+        doc.usage(get_crime, resource_crime, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval', 'ont:Query':'&limit=50000'})
         doc.usage(get_crashes, resource_crashes, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval'})
         doc.usage(get_mbta, resource_mbta, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval'})
         doc.usage(get_entertainment_data, resource_entertain, startTime, None,{prov.model.PROV_TYPE:'ont:Retrieval',})

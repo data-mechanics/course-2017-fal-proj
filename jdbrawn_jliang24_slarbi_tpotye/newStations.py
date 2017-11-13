@@ -33,7 +33,7 @@ class newStations(dml.Algorithm):
         kmeans = kmeans.fit(P)
         labels = kmeans.predict(P)
         M = kmeans.cluster_centers_
-        print()
+        print("\nNew Police Station Locations:")
         print(M)
         print()
 

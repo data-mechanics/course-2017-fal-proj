@@ -59,6 +59,7 @@ class safetyCorrelation(dml.Algorithm):
         
         c= safetyCorrelation.corr(x,y)
         pval= safetyCorrelation.p(x,y)
+        print("Correlation between safety score and proximity to police stations:")
         print("Correlation: "+ str(c), "Pval: " + str(pval))
 
         #format it for MongoDB
