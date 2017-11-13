@@ -1,7 +1,7 @@
 """
-Filename: get_correlation.py
+Filename: get_speed_stats.py
 
-Last edited by: AD and JM 11/12/17
+Last edited by: BMR 11/12/17
 
 Boston University CS591 Data Mechanics Fall 2017 - Project 2
 Team Members:
@@ -30,11 +30,11 @@ class get_speed_stats(dml.Algorithm):
     writes = ['adsouza_bmroach_mcaloonj_mcsmocha.speed_stats']
     
     @staticmethod
-    def execute(trial=False):
+    def execute(trial=False, logging=True):
         startTime = datetime.datetime.now()
         
-        if trial:
-            print("in get_statistics.py")
+        if logging:
+            print("in get_speed_stats.py")
             
         client = dml.pymongo.MongoClient()
         repo = client.repo
@@ -86,7 +86,7 @@ class get_speed_stats(dml.Algorithm):
 
         correlation = corr(limit_frequencies[0], limit_frequencies[1])
         
-        print(correlation)
+        # print(correlation)
         
         corr_dict = {'correlation': correlation}
         
@@ -109,23 +109,23 @@ class get_speed_stats(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('dbg','https://data.boston.gov')
 
-        this_script = doc.agent('alg:adsouza_bmroach_mcaloonj_mcsmocha#get_signal_placements', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extenstion':'py'})
-        resource = doc.entity('dbg:'+str(uuid.uuid4()), {'prov:label': 'Signal Placements', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extenstion':'json'})
+        this_script = doc.agent('alg:adsouza_bmroach_mcaloonj_mcsmocha#get_speed_stats', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extenstion':'py'})
+        resource = doc.entity('dbg:'+str(uuid.uuid4()), {'prov:label': 'Speed Stats', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extenstion':'json'})
 
-        get_signal_placements = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        get_speed_stats = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 
-        doc.wasAssociatedWith(get_signal_placements, this_script)
+        doc.wasAssociatedWith(get_speed_stats, this_script)
 
-        doc.usage(get_signal_placements, resource, startTime, None,
+        doc.usage(get_speed_stats, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
                   'ont:Query':'6222085d-ee88-45c6-ae40-0c7464620d64'
                   }
                   )
 
-        signal_placements = doc.entity('dat:adsouza_bmroach_mcaloonj_mcsmocha#signal_placements', {prov.model.PROV_LABEL:'Signal Placements',prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(signal_placements, this_script)
-        doc.wasGeneratedBy(signal_placements, get_signal_placements, endTime)
-        doc.wasDerivedFrom(signal_placements, resource, get_signal_placements, get_signal_placements, get_signal_placements)
+        speed_stats = doc.entity('dat:adsouza_bmroach_mcaloonj_mcsmocha#speed_stats', {prov.model.PROV_LABEL:'Speed Stats',prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(speed_stats, this_script)
+        doc.wasGeneratedBy(speed_stats, get_speed_stats, endTime)
+        doc.wasDerivedFrom(speed_stats, resource, get_speed_stats, get_speed_stats, get_speed_stats)
 
         repo.logout()
         return doc

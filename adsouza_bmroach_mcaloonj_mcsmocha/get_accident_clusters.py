@@ -1,7 +1,7 @@
 """
 Filename: get_accident_clusters.py
 
-Last edited by: BMR 11/11/17
+Last edited by: BMR 11/12/17
 
 Boston University CS591 Data Mechanics Fall 2017 - Project 2
 Team Members:
@@ -37,10 +37,19 @@ class get_accident_clusters(dml.Algorithm):
         writes = ['adsouza_bmroach_mcaloonj_mcsmocha.accident_clusters']
 
         @staticmethod
-        def execute(trial=False):
+        def execute(trial=False, logging=True):
             startTime = datetime.datetime.now()
+            
+            #__________________________
+            #Parameters
+            cluster_divisor = 10 
+            # ^ meaning divides accident count by this, and there's that many clusters
+            # Ex 200 accidents divided by cluster_divisor of 10 is 20 clusters, or means
 
-            if trial:
+            #End Parameters
+            #__________________________
+
+            if logging:
                 print("in get_accident_clusters.py")
 
             # Set up the database connection.
@@ -55,7 +64,7 @@ class get_accident_clusters(dml.Algorithm):
             
             coords_input = [(float(lat), float(lon)) for (lat, lon) in coords_input]
             
-            n_clusters = len(coords_input)//10  #Effectively collapses groups of 10 accidents into 1 cluster
+            n_clusters = len(coords_input)//cluster_divisor  
             X =  np.array(coords_input)
             # looks like [(lat, long), (lat, long), (lat, long)...]
 

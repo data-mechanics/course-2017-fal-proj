@@ -31,10 +31,10 @@ class fetch_accidents(dml.Algorithm):
         writes = ['adsouza_bmroach_mcaloonj_mcsmocha.accidents']
 
         @staticmethod
-        def execute(trial=False):
+        def execute(trial=False, logging=True):
             startTime = datetime.datetime.now()
             
-            if trial:
+            if logging:
                 print("in fetch_accidents.py")
 
             # Set up the database connection.

@@ -1,7 +1,7 @@
 """
-Filename: make_graph.py
+Filename: fetch_street_info.py
 
-Last edited by: JM 11/11/17
+Last edited by: BMR 11/12/17
 
 Boston University CS591 Data Mechanics Fall 2017 - Project 2
 Team Members:
@@ -30,11 +30,12 @@ class fetch_street_info(dml.Algorithm):
     writes = ['adsouza_bmroach_mcaloonj_mcsmocha.street_info']
 
     @staticmethod
-    def execute(trial = False):
+    def execute(trial = False, logging=True):
         startTime = datetime.datetime.now()
 
-        if trial:
+        if logging:
             print("in fetch_street_info.py")
+
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate('adsouza_bmroach_mcaloonj_mcsmocha', 'adsouza_bmroach_mcaloonj_mcsmocha')
@@ -44,8 +45,6 @@ class fetch_street_info(dml.Algorithm):
 
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
-
-
 
         speed_limits_coordinates = []
         for street in r["features"]:
@@ -60,9 +59,7 @@ class fetch_street_info(dml.Algorithm):
         repo['adsouza_bmroach_mcaloonj_mcsmocha.street_info'].metadata({'complete':True})
 
         repo.logout()
-
         endTime = datetime.datetime.now()
-
         return {"start":startTime, "end":endTime}
 
 

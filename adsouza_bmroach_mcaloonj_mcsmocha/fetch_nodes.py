@@ -1,6 +1,8 @@
 """
 Filename: fetch_nodes.py
-Last edited by: JM 11/11/17
+
+Last edited by: BMR 11/12/17
+
 Boston University CS591 Data Mechanics Fall 2017 - Project 2
 Team Members:
 Adriana D'Souza     adsouza@bu.edu
@@ -28,10 +30,26 @@ class fetch_nodes(dml.Algorithm):
         writes = ['adsouza_bmroach_mcaloonj_mcsmocha.nodes']
 
         @staticmethod
-        def execute(trial=False):
+        def execute(trial=False, logging=True):
             startTime = datetime.datetime.now()
 
+            #__________________________
+            #Parameters
+            mean_skew = 1.0
+            # ^ allows mean (for checking bottom 50th percent of distances) to be skewed, to allow in more or less.
+            # decreasing value decreases the mean, so fewer are allowed in
+
+            assert type(mean_skew) == float and mean_skew > 0
+
             if trial:
+                keep_within_value = .5
+            else:
+                keep_within_value = 2
+
+            #End Parameters
+            #__________________________
+
+            if logging:
                 print("in fetch_nodes.py")
 
             client = dml.pymongo.MongoClient()
@@ -39,7 +57,7 @@ class fetch_nodes(dml.Algorithm):
             repo.authenticate('adsouza_bmroach_mcaloonj_mcsmocha', 'adsouza_bmroach_mcaloonj_mcsmocha')
             g = geoql.loads(requests.get('http://bostonopendata-boston.opendata.arcgis.com/datasets/cfd1740c2e4b49389f47a9ce2dd236cc_8.geojson').text, encoding="latin-1")
 
-            g = g.keep_within_radius((42.3551, -71.0656), 2, 'miles')
+            g = g.keep_within_radius((42.3551, -71.0656), keep_within_value, 'miles')
 
             g = g.node_edge_graph()
 
@@ -69,7 +87,11 @@ class fetch_nodes(dml.Algorithm):
                 distances.append((dist,idx))
 
             #Get average distance to closest cluster
+<<<<<<< HEAD
             mean = sum([x[0] for x in distances])/len(distances)
+=======
+            mean = ( sum(distances)/len(distances) ) * mean_skew
+>>>>>>> 4a57574a08b1ee2fd43c8fc14a978a218456b375
 
             #Filter out nodes that have distance to nearest cluster that is less than the mean
             filtered_nodes = [nodes[x[1]] for x in distances if x[0] >= mean]
