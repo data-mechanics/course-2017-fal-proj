@@ -53,7 +53,7 @@ class underageSchools(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.boston.gov/dataset/')
 
-        this_script = doc.agent('alg:peterg04_yfchen#underageSchools', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:bohorqux_peterg04_rocksdan_yfchen#underageSchools', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_underageSchools = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_underageSchools, this_script)
@@ -63,7 +63,7 @@ class underageSchools(dml.Algorithm):
                   }
                   )
 
-        underageSchools= doc.entity('dat:peterg04_yfchen#underageSchools', {prov.model.PROV_LABEL:'Animals Found', prov.model.PROV_TYPE:'ont:DataSet'})
+        underageSchools= doc.entity('dat:bohorqux_peterg04_rocksdan_yfchen#underageSchools', {prov.model.PROV_LABEL:'Animals Found', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(underageSchools, this_script)
         doc.wasGeneratedBy(underageSchools, get_underageSchools, endTime)
         doc.wasDerivedFrom(underageSchools, resource, get_underageSchools, get_underageSchools, get_underageSchools)

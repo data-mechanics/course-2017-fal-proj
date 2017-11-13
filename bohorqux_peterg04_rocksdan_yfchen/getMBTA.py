@@ -56,7 +56,7 @@ class getMBTA(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
-        this_script = doc.agent('alg:bohorqux_rocksdan#getMBTA', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:bohorqux_peterg04_rocksdan_yfchen#getMBTA', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_MBTA = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_MBTA, this_script)
@@ -65,7 +65,7 @@ class getMBTA(dml.Algorithm):
                    'ont:Query':'?line=Bus&$select=line,trxhour'
                   }
                   )
-        MBTA = doc.entity('dat:bohorqux_rocksdan#MBTA', {prov.model.PROV_LABEL:'MBTA Report', prov.model.PROV_TYPE:'ont:DataSet'})
+        MBTA = doc.entity('dat:bohorqux_peterg04_rocksdan_yfchen#MBTA', {prov.model.PROV_LABEL:'MBTA Report', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(MBTA, this_script)
         doc.wasGeneratedBy(MBTA, get_MBTA, endTime)
         doc.wasDerivedFrom(MBTA, resource, get_MBTA, get_MBTA, get_MBTA)

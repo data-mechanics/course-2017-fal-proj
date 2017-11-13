@@ -53,7 +53,7 @@ class restaurantInspection(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/Health/')
 
-        this_script = doc.agent('alg:peterg04_yfchen#restaurantInspection', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:bohorqux_peterg04_rocksdan_yfchen#restaurantInspection', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_restaurantInspection = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_restaurantInspection, this_script)
@@ -62,7 +62,7 @@ class restaurantInspection(dml.Algorithm):
                   }
                   )
 
-        restaurantInspection= doc.entity('dat:peterg04_yfchen#restaurantInspection', {prov.model.PROV_LABEL:'Restaurant Density', prov.model.PROV_TYPE:'ont:DataSet'})
+        restaurantInspection= doc.entity('dat:bohorqux_peterg04_rocksdan_yfchen#restaurantInspection', {prov.model.PROV_LABEL:'Restaurant Density', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(restaurantInspection, this_script)
         doc.wasGeneratedBy(restaurantInspection, get_restaurantInspection, endTime)
         doc.wasDerivedFrom(restaurantInspection, resource, get_restaurantInspection, get_restaurantInspection, get_restaurantInspection)

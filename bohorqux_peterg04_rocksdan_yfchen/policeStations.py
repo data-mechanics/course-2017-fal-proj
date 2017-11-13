@@ -53,7 +53,7 @@ class policeStations(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'http://bostonopendata-boston.opendata.arcgis.com/datasets/')
 
-        this_script = doc.agent('alg:peterg04_yfchen#policeStations', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:bohorqux_peterg04_rocksdan_yfchen#policeStations', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_policeStations = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_policeStations, this_script)
@@ -62,7 +62,7 @@ class policeStations(dml.Algorithm):
                   }
                   )
 
-        policeStations= doc.entity('dat:peterg04_yfchen#policeStations', {prov.model.PROV_LABEL:'Police Stations', prov.model.PROV_TYPE:'ont:DataSet'})
+        policeStations= doc.entity('dat:bohorqux_peterg04_rocksdan_yfchen#policeStations', {prov.model.PROV_LABEL:'Police Stations', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(policeStations, this_script)
         doc.wasGeneratedBy(policeStations, get_policeStations, endTime)
         doc.wasDerivedFrom(policeStations, resource, get_policeStations, get_policeStations, get_policeStations)

@@ -44,9 +44,9 @@ class mbta_ln(dml.Algorithm):
         lst = [ln]
         repo.dropCollection("mbta_late_nights")
         repo.createCollection("mbta_late_nights")
-        repo['bohorqux_rocksdan.mbta_late_nights'].insert_many(lst)
-        repo['bohorqux_rocksdan.mbta_late_nights'].metadata({'complete':True})
-        print(repo['bohorqux_rocksdan.mbta_late_nights'].metadata())
+        repo['bohorqux_peterg04_rocksdan_yfchen.mbta_late_nights'].insert_many(lst)
+        repo['bohorqux_peterg04_rocksdan_yfchen.mbta_late_nights'].metadata({'complete':True})
+        print(repo['bohorqux_peterg04_rocksdan_yfchen.mbta_late_nights'].metadata())
 
         repo.logout()
 
@@ -72,7 +72,7 @@ class mbta_ln(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
-        this_script = doc.agent('alg:bohorqux_rocksdan#mbta_ln', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:bohorqux_peterg04_rocksdan_yfchen#mbta_ln', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_mbta_late_nights = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_mbta_late_nights, this_script)
@@ -81,7 +81,7 @@ class mbta_ln(dml.Algorithm):
                    'ont:Query':'?line=Bus&$select=line,trxdow'
                   }
                   )
-        mbta_late_nights = doc.entity('dat:bohorqux_rocksdan#mbta_late_nights', {prov.model.PROV_LABEL:'MBTA Late Nights', prov.model.PROV_TYPE:'ont:DataSet'})
+        mbta_late_nights = doc.entity('dat:bohorqux_peterg04_rocksdan_yfchen#mbta_late_nights', {prov.model.PROV_LABEL:'MBTA Late Nights', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(mbta_late_nights, this_script)
         doc.wasGeneratedBy(mbta_late_nights, get_mbta_late_nights, endTime)
         doc.wasDerivedFrom(mbta_late_nights, resource, get_mbta_late_nights, get_mbta_late_nights, get_mbta_late_nights)

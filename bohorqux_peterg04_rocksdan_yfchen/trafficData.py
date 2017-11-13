@@ -53,7 +53,7 @@ class trafficData(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/Transportation/')
 
-        this_script = doc.agent('alg:peterg04_yfchen#trafficData', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:bohorqux_peterg04_rocksdan_yfchen#trafficData', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_trafficData = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_trafficData, this_script)
@@ -62,7 +62,7 @@ class trafficData(dml.Algorithm):
                   }
                   )
 
-        trafficData= doc.entity('dat:peterg04_yfchen#trafficData', {prov.model.PROV_LABEL:'Traffic', prov.model.PROV_TYPE:'ont:DataSet'})
+        trafficData= doc.entity('dat:bohorqux_peterg04_rocksdan_yfchen#trafficData', {prov.model.PROV_LABEL:'Traffic', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(trafficData, this_script)
         doc.wasGeneratedBy(trafficData, get_trafficData, endTime)
         doc.wasDerivedFrom(trafficData, resource, get_trafficData, get_trafficData, get_trafficData)

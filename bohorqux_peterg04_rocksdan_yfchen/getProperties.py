@@ -56,7 +56,7 @@ class getProperties(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
-        this_script = doc.agent('alg:bohorqux_rocksdan#getProperties', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:bohorqux_peterg04_rocksdan_yfchen#getProperties', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_properties = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_properties, this_script)
@@ -65,7 +65,7 @@ class getProperties(dml.Algorithm):
                    'ont:Query':'?NUM_FLOORS=3&$select=PID,ZIPCODE'
                   }
                   )
-        properties = doc.entity('dat:bohorqux_rocksdan#getProperties', {prov.model.PROV_LABEL:'Property Values', prov.model.PROV_TYPE:'ont:DataSet'})
+        properties = doc.entity('dat:bohorqux_peterg04_rocksdan_yfchen#getProperties', {prov.model.PROV_LABEL:'Property Values', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(properties, this_script)
         doc.wasGeneratedBy(properties, get_properties, endTime)
         doc.wasDerivedFrom(properties, resource, get_properties, get_properties, get_properties)
