@@ -15,7 +15,7 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
     contributor = 'francisz_jrashaan'
     reads = []
     writes = ['francisz_jrashaan.Hubways', 'francisz_jrashaan.ChargingStation', 'francisz_jrashaan.bikeNetwork',
-              'francisz_jrashaan.openspace', 'francisz_jrashaan.neighborhood']
+              'francisz_jrashaan.openspace', 'francisz_jrashaan.neighborhood', 'francisz_jrashaan.neighborhoodScores']
     
     @staticmethod
     def execute(trial=False):
@@ -139,7 +139,6 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
             y = z(entry)
             neighborhoodCoords.append(y)
         
-        #print(neighborhoodCoordsTuple)
         
         definiteNeighborhoodCoordinates = []
     
@@ -184,9 +183,6 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
                 coords2 = (round(z[0],3), round(z[1],3))
                 
                 
-                #coords2[1]= float(str(coords2[1])[:-1])
-                
-                
                 if coords == coords2:
                     definiteNeighborhoodCoordinates[i] = a,b,c,1,e,f
 
@@ -195,7 +191,6 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         abridgedCoords = definiteNeighborhoodCoordinates[:5000]
         for (i,tup) in enumerate(abridgedCoords):
             a,b,c,d,e,f = tup
-            #print(len(definiteNeighborhoodCoordinates))
 
             coords = (round(b[0],3), round(b[1],3))
             
@@ -206,26 +201,15 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
                 coords2 = (round(z[0],3), round(z[1],3))
                 
                 
-                #coords2[1]= float(str(coords2[1])[:-1])
                 
                 
                 if coords == coords2:
                     definiteNeighborhoodCoordinates[i] = a,b,c,d,1,f
-#print("FUCKING MATCH")
 
 
 
         print(definiteNeighborhoodCoordinates)
 
-        
-        
-
-
-
-                   
-
-
-        
         url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/2868d370c55d4d458d4ae2224ef8cddd_7.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         gj = geojson.loads(response)
@@ -271,7 +255,6 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
                 
                 if coords == coords2:
                     definiteNeighborhoodCoordinates[i] = a,b,c,d,e,1
-                    print("FUCKING MATCH")
 
 
 
@@ -285,6 +268,11 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
                       )
                       for key in keys]
         print(aggregate)
+
+        repo.dropCollection("neighborhoodScores")
+        repo.createCollection("neighborhoodScores")
+        repo['francisz_jrashaan.neighborhoodScores'].insert_many(neighborhoodScores)
+        repo['francisz_jrashaan.neighborhoodScores'].metadata({'complete':True})
         
         
        
