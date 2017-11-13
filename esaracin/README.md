@@ -57,7 +57,7 @@ Early Problem Solving (Project #2):
 	In thinking of useful ways to consider the data collected and transformed in Project #1, some questions come to mind. Namely, how could I apply optimization problems and statistical analysis
 	to these datasets in ways that are both variable and still meaningful?
 
-	The first answer that came to mind was to apply K-means. Not only does it have a tunable input (that being the number of clusters you're looking for), but it applies
+	kmeans_crime_incidents.py: The first answer that came to mind was to apply K-means. Not only does it have a tunable input (that being the number of clusters you're looking for), but it applies
 	an optimization function on the squared distance from each point to its cluster center. Whats more, it has real world applications here: in clustering the crime incident
 	dataset collected in the previous project by the latitude and longitude each incident took place, I could find "crime centers" where crime was much more likely to happen around Boston.
 	Currently, the algorithm searches for 5 clusters, because this is the number obtained from applying the elbow method to the chart included in this directory: 5 is the number of 
@@ -65,9 +65,11 @@ Early Problem Solving (Project #2):
 	can only afford some number of patrol cars out and circulating at a given time. Using these crime centers, they could optimize the location of their patrols in a way to perfectly fits however
 	many cars they are able to expend. Note that roughly 6.29% of the crime incidents did NOT include a location for the specified incident, and these data were dropped before clustering.
 
-	To get a closer look at how the BPD is dealing with crime in Boston, I also aquired a new dataset that documents FIOs, or Field Interrogation and Observations (essentially, stop and frisks) conducted
-	by the BPD. Using this set, I'll consider any potential correlations between the targets chosen by the BPD for stop and frisk and the racial consistency of a given policing district. This has some
-	interesting implications, such as whether or not the BPD is biased in who it targets for stop and frisks, and how they might improve their current system.
+        race_linear_analysis.py: To get a closer look at how the BPD is dealing with crime in Boston, I also aquired a new dataset that documents FIOs, which required an update to the 
+	boston_gov_extraction.py script. These Field Interrogation and Observations (essentially, stop and frisks) conducted by the BPD will give some insight into how the BPD is choosing
+	who they target for stop and frisk. In this script, I perform linear regression on an input dataset containing the racial consistency of Boston's policing districts, and consider 
+	any potential correlations between the targets chosen by the BPD for stop and frisk and the racial composition of a given policing neighborhood. This has some interesting implications,
+	such as whether or not the BPD is biased in who it targets for stop and frisks, and how they might improve their current system.
 
 
 
