@@ -7,9 +7,9 @@ import uuid
 from builtins import staticmethod
 
 class avgTrafficDelay(dml.Algorithm):
-    contributor = 'peterg04_yfchen'
-    reads = ['peterg04_yfchen.traffic']
-    writes = ['peterg04_yfchen.avgTrafficDelay']
+    contributor = 'bohorqux_peterg04_rocksdan_yfchen'
+    reads = ['bohorqux_peterg04_rocksdan_yfchen.traffic']
+    writes = ['bohorqux_peterg04_rocksdan_yfchen.avgTrafficDelay']
         
     @staticmethod
     def execute(trial = False):
@@ -29,7 +29,7 @@ class avgTrafficDelay(dml.Algorithm):
         # Set up the db connection
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('peterg04_yfchen', 'peterg04_yfchen')
+        repo.authenticate('bohorqux_peterg04_rocksdan_yfchen', 'bohorqux_peterg04_rocksdan_yfchen')
         
 #         response = urllib.request.urlopen(url).read().decode("utf-8")
 #         r = json.loads(response)
