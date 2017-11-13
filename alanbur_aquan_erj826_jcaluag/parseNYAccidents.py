@@ -77,32 +77,25 @@ class parseNYAccidents(dml.Algorithm):
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         #resources:
-        doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
-        doc.add_namespace('dbe', 'https://data.boston.gov/export/245/954/')
-        doc.add_namespace('dbg', 'https://data.boston.gov/datastore/odata3.0/')
-        doc.add_namespace('cdp', 'https://data.cambridgema.gov/resource/') 
-        doc.add_namespace('svm','https://data.somervillema.gov/resource/')
         
         #define the agent
-        this_script = doc.agent('alg:aquan_erj826#getCrimes', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:alanbur_aquan_erj826_jcaluag#parseNYaccidents', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         
         #define the input resource
-        resource = doc.entity('bdp:12cb3883-56f5-47de-afa5-3b1cf61b257b', {'prov:label':'Crime Reports', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource = doc.entity('dat:alanbur_aquan_erj826_jcaluag#parseNYaccidents', {'prov:label':'Parsed NY Accident Report', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         
         #define the activity of taking in the resource
-        get_crimes = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_crimes, this_script)
-        doc.usage(get_crimes, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?$top=1000&$format=json'
-                  }
+        get_parsed_NY_accidents = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(get_parsed_NY_accidents, this_script)
+        doc.usage(get_parsed_NY_accidents, resource, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Retrieval'}
                   )
         
         #define the writeout 
-        crimes = doc.entity('dat:aquan_erj826#crimes', {prov.model.PROV_LABEL:'Crimes List', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(crimes, this_script)
-        doc.wasGeneratedBy(crimes, get_crimes, endTime)
-        doc.wasDerivedFrom(crimes, resource, get_crimes, get_crimes, get_crimes)
+        parsed_accidents = doc.entity('dat:alanbur_aquan_erj826_jcaluag#getNYAccidents', {prov.model.PROV_LABEL:'NY Accidents List', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(parsed_accidents, this_script)
+        doc.wasGeneratedBy(parsed_accidents, get_parsed_NY_accidents, endTime)
+        doc.wasDerivedFrom(parsed_accidents, resource, get_parsed_NY_accidents, get_parsed_NY_accidents, get_parsed_NY_accidents)
 
         repo.logout()
                   
