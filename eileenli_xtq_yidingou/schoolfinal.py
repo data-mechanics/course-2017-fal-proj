@@ -67,10 +67,10 @@ def counter(ls):
 
 
 
-class mergeCrimeschools(dml.Algorithm):
+class schoolfinal(dml.Algorithm):
     contributor = 'eileenli_xtq_yidingou'
-    reads = ['eileenli_xtq_yidingou.schools', 'eileenli_xtq_yidingou.Crime']
-    writes = ['eileenli_xtq_yidingou.mergeCrimeschools_data']
+    reads = ['eileenli_xtq_yidingou.schools', 'eileenli_xtq_yidingou.comfort', 'eileenli_xtq_yidingou.safety', 'eileenli_xtq_yidingou.traffic']
+    writes = ['eileenli_xtq_yidingou.schoolfinal_data']
 
 
     @staticmethod
@@ -86,7 +86,9 @@ class mergeCrimeschools(dml.Algorithm):
 
         # loads the collection
         SC = repo['eileenli_xtq_yidingou.schools'].find()
-        CR = repo['eileenli_xtq_yidingou.Crime'].find()
+        CM = repo['eileenli_xtq_yidingou.comfort'].find()
+        SF = repo['eileenli_xtq_yidingou.safety'].find()
+        TR = repo['eileenli_xtq_yidingou.traffic'].find()
 
 
         name_cord = {}
@@ -195,7 +197,7 @@ class mergeCrimeschools(dml.Algorithm):
                           'http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/')  # The event log.
 
-        this_script = doc.agent('alg:#mergeCrimeschools',
+        this_script = doc.agent('alg:#schoolfinal',
                                 {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
         resource_schoolss = doc.entity('dat:eileenli_xtq_yidingou#schoolss',
                                              {'prov:label': 'schoolss',
@@ -225,8 +227,8 @@ class mergeCrimeschools(dml.Algorithm):
 
         return doc
 
-mergeCrimeschools.execute()
-doc = mergeCrimeschools.provenance()
+schoolfinal.execute()
+doc = schoolfinal.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
 
