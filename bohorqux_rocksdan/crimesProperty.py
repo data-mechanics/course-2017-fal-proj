@@ -20,28 +20,66 @@ class crimesProperty(dml.Algorithm):
         repo = client.repo
         repo.authenticate('bohorqux_rocksdan', 'bohorqux_rocksdan')
 
+        # 244 Streets in common. p has less streets than c
         properties = repo['bohorqux_rocksdan.properties']
         crimes = repo['bohorqux_rocksdan.crimes']
-        p = []
-        c = []
-        union = []
 
+        property_reports = []
+        crime_reports = []
+        intersect = []
+
+        #Create distinct list of streets corresponding to each database
         for houses in properties.find():
-            p.append({"Street":houses["ST_NAME"], "Cost":houses["AV_TOTAL"], "Gross Tax":houses["GROSS_TAX"]})
+            if houses["ST_NAME"] not in property_reports:
+                property_reports.append(houses["ST_NAME"])
 
         for reports in crimes.find():
-            c.append({"Offense":reports["OFFENSE_CODE_GROUP"], "Desc":reports["OFFENSE_DESCRIPTION"], "Street":reports["STREET"]})
+            if reports["STREET"] not in crime_reports:
+                crime_reports.append(reports["STREET"])
 
-        for i in range(100):
-            union.append({"Street": p[i]["Street"], "Cost": p[i]["Cost"], "Gross Tax": p[i]["Gross Tax"], "Offense":c[i]["Offense"], "Desc":c[i]["Desc"]})
-            
-                
+        #Place identical street names in array
+        for street in property_reports:
+            if street in crime_reports:
+                intersect.append(street)
+
+        #Create dictionary of streets, setting None as initial values
+        properties_crimes = dict().fromkeys(intersect)
+
+        #All information from both databases go under their respective street names.
+        #Ex: BUSWELL ST: {
+        #                  Crimes {
+        #                            {All Data from the Crimes Database that occured on BUSWELL ST goes in here}
+        #                         }
+        #                  Properties {
+        #                                {All Data from the Properties Database that occured on BUSWELL ST goes in here}
+        #                             }
+        #                 }
+
+        indice = 0
+        for key in properties_crimes: #iterating through all street names
+            #Insert Crimes data related to this street in this key
+            print(key)
+            properties_crimes[key] = {"Crimes": list(), "Properties": list()}
+            for reports in crimes.find():
+                if reports["STREET"] == key:
+                    properties_crimes[key]["Crimes"].append({"Offense Code": reports["OFFENSE_CODE_GROUP"], "Description": reports["OFFENSE_DESCRIPTION"], "Shooting": reports["SHOOTING"],                     "DateTime": reports["OCCURRED_ON_DATE"], "Location": reports["Location"]})
+            print('*****' + key + " CRIMES COMPLETE")
+            #Insert Properties data related to this street in this key
+            for reports in properties.find():
+                if reports["ST_NAME"] == key:
+                    properties_crimes[key]["Properties"].append({"ZIPCODE": reports["ZIPCODE"], "AVG_LAND": reports["AV_LAND"], "AVG_BLDG": reports["AV_BLDG"],
+                                                                 "AVG_TOTAL": reports["AV_TOTAL"], "GROSS_TAX": reports["GROSS_TAX"], "Floors": reports["NUM_FLOORS"],
+                                                                 "Year Built": reports["YR_BUILT"]})
+            indice += 1
+            print('-----' + key + " PROPERTIES COMPLETE" + "\t" + str(indice))
+        
+        p_c = list()
+        p_c.append(properties_crimes)
+        
         repo.dropCollection("property_crimes")
         repo.createCollection("property_crimes")
-        repo['bohorqux_rocksdan.property_crimes'].insert_many(union)
-        repo['bohorqux_rocksdan.property_crimes'].metadata({'complete':True})
-        print(repo['bohorqux_rocksdan.property_crimes'].metadata())
-
+        repo['bohorqux_rocksdan.property_crimes'].insert_many(p_c)
+        
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -84,9 +122,9 @@ class crimesProperty(dml.Algorithm):
                   
         return doc
 
-crimesProperty.execute()
-doc = crimesProperty.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+#crimesProperty.execute()
+#doc = crimesProperty.provenance()
+#print(doc.get_provn())
+#print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof
