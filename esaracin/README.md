@@ -68,7 +68,8 @@ Early Problem Solving (Project #2):
         race_linear_analysis.py: To get a closer look at how the BPD is dealing with crime in Boston, I also aquired a new dataset that documents FIOs, which required an update to the 
 	boston_gov_extraction.py script. These Field Interrogation and Observations (essentially, stop and frisks) conducted by the BPD will give some insight into how the BPD is choosing
 	who they target for stop and frisk. In this script, I perform linear regression on an input dataset containing the racial consistency of Boston's policing districts, and consider 
-	any potential correlations between the targets chosen by the BPD for stop and frisk and the racial composition of a given policing neighborhood. This has some interesting implications,
+	any potential correlations between the targets chosen by the BPD for stop and frisk and the racial composition of a given policing neighborhood. The output attribute of this regression
+	is the number of FIOs for a given Policing District, though this could also be changed to consider the number of crimes in a given neighborhood as well. This has some interesting implications,
 	such as whether or not the BPD is biased in who it targets for stop and frisks, and how they might improve their current system.
 
 
