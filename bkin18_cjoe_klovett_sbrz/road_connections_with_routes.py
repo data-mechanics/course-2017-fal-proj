@@ -47,15 +47,6 @@ class road_connections_with_routes(dml.Algorithm):
             if {road_name: route_list} not in x:
                 x.append({road_name: route_list})
 
-
-
-
-
-
-
-
-
-
         repo.dropCollection("bkin18_cjoe_klovett_sbrz.road_connections_with_routes")
         repo.createCollection("bkin18_cjoe_klovett_sbrz.road_connections_with_routes")
         repo['bkin18_cjoe_klovett_sbrz.road_connections_with_routes'].insert_many(x)
@@ -93,6 +84,8 @@ class road_connections_with_routes(dml.Algorithm):
         get_property_data = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
         doc.wasAssociatedWith(get_property_data, this_script)
+        
+        # This is wrong. We should do .find() unless we also call a json here
         doc.usage(get_property_data, resource, startTime, None,
                   {prov.model.PROV_TYPE: 'ont:Retrieval',
                    'ont:Query': '?where=1%3D1&outFields=*&outSR=4326&f=json'

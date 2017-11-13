@@ -37,7 +37,7 @@ class selectImpBuilds(dml.Algorithm):
 
             if (building['PTYPE'] in property_lookup):
 
-                modifiedPiece = {'PTYPE': building['PTYPE'], 'LONGITUDE': building['LONGITUDE'], 'LATITUDE': building['LATITUDE']}
+                modifiedPiece = {'PTYPE': building['PTYPE'], 'LATITUDE': building['LATITUDE'], 'LONGITUDE': building['LONGITUDE']}
                 modifiedDictionary.append(modifiedPiece)
 
         repo.dropCollection('bkin18_cjoe_klovett_sbrz.property_assessment_impBuilds')
@@ -81,7 +81,7 @@ class selectImpBuilds(dml.Algorithm):
         #I don't think this is actually of type "retrieval," I'm just not sure what the actual name for it is atm. - Keith
         doc.usage(select_impBuilds_data, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=address+data&$select=description'
+                  'ont:Query':'.find()'
                   }
                   )
 
