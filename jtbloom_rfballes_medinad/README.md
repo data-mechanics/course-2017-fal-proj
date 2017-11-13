@@ -1,3 +1,15 @@
+# CS 591 Fall 2017 Project #2: Modeling, Optimization, and Statistical Analysis
+Jake Bloomfeld (jtbloom@bu.edu), Ricardo Ballesteros (rfballes@bu.edu), Daniel Medina (medinad@bu.edu)
+## Project Idea: Is there a correlation between income per capita in Boston's neighbrohoods with the number of Hubway trips taken in that neighborhood?
+
+### Notes
+* We didn't use any APIs
+* At the end of each transformation script, we commented out ''class'.execute()'
+* At the end of get_datasets.py, we commented out the last 4 lines
+
+
+
+
 # CS 591 Fall 2017 Project #1: Data Retrieval, Storage, Provenance, and Transformations 
 Jake Bloomfeld (jtbloom@bu.edu) and Ricardo Ballesteros (rfballes@bu.edu)
 ## Project Idea: Sustainability and Transportation in Boston
