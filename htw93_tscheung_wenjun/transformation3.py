@@ -9,7 +9,7 @@ import geojson
 from vincenty import vincenty
 import scipy.stats
 
-class BostonHotelCorrelation(dml.Algorithm):
+class transformation3(dml.Algorithm):
     contributor = 'htw93_tscheung_wenjun'
     reads = ['htw93_tscheung_wenjun.BostonHotelCustomScore']
     writes = ['htw93_tscheung_wenjun.BostonHotelCorrelation']
@@ -96,8 +96,8 @@ class BostonHotelCorrelation(dml.Algorithm):
                   
         return doc
 
-BostonHotelCorrelation.execute()
-doc = BostonHotelCorrelation.provenance()
+transformation3.execute()
+doc = transformation3.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
 

@@ -8,7 +8,7 @@ import sodapy
 import geojson
 from vincenty import vincenty
 
-class transformationCustomScore(dml.Algorithm):
+class transformation2(dml.Algorithm):
     contributor = 'htw93_tscheung_wenjun'
     reads = ['htw93_tscheung_wenjun.BostonHotelData']
     writes = ['htw93_tscheung_wenjun.BostonHotelCustomScore']
@@ -113,8 +113,8 @@ class transformationCustomScore(dml.Algorithm):
                   
         return doc
 
-transformationCustomScore.execute(True)
-doc = transformationCustomScore.provenance()
+transformation2.execute(True)
+doc = transformation2.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
 
