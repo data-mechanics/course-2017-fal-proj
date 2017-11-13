@@ -9,7 +9,7 @@ import geojson
 from tqdm import tqdm
 import pdb
 import scipy.stats
-#import z3
+import z3
 
 class BudgetCalculator(dml.Algorithm):
     contributor = 'francisz_jrashaan'
@@ -50,34 +50,40 @@ class BudgetCalculator(dml.Algorithm):
             scoreArray.append((co1,co2,co3,co4,co5))
           
 
-        #S = z3.Solver()
-
+        S = z3.Solver()
+        chargingStations = []
+        hubwayStations = []
+        bikeNetworks = []
+        openspace = []
+        #change .s in z3 printer z3 core and z3 
         for i in range(len(scoreArray)):
             c = scoreArray[i][0] 
             h = scoreArray[i][1]
             b = scoreArray[i][2]
             o = scoreArray[i][3]
-           # (x1,x2,x3,x4) = [z3.Real('x'+str(j) + "_" + str(i) for j in range(1,5))]
+            n = scoreArray[i][4]
+            (x1,x2,x3,x4) = [z3.Real('x'+str(j) + "_" + str(i)) for j in range(1,5)]
+            chargingStations.append(x1)
+            hubwayStations.append(x2)
+            bikeNetworks.append(x3)
+            openspace.append(x4)
 
-            #S.add(((c+x1) * 1000) + ((h+x2) * 2000) <= 1000000)
+            S.add(((c+x1) * 1000) + ((h+x2) * 2000) + ((b+x3) * 1500) + ((o+x4) * 10) <= 1000000)
+        S.add(sum(chargingStations) > 4)
+        S.add(sum(hubwayStations) > 5)
+        S.add(sum(bikeNetworks) > 8)
+        S.add(sum(openspace) > 3)
 
-       # print(S)
+
+
+
+        S.check()
+        print(S.model())
 
 
 
 
 
-        scores = []
-        newdata = []
-       
-        
-        for i in scoreArray:
-            print(i)
-
-        budget = 1000000
-        Cstation = 7000
-        Hstation = 3000
-        Bnetwork = 1000
         
     
         
