@@ -17,7 +17,7 @@ class transformationCustomScore(dml.Algorithm):
     def execute(trial = False):
         '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
         startTime = datetime.datetime.now()
-        print("here")
+        
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
@@ -30,7 +30,6 @@ class transformationCustomScore(dml.Algorithm):
 
         CustomScore = []
         
-        # Combine boston crime and boston schools.
         max_crime=HotelData[0]['crime_count']
         max_mbta=HotelData[0]['mbta_count']
         min_crime=HotelData[0]['crime_count']
@@ -57,7 +56,6 @@ class transformationCustomScore(dml.Algorithm):
             norm_mbta = (h['mbta_count']-min_mbta)/(max_mbta-min_mbta)
             norm_score = (h['rate']-min_rating)/(max_rating-min_rating)
             score = (norm_crime+norm_mbta+norm_score)/3
-            print(score)
             CustomScore.append({'hotel':h['hotel'],'score':score})
             
 
