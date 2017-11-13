@@ -37,16 +37,28 @@ class transformation2(dml.Algorithm):
         min_mbta=HotelData[0]['mbta_count']
         max_rating = HotelData[0]['rate']
         min_rating = HotelData[0]['rate']
+        max_food = HotelData[0]['food_count']
+        min_food = HotelData[0]['food_count']
+        max_garden = HotelData[0]['garden_count']
+        min_garden = HotelData[0]['garden_count']
         for h in HotelData:
             crime_count = h['crime_count']
             mbta_count = h['mbta_count']
             rating = h['rate']
+            food = h['food_count']
+            garden  = h['garden_count']
             max_crime = max(max_crime,crime_count)
             max_mbta = max(max_mbta,mbta_count)
             max_rating = max(max_rating, rating)
+            max_food = max(max_food, food)
+            max_garden = max(max_garden, garden)
             min_crime = min(min_crime, crime_count)
             min_mbta = min(min_mbta, mbta_count)
             min_rating = min(min_rating, rating)
+            min_food = min(min_food, food)
+            min_garden = min(min_garden,garden)
+            
+            
             
         HotelData.rewind()
 
@@ -56,9 +68,14 @@ class transformation2(dml.Algorithm):
             norm_crime = (h['crime_count']-min_crime)/(max_crime-min_crime)
             norm_mbta = (h['mbta_count']-min_mbta)/(max_mbta-min_mbta)
             norm_score = (h['rate']-min_rating)/(max_rating-min_rating)
-            score = (norm_crime+norm_mbta+norm_score)/3
+            norm_garden =(h['garden_count']-min_garden)/(max_garden-min_garden)
+            norm_food =(h['food_count']-min_food)/(max_food-min_food)
+            
+           # norm_custom_score = (norm_crime+norm_mbta+norm_score+norm_garden+norm_food)/5
+            
+            #CustomScore.append({'hotel':h['hotel'],'norm_rate': norm_score, 'norm_custom_score': norm_custom_score})
             #print(score)
-            CustomScore.append({'hotel':h['hotel'],'rate': norm_score, 'score':score})
+            CustomScore.append({'hotel':h['hotel'],'orginal_rate':h['rate'],'norm_rate': norm_score, 'norm_crime':norm_crime, 'norm_mbta': norm_mbta, 'norm_garden': norm_garden, 'norm_food':norm_food})
             
 
         
