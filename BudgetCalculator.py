@@ -9,6 +9,7 @@ import geojson
 from tqdm import tqdm
 import pdb
 import scipy.stats
+import z3
 
 class BudgetCalculator(dml.Algorithm):
     contributor = 'francisz_jrashaan'
@@ -24,7 +25,57 @@ class BudgetCalculator(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate('francisz_jrashaan','francisz_jrashaan')
+        data = [('North End', [0, 3, 236, 240]), ('Bay Village', [0, 0, 24, 42]), ('East Boston', [0, 19, 222, 3544]), ('Leather District', [8, 8, 34, 43]), ('Allston', [0, 1, 1888, 1994]), ('Hyde Park', [0, 0, 569, 1163]), ('Roslindale', [0, 0, 450, 608]), ('Charlestown', [0, 7, 189, 455]), ('Back Bay', [4, 17, 432, 817]), ('South End', [0, 0, 116, 150]), ('Downtown', [4, 33, 160, 420]), ('Dorchester', [0, 7, 1382, 3710]), ('South Boston Waterfront', [15, 7, 102, 222]), ('West Roxbury', [0, 0, 559, 708]), ('Longwood Medical Area', [0, 11, 136, 154]), ('Mission Hill', [0, 11, 135, 161]), ('Roxbury', [0, 7, 315, 525]), ('Beacon Hill', [1, 16, 149, 391]), ('Mattapan', [0, 0, 348, 627]), ('Harbor Islands', [0, 0, 0, 155]), ('Brighton', [0, 0, 983, 1466]), ('South Boston', [0, 1, 410, 1061]), ('West End', [0, 5, 387, 549]), ('Fenway', [4, 21, 893, 1034]), ('Chinatown', [11, 21, 74, 112]), ('Jamaica Plain', [0, 0, 356, 919])]
+        scores =  repo.francisz_jrashaan.neighborhoodScores.find()
+      
+        scoreArray = []
+        for i in scores:
+            a = lambda t: (t['Charging Station'])
+            b = lambda t: (t['Hubway Stations'])
+            c = lambda t: (t['Bike Networks'])  
+            d = lambda t: (t['Open Space'])
+           
+    
 
+ 
+            co1 = a(i)
+            co2 = b(i)
+            co3 = c(i)
+            co4 = d(i)
+
+            scoreArray.append((co1,co2,co3,co4))
+          
+
+        S = z3.Solver()
+
+        for i in range(len(scoreArray)):
+            c = scoreArray[i][0] 
+            h = scoreArray[i][1]
+            b = scoreArray[i][2]
+            o = scoreArray[i][3]
+            (x1,x2,x3,x4) = [z3.Real('x'+str(j) + "_" + str(i) for j in range(1,5))]
+
+            S.add(((c+x1) * 1000) + ((h+x2) * 2000) <= 1000000)
+
+        print(S)
+
+
+
+
+
+        scores = []
+        newdata = []
+       
+        
+        for i in scoreArray:
+            print(i)
+
+        budget = 1000000
+        Cstation = 7000
+        Hstation = 3000
+        Bnetwork = 1000
+        
+    
         
 
     @staticmethod
@@ -54,7 +105,7 @@ class BudgetCalculator(dml.Algorithm):
 
         doc.wasAssociatedWith(compute_budget, this_script)
        
-        doc.usage(compute_correlation, resource_neighborhood, startTime, None, {prov.model.PROV_TYPE:'ont:Used for Computation'})
+        doc.usage(compute_budget, resource_neighborhood, startTime, None, {prov.model.PROV_TYPE:'ont:Used for Computation'})
      
                   
         optimalscore = doc.entity('dat:francisz_jrashaan#optimalScore', {prov.model.PROV_LABEL:'Correlation Score', prov.model.PROV_TYPE:'ont:DataSet'})
@@ -66,7 +117,7 @@ class BudgetCalculator(dml.Algorithm):
                   
         return doc
 BudgetCalculator.execute()
-doc = constraint.provenance()
+doc = BudgetCalculator.provenance()
 #print(doc.get_provn())
 #print(json.dumps(json.loads(doc.serialize()), indent=4))
 
