@@ -3,6 +3,7 @@ import prov.model
 import datetime
 import uuid
 from sklearn.cluster import KMeans
+from tqdm import tqdm
 
 class newStations(dml.Algorithm):
 
@@ -12,6 +13,8 @@ class newStations(dml.Algorithm):
 
     @staticmethod
     def execute(trial=False):
+
+        NUM_CLUSTERS = 3
 
         startTime = datetime.datetime.now()
         client = dml.pymongo.MongoClient()
@@ -29,10 +32,19 @@ class newStations(dml.Algorithm):
                 P.append((float(schoolEntry['Latitude']), float(schoolEntry['Longitude'])))
 
         # run k-means on our school locations
-        kmeans = KMeans(n_clusters=3)
-        kmeans = kmeans.fit(P)
-        labels = kmeans.predict(P)
-        M = kmeans.cluster_centers_
+        with tqdm(total=100, desc="k-means") as pbar:
+            pbar.update(20)
+            if not trial:
+                kmeans = KMeans(n_clusters=NUM_CLUSTERS)
+            else:
+                kmeans = KMeans(n_clusters=NUM_CLUSTERS, max_iter=10)
+            pbar.update(20)
+            kmeans = kmeans.fit(P)
+            pbar.update(20)
+            labels = kmeans.predict(P)
+            pbar.update(20)
+            M = kmeans.cluster_centers_
+            pbar.update(20)
         print("\nNew Police Station Locations:")
         print(M)
         print()

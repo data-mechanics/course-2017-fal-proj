@@ -36,7 +36,7 @@ class rankingOptimizer(dml.Algorithm):
         improvedRanking = False
 
         if not trial:
-            for transitWeight in tqdm(range(20, 51)):
+            for transitWeight in tqdm(range(20, 51), desc="optimizing rank"):
                 for safetyWeight in range(20, 51):
                     if transitWeight + safetyWeight <= 80 and (100 - (transitWeight + safetyWeight)) < 51:
                         socialWeight = 100 - (transitWeight + safetyWeight)
@@ -67,7 +67,7 @@ class rankingOptimizer(dml.Algorithm):
                                     finalTransitWeight = transitWeight
 
         else:
-            for transitWeight in tqdm(range(20, 51, 2)):
+            for transitWeight in tqdm(range(20, 51, 2), desc="optimizing rank"):
                 for safetyWeight in range(20, 51, 2):
                     if transitWeight + safetyWeight <= 80 and (100 - (transitWeight + safetyWeight)) < 51:
                         socialWeight = 100 - (transitWeight + safetyWeight)
@@ -121,8 +121,8 @@ class rankingOptimizer(dml.Algorithm):
 
         #print(optimized_ranking)
         print("\nOptimized Ranking for " + SCHOOL_NAME)
-        print("Original Ranking: " + str(currentRanking))
-        print("Max Ranking: " + str(maxRanking))
+        print("Original Ranking: " + str(currentRanking) + "/" + str(overall_score.count()))
+        print("Optimized Ranking: " + str(maxRanking) + "/" + str(len(optimized_ranking)))
         print("New Transit Weight: " + str(finalTransitWeight))
         print("New Safety Weight: " + str(finalSafetyWeight))
         print("New Social Weight: " + str(finalSocialWeight) + "\n")
