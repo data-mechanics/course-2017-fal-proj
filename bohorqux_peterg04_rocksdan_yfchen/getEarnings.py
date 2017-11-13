@@ -73,10 +73,10 @@ class getEarnings(dml.Algorithm):
         repo.logout()
                   
         return doc
-
-getEarnings.execute()
-doc = getEarnings.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+# 
+# getEarnings.execute()
+# doc = getEarnings.provenance()
+# print(doc.get_provn())
+# print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof

@@ -73,10 +73,10 @@ class getCollege(dml.Algorithm):
         repo.logout()
                   
         return doc
-
-getCollege.execute()
-doc = getCollege.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+# 
+# getCollege.execute()
+# doc = getCollege.provenance()
+# print(doc.get_provn())
+# print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof

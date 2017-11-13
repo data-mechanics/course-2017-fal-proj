@@ -73,10 +73,10 @@ class getMBTA(dml.Algorithm):
         repo.logout()
                   
         return doc
-
-getMBTA.execute()
-doc = getMBTA.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+# 
+# getMBTA.execute()
+# doc = getMBTA.provenance()
+# print(doc.get_provn())
+# print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof

@@ -82,9 +82,9 @@ class crimesSorted(dml.Algorithm):
                   
         return doc
 
-crimesSorted.execute()
-doc = crimesSorted.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+# crimesSorted.execute()
+# doc = crimesSorted.provenance()
+# print(doc.get_provn())
+# print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof
