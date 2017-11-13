@@ -28,25 +28,54 @@ class transformation3(dml.Algorithm):
         #HotelRaing = BostonHotelRatingOriginal.find()
         CustomScoreArr = BostonHotelCustomScore.find()
 
-        OrginalScore = []
-        CustomScore = []
+        norm_rate = []
+        norm_crime = []
+        norm_mbta =[]
+        norm_garden =[]
+        norm_food =[]
+        orginal_rate=[]
         # Combine boston crime and boston schools.
         res = []
-        
+
+        combine_rate_crime=[]
         
     
         for h in CustomScoreArr:
             print(h)
-            OrginalScore.append([h['rate']])
-            CustomScore.append([h['score']])
+            orginal_rate.append([h['orginal_rate']])
+            norm_rate.append([h['norm_rate']])
+            norm_crime.append([h['norm_crime']])
+            norm_mbta.append([h['norm_mbta']])
+            norm_garden.append([h['norm_garden']])
+            norm_food.append([h['norm_food']])
 
-        print(OrginalScore)
-        print(CustomScore)
-        math = scipy.stats.pearsonr(OrginalScore, CustomScore)
-        print("Correlation coefficient is " + str(math[0]))
-        print("P-value is " + str(math[1]))        
-        res.append({'coefficient':math[0][0], 'p_value':math[1][0]})
+            combine_rate_crime.append([(h['norm_rate']+h['norm_crime']+h['norm_mbta']+h['norm_garden']+h['norm_food'])/5])
+            #CustomScore.append([h['norm_custom_score']])
 
+
+        math_score_crime = scipy.stats.pearsonr(combine_rate_crime, norm_crime)
+        
+        math_score_mbta = scipy.stats.pearsonr(combine_rate_crime, norm_mbta)
+        math_score_garden = scipy.stats.pearsonr(combine_rate_crime, norm_garden)
+        math_score_food = scipy.stats.pearsonr(combine_rate_crime, norm_food)
+        '''
+        math_score_crime = scipy.stats.pearsonr(norm_rate, norm_crime)
+        math_score_mbta = scipy.stats.pearsonr(norm_rate, norm_mbta)
+        math_score_garden = scipy.stats.pearsonr(norm_rate, norm_garden)
+        math_score_food = scipy.stats.pearsonr(norm_rate, norm_food)
+        '''
+        print("Crime Correlation coefficient is " + str(math_score_crime[0]))
+        print("Crime P-value is " + str(math_score_crime[1]))
+        print("mbta Correlation coefficient is " + str(math_score_mbta[0]))
+        print("mbta P-value is " + str(math_score_mbta[1]))
+        print("Garden Correlation coefficient is " + str(math_score_garden[0]))
+        print("Garden P-value is " + str(math_score_garden[1]))
+        print("Food Correlation coefficient is " + str(math_score_food[0]))
+        print("Fodd P-value is " + str(math_score_food[1]))        
+        res.append({'crime_coefficient':math_score_crime[0][0], 'crime_p_value':math_score_crime[1][0]})
+        res.append({'mbta_coefficient':math_score_mbta[0][0], 'mbta_p_value':math_score_mbta[1][0]})
+        res.append({'garden_coefficient':math_score_garden[0][0], 'garden_p_value':math_score_garden[1][0]})
+        res.append({'food_coefficient':math_score_food[0][0], 'food_p_value':math_score_food[1][0]})
         repo.dropCollection("BostonHotelCorrelation")
         repo.createCollection("BostonHotelCorrelation")
         repo['htw93_tscheung_wenjun.BostonHotelCorrelation'].insert_many(res)
