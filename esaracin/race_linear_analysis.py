@@ -15,7 +15,7 @@ import statsmodels.api as sm
 class race_linear_analysis(dml.Algorithm):
     contributor = 'esaracin'
     reads = ['esaracin.crime_incidents', 'esaracin.fio_data']
-    writes = []
+    writes = ['esaracin.race_data']
 
     @staticmethod
     def execute(trial = False):
@@ -29,17 +29,24 @@ class race_linear_analysis(dml.Algorithm):
         repo = client.repo
         repo.authenticate('esaracin', 'esaracin')
 
-        # Grab all of our two databases that we're reading from. Also read from
-        # a csv our third dataset
-        dataset = repo['esaracin.crime_incidents'].find()
+
+        # Support for Trial mode:       
+        if(trial == True):
+            # Skip all but 1 percent of each collection
+            dataset = repo['esaracin.crime_incidents'].find().skip(repo['esaracin.crime_incidents'].count()- 2393)
+            datasetFIO = repo['esaracin.fio_data'].find().skip(repo['esaracin.crime_incidents'].count() - 1522)
+        else:
+
+            dataset = repo['esaracin.crime_incidents'].find()
+            datasetFIO = repo['esaracin.fio_data'].find()
+
         df_crime = pd.DataFrame(list(dataset))
-       
-        dataset = repo['esaracin.fio_data'].find()
-        df_fios = pd.DataFrame(list(dataset))
+        df_fios = pd.DataFrame(list(datasetFIO))
        
         url = 'http://datamechanics.io/data/district_racial_composition.csv'
         df_race = pd.read_csv(url)
-        
+
+
         # Now we need to find the number of crimes/fios for each Policing
         # District.
         crime_by_district = {dist: 0 for dist in df_crime['DISTRICT'].unique()}
@@ -85,8 +92,9 @@ class race_linear_analysis(dml.Algorithm):
             df_race.ix[index, 'FIO Count'] /= row['population']
 
 
-
         # Now drop the categorical data before the regression
+        to_insert = df_race.to_json(orient='records') # Save to insert later
+
         districts = df_race['dist']
         df_race = df_race.drop('dist', axis=1).drop('dist_name', axis=1)
         df_race = df_race.drop('population', axis=1)
@@ -104,17 +112,15 @@ class race_linear_analysis(dml.Algorithm):
         outfile.close()
        
 
-        # JSON to insert
-#        json_set = df_race.to_json(orient='records')
-#        r = json.loads(json_set)
 
+        # Insert our race dataset.
+        r = json.loads(to_insert)
         
- #       repo.dropCollection("crime_incident_centers")
- #       repo.createCollection("crime_incident_centers")
- #       repo['esaracin.crime_incident_centers'].insert_many(r)
- #       repo['esaracin.crime_incident_centers'].metadata({'complete':True})
- #       print(repo['esaracin.crime_incident_centers'].metadata())
-
+        repo.dropCollection("race_data")
+        repo.createCollection("race_data")
+        repo['esaracin.race_data'].insert_many(r)
+        repo['esaracin.race_data'].metadata({'complete':True})
+        print(repo['esaracin.race_data'].metadata())
 
         repo.logout()
 
@@ -140,20 +146,30 @@ class race_linear_analysis(dml.Algorithm):
 
         # Add this script as a provenance agent to our document. Also add the
         # entity and activity utilized and completed by this script.
-        this_script = doc.agent('alg:esaracin#kmeans_crime_incidents', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:esaracin#race_linear_analysis', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource_crimes = doc.entity('dat:esaracin#crime_incidents',{'prov:label':'MongoDB Set',prov.model.PROV_TYPE:'ont:DataResource'})
-        clustering = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        resource_fios = doc.entity('dat:esaracin#fio_data',{'prov:label':'MongoDB Set',prov.model.PROV_TYPE:'ont:DataResource'})
+        resource_race = doc.entity('dat:esaracin#fio_data',{'prov:label':'MongoDB Set',prov.model.PROV_TYPE:'ont:DataResource'})
+        
+        
+        regression = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        get_race = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 
-        doc.wasAssociatedWith(clustering, this_script)
-        doc.usage(clustering, resource_crimes, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
+        doc.wasAssociatedWith(regression, this_script)
+        doc.usage(regression, resource_crimes, startTime, None, {prov.model.PROV_TYPE:'ont:Transformation'})
+        doc.usage(regression, resource_fios, startTime, None, {prov.model.PROV_TYPE:'ont:Transformation'})
+        doc.usage(regression, resource_race, startTime, None, {prov.model.PROV_TYPE:'ont:Transformation'})
 
-        clustered = doc.entity('dat:esaracin#crime_incident_centers', {prov.model.PROV_LABEL:'Clustered Set', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(clustered, this_script)
-        doc.wasGeneratedBy(clustered, clustering, endTime)
-        doc.wasDerivedFrom(clustered, resource_crimes, clustering, clustering, clustering)
+        doc.wasAssociatedWith(get_race, this_script)
+        doc.usage(get_race, resource_race)
+
+        race_data = doc.entity('dat:esaracin#race_data', {prov.model.PROV_LABEL:'Race Statistics', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(race_data, this_script)
+        doc.wasGeneratedBy(race_data, get_race)
+        doc.wasDerivedFrom(race_data, resource_race, get_race, get_race, get_race)
 
 
         repo.logout()
         return doc
 
-race_linear_analysis.execute()
+

@@ -123,4 +123,3 @@ class kmeans_crime_incidents(dml.Algorithm):
         repo.logout()
         return doc
 
-kmeans_crime_incidents.execute(trial=True)
