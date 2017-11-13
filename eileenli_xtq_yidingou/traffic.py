@@ -12,7 +12,7 @@ from collections import defaultdict
 class traffic(dml.Algorithm):
     contributor = 'eileenli_xtq_yidingou'
     reads = ['eileenli_xtq_yidingou.crash', 'eileenli_xtq_yidingou.hubway', 'eileenli_xtq_yidingou.signals', 'eileenli_xtq_yidingou.MBTA']
-    writes = ['eileenli_xtq_yidingou.traffic']
+    writes = ['eileenli_xtq_yidingou.traffic_data']
 
 
     @staticmethod
@@ -62,9 +62,8 @@ class traffic(dml.Algorithm):
                     mb_cord.append([float(i['longitude']), float(i['latitude'])])
                 except:
                     pass
-        
         all_cord = dict([("crash", cr_cord), ("hubway", hu_cord), ("signals", si_cord), ("MBTA", mb_cord)])
-
+        # print(all_cord)
 
         repo.dropCollection("traffic")
         repo.createCollection("traffic")
@@ -113,9 +112,13 @@ class traffic(dml.Algorithm):
         doc.usage(get_EntRes, resource_MBTA, startTime, None,
                   {prov.model.PROV_TYPE: 'ont:Computation'})
 
-        EntRes = doc.entity('dat:eileenli_xtq_yidingou#traffic', {prov.model.PROV_LABEL: 'traffic situation', prov.model.PROV_TYPE: 'ont:DataSet'})
+        EntRes = doc.entity('dat:eileenli_xtq_yidingou#traffic',
+            {prov.model.PROV_LABEL: 'traffic situation', 
+            prov.model.PROV_TYPE: 'ont:DataSet'})
+
         doc.wasAttributedTo(EntRes, this_script)
         doc.wasGeneratedBy(EntRes, get_EntRes, endTime)
+        
         doc.wasDerivedFrom(EntRes, resource_crash, get_EntRes, get_EntRes, get_EntRes)
         doc.wasDerivedFrom(EntRes, resource_hubway, get_EntRes, get_EntRes, get_EntRes)
         doc.wasDerivedFrom(EntRes, resource_signals, get_EntRes, get_EntRes, get_EntRes)
@@ -127,7 +130,7 @@ class traffic(dml.Algorithm):
 
 traffic.execute()
 doc = traffic.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+#print(doc.get_provn())
+#print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof

@@ -62,7 +62,7 @@ class comfort(dml.Algorithm):
         #print(result)
         
         all_cord = dict([("entertainment",en_cord),("restaurants",(result))])
-        #print(all_cord)
+        print(all_cord)
 
 
         repo.dropCollection("comfort")
@@ -127,7 +127,7 @@ class comfort(dml.Algorithm):
 
 comfort.execute()
 doc = comfort.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+#print(doc.get_provn())
+#print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof
