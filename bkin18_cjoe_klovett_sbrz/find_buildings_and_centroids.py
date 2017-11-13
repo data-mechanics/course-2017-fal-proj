@@ -72,7 +72,7 @@ class find_buildings_and_centroids(dml.Algorithm):
         repo.dropCollection('bkin18_cjoe_klovett_sbrz.closest_buildings')
         repo.dropCollection('bkin18_cjoe_klovett_sbrz.closest_buildings_to_centroid')
         repo.createCollection('bkin18_cjoe_klovett_sbrz.closest_buildings_to_centroid')
-        repo['bkin18_cjoe_klovett_sbrz.closest_buildings'].insert_many(closest_buildings_to_centroid)
+        repo['bkin18_cjoe_klovett_sbrz.closest_buildings_to_centroids'].insert_many(closest_buildings_to_centroid)
         repo.logout()
 
         endTime = datetime.datetime.now()
