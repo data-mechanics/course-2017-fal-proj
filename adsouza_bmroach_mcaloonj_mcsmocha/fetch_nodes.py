@@ -87,11 +87,7 @@ class fetch_nodes(dml.Algorithm):
                 distances.append((dist,idx))
 
             #Get average distance to closest cluster
-<<<<<<< HEAD
-            mean = sum([x[0] for x in distances])/len(distances)
-=======
-            mean = ( sum(distances)/len(distances) ) * mean_skew
->>>>>>> 4a57574a08b1ee2fd43c8fc14a978a218456b375
+            mean = (sum([x[0] for x in distances])/len(distances)) * mean_skew
 
             #Filter out nodes that have distance to nearest cluster that is less than the mean
             filtered_nodes = [nodes[x[1]] for x in distances if x[0] >= mean]
