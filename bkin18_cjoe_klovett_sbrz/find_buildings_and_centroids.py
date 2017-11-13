@@ -10,7 +10,7 @@ import numpy as np
 class find_buildings_and_centroids(dml.Algorithm):
     contributor = 'bkin18_cjoe_klovett_sbrz'
     reads = ['bkin18_cjoe_klovett_sbrz.property_assessment_impBuilds']
-    writes = ['bkin18_cjoe_klovett_sbrz.closest_buildings_to_centroids'] 
+    writes = ['bkin18_cjoe_klovett_sbrz.closest_buildings_to_centroids']
 
     @staticmethod
     def dist(p1, p2):
@@ -43,9 +43,9 @@ class find_buildings_and_centroids(dml.Algorithm):
         kmeans = KMeans(n_clusters=K)
         kmeans.fit(building_list)
 
-        # Build the input list (kmean_list) and the output list (closest_buildings_to_centroid)
+        # Build the input list (kmean_list) and the output list (closest_buildings_to_centroids)
         kmean_list = kmeans.cluster_centers_.tolist()
-        closest_buildings_to_centroid = []
+        closest_buildings_to_centroids = []
 
         # This is kind of repetitive we can probably try and find a better solution
         for p1 in kmean_list:
@@ -62,17 +62,17 @@ class find_buildings_and_centroids(dml.Algorithm):
                         min_dist = distance
                         last_building = building
 
-            # Rebuild buildings to include its ID and the centroid it is closest to
+            # Rebuild buildings to include its ID and the centroids it is closest to
             this_building = {}
             this_building['_id'] = last_building
             this_building['NEARBY_CENTROID'] = p2 
             this_building["DIST_TO_CENTROID"] = min_dist
-            closest_buildings_to_centroid.append(this_building)
+            closest_buildings_to_centroids.append(this_building)
 
         repo.dropCollection('bkin18_cjoe_klovett_sbrz.closest_buildings')
         repo.dropCollection('bkin18_cjoe_klovett_sbrz.closest_buildings_to_centroid')
         repo.dropCollection('bkin18_cjoe_klovett_sbrz.closest_buildings_to_centroids')
-        repo.createCollection('bkin18_cjoe_klovett_sbrz.closest_buildings_to_centroids')
+        repo.createCollection('bkin18_cjoe_klovett_sbrz.closest_b<div></div>uildings_to_centroids')
         repo['bkin18_cjoe_klovett_sbrz.closest_buildings_to_centroids'].insert_many(closest_buildings_to_centroid)
         repo.logout()
 
