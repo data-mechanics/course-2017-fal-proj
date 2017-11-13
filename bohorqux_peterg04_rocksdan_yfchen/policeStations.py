@@ -27,8 +27,8 @@ class policeStations(dml.Algorithm):
         repo.dropCollection("policeStations")
         repo.createCollection("policeStations")
         repo['bohorqux_peterg04_rocksdan_yfchen.policeStations'].insert(r)
-        repo['bohorqux_peterg04_rocksdan_yfchen'].metadata({'complete':True})
-        print(repo['bohorqux_peterg04_rocksdan_yfchen.policeStations'].metadata())
+#         repo['bohorqux_peterg04_rocksdan_yfchen'].metadata({'complete':True})
+#         print(repo['bohorqux_peterg04_rocksdan_yfchen.policeStations'].metadata())
         
         repo.logout()
         
