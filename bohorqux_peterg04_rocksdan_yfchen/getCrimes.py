@@ -25,7 +25,7 @@ class getCrimes(dml.Algorithm):
         response = response.replace(']', "")
         response += ']'
         r = json.loads(response)
-        s = json.dumps(r, sort_keys=True, indent=2)
+#         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("crimes")
         repo.createCollection("crimes")
         repo['bohorqux_peterg04_rocksdan_yfchen.crimes'].insert_many(r)

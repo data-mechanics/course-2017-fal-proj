@@ -25,7 +25,7 @@ class getMBTA(dml.Algorithm):
         response = response.replace(']', "")
         response += ']'
         r = json.loads(response)
-        s = json.dumps(r, sort_keys=True, indent=2)
+#         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("MBTA")
         repo.createCollection("MBTA")
         repo['bohorqux_peterg04_rocksdan_yfchen.MBTA'].insert_many(r)

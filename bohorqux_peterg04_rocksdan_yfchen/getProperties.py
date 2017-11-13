@@ -25,7 +25,7 @@ class getProperties(dml.Algorithm):
         response = response.replace(']', "")
         response += ']'
         r = json.loads(response)
-        s = json.dumps(r, sort_keys=True, indent=2)
+#         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("properties")
         repo.createCollection("properties")
         repo['bohorqux_peterg04_rocksdan_yfchen.properties'].insert_many(r)

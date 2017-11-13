@@ -25,7 +25,7 @@ class getCollege(dml.Algorithm):
         response = response.replace(']', "")
         response += ']'
         r = json.loads(response)
-        s = json.dumps(r, sort_keys=True, indent=2)
+#         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("college")
         repo.createCollection("college")
         repo['bohorqux_peterg04_rocksdan_yfchen.college'].insert_many(r)
