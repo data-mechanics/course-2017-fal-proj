@@ -10,8 +10,8 @@ import numpy as np
 class find_buildings_and_centroids(dml.Algorithm):
     contributor = 'bkin18_cjoe_klovett_sbrz'
     reads = ['bkin18_cjoe_klovett_sbrz.property_assessment_impBuilds']
-    writes = ['bkin18_cjoe_klovett_sbrz.closest_buildings_to_centroids'] 
-s
+    writes = ['bkin18_cjoe_klovett_sbrz.closest_buildings_to_centroids']
+
     @staticmethod
     def dist(p1, p2):
         # Standard distance formula #
