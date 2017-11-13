@@ -8,7 +8,7 @@ import uuid
 class rdata(dml.Algorithm):
     contributor = 'eileenli_xtq_yidingou'
     reads = []
-    writes = ['eileenli_xtq_yidingou.jam', 'eileenli_xtq_yidingou.crash','eileenli_xtq_yidingou.MTBA' 'eileenli_xtq_yidingou.schools', 'eileenli_xtq_yidingou.hubway','eileenli_xtq_yidingou.Restaurants','eileenli_xtq_yidingou.Crime','eileenli_xtq_yidingou.hospitals','eileenli_xtq_yidingou.Entertainment']
+    writes = ['eileenli_xtq_yidingou.jam', 'eileenli_xtq_yidingou.crash','eileenli_xtq_yidingou.MTBA', 'eileenli_xtq_yidingou.schools', 'eileenli_xtq_yidingou.hubway','eileenli_xtq_yidingou.Restaurants','eileenli_xtq_yidingou.Crime','eileenli_xtq_yidingou.hospitals','eileenli_xtq_yidingou.Entertainment', 'eileenli_xtq_yidingou.signals']
 
     @staticmethod
     def execute(trial = False):
@@ -109,7 +109,14 @@ class rdata(dml.Algorithm):
         # repo['eileenli_xtq_yidingou.Entertainment'].metadata({'complete':True})
         # print(repo['eileenli_xtq_yidingou.Entertainment'].metadata())
 
-
+        url = 'http://datamechanics.io/data/eileenli_xtq_yidingou/Traffic_Signals.geojson'
+        response = urllib.request.urlopen(url).read().decode("utf-8")
+        r = json.loads(response)['features']
+        s = json.dumps(r, sort_keys=True, indent=2)
+        repo.dropCollection("eileenli_xtq_yidingou.signals")
+        repo.createCollection("eileenli_xtq_yidingou.signals")
+        repo['eileenli_xtq_yidingou.signals'].insert_many(r)
+        #print(repo['eileenli_xtq_yidingou.hubway'].metadata())
 
         repo.logout()
 
@@ -155,7 +162,7 @@ class rdata(dml.Algorithm):
         resource_Crime = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         resource_hospitals = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         resource_entertainment = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        
+        resource_signals = doc.entity('dio:Traffic_Signals', {'prov:label':'Traffic Signals', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
 
         get_jam = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         get_MBTA = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
@@ -166,7 +173,7 @@ class rdata(dml.Algorithm):
         get_Crime = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         get_hospitals = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         get_Entertainment = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        
+        get_signals = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 
 
         doc.wasAssociatedWith(get_jam, this_script)
@@ -178,12 +185,14 @@ class rdata(dml.Algorithm):
         doc.wasAssociatedWith(get_Crime, this_script)
         doc.wasAssociatedWith(get_hospitals, this_script)
         doc.wasAssociatedWith(get_Entertainment, this_script)
+        doc.wasAssociatedWith(get_signals, this_script)
 
 
         doc.usage(get_jam, resource_jam, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval'})
         doc.usage(get_MBTA, resource_MBTA, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval'})
         doc.usage(get_crash, resource_crash, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval'})
         doc.usage(get_hubway, resource_hubway, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval'})
+        doc.usage(get_signals, resource_signals, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval'})
         doc.usage(get_schools, resource_schools, startTime, None,{prov.model.PROV_TYPE:'ont:Retrieval'})
         doc.usage(get_Restaurants, resource_Restaurants, startTime, None,{prov.model.PROV_TYPE:'ont:Retrieval',
                   'ont:Query':'?type=BostonLife+Restaurants&$select=type,latitude,longitude,OPEN_DT'})
@@ -238,12 +247,16 @@ class rdata(dml.Algorithm):
         doc.wasAttributedTo(hospitals, this_script)
         doc.wasGeneratedBy(hospitals, get_hospitals, endTime)
         doc.wasDerivedFrom(hospitals, resource_hospitals, get_hospitals, get_hospitals, get_hospitals)
-
+ 
         Entertainment = doc.entity('dat:eileenli_xtq_yidingou#Entertainment', {prov.model.PROV_LABEL:'NightLife Entertainment', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(Entertainment, this_script)
         doc.wasGeneratedBy(Entertainment, get_Entertainment, endTime)
         doc.wasDerivedFrom(Entertainment, resource_entertainment, get_Entertainment, get_Entertainment, get_Entertainment)
 
+        signals = doc.entity('dat:eileenli_xtq_yidingou#signals', {prov.model.PROV_LABEL:'Traffic signals', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(signals, this_script)
+        doc.wasGeneratedBy(signals, get_signals, endTime)
+        doc.wasDerivedFrom(signals, resource_signals, get_signals, get_signals, get_signals)
 
 
         repo.logout()

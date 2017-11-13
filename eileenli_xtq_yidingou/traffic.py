@@ -9,7 +9,7 @@ from collections import defaultdict
 
 
 
-class comfort(dml.Algorithm):
+class traffic(dml.Algorithm):
     contributor = 'eileenli_xtq_yidingou'
     reads = ['eileenli_xtq_yidingou.crash', 'eileenli_xtq_yidingou.hubway', 'eileenli_xtq_yidingou.signals']
     writes = ['eileenli_xtq_yidingou.traffic']
@@ -114,8 +114,8 @@ class comfort(dml.Algorithm):
 
         return doc
 
-comfort.execute()
-doc = comfort.provenance()
+traffic.execute()
+doc = traffic.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
 

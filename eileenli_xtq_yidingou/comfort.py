@@ -43,7 +43,7 @@ class comfort(dml.Algorithm):
                         en_cord += l
                     except:
                         pass
-        print(en_cord)
+        # print(en_cord)
 
         rs_cord = []
         for k in RS:
