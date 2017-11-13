@@ -28,7 +28,7 @@ class retrieveRoadsInventory(dml.Algorithm):
 
         # Setting up our API call
         SAMPLE_START = 2816
-        TRIAL_NUM = 50
+        TRIAL_NUM = 1000
         
         # Checks to see whether we are doing a trial execute or not - used a range because our starting data has a lot of empty points
         if trial:
