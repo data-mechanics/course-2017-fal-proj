@@ -45,8 +45,9 @@ class get_avg_distance(dml.Algorithm):
         repo.dropCollection("avg_distance")
         repo.createCollection("avg_distance")
 
-        cluster_stats = repo['adsouza_bmroach_mcaloonj_mcsmocha.num_clusters_stats'].find()
+        cluster_stats = repo['adsouza_bmroach_mcaloonj_mcsmocha.num_clusters_stats'].find({}, {'_id': False})
         cluster_stats = [d for d in cluster_stats]
+
         print(cluster_stats)
         # turn data into lists containing each of the data points
         cluster_list = []
@@ -55,12 +56,13 @@ class get_avg_distance(dml.Algorithm):
         avg_park_dist = []
         avg_acc_dist = []
 
-        for c in cluster_stats:
-            cluster_list.append(int(c)) # add cluster number
-            avg_school_dist.append(cluster_stats[c][0]) # add avg distance from school
-            avg_hosp_dist.append(cluster_stats[c][1]) # add avg distance from hospital
-            avg_park_dist.append(cluster_stats[c][2]) # add avg distance from park
-            avg_acc_dist.append(cluster_stats[c][3]) # add avg distance from accident point
+        for e in cluster_stats:
+            for k in e:
+                cluster_list.append(int(k)) # add cluster number
+                avg_school_dist.append(e[k][0]) # add avg distance from school
+                avg_hosp_dist.append(e[k][1]) # add avg distance from hospital
+                avg_park_dist.append(e[k][2]) # add avg distance from park
+                avg_acc_dist.append(e[k][3]) # add avg distance from accident point
 
         # create list of overall averages as 
         average_dist = []
