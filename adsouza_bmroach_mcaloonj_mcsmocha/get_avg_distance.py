@@ -45,8 +45,9 @@ class get_avg_distance(dml.Algorithm):
         repo.dropCollection("avg_distance")
         repo.createCollection("avg_distance")
 
-        cluster_stats = repo['adsouza_bmroach_mcaloonj_mcsmocha.num_cluster_stats'].find_one()
-
+        cluster_stats = repo['adsouza_bmroach_mcaloonj_mcsmocha.num_clusters_stats'].find()
+        cluster_stats = [d for d in cluster_stats]
+        print(cluster_stats)
         # turn data into lists containing each of the data points
         cluster_list = []
         avg_school_dist = []
@@ -54,7 +55,7 @@ class get_avg_distance(dml.Algorithm):
         avg_park_dist = []
         avg_acc_dist = []
 
-        for c in cluster_stats.keys():
+        for c in cluster_stats:
             cluster_list.append(int(c)) # add cluster number
             avg_school_dist.append(cluster_stats[c][0]) # add avg distance from school
             avg_hosp_dist.append(cluster_stats[c][1]) # add avg distance from hospital
@@ -66,6 +67,7 @@ class get_avg_distance(dml.Algorithm):
         for i in range(len(cluster_list)):
             average_dist.append(np.mean([avg_school_dist[i], avg_hosp_dist[i], avg_park_dist[i], avg_acc_dist[i]]))
 
+        print(average_dist)
         # print lowest average and the k value associated with it
         best_k_ind = 0
         lowest_avg = average_dist[0]
