@@ -6,9 +6,9 @@ import datetime
 import uuid
 
 class getMBTA(dml.Algorithm):
-    contributor = 'bohorqux_rocksdan'
+    contributor = 'bohorqux_peterg04_rocksdan_yfchen'
     reads = []
-    writes = ['bohorqux_rocksdan.MBTA']
+    writes = ['bohorqux_peterg04_rocksdan_yfchen.MBTA']
 
     @staticmethod
     def execute(trial = False):
@@ -18,7 +18,7 @@ class getMBTA(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('bohorqux_rocksdan', 'bohorqux_rocksdan')
+        repo.authenticate('bohorqux_peterg04_rocksdan_yfchen', 'bohorqux_peterg04_rocksdan_yfchen')
 
         url = 'http://datamechanics.io/data/bohorqux_rocksdan/mbta_cleaned2.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -28,9 +28,9 @@ class getMBTA(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("MBTA")
         repo.createCollection("MBTA")
-        repo['bohorqux_rocksdan.MBTA'].insert_many(r)
-        repo['bohorqux_rocksdan.MBTA'].metadata({'complete':True})
-        print(repo['bohorqux_rocksdan.MBTA'].metadata())
+        repo['bohorqux_peterg04_rocksdan_yfchen.MBTA'].insert_many(r)
+        repo['bohorqux_peterg04_rocksdan_yfchen.MBTA'].metadata({'complete':True})
+        print(repo['bohorqux_peterg04_rocksdan_yfchen.MBTA'].metadata())
 
         repo.logout()
 
@@ -49,7 +49,7 @@ class getMBTA(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('bohorqux_rocksdan', 'bohorqux_rocksdan')
+        repo.authenticate('bohorqux_peterg04_rocksdan_yfchen', 'bohorqux_peterg04_rocksdan_yfchen')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
