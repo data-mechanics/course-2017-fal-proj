@@ -9,7 +9,7 @@ import geojson
 from tqdm import tqdm
 import pdb
 import scipy.stats
-import z3
+#import z3
 
 class BudgetCalculator(dml.Algorithm):
     contributor = 'francisz_jrashaan'
@@ -29,11 +29,14 @@ class BudgetCalculator(dml.Algorithm):
         scores =  repo.francisz_jrashaan.neighborhoodScores.find()
       
         scoreArray = []
+        print(scores)
         for i in scores:
+            print(i)
             a = lambda t: (t['Charging Station'])
             b = lambda t: (t['Hubway Stations'])
             c = lambda t: (t['Bike Networks'])  
             d = lambda t: (t['Open Space'])
+            e = lambda t:(t['Neighborhood'])
            
     
 
@@ -42,22 +45,23 @@ class BudgetCalculator(dml.Algorithm):
             co2 = b(i)
             co3 = c(i)
             co4 = d(i)
+            co5 = e(i)
 
-            scoreArray.append((co1,co2,co3,co4))
+            scoreArray.append((co1,co2,co3,co4,co5))
           
 
-        S = z3.Solver()
+        #S = z3.Solver()
 
         for i in range(len(scoreArray)):
             c = scoreArray[i][0] 
             h = scoreArray[i][1]
             b = scoreArray[i][2]
             o = scoreArray[i][3]
-            (x1,x2,x3,x4) = [z3.Real('x'+str(j) + "_" + str(i) for j in range(1,5))]
+           # (x1,x2,x3,x4) = [z3.Real('x'+str(j) + "_" + str(i) for j in range(1,5))]
 
-            S.add(((c+x1) * 1000) + ((h+x2) * 2000) <= 1000000)
+            #S.add(((c+x1) * 1000) + ((h+x2) * 2000) <= 1000000)
 
-        print(S)
+       # print(S)
 
 
 
@@ -105,13 +109,13 @@ class BudgetCalculator(dml.Algorithm):
 
         doc.wasAssociatedWith(compute_budget, this_script)
        
-        doc.usage(compute_budget, resource_neighborhood, startTime, None, {prov.model.PROV_TYPE:'ont:Used for Computation'})
+        doc.usage(compute_budget, resource_neighborhoodscores, startTime, None, {prov.model.PROV_TYPE:'ont:Used for Computation'})
      
                   
         optimalscore = doc.entity('dat:francisz_jrashaan#optimalScore', {prov.model.PROV_LABEL:'Correlation Score', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(optimalscore, this_script)
         doc.wasGeneratedBy(optimalscore, compute_budget, endTime)
-        doc.wasDerivedFrom(optimalscore, resource_neighborhood, compute_budget, compute_budget, compute_budgets)
+        doc.wasDerivedFrom(optimalscore, resource_neighborhoodscores, compute_budget, compute_budget, compute_budget)
                   
         repo.logout()
                   
