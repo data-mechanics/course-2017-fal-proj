@@ -7,9 +7,9 @@ import uuid
 from builtins import staticmethod
 
 class underageSchoolsFiltered(dml.Algorithm):
-    contributor = 'peterg04_yfchen'
-    reads = ['peterg04_yfchen.underageSchools', 'peterg04_yfchen.colleges']
-    writes = ['peterg04_yfchen.underageSchoolsFiltered']
+    contributor = 'bohorqux_peterg04_rocksdan_yfchen'
+    reads = ['bohorqux_peterg04_rocksdan_yfchen.underageSchools', 'bohorqux_peterg04_rocksdan_yfchen.colleges']
+    writes = ['bohorqux_peterg04_rocksdan_yfchen.underageSchoolsFiltered']
     
     @staticmethod
     def execute(trial = False):
@@ -34,7 +34,7 @@ class underageSchoolsFiltered(dml.Algorithm):
         # Set up the db connection
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('peterg04_yfchen', 'peterg04_yfchen')
+        repo.authenticate('bohorqux_peterg04_rocksdan_yfchen', 'bohorqux_peterg04_rocksdan_yfchen')
         
 #        url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/1d9509a8b2fd485d9ad471ba2fdb1f90_0.geojson'
 #        response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -125,9 +125,9 @@ class underageSchoolsFiltered(dml.Algorithm):
         
         FinalData = project(projectMerge, lambda t: dict([("ZIPCODE", t[0]), ("College_Agg", t[1]), ("PublicSchool_Agg", t[2])]))
         
-        repo['peterg04_yfchen.underageSchoolsFiltered'].insert(FinalData, check_keys = False)
-        repo['peterg04_yfchen.underageSchoolsFiltered'].metadata({'complete':True})
-        print(repo['peterg04_yfchen.underageSchoolsFiltered'].metadata())
+        repo['bohorqux_peterg04_rocksdan_yfchen.underageSchoolsFiltered'].insert(FinalData, check_keys = False)
+        repo['bohorqux_peterg04_rocksdan_yfchen.underageSchoolsFiltered'].metadata({'complete':True})
+        print(repo['bohorqux_peterg04_rocksdan_yfchen.underageSchoolsFiltered'].metadata())
         
         repo.logout()
         
@@ -145,7 +145,7 @@ class underageSchoolsFiltered(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('peterg04_yfchen', 'peterg04_yfchen')
+        repo.authenticate('bohorqux_peterg04_rocksdan_yfchen', 'bohorqux_peterg04_rocksdan_yfchen')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.

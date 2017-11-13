@@ -6,9 +6,9 @@ import datetime
 import uuid
 
 class mbta_ln(dml.Algorithm):
-    contributor = 'bohorqux_rocksdan'
-    reads = ['bohorqux_rocksdan.MBTA']
-    writes = ['bohorqux_rocksdan.mbta_late_nights']
+    contributor = 'bohorqux_peterg04_rocksdan_yfchen'
+    reads = ['bohorqux_peterg04_rocksdan_yfchen.MBTA']
+    writes = ['bohorqux_peterg04_rocksdan_yfchen.mbta_late_nights']
 
     @staticmethod
     def execute(trial = False):
@@ -18,10 +18,10 @@ class mbta_ln(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('bohorqux_rocksdan', 'bohorqux_rocksdan')
+        repo.authenticate('bohorqux_peterg04_rocksdan_yfchen', 'bohorqux_peterg04_rocksdan_yfchen')
 
 
-        reports = repo['bohorqux_rocksdan.MBTA']
+        reports = repo['bohorqux_peterg04_rocksdan_yfchen.MBTA']
 
         wdk = {0:"Monday", 1:"Tuesday", 2:"Wednesday", 3:"Thursday", 4:"Friday", 5:"Saturday", 6:"Sunday"}
         ln = {"Monday":0, "Tuesday":0, "Wednesday":0, "Thursday":0, "Friday":0, "Saturday":0, "Sunday":0}
@@ -65,7 +65,7 @@ class mbta_ln(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('bohorqux_rocksdan', 'bohorqux_rocksdan')
+        repo.authenticate('bohorqux_peterg04_rocksdan_yfchen', 'bohorqux_peterg04_rocksdan_yfchen')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
