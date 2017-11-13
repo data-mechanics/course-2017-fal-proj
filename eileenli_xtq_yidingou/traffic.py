@@ -11,7 +11,7 @@ from collections import defaultdict
 
 class traffic(dml.Algorithm):
     contributor = 'eileenli_xtq_yidingou'
-    reads = ['eileenli_xtq_yidingou.crash', 'eileenli_xtq_yidingou.hubway', 'eileenli_xtq_yidingou.signals']
+    reads = ['eileenli_xtq_yidingou.crash', 'eileenli_xtq_yidingou.hubway', 'eileenli_xtq_yidingou.signals', 'eileenli_xtq_yidingou.MBTA']
     writes = ['eileenli_xtq_yidingou.traffic']
 
 
@@ -27,9 +27,10 @@ class traffic(dml.Algorithm):
         repo.authenticate('eileenli_xtq_yidingou', 'eileenli_xtq_yidingou')
 
         # loads the collection
-        CR = repo['eileenli_xtq_yidingou.crash'].find() #Entertainment
-        HU = repo['eileenli_xtq_yidingou.hubway'].find() #Restaurants
+        CR = repo['eileenli_xtq_yidingou.crash'].find()
+        HU = repo['eileenli_xtq_yidingou.hubway'].find()
         SI = repo['eileenli_xtq_yidingou.signals'].find()
+        MB = repo['eileenli_xtq_yidingou.MBTA'].find()
 
 
         cr_cord = []
@@ -54,8 +55,15 @@ class traffic(dml.Algorithm):
             except:
                 pass
 
+        mb_cord = []
+        for k in MB:
+            for i in k['stations']:
+                try:
+                    mb_cord.append([float(i['longitude']), float(i['latitude'])])
+                except:
+                    pass
         
-        all_cord = dict([("crash", cr_cord), ("hubway", hu_cord), ("signals", si_cord)])
+        all_cord = dict([("crash", cr_cord), ("hubway", hu_cord), ("signals", si_cord), ("MBTA", mb_cord)])
 
 
         repo.dropCollection("traffic")
@@ -91,6 +99,7 @@ class traffic(dml.Algorithm):
         resource_crash = doc.entity('dat:eileenli_xtq_yidingou#crash', {'prov:label': 'crash', prov.model.PROV_TYPE: 'ont:DataSet'})
         resource_hubway = doc.entity('dat:eileenli_xtq_yidingou#hubway', {'prov:label': 'hubway', prov.model.PROV_TYPE: 'ont:DataSet'})
         resource_signals = doc.entity('dat:eileenli_xtq_yidingou#signals', {'prov:label': 'signals', prov.model.PROV_TYPE: 'ont:DataSet'})
+        resource_MBTA = doc.entity('dat:eileenli_xtq_yidingou#MBTA', {'prov:label': 'MBTA', prov.model.PROV_TYPE: 'ont:DataSet'})
         
 
         get_EntRes = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
@@ -101,7 +110,8 @@ class traffic(dml.Algorithm):
                   {prov.model.PROV_TYPE: 'ont:Computation'})
         doc.usage(get_EntRes, resource_signals, startTime, None,
                   {prov.model.PROV_TYPE: 'ont:Computation'})
-        
+        doc.usage(get_EntRes, resource_MBTA, startTime, None,
+                  {prov.model.PROV_TYPE: 'ont:Computation'})
 
         EntRes = doc.entity('dat:eileenli_xtq_yidingou#traffic', {prov.model.PROV_LABEL: 'traffic situation', prov.model.PROV_TYPE: 'ont:DataSet'})
         doc.wasAttributedTo(EntRes, this_script)
@@ -109,7 +119,8 @@ class traffic(dml.Algorithm):
         doc.wasDerivedFrom(EntRes, resource_crash, get_EntRes, get_EntRes, get_EntRes)
         doc.wasDerivedFrom(EntRes, resource_hubway, get_EntRes, get_EntRes, get_EntRes)
         doc.wasDerivedFrom(EntRes, resource_signals, get_EntRes, get_EntRes, get_EntRes)
-        
+        doc.wasDerivedFrom(EntRes, resource_MBTA, get_EntRes, get_EntRes, get_EntRes) 
+
         repo.logout()
 
         return doc
