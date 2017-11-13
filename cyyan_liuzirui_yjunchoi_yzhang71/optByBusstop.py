@@ -96,7 +96,8 @@ class optByBusstop(dml.Algorithm):
         {prov.model.PROV_LABEL:'Optimized Polling Location based on Busstop', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(optByBusstop, this_script)
         doc.wasGeneratedBy(optByBusstop, get_optByBusstop, endTime)
-        doc.wasDerivedFrom(optByBusstop, resource, get_optByBusstop, get_optByBusstop, get_optByBusstop)
+        doc.wasDerivedFrom(optByBusstop, resource_bus_by_ward, get_optByBusstop, get_optByBusstop, get_optByBusstop)
+        doc.wasDerivedFrom(optByBusstop, resource_pollingLocation, get_optByBusstop, get_optByBusstop, get_optByBusstop)
 
         repo.logout()
 

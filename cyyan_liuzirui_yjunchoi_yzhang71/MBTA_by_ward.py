@@ -117,6 +117,13 @@ class MBTA_by_ward(dml.Algorithm):
         doc.wasGeneratedBy(h, this_MBTA, endTime)
         doc.wasDerivedFrom(h, resource2, this_MBTA, this_MBTA, this_MBTA)
 
+        MBTA_by_ward = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#MBTA_by_ward',
+        {prov.model.PROV_LABEL:'MBTA stations in each ward', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(MBTA_by_ward, this_script)
+        doc.wasGeneratedBy(MBTA_by_ward, this_script, endTime)
+        doc.wasDerivedFrom(MBTA_by_ward, resource1, this_script, this_script, this_script)
+        doc.wasDerivedFrom(MBTA_by_ward, resource2, this_script, this_script, this_script)
+
         repo.logout()
 
         return doc

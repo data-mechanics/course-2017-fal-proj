@@ -119,7 +119,9 @@ class optByPublicT(dml.Algorithm):
         {prov.model.PROV_LABEL:'Optimized Polling Location based on Public Transportation', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(optByPublicT, this_script)
         doc.wasGeneratedBy(optByPublicT, get_optByPublicT, endTime)
-        doc.wasDerivedFrom(optByPublicT, resource, get_optByPublicT, get_optByPublicT, get_optByPublicT)
+        doc.wasDerivedFrom(optByPublicT, resource_MBTA_by_ward, get_optByPublicT, get_optByPublicT, get_optByPublicT)
+        doc.wasDerivedFrom(optByPublicT, resource_bus_by_ward, get_optByPublicT, get_optByPublicT, get_optByPublicT)
+        doc.wasDerivedFrom(optByPublicT, resource_pollingLocation, get_optByPublicT, get_optByPublicT, get_optByPublicT)
 
         repo.logout()
 

@@ -23,7 +23,7 @@ class optByMBTA(dml.Algorithm):
         repo.authenticate('cyyan_liuzirui_yjunchoi_yzhang71', 'cyyan_liuzirui_yjunchoi_yzhang71')
 
         pLocation = repo['cyyan_liuzirui_yjunchoi_yzhang71.pollingLocation'].find()
-        MBTA = repo['cyyan_liuzirui_yjunchoi_yzhang71.MBTA_by_ward'].find()
+        MBTA = repo['cyyan_liuzirui_yjunchoi_yzhang71.MBTA_by_ward'].find({})
 
         repo.dropCollection("optByMBTA")
         repo.createCollection("optByMBTA")
@@ -41,9 +41,12 @@ class optByMBTA(dml.Algorithm):
         # Use k-mean Algorithm to optimize polling locations based on public transportation by wards
         optimized = {}
         for i in range(1,23):
-            pLoc[str(i)] = np.asarray(pLoc[str(i)])
-            centroids, labels = kmeans2(station[str(i)], k = pLoc[str(i)], iter = 100, minit = 'matrix')
-            optimized[str(i)] = centroids.tolist()
+            if station[str(i)] != []:
+                pLoc[str(i)] = np.asarray(pLoc[str(i)])
+                centroids, labels = kmeans2(station[str(i)], k = pLoc[str(i)], iter = 100, minit = 'matrix')
+                optimized[str(i)] = centroids.tolist()
+            else:
+                optimized[str(i)] = pLoc[str(i)]
 
         results = [optimized]
 
@@ -95,7 +98,8 @@ class optByMBTA(dml.Algorithm):
         {prov.model.PROV_LABEL:'Optimized Polling Location based on MBTA', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(optByMBTA, this_script)
         doc.wasGeneratedBy(optByMBTA, get_optByMBTA, endTime)
-        doc.wasDerivedFrom(optByMBTA, resource, get_optByMBTA, get_optByMBTA, get_optByMBTA)
+        doc.wasDerivedFrom(optByMBTA, resource_pollingLocation, get_optByMBTA, get_optByMBTA, get_optByMBTA)
+        doc.wasDerivedFrom(optByMBTA, resource_MBTA_by_ward, get_optByMBTA, get_optByMBTA, get_optByMBTA)
 
         repo.logout()
 

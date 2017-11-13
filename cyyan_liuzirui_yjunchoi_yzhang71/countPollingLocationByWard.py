@@ -35,9 +35,8 @@ class countPollingLocationByWard(dml.Algorithm):
         # Group by Ward and count the number of polling location
         wardList = [] # 22 wards in Boston
         for row in PL:
-
             wardList.append(len(row['coordinates'])) # index starts from 0
-        print(wardList)
+
 
         countLocation = []
         for i in range(22):
@@ -48,7 +47,7 @@ class countPollingLocationByWard(dml.Algorithm):
         repo.createCollection("countPollingLocationByWard")
         repo['cyyan_liuzirui_yjunchoi_yzhang71.countPollingLocationByWard'].insert(countLocation)
         repo['cyyan_liuzirui_yjunchoi_yzhang71.countPollingLocationByWard'].metadata({'complete': True})
-        print("Saved countPollingLocationByWard", repo['cyyan_liuzirui_yjunchoi_yzhang71.countPollingLocationByWard'].metadata())
+        #print("Saved countPollingLocationByWard", repo['cyyan_liuzirui_yjunchoi_yzhang71.countPollingLocationByWard'].metadata())
 
         repo.logout()
 

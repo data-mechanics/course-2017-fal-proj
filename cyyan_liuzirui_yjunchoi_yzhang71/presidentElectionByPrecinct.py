@@ -27,7 +27,6 @@ class presidentElectionByPrecinct(dml.Algorithm):
         repo.createCollection("presidentElectionByPrecinct")
 
         url = 'http://datamechanics.io/data/yjunchoi_yzhang71/presidentElectionByPrecinct.csv'
-        #Originally from 'http://electionstats.state.ma.us/elections/download/40060/precincts_include:1/'
         # Code for csv read with sth
         urllib.request.urlretrieve(url, 'vote.csv')
         vote_df = pd.read_csv('vote.csv')
