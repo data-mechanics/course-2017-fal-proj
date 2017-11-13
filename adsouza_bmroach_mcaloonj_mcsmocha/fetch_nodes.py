@@ -1,20 +1,14 @@
 """
 Filename: fetch_nodes.py
-
-Last edited by: BMR 11/11/17
-
+Last edited by: JM 11/11/17
 Boston University CS591 Data Mechanics Fall 2017 - Project 2
 Team Members:
 Adriana D'Souza     adsouza@bu.edu
 Brian Roach         bmroach@bu.edu
 Jessica McAloon     mcaloonj@bu.edu
 Monica Chiu         mcsmocha@bu.edu
-
 Original skeleton files provided by Andrei Lapets (lapets@bu.edu)
-
-Development Notes: 
-
-
+Development Notes:
 """
 
 import geojson
@@ -64,7 +58,6 @@ class fetch_nodes(dml.Algorithm):
             clusters = repo['adsouza_bmroach_mcaloonj_mcsmocha.accident_clusters'].find_one()
             clusters = clusters["accident_clusters"]
 
-
             #Insert clusters into cKDTree
             cluster_tree = cKDTree(clusters)
 
@@ -73,17 +66,13 @@ class fetch_nodes(dml.Algorithm):
             for i in range(len(nodes)):
                 #find the k nearest neighbors
                 dist, idx = cluster_tree.query(nodes[i], k=1, p=2) #p=2 means euclidean distance, there's no option for vincenty
-                distances.append(dist)
+                distances.append((dist,idx))
 
             #Get average distance to closest cluster
-            mean = sum(distances)/len(distances)
+            mean = sum([x[0] for x in distances])/len(distances)
 
             #Filter out nodes that have distance to nearest cluster that is less than the mean
-            filtered_nodes = []
-            for i in range(len(nodes)):
-                dist, idx = cluster_tree.query(nodes[i], k=1, p=2)
-                if dist >= mean:
-                    filtered_nodes.append(nodes[i])
+            filtered_nodes = [nodes[x[1]] for x in distances if x[0] >= mean]
 
 
             #Insert into repo {"nodes": [[lat,long], [lat,long]..............]}
@@ -144,7 +133,7 @@ class fetch_nodes(dml.Algorithm):
             return doc
 
 
-# fetch_nodes.execute()
+#fetch_nodes.execute()
 # doc = fetch_nodes.provenance()
 # print(doc.get_provn())
 # print(json.dumps(json.loads(doc.serialize()), indent=4))
