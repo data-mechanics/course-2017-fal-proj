@@ -6,6 +6,7 @@ import datetime
 import uuid
 import pdb
 import csv
+import sys
 
 class snow_emergency_routes(dml.Algorithm):
     contributor = 'bkin18_cjoe'
@@ -20,6 +21,9 @@ class snow_emergency_routes(dml.Algorithm):
     @staticmethod 
     def execute(trial=False):
         startTime = datetime.datetime.now()
+
+        print("Finding snow emergency routes...            \n", end='\r')
+        sys.stdout.write("\033[F") # Cursor up one line
 
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
@@ -62,24 +66,23 @@ class snow_emergency_routes(dml.Algorithm):
         doc.add_namespace('bdp', 'http://bostonopendata-boston.opendata.arcgis.com/datasets/')
         doc.add_namespace('hdv', 'https://dataverse.harvard.edu/dataset.xhtml')
 
-
+        ## Agent
         this_script = doc.agent('alg:bkin18_cjoe_klovett_sbrz#snow_emergency_routes', 
             { prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         
+        ## Activity
         this_run = doc.activity('log:a'+str(uuid.uuid4()), startTime, endTime, 
             { prov.model.PROV_TYPE:'ont:Retrieval'})#, 'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'})
 
+        ## Entity
         route_input = doc.entity('bdp:4f3e4492e36f4907bcd307b131afe4a5_0',
-            {'prov:label':'311, Service Requests',
-            prov.model.PROV_TYPE:'ont:DataResource', 'bdp:Extension':'geojson'}) 
+            {'prov:label':'Snow Emergency Routes', prov.model.PROV_TYPE:'ont:DataResource', 'bdp:Extension':'geojson'}) 
 
         output = doc.entity('dat:bkin18_cjoe_klovett_sbrz.emergency_routes', 
             { prov.model.PROV_LABEL:'Snow Emergency Routes', prov.model.PROV_TYPE:'ont:DataSet'})
     
         doc.wasAssociatedWith(this_run, this_script)
-
         doc.used(this_run, route_input, startTime)
-        # doc.usage(routes, resource, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
 
         doc.wasAttributedTo(output, this_script)
         doc.wasGeneratedBy(output, this_run, endTime)

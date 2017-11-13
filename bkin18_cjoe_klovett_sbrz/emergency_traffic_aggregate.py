@@ -6,6 +6,7 @@ import datetime
 import uuid
 import pdb
 import re
+import sys
 
 class emergency_traffic_aggregate(dml.Algorithm):
     contributor = 'bkin18_cjoe_klovett_sbrz'
@@ -16,6 +17,9 @@ class emergency_traffic_aggregate(dml.Algorithm):
     @staticmethod
     def execute(trial=False):
         startTime = datetime.datetime.now()
+
+        print("Aggregating traffic data...            \n", end='\r')
+        sys.stdout.write("\033[F") # Cursor up one line
 
         # Set up the database connection.
         client = dml.pymongo.MongoClient()

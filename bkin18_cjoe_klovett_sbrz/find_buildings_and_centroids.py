@@ -21,6 +21,9 @@ class find_buildings_and_centroids(dml.Algorithm):
     def execute(trial=False):
         startTime = datetime.datetime.now()
 
+        print("Finding closest buildings...       \n", end='\r')
+        sys.stdout.write("\033[F") # Cursor up one line
+
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
@@ -102,26 +105,27 @@ class find_buildings_and_centroids(dml.Algorithm):
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#DataSet')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/')  # The event log.
 
+        ## Agent
         this_script = doc.agent('alg:bkin18_cjoe_klovett_sbrz#find_buildings_and_centroids',
-                                {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
-        resource = doc.entity('bdp:38173410110330', {'prov:label': 'Buildings and Centroids', prov.model.PROV_TYPE: 'ont:DataResource', 'ont:Extension': 'json'})
-        property_address_db = doc.entity('dat:bkin18_cjoe_klovett_sbrz#property_assessment_impBuilds',
-            {'prov:label': 'property_assessment_impBuilds', prov.model.PROV_TYPE: 'ont:DataSet'})
-        kmean_db = doc.entity('dat:bkin18_cjoe_klovett_sbrz#buildings_and_centroids',
-                                {'prov:label': 'Buildings and Centroids Data', prov.model.PROV_TYPE: 'ont:DataSet'})
-        get_cb_data = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
+            { prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
+        
+        ## Activity
+        this_run = doc.activity('log:a'+str(uuid.uuid4()), startTime, endTime, 
+            { prov.model.PROV_TYPE:'ont:Retrieval', 'ont:Query':'.find()'})
 
-        doc.wasAssociatedWith(get_cb_data, this_script)
-        #I don't think this is actually of type "retrieval," I'm just not sure what the actual name for it is atm. - Keith
-        doc.usage(get_cb_data, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'.find()'
-                  }
-                  )
+        ## Entity
+#        resource = doc.entity('bdp:38173410110330', {'prov:label': 'Buildings and Centroids', prov.model.PROV_TYPE: 'ont:DataResource', 'ont:Extension': 'json'})
+        imp_b_input = doc.entity('dat:bkin18_cjoe_klovett_sbrz#property_assessment_impBuilds',
+            {'prov:label': 'Important Buildings', prov.model.PROV_TYPE: 'ont:DataSet'})
+        output = doc.entity('dat:bkin18_cjoe_klovett_sbrz#buildings_and_centroids',
+            {'prov:label': 'Buildings and Centroids Data', prov.model.PROV_TYPE: 'ont:DataSet'})
 
-        doc.wasAttributedTo(kmean_db, this_script)
-        doc.wasGeneratedBy(kmean_db, get_cb_data, endTime)
-        doc.wasDerivedFrom(kmean_db, resource, kmean_db)
+        doc.wasAssociatedWith(this_run, this_script)
+        doc.used(this_run, imp_b_input, startTime)
+
+        doc.wasAttributedTo(output, this_script)
+        doc.wasGeneratedBy(output, this_run, endTime)
+        doc.wasDerivedFrom(output, imp_b_input, this_run, this_run)
 
         repo.logout()
 
