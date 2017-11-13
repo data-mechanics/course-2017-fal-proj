@@ -83,10 +83,10 @@ class crimesProperty(dml.Algorithm):
         repo.logout()
                   
         return doc
-
-crimesProperty.execute()
-doc = crimesProperty.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+# 
+# crimesProperty.execute()
+# doc = crimesProperty.provenance()
+# print(doc.get_provn())
+# print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof
