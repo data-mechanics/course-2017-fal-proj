@@ -56,9 +56,9 @@ class avgTrafficDelay(dml.Algorithm):
         # Must do projection one last time to get the mean of delay time for each date; convert back to a dictionary
         finalData = project(aggregatedData, lambda entry: dict([(entry[0], entry[1]/len(projectedData))]))
         
-        repo['peterg04_yfchen.avgTrafficDelay'].insert(finalData, check_keys = False)
-        repo['peterg04_yfchen.avgTrafficDelay'].metadata({'complete':True})
-        print(repo['peterg04_yfchen.avgTrafficDelay'].metadata())
+        repo['bohorqux_peterg04_rocksdan_yfchen.avgTrafficDelay'].insert(finalData, check_keys = False)
+        repo['bohorqux_peterg04_rocksdan_yfchen.avgTrafficDelay'].metadata({'complete':True})
+        print(repo['bohorqux_peterg04_rocksdan_yfchen.avgTrafficDelay'].metadata())
         
         repo.logout()
         
@@ -76,14 +76,14 @@ class avgTrafficDelay(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('peterg04_yfchen', 'peterg04_yfchen')
+        repo.authenticate('bohorqux_peterg04_rocksdan_yfchen', 'bohorqux_peterg04_rocksdan_yfchen')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/Transportation/')
 
-        this_script = doc.agent('alg:peterg04_yfchen#avgTrafficDelay', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:bohorqux_peterg04_rocksdan_yfchen#avgTrafficDelay', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataSet', 'ont:Extension':'json'})
         get_avgTrafficDelay = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_avgTrafficDelay, this_script)
@@ -92,7 +92,7 @@ class avgTrafficDelay(dml.Algorithm):
                   }
                   )
 
-        avgTrafficDelay= doc.entity('dat:peterg04_yfchen#avgTrafficDelay', {prov.model.PROV_LABEL:'Average Traffic', prov.model.PROV_TYPE:'ont:DataSet'})
+        avgTrafficDelay= doc.entity('dat:bohorqux_peterg04_rocksdan_yfchen#avgTrafficDelay', {prov.model.PROV_LABEL:'Average Traffic', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(avgTrafficDelay, this_script)
         doc.wasGeneratedBy(avgTrafficDelay, get_avgTrafficDelay, endTime)
         doc.wasDerivedFrom(avgTrafficDelay, resource, get_avgTrafficDelay, get_avgTrafficDelay, get_avgTrafficDelay)

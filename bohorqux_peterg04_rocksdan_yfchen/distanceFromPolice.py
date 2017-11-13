@@ -7,9 +7,9 @@ import uuid
 from builtins import staticmethod
 
 class distanceFromPolice(dml.Algorithm):
-    contributor = 'peterg04_yfchen'
-    reads = ['peterg04_yfchen.policeStations', 'peterg04_yfchen.restaurants']
-    writes = ['peterg04_yfchen.distanceFromPolice']
+    contributor = 'bohorqux_peterg04_rocksdan_yfchen'
+    reads = ['bohorqux_peterg04_rocksdan_yfchen.policeStations', 'bohorqux_peterg04_rocksdan_yfchen.restaurants']
+    writes = ['bohorqux_peterg04_rocksdan_yfchen.distanceFromPolice']
         
     @staticmethod
     def execute(trial = False):
@@ -38,7 +38,7 @@ class distanceFromPolice(dml.Algorithm):
         # Set up the db connection
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('peterg04_yfchen', 'peterg04_yfchen')
+        repo.authenticate('bohorqux_peterg04_rocksdan_yfchen', 'bohorqux_peterg04_rocksdan_yfchen')
         
 #         response = urllib.request.urlopen(url).read().decode("utf-8")
 #         r = json.loads(response)
@@ -79,9 +79,9 @@ class distanceFromPolice(dml.Algorithm):
         # Convert to dictionary entry and insert into mongo
         finalData = project(finalProject, lambda t: dict([("zip", t[0]), ("location", (t[1], t[2]))]))
 
-        repo['peterg04_yfchen.distanceFromPolice'].insert(finalData)
-        repo['peterg04_yfchen.distanceFromPolice'].metadata({'complete':True})
-        print(repo['peterg04_yfchen.distanceFromPolice'].metadata())
+        repo['bohorqux_peterg04_rocksdan_yfchen.distanceFromPolice'].insert(finalData)
+        repo['bohorqux_peterg04_rocksdan_yfchen.distanceFromPolice'].metadata({'complete':True})
+        print(repo['bohorqux_peterg04_rocksdan_yfchen.distanceFromPolice'].metadata())
         
         repo.logout()
         
@@ -99,7 +99,7 @@ class distanceFromPolice(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('peterg04_yfchen', 'peterg04_yfchen')
+        repo.authenticate('bohorqux_peterg04_rocksdan_yfchen', 'bohorqux_peterg04_rocksdan_yfchen')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
@@ -107,7 +107,7 @@ class distanceFromPolice(dml.Algorithm):
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/Health/')
         doc.add_namespace('bdp', 'http://bostonopendata-boston.opendata.arcgis.com/datasets/')
 
-        this_script = doc.agent('alg:peterg04_yfchen#distanceFromPolice', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:bohorqux_peterg04_rocksdan_yfchen#distanceFromPolice', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataSet', 'ont:Extension':'json'})
         get_distanceFromPolice = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_distanceFromPolice, this_script)
@@ -116,7 +116,7 @@ class distanceFromPolice(dml.Algorithm):
                   }
                   )
 
-        distanceFromPolice= doc.entity('dat:peterg04_yfchen#distanceFromPolice', {prov.model.PROV_LABEL:'Distance From Police', prov.model.PROV_TYPE:'ont:DataSet'})
+        distanceFromPolice= doc.entity('dat:bohorqux_peterg04_rocksdan_yfchen#distanceFromPolice', {prov.model.PROV_LABEL:'Distance From Police', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(distanceFromPolice, this_script)
         doc.wasGeneratedBy(distanceFromPolice, get_distanceFromPolice, endTime)
         doc.wasDerivedFrom(distanceFromPolice, resource, get_distanceFromPolice, get_distanceFromPolice, get_distanceFromPolice)

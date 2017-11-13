@@ -6,9 +6,9 @@ import datetime
 import uuid
 
 class getEarnings(dml.Algorithm):
-    contributor = 'bohorqux_rocksdan'
+    contributor = 'bohorqux_peterg04_rocksdan_yfchen'
     reads = []
-    writes = ['bohorqux_rocksdan.earnings']
+    writes = ['bohorqux_peterg04_rocksdan_yfchen.earnings']
 
     @staticmethod
     def execute(trial = False):
@@ -18,7 +18,7 @@ class getEarnings(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('bohorqux_rocksdan', 'bohorqux_rocksdan')
+        repo.authenticate('bohorqux_peterg04_rocksdan_yfchen', 'bohorqux_peterg04_rocksdan_yfchen')
 
         url = 'https://data.cityofboston.gov/resource/rba9-vd7t.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -28,9 +28,9 @@ class getEarnings(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("earnings")
         repo.createCollection("earnings")
-        repo['bohorqux_rocksdan.earnings'].insert_many(r)
-        repo['bohorqux_rocksdan.earnings'].metadata({'complete':True})
-        print(repo['bohorqux_rocksdan.earnings'].metadata())
+        repo['bohorqux_peterg04_rocksdan_yfchen.earnings'].insert_many(r)
+        repo['bohorqux_peterg04_rocksdan_yfchen.earnings'].metadata({'complete':True})
+        print(repo['bohorqux_peterg04_rocksdan_yfchen.earnings'].metadata())
 
         repo.logout()
 
@@ -49,14 +49,14 @@ class getEarnings(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('bohorqux_rocksdan', 'bohorqux_rocksdan')
+        repo.authenticate('bohorqux_peterg04_rocksdan_yfchen', 'bohorqux_peterg04_rocksdan_yfchen')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
-        this_script = doc.agent('alg:bohorqux_rocksdan#getEarnings', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:bohorqux_peterg04_rocksdan_yfchen#getEarnings', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_earnings = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_earnings, this_script)
@@ -65,7 +65,7 @@ class getEarnings(dml.Algorithm):
                    'ont:Query':'?title=Property+Officer&$select=Property+Officer,regular,total_earnings'
                   }
                   )
-        earnings = doc.entity('dat:bohorqux_rocksdan#earnings', {prov.model.PROV_LABEL:'Earnings', prov.model.PROV_TYPE:'ont:DataSet'})
+        earnings = doc.entity('dat:bohorqux_peterg04_rocksdan_yfchen#earnings', {prov.model.PROV_LABEL:'Earnings', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(earnings, this_script)
         doc.wasGeneratedBy(earnings, get_earnings, endTime)
         doc.wasDerivedFrom(earnings, resource, get_earnings, get_earnings, get_earnings)

@@ -6,9 +6,9 @@ import datetime
 import uuid
 
 class getCollege(dml.Algorithm):
-    contributor = 'bohorqux_rocksdan'
+    contributor = 'bohorqux_peterg04_rocksdan_yfchen'
     reads = []
-    writes = ['bohorqux_rocksdan.college']
+    writes = ['bohorqux_peterg04_rocksdan_yfchen.college']
 
     @staticmethod
     def execute(trial = False):
@@ -18,7 +18,7 @@ class getCollege(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('bohorqux_rocksdan', 'bohorqux_rocksdan')
+        repo.authenticate('bohorqux_peterg04_rocksdan_yfchen', 'bohorqux_peterg04_rocksdan_yfchen')
 
         url = 'http://datamechanics.io/data/bohorqux_rocksdan/college_cleaned.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -28,9 +28,9 @@ class getCollege(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("college")
         repo.createCollection("college")
-        repo['bohorqux_rocksdan.college'].insert_many(r)
-        repo['bohorqux_rocksdan.college'].metadata({'complete':True})
-        print(repo['bohorqux_rocksdan.college'].metadata())
+        repo['bohorqux_peterg04_rocksdan_yfchen.college'].insert_many(r)
+        repo['bohorqux_peterg04_rocksdan_yfchen.college'].metadata({'complete':True})
+        print(repo['bohorqux_peterg04_rocksdan_yfchen.college'].metadata())
 
         repo.logout()
 
@@ -49,14 +49,14 @@ class getCollege(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('bohorqux_rocksdan', 'bohorqux_rocksdan')
+        repo.authenticate('bohorqux_peterg04_rocksdan_yfchen', 'bohorqux_peterg04_rocksdan_yfchen')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
-        this_script = doc.agent('alg:bohorqux_rocksdan#getCollege', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:bohorqux_peterg04_rocksdan_yfchen#getCollege', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_college = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_college, this_script)
@@ -65,7 +65,7 @@ class getCollege(dml.Algorithm):
                    'ont:Query':'?FIELD5=null&$select=FIELD5,FIELD2'
                   }
                   )
-        college = doc.entity('dat:bohorqux_rocksdan#college', {prov.model.PROV_LABEL:'Colleges', prov.model.PROV_TYPE:'ont:DataSet'})
+        college = doc.entity('dat:bohorqux_peterg04_rocksdan_yfchen#college', {prov.model.PROV_LABEL:'Colleges', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(college, this_script)
         doc.wasGeneratedBy(college, get_college, endTime)
         doc.wasDerivedFrom(college, resource, get_college, get_college, get_college)

@@ -6,9 +6,9 @@ import datetime
 import uuid
 
 class crimesSorted(dml.Algorithm):
-    contributor = 'bohorqux_rocksdan'
-    reads = ['bohorqux_rocksdan.crimes']
-    writes = ['bohorqux_rocksdan.sorted']
+    contributor = 'bohorqux_peterg04_rocksdan_yfchen'
+    reads = ['bohorqux_peterg04_rocksdan_yfchen.crimes']
+    writes = ['bohorqux_peterg04_rocksdan_yfchen.sorted']
 
     @staticmethod
     def execute(trial = False):
@@ -18,12 +18,12 @@ class crimesSorted(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('bohorqux_rocksdan', 'bohorqux_rocksdan')
+        repo.authenticate('bohorqux_peterg04_rocksdan_yfchen', 'bohorqux_peterg04_rocksdan_yfchen')
 
         crimes = {}
         stats = []
 
-        reports = repo['bohorqux_rocksdan.crimes']
+        reports = repo['bohorqux_peterg04_rocksdan_yfchen.crimes']
 
         for r in reports.find():
             if r["OFFENSE_CODE_GROUP"] not in crimes:
@@ -36,8 +36,8 @@ class crimesSorted(dml.Algorithm):
 
         repo.dropCollection("sorted")
         repo.createCollection("sorted")
-        repo['bohorqux_rocksdan.sorted'].insert_many(stats)
-        repo['bohorqux_rocksdan.sorted'].metadata({'complete':True})
+        repo['bohorqux_peterg04_rocksdan_yfchen.sorted'].insert_many(stats)
+        repo['bohorqux_peterg04_rocksdan_yfchen.sorted'].metadata({'complete':True})
         print(repo['bohorqux_rocksdan.sorted'].metadata())
 
         repo.logout()
@@ -57,14 +57,14 @@ class crimesSorted(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('bohorqux_rocksdan', 'bohorqux_rocksdan')
+        repo.authenticate('bohorqux_peterg04_rocksdan_yfchen', 'bohorqux_peterg04_rocksdan_yfchen')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
-        this_script = doc.agent('alg:bohorqux_rocksdan#crimesSorted', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:bohorqux_peterg04_rocksdan_yfchen#crimesSorted', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_crimes = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_crimes, this_script)
@@ -73,7 +73,7 @@ class crimesSorted(dml.Algorithm):
                    'ont:Query':'?OFFENSE_CODE_GROUP=Residential+Burglary&$select=OFFENSE_CODE_GROUP'
                   }
                   )
-        crimes = doc.entity('dat:bohorqux_rocksdan#sorted', {prov.model.PROV_LABEL:'Crime Report', prov.model.PROV_TYPE:'ont:DataSet'})
+        crimes = doc.entity('dat:bohorqux_peterg04_rocksdan_yfchen#sorted', {prov.model.PROV_LABEL:'Crime Report', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(crimes, this_script)
         doc.wasGeneratedBy(crimes, get_crimes, endTime)
         doc.wasDerivedFrom(crimes, resource, get_crimes, get_crimes, get_crimes)
