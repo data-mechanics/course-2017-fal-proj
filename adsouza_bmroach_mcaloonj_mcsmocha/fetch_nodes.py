@@ -135,7 +135,7 @@ class fetch_nodes(dml.Algorithm):
                 {prov.model.PROV_TYPE:'ont:Retrieval'})
 
             doc.usage(get_nodes, accident_clusters, startTime, None,
-                {prov.model.PROV_TYPE:'ont:Retrieval'})
+                {prov.model.PROV_TYPE:'ont:Computation'})
 
 
             nodes = doc.entity('dat:adsouza_bmroach_mcaloonj_mcsmocha#nodes', {prov.model.PROV_LABEL:'Nodes',prov.model.PROV_TYPE:'ont:DataSet'})
