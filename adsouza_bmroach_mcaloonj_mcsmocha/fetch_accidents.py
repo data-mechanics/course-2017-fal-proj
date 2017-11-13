@@ -12,11 +12,10 @@ Monica Chiu         mcsmocha@bu.edu
 
 Original skeleton files provided by Andrei Lapets (lapets@bu.edu)
 
-Development Notes: 
+Development Notes:
 
 
 """
-
 import urllib.request
 import json
 import dml
@@ -33,7 +32,7 @@ class fetch_accidents(dml.Algorithm):
         @staticmethod
         def execute(trial=False, logging=True):
             startTime = datetime.datetime.now()
-            
+
             if logging:
                 print("in fetch_accidents.py")
 
@@ -66,36 +65,37 @@ class fetch_accidents(dml.Algorithm):
             repo = client.repo
             repo.authenticate('adsouza_bmroach_mcaloonj_mcsmocha','adsouza_bmroach_mcaloonj_mcsmocha')
 
-            doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
-            doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
+            doc.add_namespace('alg', 'http://datamechanics.io/algorithm/adsouza_bmroach_mcaloonj_mcsmocha/')
+            doc.add_namespace('dat', 'http://datamechanics.io/data/adsouza_bmroach_mcaloonj_mcsmocha/')
             doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
-            doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
+            doc.add_namespace('log', 'http://datamechanics.io/log#')
             doc.add_namespace('dbg','https://data.boston.gov/api/3/action/datastore_search')
 
-            this_script = doc.agent('alg:adsouza_bmroach_mcaloonj_mcsmocha#fetch_accidents', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extenstion':'py'})
-            resource = doc.entity('dbg:'+str(uuid.uuid4()), {'prov:label': 'Crime Incident Reports', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extenstion':'json'})
+            #Agent
+            this_script = doc.agent('alg:fetch_accidents', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extenstion':'py'})
 
-            get_accidents = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+            #Resources
+            resource = doc.entity('dbg:'+str(uuid.uuid4()), {'prov:label': 'Crime Incident Reports', prov.model.PROV_TYPE:'ont:DataResource'})
 
-            doc.wasAssociatedWith(get_accidents, this_script)
+            #Activities
+            this_run = doc.activity('log:a'+str(uuid.uuid4()), startTime, endTime, {prov.model.PROV_TYPE:'ont:Retrieval', 'ont:Query':'?resource_id=12cb3883-56f5-47de-afa5-3b1cf61b257b&q=Motor%20Vehicle%20Accident%20Response&limit=50000'})
 
-            doc.usage(get_accidents, resource, startTime, None,
-                      {prov.model.PROV_TYPE:'ont:Retrieval',
-                      'ont:Query':'?resource_id=12cb3883-56f5-47de-afa5-3b1cf61b257b&q=Motor%20Vehicle%20Accident%20Response&limit=50000'
-                      }
-                      )
+            #Usage
+            doc.wasAssociatedWith(this_run, this_script)
+            doc.used(this_run, resource, startTime)
 
-            accidents = doc.entity('dat:adsouza_bmroach_mcaloonj_mcsmocha#accidents', {prov.model.PROV_LABEL:'Accidents',prov.model.PROV_TYPE:'ont:DataSet'})
+            #New dataset
+            accidents = doc.entity('dat:accidents', {prov.model.PROV_LABEL:'Accidents',prov.model.PROV_TYPE:'ont:DataSet'})
             doc.wasAttributedTo(accidents, this_script)
-            doc.wasGeneratedBy(accidents, get_accidents, endTime)
-            doc.wasDerivedFrom(accidents, resource, get_accidents, get_accidents, get_accidents)
+            doc.wasGeneratedBy(accidents, this_run, endTime)
+            doc.wasDerivedFrom(accidents, resource, this_run, this_run, this_run)
 
             repo.logout()
             return doc
 
-# fetch_accidents.execute()
-# doc = fetch_accidents.provenance()
-# print(doc.get_provn())
-# print(json.dumps(json.loads(doc.serialize()), indent=4))
+fetch_accidents.execute()
+doc = fetch_accidents.provenance()
+print(doc.get_provn())
+print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ##eof

@@ -83,7 +83,7 @@ class fetch_nodes(dml.Algorithm):
             #For each node, get distance of nearest cluster
             for i in range(len(nodes)):
                 #find the k nearest neighbors
-                dist, idx = cluster_tree.query(nodes[i], k=1, p=2) #p=2 means euclidean distance, there's no option for vincenty
+                dist, idx = cluster_tree.query(nodes[i], k=1, p=2) #p=2 means euclidean distance
                 distances.append((dist,idx))
 
             #Get average distance to closest cluster
@@ -116,35 +116,34 @@ class fetch_nodes(dml.Algorithm):
 
             repo.authenticate('adsouza_bmroach_mcaloonj_mcsmocha', 'adsouza_bmroach_mcaloonj_mcsmocha')
 
-            doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
-            doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
+            doc.add_namespace('alg', 'http://datamechanics.io/algorithm/adsouza_bmroach_mcaloonj_mcsmocha/')
+            doc.add_namespace('dat', 'http://datamechanics.io/data/adsouza_bmroach_mcaloonj_mcsmocha/')
             doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
-            doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-            doc.add_namespace('bod', 'http://bostonopendata-boston.opendata.arcgis.com/datasets/cfd1740c2e4b49389f47a9ce2dd236cc_8.geojson')
-            doc.add_namespace('dat', 'adsouza_bmroach_mcaloonj_mcsmocha#accident_clusters')
+            doc.add_namespace('log', 'http://datamechanics.io/log#')
+            doc.add_namespace('bod', 'http://bostonopendata-boston.opendata.arcgis.com/datasets/')
 
-            this_script = doc.agent('alg:adsouza_bmroach_mcaloonj_mcsmocha#fetch_nodes', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-            streets = doc.entity('bod:cfd1740c2e4b49389f47a9ce2dd236cc_8.geojson', {'prov:label':'Boston Segments', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-            accident_clusters = doc.entity('dat:adsouza_bmroach_mcaloonj_mcsmocha#accident_clusters', {'prov:label':'Accident Clusters', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+            #Agent
+            this_script = doc.agent('alg:fetch_nodes', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
-            get_nodes = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+            #Resources
+            streets = doc.entity('bod:cfd1740c2e4b49389f47a9ce2dd236cc_8', {'prov:label':'Boston Segments', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
+            accident_clusters = doc.entity('dat:accident_clusters', {'prov:label':'Accident Clusters', prov.model.PROV_TYPE:'ont:DataResource'})
 
-            doc.wasAssociatedWith(get_nodes, this_script)
+            #Activities
+            this_run = doc.activity('log:a'+str(uuid.uuid4()), startTime, endTime, {prov.model.PROV_TYPE:'ont:Computation'})
 
-            doc.usage(get_nodes, streets, startTime, None,
-                {prov.model.PROV_TYPE:'ont:Retrieval'})
+            #Usage
+            doc.wasAssociatedWith(this_run, this_script)
 
-            doc.usage(get_nodes, accident_clusters, startTime, None,
-                {prov.model.PROV_TYPE:'ont:Computation'})
+            doc.used(this_run, streets, startTime)
+            doc.used(this_run, accident_clusters, startTime)
 
-
-            nodes = doc.entity('dat:adsouza_bmroach_mcaloonj_mcsmocha#nodes', {prov.model.PROV_LABEL:'Nodes',prov.model.PROV_TYPE:'ont:DataSet'})
-
-
+            #New dataset
+            nodes = doc.entity('dat:nodes', {prov.model.PROV_LABEL:'Nodes',prov.model.PROV_TYPE:'ont:DataSet'})
             doc.wasAttributedTo(nodes, this_script)
-            doc.wasGeneratedBy(nodes, get_nodes, endTime)
-            doc.wasDerivedFrom(nodes, streets, get_nodes, get_nodes, get_nodes)
-            doc.wasDerivedFrom(nodes, accident_clusters, get_nodes, get_nodes, get_nodes)
+            doc.wasGeneratedBy(nodes, this_run, endTime)
+            doc.wasDerivedFrom(nodes, streets, this_run, this_run, this_run)
+            doc.wasDerivedFrom(nodes, accident_clusters, this_run, this_run, this_run)
 
             repo.logout()
 

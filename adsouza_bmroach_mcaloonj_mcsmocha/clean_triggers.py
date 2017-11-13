@@ -12,7 +12,7 @@ Monica Chiu         mcsmocha@bu.edu
 
 Original skeleton files provided by Andrei Lapets (lapets@bu.edu)
 
-Development Notes: 
+Development Notes:
 
 
 """
@@ -26,9 +26,9 @@ import uuid
 
 class clean_triggers(dml.Algorithm):
     contributor = 'adsouza_bmroach_mcaloonj_mcsmocha'
-    reads = ['adsouza_bmroach_mcaloonj_mcsmocha.accident_clusters', 
-             'adsouza_bmroach_mcaloonj_mcsmocha.hospitals', 
-             'adsouza_bmroach_mcaloonj_mcsmocha.schools', 
+    reads = ['adsouza_bmroach_mcaloonj_mcsmocha.accident_clusters',
+             'adsouza_bmroach_mcaloonj_mcsmocha.hospitals',
+             'adsouza_bmroach_mcaloonj_mcsmocha.schools',
              'adsouza_bmroach_mcaloonj_mcsmocha.open_space']
     writes = ['adsouza_bmroach_mcaloonj_mcsmocha.clean_triggers']
 
@@ -88,29 +88,40 @@ class clean_triggers(dml.Algorithm):
         repo = client.repo
         repo.authenticate('adsouza_bmroach_mcaloonj_mcsmocha','adsouza_bmroach_mcaloonj_mcsmocha')
 
-        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
-        doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
+        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/adsouza_bmroach_mcaloonj_mcsmocha/')
+        doc.add_namespace('dat', 'http://datamechanics.io/data/adsouza_bmroach_mcaloonj_mcsmocha/')
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
-        doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
+        doc.add_namespace('log', 'http://datamechanics.io/log#')
         doc.add_namespace('dbg','https://data.boston.gov/api/3/action/datastore_search')
 
-        this_script = doc.agent('alg:adsouza_bmroach_mcaloonj_mcsmocha#fetch_accidents', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extenstion':'py'})
-        resource = doc.entity('dbg:'+str(uuid.uuid4()), {'prov:label': 'Crime Incident Reports', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extenstion':'json'})
+        #Agent
+        this_script = doc.agent('alg:clean_triggers', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
-        get_accidents = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        #Resources
+        accident_clusters = doc.entity('dat:accident_clusters', {'prov:label': 'Accident Clusters', prov.model.PROV_TYPE:'ont:DataResource'})
+        hospitals = doc.entity('dat:hospitals', {'prov:label': 'Hospitals', prov.model.PROV_TYPE:'ont:DataResource'})
+        schools = doc.entity('dat:schools', {'prov:label': 'Public Schools', prov.model.PROV_TYPE:'ont:DataResource'})
+        open_space = doc.entity('dat:open_space', {'prov:label': 'Open Space', prov.model.PROV_TYPE:'ont:DataResource'})
 
-        doc.wasAssociatedWith(get_accidents, this_script)
+        #Activities
+        this_run = doc.activity('log:a'+str(uuid.uuid4()), startTime, endTime, {prov.model.PROV_TYPE:'ont:Computation'})
 
-        doc.usage(get_accidents, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?resource_id=12cb3883-56f5-47de-afa5-3b1cf61b257b&q=Motor%20Vehicle%20Accident%20Response&limit=50000'
-                  }
-                  )
+        #Usage
+        doc.wasAssociatedWith(this_run, this_script)
 
-        clean_triggers = doc.entity('dat:adsouza_bmroach_mcaloonj_mcsmocha#clean_triggers', {prov.model.PROV_LABEL:'clean_triggers',prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.used(this_run, accident_clusters, startTime)
+        doc.used(this_run, hospitals, startTime)
+        doc.used(this_run, schools, startTime)
+        doc.used(this_run, open_space, startTime)
+
+        # New dataset
+        clean_triggers = doc.entity('dat:clean_triggers', {prov.model.PROV_LABEL:'Clean Triggers',prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(clean_triggers, this_script)
-        doc.wasGeneratedBy(clean_triggers, get_accidents, endTime)
-        doc.wasDerivedFrom(clean_triggers, resource, get_accidents, get_accidents, get_accidents)
+        doc.wasGeneratedBy(clean_triggers, this_run, endTime)
+        doc.wasDerivedFrom(clean_triggers, accident_clusters, this_run, this_run, this_run)
+        doc.wasDerivedFrom(clean_triggers, hospitals, this_run, this_run, this_run)
+        doc.wasDerivedFrom(clean_triggers, schools, this_run, this_run, this_run)
+        doc.wasDerivedFrom(clean_triggers, open_space, this_run, this_run, this_run)
 
         repo.logout()
         return doc
