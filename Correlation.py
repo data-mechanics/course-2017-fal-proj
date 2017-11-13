@@ -44,16 +44,16 @@ class Correlation(dml.Algorithm):
         relationdata6 = []
       
 
-        """
+        
         Correlations = []
 
         for i in scoreArray:
-            a = lambda t: ((t[1][0], t[1][1]))
-            b = lambda t: ((t[1][0], t[1][2]))    
-            c = lambda t: ((t[1][0], t[1][3]))     
-            d = lambda t: ((t[1][1], t[1][2])) 
-            e = lambda t: ((t[1][1], t[1][3]))
-            f = lambda t: ((t[1][2], t[1][3]))  
+            a = lambda t: ((t[1], t[2]))
+            b = lambda t: ((t[1], t[3]))    
+            c = lambda t: ((t[1], t[4]))     
+            d = lambda t: ((t[2], t[3])) 
+            e = lambda t: ((t[2], t[3]))
+            f = lambda t: ((t[3], t[4]))  
            
     
 
@@ -128,14 +128,22 @@ class Correlation(dml.Algorithm):
         score.append(("correlation between hubway stations   & bikenetworks",p(x4,y4)))
         score.append(("correlation between hubway stations & openspaces",p(x5,y5)))
         score.append(("correlation between bikenetworks & openspaces",p(x6,y6)))
+
+        fixedScore= []
+        for x in score:
+             print(x)
+             y = lambda t: ({t[0],t[1]})
+             z = y(x)
+             fixedScore.append(z)
+             
     
 
 
 
 
-        repo['francisz_jrashaan.correlationScore'].insert_many(score)
+        repo['francisz_jrashaan.correlationScore'].insert_many(fixedScore)
         repo['francisz_jrashaan.correlationScore'].metadata({'complete':True})
-        """
+        
 
 
     @staticmethod
