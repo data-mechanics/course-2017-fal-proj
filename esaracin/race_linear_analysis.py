@@ -149,7 +149,7 @@ class race_linear_analysis(dml.Algorithm):
         this_script = doc.agent('alg:esaracin#race_linear_analysis', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource_crimes = doc.entity('dat:esaracin#crime_incidents',{'prov:label':'MongoDB Set',prov.model.PROV_TYPE:'ont:DataResource'})
         resource_fios = doc.entity('dat:esaracin#fio_data',{'prov:label':'MongoDB Set',prov.model.PROV_TYPE:'ont:DataResource'})
-        resource_race = doc.entity('dat:esaracin#fio_data',{'prov:label':'MongoDB Set',prov.model.PROV_TYPE:'ont:DataResource'})
+        resource_race = doc.entity('dat:esaracin#race_data',{'prov:label':'MongoDB Set',prov.model.PROV_TYPE:'ont:DataResource'})
         
         
         regression = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
