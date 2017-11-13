@@ -6,6 +6,8 @@ import datetime
 import uuid
 import requests
 import geojson
+import scipy.stats
+
 #from tqdm import tqdm
 import pdb
 from random import shuffle
@@ -28,13 +30,14 @@ class Correlation(dml.Algorithm):
         repo.dropCollection("correlationScore")
         repo.createCollection("correlationScore")
         scores =  repo.francisz_jrashaan.neighborhoodScores.find()
-        print(scores)
-        print(scores[0])
+      
         scoreArray = []
         for x in scores:
             scoreArray.append(x)
 
-        print(scoreArray)
+
+        print(scoreArray[1]['Charging Station'])
+        print("TESTING")
         #scores = [('North End', [0, 3, 236, 240]), ('Bay Village', [0, 0, 24, 42]), ('East Boston', [0, 19, 222, 3544]), ('Leather District', [8, 8, 34, 43]), ('Allston', [0, 1, 1888, 1994]), ('Hyde Park', [0, 0, 569, 1163]), ('Roslindale', [0, 0, 450, 608]), ('Charlestown', [0, 7, 189, 455]), ('Back Bay', [4, 17, 432, 817]), ('South End', [0, 0, 116, 150]), ('Downtown', [4, 33, 160, 420]), ('Dorchester', [0, 7, 1382, 3710]), ('South Boston Waterfront', [15, 7, 102, 222]), ('West Roxbury', [0, 0, 559, 708]), ('Longwood Medical Area', [0, 11, 136, 154]), ('Mission Hill', [0, 11, 135, 161]), ('Roxbury', [0, 7, 315, 525]), ('Beacon Hill', [1, 16, 149, 391]), ('Mattapan', [0, 0, 348, 627]), ('Harbor Islands', [0, 0, 0, 155]), ('Brighton', [0, 0, 983, 1466]), ('South Boston', [0, 1, 410, 1061]), ('West End', [0, 5, 387, 549]), ('Fenway', [4, 21, 893, 1034]), ('Chinatown', [11, 21, 74, 112]), ('Jamaica Plain', [0, 0, 356, 919])]
         relationdata1 = []
         relationdata2 = []
@@ -48,12 +51,12 @@ class Correlation(dml.Algorithm):
         Correlations = []
 
         for i in scoreArray:
-            a = lambda t: ((t[1], t[2]))
-            b = lambda t: ((t[1], t[3]))    
-            c = lambda t: ((t[1], t[4]))     
-            d = lambda t: ((t[2], t[3])) 
-            e = lambda t: ((t[2], t[3]))
-            f = lambda t: ((t[3], t[4]))  
+            a = lambda t: ((t['Charging Station'], t['Hubway Stations']))
+            b = lambda t: ((t['Charging Station'], t['Bike Networks']))    
+            c = lambda t: ((t['Charging Station'], t['Open Space']))     
+            d = lambda t: ((t['Hubway Stations'], t['Bike Networks'])) 
+            e = lambda t: ((t['Hubway Stations'], t['Open Space']))
+            f = lambda t: ((t['Bike Networks'], t['Open Space']))  
            
     
 
@@ -68,9 +71,9 @@ class Correlation(dml.Algorithm):
             relationdata1.append(co1)
             relationdata2.append(co2)
             relationdata3.append(co3)
-            relationaldata4.append(co4)
-            relationaldata5.append(co5)
-            relationaldata6.append(co6)
+            relationdata4.append(co4)
+            relationdata5.append(co5)
+            relationdata6.append(co6)
 
 
 
@@ -119,15 +122,17 @@ class Correlation(dml.Algorithm):
                 corrs.append(corr(x, y_permuted))
             return len([c for c in corrs if abs(c) > c0])/len(corrs)
 
+        print(p(x1,x2))
+
 
 
         score = []
-        score.append(("correlation between charging stations & hubway stations ",p(x1,y1)))
-        score.append(("correlation between charging stations & bikenetworks",p(x2,y2)))
-        score.append(("correlation between charging stations & openspaces",p(x3,y3)))
-        score.append(("correlation between hubway stations   & bikenetworks",p(x4,y4)))
-        score.append(("correlation between hubway stations & openspaces",p(x5,y5)))
-        score.append(("correlation between bikenetworks & openspaces",p(x6,y6)))
+        score.append(("correlation between charging stations & hubway stations ",scipy.stats.pearsonr(x1,y1)))
+        score.append(("correlation between charging stations & bikenetworks",scipy.stats.pearsonr(x2,y2)))
+        score.append(("correlation between charging stations & openspaces",scipy.stats.pearsonr(x3,y3)))
+        score.append(("correlation between hubway stations   & bikenetworks",scipy.stats.pearsonr(x4,y4)))
+        score.append(("correlation between hubway stations & openspaces",scipy.stats.pearsonr(x5,y5)))
+        score.append(("correlation between bikenetworks & openspaces",scipy.stats.pearsonr(x6,y6)))
 
         fixedScore= []
         for x in score:
@@ -137,12 +142,12 @@ class Correlation(dml.Algorithm):
              fixedScore.append(z)
              
     
+        print(fixedScore)
 
 
 
-
-        repo['francisz_jrashaan.correlationScore'].insert_many(fixedScore)
-        repo['francisz_jrashaan.correlationScore'].metadata({'complete':True})
+        #repo['francisz_jrashaan.correlationScore'].insert_many(fixedScore)
+        #repo['francisz_jrashaan.correlationScore'].metadata({'complete':True})
         
 
 
