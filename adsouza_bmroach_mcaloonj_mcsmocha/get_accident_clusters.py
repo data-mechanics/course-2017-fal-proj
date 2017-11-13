@@ -12,7 +12,7 @@ Monica Chiu         mcsmocha@bu.edu
 
 Original skeleton files provided by Andrei Lapets (lapets@bu.edu)
 
-Development Notes: 
+Development Notes:
 - Number of means being used drastically effects runtime, so we tried different numbers (line 56)
 - From testing, we have decided to collapse each group of 10 accident spots into a single cluster
 
@@ -33,16 +33,16 @@ import uuid
 
 class get_accident_clusters(dml.Algorithm):
         contributor = 'adsouza_bmroach_mcaloonj_mcsmocha'
-        reads = ['adsouza_bmroach_mcaloonj_mcsmocha.accidents'] 
+        reads = ['adsouza_bmroach_mcaloonj_mcsmocha.accidents']
         writes = ['adsouza_bmroach_mcaloonj_mcsmocha.accident_clusters']
 
         @staticmethod
         def execute(trial=False, logging=True):
             startTime = datetime.datetime.now()
-            
+
             #__________________________
             #Parameters
-            cluster_divisor = 10 
+            cluster_divisor = 200 
             # ^ meaning divides accident count by this, and there's that many clusters
             # Ex 200 accidents divided by cluster_divisor of 10 is 20 clusters, or means
 
@@ -59,12 +59,12 @@ class get_accident_clusters(dml.Algorithm):
 
 
             accidents = repo['adsouza_bmroach_mcaloonj_mcsmocha.accidents'].find()
-            coords_input = [tuple(row['Location'].replace('(', '').replace(')', '').split(',')) 
+            coords_input = [tuple(row['Location'].replace('(', '').replace(')', '').split(','))
                             for row in accidents if row['Location'] != '(0.00000000, 0.00000000)' ]
-            
+
             coords_input = [(float(lat), float(lon)) for (lat, lon) in coords_input]
-            
-            n_clusters = len(coords_input)//cluster_divisor  
+
+            n_clusters = len(coords_input)//cluster_divisor
             X =  np.array(coords_input)
             # looks like [(lat, long), (lat, long), (lat, long)...]
 

@@ -121,11 +121,11 @@ class fetch_nodes(dml.Algorithm):
             doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
             doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
             doc.add_namespace('bod', 'http://bostonopendata-boston.opendata.arcgis.com/datasets/cfd1740c2e4b49389f47a9ce2dd236cc_8.geojson')
-            doc.add_namespace('abmm', 'adsouza_bmroach_mcaloonj_mcsmocha')
+            doc.add_namespace('dat', 'adsouza_bmroach_mcaloonj_mcsmocha#accident_clusters')
 
             this_script = doc.agent('alg:adsouza_bmroach_mcaloonj_mcsmocha#fetch_nodes', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
             streets = doc.entity('bod:cfd1740c2e4b49389f47a9ce2dd236cc_8.geojson', {'prov:label':'Boston Segments', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-            accident_clusters = doc.entity('abmm:accident_clusters', {'prov:label':'Accident Clusters', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+            accident_clusters = doc.entity('dat:adsouza_bmroach_mcaloonj_mcsmocha#accident_clusters', {'prov:label':'Accident Clusters', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 
             get_nodes = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 
@@ -151,7 +151,7 @@ class fetch_nodes(dml.Algorithm):
             return doc
 
 
-#fetch_nodes.execute()
+# fetch_nodes.execute()
 # doc = fetch_nodes.provenance()
 # print(doc.get_provn())
 # print(json.dumps(json.loads(doc.serialize()), indent=4))
