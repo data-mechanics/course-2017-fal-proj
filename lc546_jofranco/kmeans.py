@@ -1,4 +1,5 @@
 import dml
+import urllib.request
 import prov.model
 import uuid
 import datetime
@@ -22,69 +23,98 @@ def evaluate_clusters(X,max_clusters):
 
 
 class kmeans(dml.Algorithm):
-	contributor = "lc546_jofranco"
-	reads = ["lc546_jofranco.propety"]
-	writes = ["lc546_jofranco.kmeans"]
+    contributor = "lc546_jofranco"
+    reads = ["lc546_jofranco.propety"]
+    writes = ["lc546_jofranco.kmeans"]
 
-	@staticmethod
-	def execute(trial = False):
-		client = dml.pymongo.MongoClient()
-		repo = client.repo
-		repo.authenticate("lc546_jofranco", "lc546_jofranco")
-		startTime = datetime.datetime.now()
+    @staticmethod
+    def execute(trial = False):
+        client = dml.pymongo.MongoClient()
+        repo = client.repo
+        repo.authenticate("lc546_jofranco", "lc546_jofranco")
+        startTime = datetime.datetime.now()
+        url = 'https://data.cityofboston.gov/resource/g5b5-xrwi.json'
+        response = urllib.request.urlopen(url).read().decode("utf-8")
+        r = json.loads(response)
+        print("#########################")
 
-		repo.dropPermanent("kmeans")
-		repo.createPermanent("kmeans")
+        zipcode = []
+        lalo = []
+        street = []
+
+        for i in r:
+            zipcode.append( i['zipcode'])
+            if (i['latitude']!='#N/A' and i['longitude'] != '#N/A'):
+                lalo += [i['latitude'], i['longitude']]
+            else:
+                lalo += [0,0]
+        # latitude += i['latitude']
+        # longitude += i['longitude']
+            street.append( i['st_name'])
+        print("$$$$$$$$$$$$$$$$$$")
+        print(lalo)
+        total = [{'zipcode': zipcode, 'address': lalo, 'street': street}]
+
+        print(total)
+        s = json.dumps(r, sort_keys= True, indent = 2)
+        #    print(type(s))
+        repo.dropCollection("propety")
+        repo.createCollection("propety")
+        repo["lc546_jofranco.propety"].insert_many(total)
+        repo["lc546_jofranco.propety"].metadata({'complete':True})
+        print(repo["lc546_jofranco.propety"].metadata())
+        repo.dropPermanent("kmeans")
+        repo.createPermanent("kmeans")
 
 
-		values = repo.lc546_jofranco.propety.find()
-		
-		location = values.address
+        values = repo.lc546_jofranco.propety.find()
+
+        location = values.address
 
 
 
-		#evaluate_clusters(latlong, 8)
-		kmeans = KMeans(n_clusters = 4).fit(latlong)
-		centers = [x[:2] for x in kmeans.cluster_centers_]
-		print(centers)
-		plt.scatter(for (i in location, x=i[0],;y = i[-1]), c = kmeans.labels_)
-		plt.xlabel('Latitude')
-		plt.ylabel('Longitude')
-		plt.show()
+        #evaluate_clusters(location, 8)
+        kmeans = KMeans(n_clusters = 4).fit(location)
+        centers = [x[:2] for x in kmeans.cluster_centers_]
+        print(centers)
+        plt.scatter(x=i[0],y = i[-1])
+        plt.xlabel('Latitude')
+        plt.ylabel('Longitude')
+        plt.show()
 
-	@staticmethod
-	def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
-		client = dml.pymongo.MongoClient()
-		repo = client.repo
-		repo.authenticate("lc546_jofranco", "lc546_jofranco")
-		# Provenance Data
-		doc = prov.model.ProvDocument()
-		doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
-		doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
-		doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
-		doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-		doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
-		doc.add_namespace('bod', 'http://bostonopendata.boston.opendata.arcgis.com/')
+    @staticmethod
+    def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
+        client = dml.pymongo.MongoClient()
+        repo = client.repo
+        repo.authenticate("lc546_jofranco", "lc546_jofranco")
+        # Provenance Data
+        doc = prov.model.ProvDocument()
+        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
+        doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
+        doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
+        doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
+        doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
+        doc.add_namespace('bod', 'http://bostonopendata.boston.opendata.arcgis.com/')
 
-		this_script = doc.agent('alg:lc546_jofranco#kmeans', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
-		constraint = doc.entity('dat:lc546_jofranco#propety', {prov.model.PROV_LABEL:'Returns whether or not the constraint is satisfied', prov.model.PROV_TYPE:'ont:DataSet'})
-		
+        this_script = doc.agent('alg:lc546_jofranco#kmeans', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
+        constraint = doc.entity('dat:lc546_jofranco#propety', {prov.model.PROV_LABEL:'Returns whether or not the constraint is satisfied', prov.model.PROV_TYPE:'ont:DataSet'})
 
-		this_run = doc.activity('log:a' + str(uuid.uuid4()), startTime, endTime, {prov.model.PROV_TYPE:'ont:Computation'})
 
-		doc.wasAssociatedWith(this_run, this_script)
-		doc.used(this_run, constraint, startTime)
+        this_run = doc.activity('log:a' + str(uuid.uuid4()), startTime, endTime, {prov.model.PROV_TYPE:'ont:Computation'})
 
-		# Our new combined data set
-		maintenance = doc.entity('dat:lc546_jofranco#kmeans', {prov.model.PROV_LABEL:'finds centers using kmeans', prov.model.PROV_TYPE:'ont:DataSet'})
-		doc.wasAttributedTo(maintenance, this_script)
-		doc.wasGeneratedBy(maintenance, this_run, endTime)
-		doc.wasDerivedFrom(maintenance, constraint, this_run, this_run, this_run)
+        doc.wasAssociatedWith(this_run, this_script)
+        doc.used(this_run, constraint, startTime)
 
-		repo.record(doc.serialize()) # Record the provenance document.
-		repo.logout()
+        # Our new combined data set
+        maintenance = doc.entity('dat:lc546_jofranco#kmeans', {prov.model.PROV_LABEL:'finds centers using kmeans', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(maintenance, this_script)
+        doc.wasGeneratedBy(maintenance, this_run, endTime)
+        doc.wasDerivedFrom(maintenance, constraint, this_run, this_run, this_run)
 
-		return doc
+        repo.record(doc.serialize()) # Record the provenance document.
+        repo.logout()
+
+        return doc
 
 
 # running in trial mode won't show you good clusters since we aren't looking at the full data set

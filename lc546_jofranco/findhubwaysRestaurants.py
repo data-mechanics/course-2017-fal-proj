@@ -55,7 +55,7 @@ class findhubwaysRestaurants(dml.Algorithm):
             'geoNear','lc546_jofranco.permitgeodata',
              near = { 'coordinates':[i["lo"], i["la"]]},
              spherical = True,
-             maxDistance= 300)['results'])
+             maxDistance= 500)['results'])
             food_bike = {}
             food_bike['numberRestaurantsnear'] = restaurants
             food_bike['location'] = [i["lo"], i["la"]]

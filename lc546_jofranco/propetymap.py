@@ -34,6 +34,7 @@ class propetymap(dml.Algorithm):
             street += i['st_name']
 
         total = {'zipcode': zipcode, 'address': lalo, 'street': street}
+        print(total)
 
 
 
