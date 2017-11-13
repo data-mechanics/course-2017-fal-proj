@@ -10,7 +10,7 @@ import numpy as np
 class find_buildings_and_centroids(dml.Algorithm):
     contributor = 'bkin18_cjoe_klovett_sbrz'
     reads = ['bkin18_cjoe_klovett_sbrz.property_assessment_impBuilds']
-    writes = ['bkin18_cjoe_klovett_sbrz.closest_buildings_to_centroid'] 
+    writes = ['bkin18_cjoe_klovett_sbrz.closest_buildings_to_centroids'] 
 
     @staticmethod
     def dist(p1, p2):
@@ -71,8 +71,9 @@ class find_buildings_and_centroids(dml.Algorithm):
 
         repo.dropCollection('bkin18_cjoe_klovett_sbrz.closest_buildings')
         repo.dropCollection('bkin18_cjoe_klovett_sbrz.closest_buildings_to_centroid')
-        repo.createCollection('bkin18_cjoe_klovett_sbrz.closest_buildings_to_centroid')
-        repo['bkin18_cjoe_klovett_sbrz.closest_buildings'].insert_many(closest_buildings_to_centroid)
+        repo.dropCollection('bkin18_cjoe_klovett_sbrz.closest_buildings_to_centroids')
+        repo.createCollection('bkin18_cjoe_klovett_sbrz.closest_buildings_to_centroids')
+        repo['bkin18_cjoe_klovett_sbrz.closest_buildings_to_centroids'].insert_many(closest_buildings_to_centroid)
         repo.logout()
 
         endTime = datetime.datetime.now()
