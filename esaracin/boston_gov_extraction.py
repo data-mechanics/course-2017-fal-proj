@@ -53,11 +53,8 @@ class boston_gov_extraction(dml.Algorithm):
 
 
         # Apply the same for Stop and Frisk Datasets used in Project 2.
-        url = 'https://data.boston.gov/dataset/4ebae674-28c1-4b9b-adc3-c04c99234a68/resource/ebb9c51c-6e9a-40a4-94d0-895de9bf47ad/download/fieldcontactnameforpublic2016.csv'
+        url = 'https://data.boston.gov/dataset/4ebae674-28c1-4b9b-adc3-c04c99234a68/resource/c696738d-2625-4337-8c50-123c2a85fbad/download/boston-police-department-fio.csv'
         dataset = pd.read_csv(url)
-        url_2015 = 'https://data.boston.gov/dataset/4ebae674-28c1-4b9b-adc3-c04c99234a68/resource/34453828-67ca-45f1-a31d-526b11ca49f4/download/fieldcontactnameforpublic2015.csv'
-        dataset_2015 = pd.read_csv(url_2015)
-        dataset = pd.concat([dataset, dataset_2015], axis=0)
         json_set = dataset.to_json(orient='records')
         r = json.loads(json_set)
         
@@ -90,14 +87,14 @@ class boston_gov_extraction(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/')
         doc.add_namespace('gov1','https://data.boston.gov/dataset/6220d948-eae2-4e4b-8723-2dc8e67722a3/resource/12cb3883-56f5-47de-afa5-3b1cf61b257b/download/')
         doc.add_namespace('gov2', 'https://data.boston.gov/dataset/3937b427-6aa4-4515-b30d-c76771313feb/resource/474f5374-15fe-4768-b31c-18b819cfa145/download/') # Namespace specific to this script
-        doc.add_namespace('gov3', 'https://data.boston.gov/dataset/4ebae674-28c1-4b9b-adc3-c04c99234a68/resource/ebb9c51c-6e9a-40a4-94d0-895de9bf47ad/download/fieldcontactnameforpublic2016.csv')
+        doc.add_namespace('gov3', 'https://data.boston.gov/dataset/4ebae674-28c1-4b9b-adc3-c04c99234a68/resource/c696738d-2625-4337-8c50-123c2a85fbad/download/')
 
         # Add this script as a provenance agent to our document
         this_script = doc.agent('alg:esaracin#boston_gov_extraction', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('gov1:crime', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource','ont:Extension':'csv'})
         resource_guns = doc.entity('gov2:boston-police-department-firearms-recovery-counts',
                    {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource','ont:Extension':'csv'})
-        resource_fios = doc.entity('gov3:fieldcontactnameforpublic2016', {'prov:label': '311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource','ont:Extension':'csv'})
+        resource_fios = doc.entity('gov3:boston-police-department-fio', {'prov:label': '311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource','ont:Extension':'csv'})
 
         get_crime = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         get_guns = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
@@ -124,7 +121,7 @@ class boston_gov_extraction(dml.Algorithm):
         fios = doc.entity('dat:esaracin#fio_data', {prov.model.PROV_LABEL:'FIOs Reported', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(fios, this_script)
         doc.wasGeneratedBy(fios, get_fios, endTime)
-        doc.wasDerviedFrom(fios, resource_fios, get_fios, get_fios, get_fios)
+        doc.wasDerivedFrom(fios, resource_fios, get_fios, get_fios, get_fios)
 
         repo.logout()
         return doc
