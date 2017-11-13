@@ -39,18 +39,16 @@ class boston_hubway_stations(dml.Algorithm):
             new_dict['Station Name'] = item['Station']
             new_dict['Longitude'] = item['Longitude']
             new_dict['Latitude'] = item['Latitude']
-            new_dict['Municipality'] = item['Municipality']
+            #new_dict['Municipality'] = item['Municipality']
             new_dict['Number of Docks'] = item['# of Docks']    
             hubway_list.append(new_dict)
         #print(hubway_list)
 
-        x = boston_hubway_stations.project(hubway_list, lambda t: (t['Municipality'], t['Number of Docks']))
+        x = boston_hubway_stations.project(hubway_list, lambda t: (t['Station Name'], t['Number of Docks'], t['Latitude'], t['Longitude']))
+        x = [{'Station': s, 'Number of Docks': n, 'Latitude': lat, 'Longitude': lon} for (s, n, lat, lon) in x]
 
-        num_docks_per_municipality = boston_hubway_stations.aggregate(x, sum)
-        num_docks_per_municipality = [{'# of Docks': n, 'Municipality': m} for (m,n) in num_docks_per_municipality]
-        print(num_docks_per_municipality)
 
-        repo['jtbloom_rfballes_medinad.boston_hubway_stations'].insert_many(num_docks_per_municipality)
+        repo['jtbloom_rfballes_medinad.boston_hubway_stations'].insert_many(x)
 
 
     @staticmethod

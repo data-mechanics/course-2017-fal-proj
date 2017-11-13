@@ -62,11 +62,13 @@ class incoming_trips(dml.Algorithm):
 
 
 		incoming = incoming_trips.project(trip_list, lambda t: ((t['end station name'], t['bikeid']), t['end station latitude'], t['end station longitude']))
+		#lat_lon = incoming_trips.project(trip_list, lambda t:(t['end station name'], t['end station latitude'], t['end station longitude']))
 		#print(incoming)
 		num_trips = incoming_trips.aggregate(incoming, incoming_trips.count_trips)
 		#num_trips = incoming_trips.product(incoming, num_trips)
 		#print(num_trips)
-		num_trips = [{'# incoming trips': n, 'station': s} for (s, n) in num_trips]
+		num_trips = [{'# incoming trips': n, 'end station': s} for (s, n) in num_trips]
+		#print(num_trips)
 		repo['jtbloom_rfballes_medinad.incoming_trips'].insert_many(num_trips)
 
 			
