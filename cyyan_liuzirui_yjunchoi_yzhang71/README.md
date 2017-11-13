@@ -42,3 +42,19 @@ First we need to divide Boston Map into 22 wards. I already put links of each da
 These data sets are transformed to a new data set
 1.	mainStreet.py (Constraint Satisfactory Problem) - ?
 2.	optShuttleBus.py - ?
+### Libraries
+1.  import urllib.request
+2.  import json
+3.  import dml
+4.  import prov.model
+5.  import datetime
+6.  import uuid
+7.  import yaml
+8.  import numpy as np
+9.  import pandas as pd
+10. from collections import Counter
+11. import matplotlib.path as mplPath
+12. from scipy.cluster.vq import kmeans2
+13. import math
+14. import random
+15. import csv
