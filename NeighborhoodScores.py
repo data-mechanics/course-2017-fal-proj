@@ -6,7 +6,7 @@ import datetime
 import uuid
 import requests
 import geojson
-from tqdm import tqdm
+#from tqdm import tqdm
 import pdb
 
 
@@ -382,8 +382,8 @@ class NeighborhoodScores(dml.Algorithm):
           
         return doc
 
-neighborhoodScores.execute()
-doc = neighborhoodScores.provenance()
+NeighborhoodScores.execute()
+doc = NeighborhoodScores.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
 
