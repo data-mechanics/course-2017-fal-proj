@@ -57,28 +57,47 @@ class BudgetCalculator(dml.Algorithm):
         openspace = []
         #change .s in z3 printer z3 core and z3 
         for i in range(len(scoreArray)):
+
             c = scoreArray[i][0] 
             h = scoreArray[i][1]
             b = scoreArray[i][2]
             o = scoreArray[i][3]
             n = scoreArray[i][4]
             (x1,x2,x3,x4) = [z3.Real('x'+str(j) + "_" + str(i)) for j in range(1,5)]
+            S.add(x1 > 10)
+            S.add(x2 > 20)
+            S.add(x3 > 15)
+            S.add(x4 > 5)
+
+
+
+
             chargingStations.append(x1)
             hubwayStations.append(x2)
             bikeNetworks.append(x3)
             openspace.append(x4)
 
-            S.add(((c+x1) * 1000) + ((h+x2) * 2000) + ((b+x3) * 1500) + ((o+x4) * 10) <= 1000000)
-        S.add(sum(chargingStations) > 4)
-        S.add(sum(hubwayStations) > 5)
-        S.add(sum(bikeNetworks) > 8)
-        S.add(sum(openspace) > 3)
+            S.add(((c+x1) * 1000) + ((h+x2) * 2000) + ((b+x3) * 1500) + ((o+x4) * 10) <= 5000000)
+            chargingStations.append(c+x1)
+            hubwayStations.append(x2)
+            bikeNetworks.append(x3)
+            openspace.append(x4)
+
+        print(chargingStations)
+        print("STOP")
+        S.add(sum(chargingStations) > 100)
+        S.add(sum(hubwayStations) > 150)
+        S.add(sum(bikeNetworks) > 100)
+        S.add(sum(openspace) > 50)
 
 
 
 
         S.check()
         print(S.model())
+        t = S.model()
+        print(t[0][1])
+        print(t[1])
 
 
 
