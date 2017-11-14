@@ -31,12 +31,8 @@ class CalculateCorrelation(dml.Algorithm):
 
         repo.authenticate('alanbur_aquan_erj826_jcaluag', 'alanbur_aquan_erj826_jcaluag')          
 
-
-        collection = repo.alanbur_aquan_erj826_jcaluag.parseNYaccidents
-
         repo.dropCollection("alanbur_aquan_erj826_jcaluag.correlation")
         repo.createCollection("alanbur_aquan_erj826_jcaluag.correlation")
-
 
 
         ny = [entry for entry in repo.alanbur_aquan_erj826_jcaluag.boroughAggregateNY.find()][0]
@@ -52,7 +48,7 @@ class CalculateCorrelation(dml.Algorithm):
         s = ny['STATEN ISLAND']
         cov = np.corrcoef([NYall,sf,m,b,q,bronx,s])
 
-        repo['alanbur_aquan_erj826_jcaluag.correlation'].insert(cov, check_keys=False)
+        repo['alanbur_aquan_erj826_jcaluag.correlation'].insert({'answer':cov}, check_keys=False)
 
         repo['alanbur_aquan_erj826_jcaluag.correlation'].metadata({'complete': True})
 
