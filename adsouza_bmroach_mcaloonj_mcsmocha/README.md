@@ -50,11 +50,12 @@ In the case where the number of accidents determined to be approximately 23,200,
 * $$ *fetch_nodes.py*
 * *fetch_open_space.py*
 * *fetch_schools.py*
-* *fetch_street_info.py*
 <br><br>
 * $$ *get_accident_clusters.py* - Performs k-means on the input accidents to reduce accidents into accident clusters, which are later used as points of influence as to where feedback signs should be placed.
 * $$ *get_signal_placements.py* - Consumes the triggers produced by clean_triggers (below) to determine the optimal placement of speed 
 * *get_speed_stats.py*
+* *get_avgs.py* - Gets average distances between signs and each trigger
+* *get_avg_distance.py* - Finds the optimal number of accident clusters and graphs all the average distances for each trigger
 <br><br>
 * *clean_triggers.py* - Collects and cleans accident clusters, schools, open spaces, hospitals, candidate intersections for placement for use as points in the k-means clustering done in get_signal_placements.
 <br><br>
