@@ -82,7 +82,7 @@ class parseNYAccidents(dml.Algorithm):
         this_script = doc.agent('alg:alanbur_aquan_erj826_jcaluag#parseNYaccidents', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         
         #define the input resource
-        resource = doc.entity('dat:alanbur_aquan_erj826_jcaluag#parseNYaccidents', {'prov:label':'Parsed NY Accident Report', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource = doc.entity('dat:alanbur_aquan_erj826_jcaluag#NYaccidents', {'prov:label':'Original NY Accident Report', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         
         #define the activity of taking in the resource
         get_parsed_NY_accidents = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
