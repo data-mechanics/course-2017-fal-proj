@@ -25,13 +25,15 @@ class CalculateCorrelation(dml.Algorithm):
     @staticmethod
     def execute(trial = False):
         startTime = datetime.datetime.now()
-        print("Building 6 by 6 correlation matrix")
 
-        # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
 
         repo.authenticate('alanbur_aquan_erj826_jcaluag', 'alanbur_aquan_erj826_jcaluag')          
+
+        repo.dropCollection("alanbur_aquan_erj826_jcaluag.correlation")
+        repo.createCollection("alanbur_aquan_erj826_jcaluag.correlation")
+
 
         ny = [entry for entry in repo.alanbur_aquan_erj826_jcaluag.boroughAggregateNY.find()][0]
         sf = [entry['data'] for entry in repo.alanbur_aquan_erj826_jcaluag.timeAggregateSF.find()][0]
@@ -46,11 +48,9 @@ class CalculateCorrelation(dml.Algorithm):
         s = ny['STATEN ISLAND']
         cov = np.corrcoef([NYall,sf,m,b,q,bronx,s])
 
-        print(cov)
+        repo['alanbur_aquan_erj826_jcaluag.correlation'].insert({'answer':cov.tolist()}, check_keys=False)
 
-
-        
-
+        repo['alanbur_aquan_erj826_jcaluag.correlation'].metadata({'complete': True})
 
         repo.logout()
 

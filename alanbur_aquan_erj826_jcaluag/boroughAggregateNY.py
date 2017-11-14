@@ -45,17 +45,12 @@ class boroughAggregateNY(dml.Algorithm):
 
 
 
-        print(borough)
-
-
-
-
 
         repo['alanbur_aquan_erj826_jcaluag.boroughAggregateNY'].insert(borough, check_keys=False)
 
 
         repo['alanbur_aquan_erj826_jcaluag.boroughAggregateNY'].metadata({'complete':True})
-        print(repo['alanbur_aquan_erj826_jcaluag.boroughAggregateNY'].metadata())
+        #print(repo['alanbur_aquan_erj826_jcaluag.boroughAggregateNY'].metadata())
 
         repo.logout()
 

@@ -39,18 +39,14 @@ class timeAnalyzer(dml.Algorithm):
         timeSF = [entry['data'] for entry in repo.alanbur_aquan_erj826_jcaluag.timeAggregateSF.find()][0]
         # timeNY=[1,2,3,4,5,6]
         # timeSF=[2,4,6,8,10,10]
-        print("New York: ",timeNY)
-        print("San Fran: ",timeSF)
-        
 
-        print(np.corrcoef(timeNY,timeSF))
         cov= np.corrcoef(timeNY,timeSF)[0][1]
 
         result={"correlation":cov}
   
         repo['alanbur_aquan_erj826_jcaluag.timeAnalysis'].insert(result, check_keys=False)
         repo['alanbur_aquan_erj826_jcaluag.timeAnalysis'].metadata({'complete':True})
-        print(repo['alanbur_aquan_erj826_jcaluag.timeAnalysis'].metadata())
+       # print(repo['alanbur_aquan_erj826_jcaluag.timeAnalysis'].metadata())
 
         repo.logout()
 
