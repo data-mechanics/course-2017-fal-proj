@@ -10,7 +10,8 @@ Our team set out to determine an optimal placement of Speed Feedback Signs in th
 We categorized our approach into two parts. <br>
 **Part 1** - Placement of Speed Feedback Signs
 * Phase 1:<br>
-Cluster accidents into accident hot spots via k-means, where the number of means is proportional to the number of input nodes.
+Cluster accidents into accident hot spots via k-means, where the number of means is proportional to the number of input nodes. <br>
+To look at signal placement results, open placements.html within the same directory.
 * Phase 2: <br>
 Filter intersections by proximity to accident clusters. For an intersection to be a candidate placement site, the intersection must be in the lower 50th percentile with regards to distance to closest accident cluster. This ensures that final placements are not skewed by proximity to vulnerable sights alone, but must also be close to where accidents are known to occur. 
 * Phase 3:<br>
