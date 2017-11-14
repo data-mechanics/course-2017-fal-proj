@@ -84,30 +84,64 @@ class setOptimalHealthMarkets(dml.Algorithm):
 
         correctedMeans = []
         means = means.tolist()
+        #print("Number of Means:", len(means))
         inputs = {}
         inputs['means'] = means
-        # adjustedMeans = [Point(m) for m in means]
-        # flag = False
-        # countVal = 0
-        # countInval = 0
-        # for f in mapValues[0]:
-        #         #polygon = shape(feature[f])
-        #     if (f == '_id'):
-        #         continue
-        #     else:
-        #         poly = shape(mapValues[0][f])
-        #         print(f)
-        #         print(mapValues[0][f])
-        #         exit()
-        #         for mean in adjustedMeans:
-        #             if (poly.contains(mean)):
-        #                 countVal += 1
-        #                 flag = True
-        #             else:
-        #                 countInval += 1
-        # print("num valid ", countVal)
-        # print("num inval ", countInval)
-        # exit()
+        adjustedMeans = [Point(m) for m in means]
+        for m in adjustedMeans:
+            flag = False
+            for f in mapValues[0]:
+                #print(f)
+                if (f == '_id'):
+                    continue
+                else:
+                    if (f == "South Boston" or f == "South Boston Neighborhood"):
+                        mapValues[0][f]['coordinates'][0][0] = [(x,y) for (y,x) in mapValues[0][f]['coordinates'][0][0]]
+                    else:
+                        mapValues[0][f]['coordinates'][0] = [(x,y) for (y,x) in mapValues[0][f]['coordinates'][0]]
+                poly = shape(mapValues[0][f])
+                if poly.contains(m):
+                    flag = True
+                    print(str(m), "is in ", f)
+                    break
+            correctedMeans.append((str(m), flag))
+
+        goodMeans = [x[0] for x in correctedMeans if x[1] == True]
+        badMeans = [x[0] for x in correctedMeans if x[1] == False]
+        tempMeans = []
+        for x in badMeans:
+            minDist = 9999999
+            minPoint = None
+            arr = str(x).replace("(", "").replace(")", "").split(" ")
+            coord = (float(arr[1]), float(arr[2]))
+            for f in mapValues[0]:
+                if (f == '_id'):
+                    continue
+                else:
+                    if (f == "South Boston" or f == "South Boston Neighborhood"):
+                        for p in mapValues[0][f]['coordinates'][0][0]:
+                            dist = Distance(coord, p).miles
+                            if dist < minDist:
+                                minDist = dist
+                                minPoint = p
+                    else:
+                        for p in mapValues[0][f]['coordinates'][0]:
+                            dist = Distance(coord, p).miles
+                            if dist < minDist:
+                                minDist = dist
+                                minPoint = p
+            
+            tempMeans.append(minPoint)
+        
+        finalMeans = []
+        for x in tempMeans:
+            finalMeans.append(x)
+        for x in goodMeans:
+            arr = x.replace("(", "").replace(")", "").split(" ")
+            finalMeans.append((float(arr[1]), float(arr[2])))
+        
+        inputs = {}
+        inputs['optimalMarketLocation'] = finalMeans
         repo.dropCollection("OptimalHealthMarkets")
         repo.createCollection("OptimalHealthMarkets")
         repo['biel_otis.OptimalHealthMarkets'].insert_many([inputs])
@@ -168,4 +202,5 @@ class setOptimalHealthMarkets(dml.Algorithm):
         
         return doc
 
+setOptimalHealthMarkets.execute()
 ## eof
