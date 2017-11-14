@@ -155,8 +155,8 @@ class get_signal_placements(dml.Algorithm):
             this_script = doc.agent('alg:get_signal_placements', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extenstion':'py'})
 
             #Resources
-            signal_placements = doc.entity('dat:signal_placements', {'prov:label': 'Signal Placements', prov.model.PROV_TYPE:'ont:DataResource'})
-            nodes = doc.entity('dat:signal_placements', {'prov:nodes': 'Nodes', prov.model.PROV_TYPE:'ont:DataResource'})
+            clean_triggers = doc.entity('dat:clean_triggers', {'prov:label': 'Clean Triggers', prov.model.PROV_TYPE:'ont:DataResource'})
+            nodes = doc.entity('dat:nodes', {'prov:nodes': 'Nodes', prov.model.PROV_TYPE:'ont:DataResource'})
 
             #Activities
             this_run = doc.activity('log:a'+str(uuid.uuid4()), startTime, endTime, {prov.model.PROV_TYPE:'ont:Computation'})
@@ -164,13 +164,13 @@ class get_signal_placements(dml.Algorithm):
             #Usage
             doc.wasAssociatedWith(this_run, this_script)
 
-            doc.used(this_run, signal_placements, startTime)
+            doc.used(this_run, clean_triggers, startTime)
             doc.used(this_run, nodes, startTime)
 
             signal_placements = doc.entity('dat:signal_placements', {prov.model.PROV_LABEL:'Signal Placements',prov.model.PROV_TYPE:'ont:DataSet'})
             doc.wasAttributedTo(signal_placements, this_script)
             doc.wasGeneratedBy(signal_placements, this_run, endTime)
-            doc.wasDerivedFrom(signal_placements, signal_placements, this_run, this_run, this_run)
+            doc.wasDerivedFrom(signal_placements, clean_triggers, this_run, this_run, this_run)
             doc.wasDerivedFrom(signal_placements, nodes, this_run, this_run, this_run)
 
             repo.logout()

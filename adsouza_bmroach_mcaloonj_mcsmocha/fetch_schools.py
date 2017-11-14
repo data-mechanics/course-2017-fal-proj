@@ -93,9 +93,9 @@ class fetch_schools(dml.Algorithm):
         return doc
 
 
-fetch_schools.execute()
-doc = fetch_schools.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+# fetch_schools.execute()
+# doc = fetch_schools.provenance()
+# print(doc.get_provn())
+# print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ##eof

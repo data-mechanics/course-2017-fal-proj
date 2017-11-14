@@ -42,7 +42,7 @@ class get_accident_clusters(dml.Algorithm):
 
             #__________________________
             #Parameters
-            cluster_divisor = 200
+            cluster_divisor = 15
             # ^ meaning divides accident count by this, and there's that many clusters
             # Ex 200 accidents divided by cluster_divisor of 10 is 20 clusters, or means
 

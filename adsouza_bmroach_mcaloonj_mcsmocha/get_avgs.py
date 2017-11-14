@@ -144,7 +144,7 @@ class get_avgs(dml.Algorithm):
         return doc
 
 
-get_avgs.execute()
-doc = get_avgs.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+# get_avgs.execute()
+# doc = get_avgs.provenance()
+# print(doc.get_provn())
+# print(json.dumps(json.loads(doc.serialize()), indent=4))
