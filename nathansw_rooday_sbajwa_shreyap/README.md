@@ -16,7 +16,7 @@ Second, we dive into the wealth of demographic data which is available for Bosto
 > Given a neighborhood A, how does geographical proximity influence the spread or trickling of poverty from neighborhood A to its surrounding neighborhoods?
 
 We do this by analyzing a distance matric between neighborhoods and computing its correlation with various demographic data.
-The coorelation provides us a sizeable measure of this "trickling"
+The correlation provides us a sizeable measure of this "trickling"
 
 __How is this helpful to policy makers?__
 
