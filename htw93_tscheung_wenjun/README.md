@@ -4,7 +4,7 @@
 
 ## Project Narrative
 
-As one of the most famous city all over the world,Boston is a popular city for people to travel. People might use website like booking or tripdavisor to find out the suitable hotel from them. However, most of the grades and comments concentrates on the hotels themselve, like the quality of service, cleaningness, etc. Obviously, those grades and comments ignore the surroundings, like crime rates, transportations. Hence we try to evaluate the hotels of Boston by some other factors, like crime rate, transportation information, foods and gardens.
+As one of the most famous city all over the world,Boston is a popular city for people to travel. People might use website like booking or tripdavisor to find out the suitable hotel from them. However, most of the grades and comments concentrates on the hotels themselve, like the quality of service, cleaningness, etc. Obviously, those grades and comments ignore the surroundings, like crime rates, transportations. Hence we try to evaluate the hotels of Boston by some other factors, like crime rate, transportation information, foods and gardens. Based on the evaluation, we aimed to find a new protential coordinate to build new hotel with high score.
 
 
 ## Datasets
@@ -24,6 +24,7 @@ Orginal Dataset | Transformation Description| New Dataset
 Hotels in Boston, Boston Crime Data, MBTA Data,Restaurants in Boston, Gardens of Boston | Start from each hotel, set a radius(ex. 0.5 miles), count number of crimes, mbta stops, restaurants and gardens | Boston Hotel Data
 BostonHotelData |  Apply our custom algorithm to give a new score to each hotel | BostonHotelCustomScore
 BostonHotelCustomScore| Apply Correlation coefficient to figure out the most related factor to our custom score system | BostonHotelCorrelation
+BostonHotelCustomScore, BostonHotel | Use K-means to cluster hotels based on new custom score and select best coordinates to build a new protential hotel | BostonHotelProtential
 
 
 
