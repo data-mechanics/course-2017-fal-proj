@@ -5,9 +5,10 @@ aquan6: aquan<br />
 erj826: erj826<br />
 jcaluag: jcaluag<br />
 
+
 For project 2, we decided to shift our focus away from Boston and take a look at other large cities in the United States.
 We decided to look at New York City and San Francisco with hopes of studying and solving issues surrounding traffic accidents throughout different times of day.
-Our first tool is an implementation of K-means with an added constraint satisfaction algorithm.
+Our trial mode was implemented using reservoir sampling -- that is to say our subset of the whole set is obtained with a uniform distribution. Our first tool is an implementation of K-means with an added constraint satisfaction algorithm.
 We perform this algorithm on the New York City data and find the number of means that are necessary to cluster each accident to within a certain distance threshold of each mean.
 Our findings could be a factor used in deciding optimal placement of police stations around the city.
 
