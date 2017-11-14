@@ -45,7 +45,7 @@ class getData(dml.Algorithm):
             temp['type'] = 'transport'
             try:
                 temp['location']=[float(s[4]),float(s[5])]
-                if(float(s[4])<42.230280 or float(s[4])>42.401714 or float(s[5]) < -71.185594 or float(s[5])>-70.984888):
+                if(float(s[4])<42.332299 or float(s[4])>42.375863 or float(s[5]) < -71.173850 or float(s[5])>-70.990035):
                     continue
             except ValueError:
                 continue
@@ -77,7 +77,7 @@ class getData(dml.Algorithm):
                 temp['location']=f['location']['coordinates'][::-1]
                 x = temp['location'][0]
                 y = temp['location'][1]
-                if(x<42.230280 or x>42.401714 or y < -71.185594 or y>-70.984888):
+                if(x<42.332299 or x>42.375863 or y < -71.173850 or y>-70.990035):
                     continue
                 food_info.append(temp)
             except KeyError:
@@ -99,7 +99,7 @@ class getData(dml.Algorithm):
                 temp['location']=[float(x) for x in f['coordinates'].split(',')]
                 x = temp['location'][0]
                 y = temp['location'][1]
-                if(x<42.230280 or x>42.401714 or y < -71.185594 or y>-70.984888):
+                if(x<42.332299 or x>42.375863 or y < -71.173850 or y>-70.990035):
                     continue
                 garden_info.append(temp)
             except KeyError:
