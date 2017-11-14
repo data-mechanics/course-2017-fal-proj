@@ -33,15 +33,15 @@ BostonHotelCustomScore, BostonHotel | Use K-means to cluster hotels based on new
 In our new scoring system, we calculate the number of gardens, crimes, MBTA stops, restaurants and cafes near each hotels(within certain distance). Then we use the normalize formula below to scale the original sorce and datas gathered together to calculater the new score.
 
 ### Normalize Formula
-<img src="https://i.imgur.com/HC093vp.png" style="width:200px">
+<img src="https://i.imgur.com/HC093vp.png" style="width:100px">
 
 ### Custom Score Formula
-<img src="https://i.imgur.com/PQ6ekYB.png" style="width:400px">
+<img src="https://i.imgur.com/PQ6ekYB.png" style="width:200px">
 
 ## Correlation Coefficient
 **Formula:**
 
-<img src="https://i.imgur.com/YipOLbT.png" style="width:200px">
+<img src="https://i.imgur.com/YipOLbT.png" style="width:100px">
 
 For each factor, we calculate the correlation coefficient. below is the result:
 
@@ -73,7 +73,7 @@ Learnt from the correlation coefficient, we find out that our custom score is ne
 
 We discard the crime factor, thus the new score will be:
 
-<img src="https://i.imgur.com/1A9lMiu.png" style="width:300px">
+<img src="https://i.imgur.com/1A9lMiu.png" style="width:200px">
 
 ### Apply K-means
 For K-means matrix, we use the coordinates and new custom rates of hotels. First we normalize the coordinates and rates separately. Then we slightly make coordinates with higer weights to make sure the clusters can be clusted based on there location first. We choose number of clusters as 10. For each calculated cluster. We select the cluster with higheset average custom rate and calculate the center coordinate of this cluster, which is [42.347708499999996 -71.0792716]
