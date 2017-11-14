@@ -112,6 +112,6 @@ class CalculateCorrelation(dml.Algorithm):
                   
         return doc
 
-CalculateCorrelation.execute()
+# CalculateCorrelation.execute()
 
 ## eof

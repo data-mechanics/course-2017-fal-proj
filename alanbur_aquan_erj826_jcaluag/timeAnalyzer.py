@@ -106,6 +106,6 @@ class timeAnalyzer(dml.Algorithm):
                   
         return doc
 
-timeAnalyzer.execute()
+# timeAnalyzer.execute()
 
 ## eof

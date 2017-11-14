@@ -101,6 +101,6 @@ class timeAggregateNY(dml.Algorithm):
                   
         return doc
 
-timeAggregateNY.execute()
+# timeAggregateNY.execute()
 
 ## eof

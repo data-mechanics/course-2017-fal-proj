@@ -101,6 +101,6 @@ class parseNYAccidents(dml.Algorithm):
                   
         return doc
 
-parseNYAccidents.execute()
+# parseNYAccidents.execute()
 
 ## eof

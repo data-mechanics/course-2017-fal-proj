@@ -106,6 +106,6 @@ class boroughAggregateNY(dml.Algorithm):
                   
         return doc
 
-boroughAggregateNY.execute()
+# boroughAggregateNY.execute()
 
 ## eof

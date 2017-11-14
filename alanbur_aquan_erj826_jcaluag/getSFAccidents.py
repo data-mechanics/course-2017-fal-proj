@@ -107,6 +107,6 @@ class getSFAccidents(dml.Algorithm):
                   
         return doc
 
-getSFAccidents.execute()
+# getSFAccidents.execute()
 ## eof
 

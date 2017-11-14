@@ -179,6 +179,6 @@ class FindKMeans(dml.Algorithm):
 
 
 
-FindKMeans.execute(False)
+# FindKMeans.execute(False)
 
 ## eof

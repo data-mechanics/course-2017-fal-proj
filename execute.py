@@ -27,6 +27,7 @@ path = args.contributor_folder
 algorithms = []
 for r,d,f in os.walk(path):
     for file in f:
+        print(algorithms)
         if r.find(os.sep) == -1 and file.split(".")[-1] == "py":
             name_module = ".".join(file.split(".")[0:-1])
             module = importlib.import_module(path + "." + name_module)
@@ -37,6 +38,8 @@ for r,d,f in os.walk(path):
 datasets = set()
 ordered = []
 while len(algorithms) > 0:
+    print(datasets)
+    print(ordered)
     for i in range(0,len(algorithms)):
         print(algorithms)
         if set(algorithms[i].reads).issubset(datasets):

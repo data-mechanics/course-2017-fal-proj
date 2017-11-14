@@ -97,6 +97,6 @@ class timeAggregateSF(dml.Algorithm):
                   
         return doc
 
-timeAggregateSF.execute()
+# timeAggregateSF.execute()
 
 ## eof
