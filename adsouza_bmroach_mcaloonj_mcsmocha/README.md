@@ -34,7 +34,7 @@ An optimal value for *a* is one that helps in minimizing the distance of a sign 
 * --trial flag decreases radius of possible intersections for placement
 
 ## Statistical Findings
-In the case where the number of accidents determined to be approximately 23,200, according to the graph shown below, the value of *a* is one that minimizes the average overall distance, which is *a* = 212, or *c* = 110. The average distances of signs to other triggers is also shown on the graph to show the overall average's relation to the triggers: the average hospital distances increases the average slightly, but the similarities of the other three triggers allow the overall average to be an accurate measure of the overall distances of the signs. As a result, 212 clusters to cluster accident hotspots ends up being an optimal value of *a*.
+There were 23,200 total accidents in our accident dataset. According to the graph shown below, the value of *a* is one that minimizes the average overall distance, which is *a* = 212, or *c* = 110. The average distances of signs to other triggers is also shown on the graph to show the overall average's relation to the triggers: the average hospital distances increases the average slightly, but the similarities of the other three triggers allow the overall average to be an accurate measure of the overall distances of the signs. As a result, 212 clusters to cluster accident hotspots ends up being an optimal value of *a*.
 
 <img src="graph_range(80,90,...,200).png" height='400' width='auto'><br>
 
