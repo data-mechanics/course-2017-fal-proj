@@ -102,12 +102,10 @@ class demographics(dml.Algorithm):
 		repo.authenticate("nathansw_sbajwa","nathansw_sbajwa")
 
 		## Namespaces
-		doc.add_namespace('alg', 'http://datamechanics.io/algorithm/sbajwa_nathansw/') # The scripts in / format.
-		doc.add_namespace('dat', 'http://datamechanics.io/data/sbajwa_nathansw/') # The data sets in / format.
+		doc.add_namespace('alg', 'http://datamechanics.io/algorithm/nathansw_sbajwa/') # The scripts in / format.
+		doc.add_namespace('dat', 'http://datamechanics.io/data/nathansw_sbajwa/') # The data sets in / format.
 		doc.add_namespace('ont', 'http://datamechanics.io/ontology#')
 		doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
-
-		doc.add_namespace('json_data', 'http://datamechanics.io/data/nathansw_sbajwa/') 
 
 		## Agents
 		this_script = doc.agent('alg:nathansw_sbajwa#demographics', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
@@ -120,10 +118,10 @@ class demographics(dml.Algorithm):
 
 		## Entities
 		# Data Sources
-		resource1 = doc.entity('json_data: Race.json', {'prov:label':'Race by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-		resource2 = doc.entity('json_data: PovertyRates.json', {'prov:label':'Poverty Rates by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-		resource3 = doc.entity('json_data: HouseholdIncome.json', {'prov:label':'Household Income by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-		resource4 = doc.entity('json_data: MeansOfCommuting.json', {'prov:label':'Means of Commuting by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+		resource1 = doc.entity('dat: Race.json', {'prov:label':'Race by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+		resource2 = doc.entity('dat: PovertyRates.json', {'prov:label':'Poverty Rates by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+		resource3 = doc.entity('dat: HouseholdIncome.json', {'prov:label':'Household Income by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+		resource4 = doc.entity('dat: MeansOfCommuting.json', {'prov:label':'Means of Commuting by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 
 		# Data Generated
 		race = doc.entity('dat:nathansw_sbajwa#race', {prov.model.PROV_LABEL:'Race by Neighborhood', prov.model.PROV_TYPE:'ont:DataSet'})
