@@ -43,7 +43,7 @@ class getStats(dml.Algorithm):
         s = ny['STATEN ISLAND']
         cov = np.corrcoef([sf,m,b,q,bronx,s])
 
-        cov = np.cov([sf,m,b,q,bronx, s])
+        # cov = np.cov([sf,m,b,q,bronx, s])
         print(cov)
 
 

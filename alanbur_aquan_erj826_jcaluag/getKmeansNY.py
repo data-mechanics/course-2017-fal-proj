@@ -14,7 +14,7 @@ import requests
 import math
 import numpy as np
 from sklearn.cluster import KMeans
-
+import random
 #the largest acceptable distance between two data 
 acceptableDistance = 0.05 #this is about 3 miles from degree long//lat conversion to miles
 coordinates = []
@@ -35,7 +35,7 @@ def distance(p0, p1):
     return math.sqrt((p0[0] - p1[0])**2 + (p0[1] - p1[1])**2)
 
 #our algorithm
-class parseNYAccidents(dml.Algorithm):
+class FindKMeans(dml.Algorithm):
     contributor = 'alanbur_aquan_erj826_jcaluag'
     reads = ['alanbur_aquan_erj826_jcaluag.parseNYaccidents']
     writes = ['alanbur_aquan_erj826_jcaluag.kMeansNY']
@@ -54,14 +54,29 @@ class parseNYAccidents(dml.Algorithm):
 
         #get coordinates from colleciton
         collection = repo.alanbur_aquan_erj826_jcaluag.parseNYaccidents
-        #coordinates = []
+        coordinates = []
+
         for entry in collection.find():    
             try: #make the array for kmeans
                 datapoint = [entry['longitude'],entry['latitude']]
                 coordinates.append(datapoint)        
             except:
-                continue         
+                continue   
+
+        SampleSize=100
+        if trial:
+            TrialSample=coordinates[:SampleSize]
+            for i in range(SampleSize+1,len(coordinates)):
+                j=random.randint(1,i)
+                if j<SampleSize:
+                    TrialSample[j] = coordinates[i]
+            print('Running in trial mode')
+            coordinates=TrialSample
+            print(coordinates)
+
         X = np.array(coordinates)
+
+
         
         #X = np.array(coordinates).reshape((1,-1),(1,-1))
         #X= scalar.transform(X)
@@ -146,6 +161,6 @@ class parseNYAccidents(dml.Algorithm):
 
 
 
-parseNYAccidents.execute()
+FindKMeans.execute(False)
 
 ## eof
