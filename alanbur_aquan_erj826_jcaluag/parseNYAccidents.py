@@ -92,7 +92,7 @@ class parseNYAccidents(dml.Algorithm):
                   )
         
         #define the writeout 
-        parsed_accidents = doc.entity('dat:alanbur_aquan_erj826_jcaluag#getNYAccidents', {prov.model.PROV_LABEL:'NY Accidents List', prov.model.PROV_TYPE:'ont:DataSet'})
+        parsed_accidents = doc.entity('dat:alanbur_aquan_erj826_jcaluag#parseNYaccidents', {prov.model.PROV_LABEL:'NY Accidents List', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(parsed_accidents, this_script)
         doc.wasGeneratedBy(parsed_accidents, get_parsed_NY_accidents, endTime)
         doc.wasDerivedFrom(parsed_accidents, resource, get_parsed_NY_accidents, get_parsed_NY_accidents, get_parsed_NY_accidents)

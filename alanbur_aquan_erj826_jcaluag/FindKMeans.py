@@ -128,7 +128,7 @@ class FindKMeans(dml.Algorithm):
         #resources:
         
         #define the agent
-        this_script = doc.agent('alg:alanbur_aquan_erj826_jcaluag#timeAnalyzer', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:alanbur_aquan_erj826_jcaluag#FindKMeans', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         
         #define the input resource
         resource = doc.entity('dat:parseNYaccidents', {'prov:label':'NY Parsed Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})

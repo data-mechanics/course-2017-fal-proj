@@ -98,7 +98,7 @@ class getSFAccidents(dml.Algorithm):
                   )
         
         #define the writeout 
-        accidents = doc.entity('dat:alanbur_aquan_erj826_jcaluag#getSFAccidents', {prov.model.PROV_LABEL:'SF Accident List', prov.model.PROV_TYPE:'ont:DataSet'})
+        accidents = doc.entity('dat:alanbur_aquan_erj826_jcaluag#SFaccidents', {prov.model.PROV_LABEL:'SF Accident List', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(accidents, this_script)
         doc.wasGeneratedBy(accidents, get_SF_Accidents, endTime)
         doc.wasDerivedFrom(accidents, resource, get_SF_Accidents, get_SF_Accidents, get_SF_Accidents)
