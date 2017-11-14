@@ -93,7 +93,7 @@ class MBTA_by_ward(dml.Algorithm):
 
         #define entity to represent resources
         this_script = doc.agent('alg:cyyan_liuzirui_yjunchoi_yzhang71#MBTA_by_ward', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource1 = doc.entity('bdp:cyyan_liuzirui_yjunchoi_yzhang71#boston_wards', {prov.model.PROV_LABEL:'boston_wards', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
+        resource1 = doc.entity('bdp:yjunchoi_yzhang71#boston_wards', {prov.model.PROV_LABEL:'boston_wards', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
         resource2 = doc.entity('eri:cyyan_liuzirui_yjunchoi_yzhang71#MBTACoordinates', {prov.model.PROV_LABEL:'MBTACoordinates', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'yaml'})
 
         this_wards = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)

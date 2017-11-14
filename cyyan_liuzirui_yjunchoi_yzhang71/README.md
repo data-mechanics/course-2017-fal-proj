@@ -1,60 +1,49 @@
-## Data set:
-Data set for Wards: https://data.boston.gov/dataset/wards
+# The Purpose of Project
+As an every presidential election, every election is the most important election in our lifetime before knowing the result of election, because we can change the result by voting. However, based on the research done by our group, more than 40% of U.S citizen did not vote in 2016. With researching the relationship between voter turnout and the other factors, we find the journal: "Increasing Voter Turnout: Can Mass Transit Help?" (http://www.inquiriesjournal.com/articles/1618/increasing-voter-turnout-can-mass-transit-help). By using dataset from various data sources of Boston, we focus on optimizing the polling locations based on public transportation. Moreover, we compare between the original polling location and the optimized polling location by calculating the average distances with randomized samples of voters in Boston (95% confidence interval).
 
-Data set for Precincts: https://data.boston.gov/dataset/precincts
+## Authors
+Yueyan Chen (cyyan)
+Zirui Liu (liuzirui)
+Young Jun Choi (yjunchoi)
+Yuchen Zhang (yzhang71)
 
-Data set for Polling Location: https://data.boston.gov/dataset/polling-locations
+## Data set
+###Data set for Wards:
+https://data.boston.gov/dataset/wards
+###Data set for Polling Location:
+https://data.boston.gov/dataset/polling-locations
+###Data set for Bus Stop:
+http://datamechanics.io/data/wuhaoyu_yiran123/MBTA_Bus_Stops.geojson
+###Data set for MBTA:
+http://erikdemaine.org/maps/mbta/mbta.yaml
+###Data set for President Election Result by Precinct:
+http://datamechanics.io/data/yjunchoi_yzhang71/presidentElectionByPrecinct.csv
 
-Data set for Boston Population: https://www.opendatanetwork.com/entity/1600000US2507000/Boston_MA/demographics.population.count?year=2014
+## Optimization and Statistical Analysis
+### K-Means (optByPublicT.py; optByBusstop.py; optByMBTA.py)
+We use K-means algorithms to find the optimal polling locations based on public transportations, bus stops, and MBTA. In each file, we divide bus stops and MBTA stations into 22 wards, and use K-means algorithms 22 times to find the optimal polling locations in each ward. For optByPublicT.py, we compute optimization with both bus stops and MBTA to compare the results among the other optimization methods. Therefore, three files return different lists of optimal polling location in each ward.
 
-Data set for Boston Map: https://data.boston.gov/dataset/city-of-boston-boundary
+### Statistical Analysis with Sampling and Inference (scoringLocation.py)
+Because it is difficult to tell which optimization method is the best without scoring or evaluating locations, we perform the basic statistical analysis with four different lists of polling locations. We randomize 10000 addresses in Boston for voters' addresses, instead of using every voter's address in Boston to compare among polling locations we optimized. By calculating Euclidean distance between randomized voter's address and the nearest polling location, we want to find which optimization method provides the highest accessibility to Boston voters. Throughout the distribution of distance between voters and the polling location, scoringLocation.py returns the result of statistical analysis in 95% confidence interval.
 
-Data set from US Census: https://docs.digital.mass.gov/dataset/massgis-data-datalayers-2010-us-census
+## Required libraries and tools
+You will need some libraries and packages. By downloading through pip, you can easily install the latest versions.
+```
+python -m pip install yaml
+python -m pip install numpy
+python -m pip install pandas
+python -m pip install matplotlib
+python -m pip install math
+python -m pip install scipy
+python -m pip install Counter
+python -m pip install csv
+```
+## To run the execution script for Project 2
 
-Data set for Boston Street: https://data.boston.gov/dataset/boston-segments/resource/a159f77f-3b3d-423d-a36f-6c804475817a
-
-Data set for Boston Street 2: https://data.boston.gov/dataset/live-street-address-management-sam-addresses (Young prefers this)
-
-Data set for Boston Main Street: https://data.boston.gov/dataset/main-street-districts (It does not have much, only 20)
-
-## Optimize Polling Location
-Optimize polling locations based on the accessibility to bus stops and MBTA
-Use k-mean algorithms (SciKit) - Young
-### Data Sets
-Need four data sets: (All can be found at Analyze Boston)
-1.	Bus Stops (Name, Coordinates) - Ray
-2.	MBTA T station (Name, Coordinates) - Dennis
-3.	Polling Location - Young
-4.	Boston Map (jpeg file) / Boston Map Coordinates - Joyce
-### How to transform data sets
-These data sets are transformed to two new data sets
-1.	optPollingByBus.py - Young
-2.	optPollingByMBTA.py - ? (Follow optPollingByBus.py)
-## Optimize shuttle bus stops
-Optimize shuttle bus stops for the areas which are not accessible with bus stops and MBTA
-First we need to divide Boston Map into 22 wards. I already put links of each data set for coordinates of Wards and Precinct. Please use geojson file from link and follow the steps explained during class.
-### Data Sets
-1.	Export the coordinates of Ward - ?
-2.	Export the coordinates of Boston - Joyce
-3.	Count the number of bus stops and MBTA station in each Ward - ? (constraint satisfatory problem)
-4.	Find the coordinates of boston street - ?
-### How to transform data sets
-These data sets are transformed to a new data set
-1.	mainStreet.py (Constraint Satisfactory Problem) - ?
-2.	optShuttleBus.py - ?
-### Libraries
-1.  import urllib.request
-2.  import json
-3.  import dml
-4.  import prov.model
-5.  import datetime
-6.  import uuid
-7.  import yaml
-8.  import numpy as np
-9.  import pandas as pd
-10. from collections import Counter
-11. import matplotlib.path as mplPath
-12. from scipy.cluster.vq import kmeans2
-13. import math
-14. import random
-15. import csv
+```
+python execute.py cyyan_liuzirui_yjunchoi_yzhang71
+```
+To execute the algorithms in trial mode
+```
+python execute.py cyyan_liuzirui_yjunchoi_yzhang71
+```
