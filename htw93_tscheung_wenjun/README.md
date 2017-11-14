@@ -22,16 +22,58 @@ In this project, we use 5 original datasets. Our core dataset is the hotels of B
 Orginal Dataset | Transformation Description| New Dataset
 ---- | ---| ---
 Hotels in Boston, Boston Crime Data, MBTA Data,Restaurants in Boston, Gardens of Boston | Start from each hotel, set a radius(ex. 0.5 miles), count number of crimes, mbta stops, restaurants and gardens | Boston Hotel Data
-Boston Hotel Data |  Apply our custom algorithm to give a new score to each hotel | 
-
-
-## Algorithm
-
-### Scoring Formula
-
-
-### Correlation Coefficient
+BostonHotelData |  Apply our custom algorithm to give a new score to each hotel | BostonHotelCustomScore
+BostonHotelCustomScore| Apply Correlation coefficient to figure out the most related factor to our custom score system | BostonHotelCorrelation
 
 
 
+## Custom Rating System
+
+In our new scoring system, we calculate the number of gardens, crimes, MBTA stops, restaurants and cafes near each hotels(within certain distance). Then we use the normalize formula below to scale the original sorce and datas gathered together to calculater the new score.
+
+### Normalize Formula
+<img src="http://chart.googleapis.com/chart?cht=tx&chl=S_{normalized}=\frac{S - S_{min}}{S_{max} - S_{min}}" style="border:none;">
+
+### Custom Score Formula
+<img src="http://chart.googleapis.com/chart?cht=tx&chl=S_{custom} = \frac{(S_{origin} %2B S_{garden}%2BS_{food}%2BS_{mbta}%2B(1-S{crime}))}{5}" style="border:none;">
+
+## Correlation Coefficient
+**Formula:**
+
+<img src="http://chart.googleapis.com/chart?cht=tx&chl=corr(x,y)=\frac{cov(x,y)}{std(x) - std(y)}" style="border:none;">
+
+For each factor, we calculate the correlation coefficient. below is the result:
+
+###Crime
+* coefficient: -0.09448652255976357
+* p value: 0.3984638884028119
+
+###MBTA Stops
+* coefficient: 0.5511472545817303
+* p value: 8.065664653031119e-8
+
+###Gardens
+* coefficient: 0.8712154440427992
+* p value: 1.9353053027735632e-26
+
+###Foods
+* coefficient: 0.6383325374109514
+* p value: 1.1093179778057194e-10
+
+## Best place to build a hotel
+
+Based on the effort we made above, we try to find a best place to build to hotel. In the part, we first discard useless factors and recalculate the custom score of each hotel. Then we use the coordinates of the hotel and the new score to do K-means. We choose the cluster with highest average score, the calcuate the center coordinate of this cluster, which will be the best place to build a new hotel.
+
+### Factor Filter
+
+Learnt from the correlation coefficient, we find out that our custom score is nearly not related to crime. Thus we discard crime factor first.
+
+### New Custom Score
+
+We discard the crime factor, thus the new score will be:
+
+<img src="http://chart.googleapis.com/chart?cht=tx&chl=S_{custom} = \frac{S_{origin} %2B S_{garden}%2BS_{food}%2BS_{mbta})}{4}" style="border:none;">
+
+### Apply K-means
+For K-means matrix, we use the coordinates and new custom rates of hotels. First we normalize the coordinates and rates separately. Then we slightly make coordinates with higer weights to make sure the clusters can be clusted based on there location first. We choose number of clusters as 10. For each calculated cluster. We select the cluster with higheset average custom rate and calculate the center coordinate of this cluster, which is [42.347708499999996 -71.0792716]
 
