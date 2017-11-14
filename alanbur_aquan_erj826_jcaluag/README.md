@@ -10,8 +10,9 @@ For project 2, we decided to shift our focus away from Boston and take a look at
 We decided to look at New York City and San Francisco with hopes of studying and solving issues surrounding traffic accidents throughout different times of day.
 
 Our first tool is an implementation of K-means with an added constraint satisfaction algorithm.
-We perform this algorithm on the New York City data and find the number of means that are necessary to cluster each accident to within a certain distance threshold of each mean(at the moment we have hardcoded a 3 mile average distance between centroids and all the nodes in their cluster).
+We perform this algorithm on the New York City data and find the number of means that are necessary to cluster each accident to within a certain distance threshold of each mean(at the moment we have hardcoded a 3 mile average distance between centroids and all the nodes in their cluster). We originally made our metric for constraint satisfaction the maximum distance between the centroid and the points within its cluster, but we later decided that an average function would make for a better metric because it aligns the way the kmeans algorithm works. Below is a printout of an example where the optimal 5 centroids were calculated that satisifed the 3 mile average distance metric.
 Our findings could be a factor used in deciding optimal placement of police stations, hospitals, or other response facilities around the city.
+
 
 In our second area of study, we found data on the number of accidents per hour for San Francisco and for each borough in New York.
 Our trial mode was implemented using reservoir sampling -- that is to say our subset of the whole set is obtained with a uniform distribution. If trial mode is on,
