@@ -14,7 +14,7 @@ from  itertools import combinations , combinations_with_replacement , product
 
 ### Algorithm 2
 
-class mbta_stops_lines(dml.Algorithm):
+class trickleAnalysis(dml.Algorithm):
 
   contributor = 'nathansw_rooday_sbajwa_shreyap'
   ### Make sure this is the correct dataset file name
@@ -51,16 +51,16 @@ class mbta_stops_lines(dml.Algorithm):
 
 
     ## Agents
-    this_script = doc.agent('alg:nathansw_rooday_sbajwa_shreyap#mbta_stops_lines', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+    this_script = doc.agent('alg:nathansw_rooday_sbajwa_shreyap#trickleAnalysis', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
     ## Activities
-    get_mbta_stops_lines = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+    get_trickleAnalysis = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 
     ## Entitites
     # Data Source
     resource = 
     # Data Generated
-    mbta_stops_lines = 
+    trickleAnalysis = 
        
     ############################################################
 

@@ -19,7 +19,7 @@ import statsmodels
 
 ### Algorithm 1
 
-class Regression_Analysis(dml.Algorithm):
+class regressionAnalysis(dml.Algorithm):
 
   contributor = 'nathansw_rooday_sbajwa_shreyap'
   ### Make sure this is the correct dataset file name
@@ -132,4 +132,4 @@ class Regression_Analysis(dml.Algorithm):
 
     return doc
 
-Regression_Analysis.execute()
+regressionAnalysis.execute()
