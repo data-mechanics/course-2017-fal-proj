@@ -48,7 +48,7 @@ class CalculateCorrelation(dml.Algorithm):
         s = ny['STATEN ISLAND']
         cov = np.corrcoef([NYall,sf,m,b,q,bronx,s])
 
-        repo['alanbur_aquan_erj826_jcaluag.correlation'].insert({'answer':cov}, check_keys=False)
+        repo['alanbur_aquan_erj826_jcaluag.correlation'].insert({'answer':cov.tolist()}, check_keys=False)
 
         repo['alanbur_aquan_erj826_jcaluag.correlation'].metadata({'complete': True})
 
