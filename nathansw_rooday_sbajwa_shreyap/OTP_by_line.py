@@ -119,11 +119,10 @@ class OTP_by_line(dml.Algorithm):
         ##########################################################
 
         ## Namespaces
-		doc.add_namespace('alg', 'http://datamechanics.io/algorithm/sbajwa_nathansw/') # The scripts in / format.
-		doc.add_namespace('dat', 'http://datamechanics.io/data/sbajwa_nathansw/') # The data sets in / format.
+		doc.add_namespace('alg', 'http://datamechanics.io/algorithm/nathansw_rooday_sbajwa_shreyapandit/') # The scripts in / format.
+		doc.add_namespace('dat', 'http://datamechanics.io/data/nathansw_rooday_sbajwa_shreyapandit/') # The data sets in / format.
 		doc.add_namespace('ont', 'http://datamechanics.io/ontology#')
 		doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
-
 		doc.add_namespace('json_data', 'http://datamechanics.io/data/nathansw_rooday_sbajwa_shreyap/') 
 
 		## Agents
@@ -134,7 +133,7 @@ class OTP_by_line(dml.Algorithm):
 
 		## Entitites
 		# Data Source
-		resource = doc.entity('json_data:MBTAPerformance.json', {'prov:label':'MBTA Performance Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+		resource = doc.entity('dat:MBTAPerformance.json', {'prov:label':'MBTA Performance Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 		# Data Generated
 		OTP_by_line = doc.entity('dat:nathansw_rooday_sbajwa_shreyap#OTP_by_line', {prov.model.PROV_LABEL:'On-Time Performance by Line', prov.model.PROV_TYPE:'ont:DataSet'})
        
