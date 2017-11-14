@@ -41,43 +41,63 @@ class kmeans(dml.Algorithm):
         zipcode = []
         lalo = []
         street = []
+        latitude = []
+        longitude = []
 
         for i in r:
-            zipcode.append( i['zipcode'])
-            if (i['latitude']!='#N/A' and i['longitude'] != '#N/A'):
-                lalo += [i['latitude'], i['longitude']]
-            else:
-                lalo += [0,0]
-        # latitude += i['latitude']
-        # longitude += i['longitude']
-            street.append( i['st_name'])
+            #if (len(zipcode)<120):
+
+
+            #if (len(latitude)<120):
+            if ((i['latitude']!='#N/A' and i['latitude']!="" ) and (i['longitude']!='#N/A' and i['longitude']!="" )):
+                latitude.append(i['latitude'])
+
+            #if (len(longitude)<120):
+                #if (i['longitude']!='#N/A' and i['longitude']!="" ):
+                longitude.append(i['longitude'])
+                #print(longitude, i['longitude'])
+                zipcode.append( i['zipcode'])
+
+        print(len(latitude))
+        print(len(longitude))
+
+        for i in range(118):
+
+            lalo += [latitude[i], longitude[i]]
+
+            #street.append( i['st_name'])
         print("$$$$$$$$$$$$$$$$$$")
-        print(lalo)
-        total = [{'zipcode': zipcode, 'address': lalo, 'street': street}]
+        print(len(latitude), len(longitude))
+        #print(lalo)
+        total = {'zipcode': zipcode, 'address': lalo, 'street': street}
 
-        print(total)
-        s = json.dumps(r, sort_keys= True, indent = 2)
+        #print(total)
+        #s = json.dumps(total, sort_keys= True, indent = 2)
         #    print(type(s))
-        repo.dropCollection("propety")
-        repo.createCollection("propety")
-        repo["lc546_jofranco.propety"].insert_many(total)
-        repo["lc546_jofranco.propety"].metadata({'complete':True})
-        print(repo["lc546_jofranco.propety"].metadata())
-        repo.dropPermanent("kmeans")
-        repo.createPermanent("kmeans")
+        #repo.dropCollection("propety")
+        #repo.createCollection("propety")
+        #repo["lc546_jofranco.propety"].insert_many(total)
+        #repo["lc546_jofranco.propety"].metadata({'complete':True})
+        #print(repo["lc546_jofranco.propety"].metadata())
+        #repo.dropPermanent("kmeans")
+        #repo.createPermanent("kmeans")
 
 
-        values = repo.lc546_jofranco.propety.find()
+        #values = repo.lc546_jofranco.propety.find()
 
-        location = values.address
+
+        location = total['address']
+        x = latitude
+        y = longitude
+
 
 
 
         #evaluate_clusters(location, 8)
-        kmeans = KMeans(n_clusters = 4).fit(location)
+        kmeans = KMeans(n_clusters = 1).fit(location)
         centers = [x[:2] for x in kmeans.cluster_centers_]
         print(centers)
-        plt.scatter(x=i[0],y = i[-1])
+        plt.scatter(x,y)
         plt.xlabel('Latitude')
         plt.ylabel('Longitude')
         plt.show()

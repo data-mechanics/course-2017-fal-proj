@@ -5,10 +5,10 @@ import prov.model
 import datetime
 import uuid
 import pandas as pd
-class findhubwaysRestaurants(dml.Algorithm):
+class geoCrimeRestaurants(dml.Algorithm):
     contributor = 'lc546_jofranco'
-    reads = ['lc546_jofranco.hubway']
-    writes = ['lc546_jofranco.HubwayRestaurants']
+    reads = ['lc546_jofranco.crimerate']
+    writes = ['lc546_jofranco.CrimeRestaurants']
     @staticmethod
     def execute(trial = False):
         startTime = datetime.datetime.now()
@@ -19,7 +19,7 @@ class findhubwaysRestaurants(dml.Algorithm):
 
         '''Find list of restaurants that are near the hubway stations'''
         #print(repo['lc546_jofranco.hubway'].find())
-        hubs = repo.lc546_jofranco.hubway
+        hubs = repo.lc546_jofranco.crimerate
         #print(hubs.find())
         #food = repo.lc546_jofranco.permitgeodata
         #print("food", food.find())
@@ -40,34 +40,34 @@ class findhubwaysRestaurants(dml.Algorithm):
         #     foodlocale.append(coor)
         #print(foodlocale)
         s = json.dumps(r, sort_keys = True, indent = 2)
-        repo.dropCollection("permitgeodata")
-        repo.createCollection("permitgeodata")
-        repo["lc546_jofranco.permitgeodata"].ensure_index([("location", dml.pymongo.GEOSPHERE)])
-        repo["lc546_jofranco.permitgeodata"].insert_many(r)
-        repo["lc546_jofranco.permitgeodata"].metadata({'complete':True})
+        repo.dropCollection("crimefoodgeodata")
+        repo.createCollection("crimefoodgeodata")
+        repo["lc546_jofranco.crimefoodgeodata"].ensure_index([("location", dml.pymongo.GEOSPHERE)])
+        repo["lc546_jofranco.crimefoodgeodata"].insert_many(r)
+        repo["lc546_jofranco.crimefoodgeodata"].metadata({'complete':True})
         #print(foodlocale)
 
-        restaurants_near_hubway = []
+        restaurants_near_crime = []
         for i in hubs.find():
             #print(i)
             #print(i["lo"])
             restaurants = len(repo.command(
-            'geoNear','lc546_jofranco.permitgeodata',
-             near = { 'coordinates':[i["lo"], i["la"]]},
+            'geoNear','lc546_jofranco.crimefoodgeodata',
+             near = { 'coordinates':[float(i['location']["longitude"]), float(i['location']["latitude"])]},
              spherical = True,
              maxDistance= 500)['results'])
-            food_bike = {}
-            food_bike['numberRestaurantsnear'] = restaurants
-            food_bike['location'] = [float(i["lo"]), float(i["la"])]
-            restaurants_near_hubway.append(food_bike)
+            food_crime = {}
+            food_crime['numberRestaurantsnear'] = restaurants
+            food_crime['location'] = [i['location']["longitude"], i['location']["latitude"]]
+            restaurants_near_crime.append(food_crime)
 
-        s = json.dumps(restaurants_near_hubway, sort_keys=True, indent = 2)
-        print("#######",restaurants_near_hubway)
-        repo.dropCollection("HubwayRestaurants")
-        repo.createCollection("HubwayRestaurants")
+        print("#######KACHOW",restaurants_near_crime)
+        s = json.dumps(restaurants_near_crime, sort_keys=True, indent=2)
+        repo.dropCollection("CrimeRestaurants")
+        repo.createCollection("CrimeRestaurants")
         #repo["lc546_jofranco.HubwayRestaurants"].ensure_index([("location", dml.pymongo.GEOSPHERE)])
-        repo["lc546_jofranco.HubwayRestaurants"].insert_many(restaurants_near_hubway)
-        repo["lc546_jofranco.HubwayRestaurants"].metadata({'complete':True})
+        repo["lc546_jofranco.CrimeRestaurants"].insert_many(restaurants_near_crime)
+        repo["lc546_jofranco.CrimeRestaurants"].metadata({'complete':True})
         repo.logout()
         endTime = datetime.datetime.now()
         return {"start":startTime, "end":endTime}
@@ -92,7 +92,7 @@ class findhubwaysRestaurants(dml.Algorithm):
         doc.wasDerivedFrom(Bikeinfo, resource, get_bikeinfo, get_bikeinfo, get_bikeinfo)
         return doc
 
-findhubwaysRestaurants.execute()
-doc = findhubwaysRestaurants.provenance()
+geoCrimeRestaurants.execute()
+doc = geoCrimeRestaurants.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
