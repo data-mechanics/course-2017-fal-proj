@@ -35,7 +35,6 @@ python -m pip install pandas
 python -m pip install matplotlib
 python -m pip install math
 python -m pip install scipy
-python -m pip install Counter
 python -m pip install csv
 ```
 ## To run the execution script for Project 2

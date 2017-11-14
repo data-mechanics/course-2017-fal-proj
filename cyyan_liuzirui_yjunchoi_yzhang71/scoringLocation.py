@@ -161,7 +161,6 @@ class scoringLocation(dml.Algorithm):
                                              {'prov:label': 'pollingLocation',
                                               prov.model.PROV_TYPE: 'ont:DataSet'})
 
-
         resource_optByBusstop = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#optByBusstop',
                                              {'prov:label': 'Optimization by bus stop',
                                               prov.model.PROV_TYPE: 'ont:DataSet'})

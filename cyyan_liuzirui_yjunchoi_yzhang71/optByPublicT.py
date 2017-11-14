@@ -100,16 +100,18 @@ class optByPublicT(dml.Algorithm):
 
 
         this_script = doc.agent('alg:cyyan_liuzirui_yjunchoi_yzhang71#optByPublicT', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource_pollingLocation = doc.entity('dat:yjunchoi_yzhang71#pollingLocation',
+        resource_pollingLocation = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#pollingLocation',
                                              {'prov:label': 'pollingLocation',
                                               prov.model.PROV_TYPE: 'ont:DataSet'})
-        resource_bus_by_ward = doc.entity('dat:yjunchoi_yzhang71#bus_by_ward',
+                                              
+        resource_bus_by_ward = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#bus_by_ward',
                                              {'prov:label': 'bus_by_ward',
                                               prov.model.PROV_TYPE: 'ont:DataSet'})
 
-        resource_MBTA_by_ward = doc.entity('dat:yjunchoi_yzhang71#MBTA_by_ward',
+        resource_MBTA_by_ward = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#MBTA_by_ward',
                                              {'prov:label': 'MBTA_by_ward',
                                               prov.model.PROV_TYPE: 'ont:DataSet'})
+
         get_optByPublicT = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_optByPublicT, this_script)
         doc.usage(get_optByPublicT, resource_pollingLocation, startTime, None,

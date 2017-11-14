@@ -1,4 +1,3 @@
-from collections import Counter
 import urllib.request
 import json
 import dml
@@ -88,12 +87,12 @@ class MBTA_by_ward(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('bdp', 'http://datamechanics.io/data/yjunchoi_yzhang71/')
+        doc.add_namespace('bdp', 'http://datamechanics.io/data/yjunchoi_yzhang71/') # From project 1
         doc.add_namespace('eri', 'http://erikdemaine.org/maps/mbta')
 
         #define entity to represent resources
         this_script = doc.agent('alg:cyyan_liuzirui_yjunchoi_yzhang71#MBTA_by_ward', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource1 = doc.entity('bdp:yjunchoi_yzhang71#boston_wards', {prov.model.PROV_LABEL:'boston_wards', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
+        resource1 = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#boston_wards', {prov.model.PROV_LABEL:'boston_wards', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
         resource2 = doc.entity('eri:cyyan_liuzirui_yjunchoi_yzhang71#MBTACoordinates', {prov.model.PROV_LABEL:'MBTACoordinates', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'yaml'})
 
         this_wards = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
@@ -103,9 +102,9 @@ class MBTA_by_ward(dml.Algorithm):
         doc.wasAssociatedWith(this_MBTA, this_script)
 
         doc.usage(this_wards, resource1, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Computation',})
+                  {prov.model.PROV_TYPE:'ont:Computation'})
         doc.usage(this_MBTA, resource2, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Computation',})
+                  {prov.model.PROV_TYPE:'ont:Computation'})
 
         p = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#boston_wards', {prov.model.PROV_LABEL:'boston_wards', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(p, this_script)

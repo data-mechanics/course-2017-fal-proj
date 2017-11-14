@@ -87,12 +87,14 @@ class optByMBTA(dml.Algorithm):
 
 
         this_script = doc.agent('alg:cyyan_liuzirui_yjunchoi_yzhang71#optByMBTA', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource_pollingLocation = doc.entity('dat:yjunchoi_yzhang71#pollingLocation',
+        resource_pollingLocation = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#pollingLocation',
                                              {'prov:label': 'pollingLocation',
                                               prov.model.PROV_TYPE: 'ont:DataSet'})
-        resource_MBTA_by_ward = doc.entity('dat:yjunchoi_yzhang71#MBTA_by_ward',
+
+        resource_MBTA_by_ward = doc.entity('dat:cyyan_liuzirui_yjunchoi_yzhang71#MBTA_by_ward',
                                              {'prov:label': 'MBTA_by_ward',
                                               prov.model.PROV_TYPE: 'ont:DataSet'})
+                                              
         get_optByMBTA = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_optByMBTA, this_script)
         doc.usage(get_optByMBTA, resource_pollingLocation, startTime, None,
