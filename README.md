@@ -9,6 +9,12 @@ Boston is a city notorious for extreme winter weather. With snowstorms potential
     * sklearn
     * z3-solver
 
+To install the z3 library properly please visit the github page and follow the instructions for python installation.
+
+github link:
+
+https://github.com/Z3Prover/z3
+
 ## Notes and Running
 * Within the repository there is a folder entitled "extra_files". The files in this directory do not, and should not, run upon execution. They are files which are not used in the context of the current project, but may prove useful in project 3.
 * No API keys or login credentials are required.
