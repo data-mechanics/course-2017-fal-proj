@@ -34,5 +34,5 @@ Algorithms:
 
 K-means with an optimization:
 
-Covariance comparison:
+Correlation coefficient comparison:
 ![alt text](https://github.com/aquan6/course-2017-fal-proj/blob/master/alanbur_aquan_erj826_jcaluag/covTable.jpeg)
