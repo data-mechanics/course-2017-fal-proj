@@ -9,6 +9,28 @@ Boston is a city notorious for extreme winter weather. With snowstorms potential
     * sklearn
     * z3-solver
 
+## Notes and Running
+* Within the repository there is a folder entitled "extra_files". The files in this directory do not, and should not, run upon execution. They are files which are not used in the context of the current project, but may prove useful in project 3.
+* No API keys or login credentials are required.
+To run:
+
+```
+mongod --dbpath "<DATABASE PATH HERE>"
+```
+
+```
+mongo repo -u bkin18_cjoe_klovett_sbrz -p bkin18_cjoe_klovett_sbrz --authenticationDatabase repo
+```
+
+For trial mode:
+```
+python3 execute.py bkin18_cjoe_klovett_sbrz --trial
+```
+Else:
+```
+python3 execute.py bkin18_cjoe_klovett_sbrz
+```
+
 # course-2017-fal-proj
 Joint repository for the collection of student course projects in the Fall 2017 iteration of the Data Mechanics course at Boston University.
 
