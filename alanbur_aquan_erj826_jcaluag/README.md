@@ -31,7 +31,7 @@ Execution Instructions:
 * All our resource files are public and do not require authentication. 
 * In bash, above the directory of alanbur_aquan_erj826_jcaluag, run ```python3 execute.py alanbur_aquan_erj826_jcaluag``` 
 * This will go into the alanbur_aquan_erj826_jcaluag folder and run all the execute and provenance functions. 
-* In the same directory, you can now view ‘provenance.html’ to see how the different entities were derived via activities by the agents in our project.
+* In the directory from which you ran the command, you can now view ‘provenance.html’ to see how the different entities were derived via activities by the agents in our project.
 
 
 Resources:

@@ -30,7 +30,7 @@ coordinates = []
 def getMaxDistance(kmeans, coordinates):
     maxDistance = 0
     for i in range(len(coordinates)):
-        clusterCenter =kmeans.predict(coordinates[i])
+        clusterCenter =kmeans.predict([coordinates[i]])
         current = distance(kmeans.cluster_centers_[clusterCenter][0],coordinates[i])
         if(current > maxDistance):
             maxDistance = current
@@ -39,6 +39,7 @@ def getMaxDistance(kmeans, coordinates):
 def getAvgDistance(kmeans, coordinates):
     totalDistance = 0
     for i in range(len(coordinates)):
+        #print(coordinates)
         clusterCenter = kmeans.predict([coordinates[i]])
         totalDistance += distance(kmeans.cluster_centers_[clusterCenter][0],coordinates[i])
     return totalDistance/len(coordinates)
@@ -178,7 +179,6 @@ class FindKMeans(dml.Algorithm):
 
 
 
-
-FindKMeans.execute(False)
+#FindKMeans.execute(False)
 
 ## eof
