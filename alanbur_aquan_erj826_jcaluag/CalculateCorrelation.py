@@ -2,7 +2,7 @@
 CS591
 Project 2
 11.2.17
-timeAnalyzer.py
+CalculateCorrelation.py
 
 reads the two collections with [time, accident] data
 returns correlation coefficient
@@ -44,14 +44,9 @@ class CalculateCorrelation(dml.Algorithm):
         NYall = [entry['data'] for entry in repo.alanbur_aquan_erj826_jcaluag.timeAggregateNY.find()][0]
 
         SampleSize=100
+
         if trial:
-            # if len(ny)>SampleSize:
-            #     TrialSample=ny[:SampleSize]
-            #     for i in range(SampleSize+1,len(ny)):
-            #         j=random.randint(1,i)
-            #         if j<SampleSize:
-            #             TrialSample[j] = ny[i]
-            #     ny=TrialSample
+
             if len(sf)>SampleSize:
                 TrialSample=sf[:SampleSize]
                 for i in range(SampleSize+1,len(sf)):
@@ -66,7 +61,6 @@ class CalculateCorrelation(dml.Algorithm):
                     if j<SampleSize:
                         TrialSample[j] = NYall[i]
                 NYall=TrialSample
-
 
 
         m= ny['MANHATTAN']

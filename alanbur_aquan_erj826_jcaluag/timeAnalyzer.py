@@ -57,10 +57,6 @@ class timeAnalyzer(dml.Algorithm):
         #    print('Running in trial mode')
             timeSF=TrialSample
 
-
-        # timeNY=[1,2,3,4,5,6]
-        # timeSF=[2,4,6,8,10,10]
-
         cov= np.corrcoef(timeNY,timeSF)[0][1]
 
         result={"correlation":cov}

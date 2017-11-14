@@ -2,7 +2,7 @@
 CS591
 Project 2
 11.12.17
-getKmeansNY.py
+FindKmeansNY.py
 """
 import urllib.request
 import json
@@ -57,7 +57,7 @@ class FindKMeans(dml.Algorithm):
     def execute(trial = False):
         '''Retrieve crime incident report information from Boston.'''
         startTime = datetime.datetime.now()
-        #print('Finding optimal number of means')
+
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
@@ -83,9 +83,9 @@ class FindKMeans(dml.Algorithm):
                 j=random.randint(1,i)
                 if j<SampleSize:
                     TrialSample[j] = coordinates[i]
-           # print('Running in trial mode')
+
             coordinates=TrialSample
-           # print(coordinates)
+
 
         X = np.array(coordinates)
  

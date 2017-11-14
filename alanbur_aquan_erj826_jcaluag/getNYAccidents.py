@@ -36,15 +36,15 @@ class getNYAccidents(dml.Algorithm):
         
         data = json.loads(response)
 
-        # SampleSize=100
-        # if trial:
-        #     TrialSample=data[:SampleSize]
-        #     for i in range(SampleSize+1,len(data)):
-        #         j=random.randint(1,i)
-        #         if j<SampleSize:
-        #             TrialSample[j] = data[i]
-        #  #   print('Running in trial mode')
-        #     data=TrialSample
+        SampleSize=100
+        if trial:
+            TrialSample=data[:SampleSize]
+            for i in range(SampleSize+1,len(data)):
+                j=random.randint(1,i)
+                if j<SampleSize:
+                    TrialSample[j] = data[i]
+         #   print('Running in trial mode')
+            data=TrialSample
 
 
 

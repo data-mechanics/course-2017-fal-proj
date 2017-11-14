@@ -2,7 +2,7 @@
 CS591
 Project 2
 11.2.17
-timeAggregateNY.py
+boroughAggregateNY.py
 """
 
 import urllib.request
@@ -42,7 +42,6 @@ class boroughAggregateNY(dml.Algorithm):
             borough[entry['borough']] = bins
         for entry in collection.find():
             borough[entry['borough']][int(entry["time"][0:entry["time"].index(":")])] += 1
-
 
 
 

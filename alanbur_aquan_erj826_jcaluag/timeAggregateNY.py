@@ -85,9 +85,7 @@ class timeAggregateNY(dml.Algorithm):
         doc.usage(action, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Computation'
                   }
-                  )
-        
-        
+                  )       
         
         #define the writeout 
         output = doc.entity('dat:alanbur_aquan_erj826_jcaluag#timeAggregateNY', {prov.model.PROV_LABEL:'NY Time Aggregated Data', prov.model.PROV_TYPE:'ont:DataSet'})
