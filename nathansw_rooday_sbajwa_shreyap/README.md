@@ -4,15 +4,16 @@ Many residents in the City of Boston rely on the MBTA for transportation to and 
 
 What we attempt to analyze as part of this project is two-fold:
 
-First, we focus on exactly "how" these neighborhoods contribute to the reliability of public transportation in Boston. Regression analysis on the reliability of public transport routes alongwith the neighborhoods they pass through, gives us a way to **Quantify** how much each neighborhood contributes to the overall reliability metric. 
+First, we focus on exactly "how" these neighborhoods contribute to the reliability of public transportation in Boston. Regression analysis on the reliability of public transport routes alongwith the neighborhoods they pass through, gives us a way to ***quantify*** how much each neighborhood contributes to the overall reliability metric. 
 
 __How is this helpful to policy makers?__
 
 Our algorithm is fully paramterizable, and can predict reliability of a route you supply to it. If policy makers wish to implement a new T route, our algorithm can predict the reliability of the new route based on which neighborhoods it passes through, allowing descision makers to compare it among existing reliability statistics and making informed choices about implementing that route.
 
 
-Second, we dive into the wealth of demographic data which is available for Boston's neighborhoods,such as povert statistics, median household income, race, and means of commuting. We attempt to see how tightly **geograophical proximity** among neighborhoods is linked to (or can influence) the spread of this demographic data across neighborhoods. For example, one way to think about this can be:
-	*Given a neighborhood A, how does geographical proximity influence the spread or trickling of poverty from neighborhood 	A to its surrounding neighborhoods?*
+Second, we dive into the wealth of demographic data which is available for Boston's neighborhoods,such as poverty statistics, median household income, race, and means of commuting etc. We attempt to see how tightly **geographical proximity** among neighborhoods is linked to (or can influence) the spread of this demographic across neighborhoods. For example, one way to think about this can be:
+
+> Given a neighborhood A, how does geographical proximity influence the spread or trickling of poverty from neighborhood A to its surrounding neighborhoods?
 
 We do this by analyzing a distance matric between neighborhoods and computing its correlation with various demographic data.
 The coorelation provides us a sizeable measure of this "trickling"
