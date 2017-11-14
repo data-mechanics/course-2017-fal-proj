@@ -1,4 +1,4 @@
-# CS591 Project 1
+# CS591 Project 2
 
 Many residents in the City of Boston rely on the MBTA for transportation to and from work. Hence, the reliability of public transportation is of utmost importance to the city residents. Moreover, Boston neighborhoods are a diverse landscape; each varying in its culture and demographics.
 
