@@ -27,7 +27,7 @@ path = args.contributor_folder
 algorithms = []
 for r,d,f in os.walk(path):
     for file in f:
-        if file.split(".")[-1] == "py":
+        if r.find(os.sep) == -1 and file.split(".")[-1] == "py":
             name_module = ".".join(file.split(".")[0:-1])
             module = importlib.import_module(path + "." + name_module)
             algorithms.append(module.__dict__[name_module])
@@ -51,7 +51,7 @@ for algorithm in ordered:
     provenance = algorithm.provenance(provenance)
 
 # Display a provenance record of the overall execution process.
-# print(provenance.get_provn())
+print(provenance.get_provn())
 
 # Render the provenance document as an interactive graph.
 prov_json = json.loads(provenance.serialize())
