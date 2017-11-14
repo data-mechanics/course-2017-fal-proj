@@ -117,7 +117,7 @@ class FindKMeans(dml.Algorithm):
         centroids = kmeans.cluster_centers_
         for i in range(len(centroids)):
             n[str(i)]=centroids[i].tolist()
-
+        
         repo['alanbur_aquan_erj826_jcaluag.kMeansNY'].insert(n, check_keys=False)
         repo['alanbur_aquan_erj826_jcaluag.kMeansNY'].metadata({'complete':True})
         print(repo['alanbur_aquan_erj826_jcaluag.kMeansNY'].metadata())
