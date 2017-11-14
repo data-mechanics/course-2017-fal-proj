@@ -78,7 +78,7 @@ class timeAnalyzer(dml.Algorithm):
         
         #define the input resource
         resource = doc.entity('dat:timeAggregateNY', {'prov:label':'NY Time Aggregation', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        resource2 = doc.entity('dat:timeAggregateNY', {'prov:label':'SF Time Aggregation', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource2 = doc.entity('dat:timeAggregateSF', {'prov:label':'SF Time Aggregation', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         #define the activity of taking in the resource
         action = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(action, this_script)
