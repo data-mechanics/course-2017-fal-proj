@@ -19,7 +19,7 @@ import numpy as np
 
 class CalculateCorrelation(dml.Algorithm):
     contributor = 'alanbur_aquan_erj826_jcaluag'
-    reads = ['alanbur_aquan_erj826_jcaluag.boroughAggregateNY', 'alanbur_aquan_erj826_jcaluag.timeAggregateSF']
+    reads = ['alanbur_aquan_erj826_jcaluag.boroughAggregateNY', 'alanbur_aquan_erj826_jcaluag.timeAggregateSF','alanbur_aquan_erj826_jcaluag.timeAggregateNY']
     writes = []
 
     @staticmethod
@@ -37,14 +37,15 @@ class CalculateCorrelation(dml.Algorithm):
         sf = [entry['data'] for entry in repo.alanbur_aquan_erj826_jcaluag.timeAggregateSF.find()][0]
 
 
+        NYall = [entry['data'] for entry in repo.alanbur_aquan_erj826_jcaluag.timeAggregateNY.find()][0]
+
         m= ny['MANHATTAN']
         b = ny['BROOKLYN']
         q = ny['QUEENS']
         bronx = ny['BRONX']
         s = ny['STATEN ISLAND']
-        cov = np.corrcoef([sf,m,b,q,bronx,s])
+        cov = np.corrcoef([NYall,sf,m,b,q,bronx,s])
 
-        # cov = np.cov([sf,m,b,q,bronx, s])
         print(cov)
 
 
@@ -106,6 +107,6 @@ class CalculateCorrelation(dml.Algorithm):
                   
         return doc
 
-# CalculateCorrelation.execute()
+CalculateCorrelation.execute()
 
 ## eof
