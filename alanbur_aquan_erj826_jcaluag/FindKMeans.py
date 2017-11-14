@@ -131,8 +131,7 @@ class FindKMeans(dml.Algorithm):
         this_script = doc.agent('alg:alanbur_aquan_erj826_jcaluag#timeAnalyzer', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         
         #define the input resource
-        resource = doc.entity('dat:timeAggregateNY', {'prov:label':'NY Time Aggregation', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        resource2 = doc.entity('dat:timeAggregateNY', {'prov:label':'SF Time Aggregation', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource = doc.entity('dat:parseNYaccidents', {'prov:label':'NY Parsed Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         #define the activity of taking in the resource
         action = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(action, this_script)
@@ -140,17 +139,13 @@ class FindKMeans(dml.Algorithm):
                   {prov.model.PROV_TYPE:'ont:Computation'
                   }
                   )
-        doc.usage(action, resource2, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Computation'
-                  }
-                  )
+        
         
         #define the writeout 
-        output = doc.entity('dat:alanbur_aquan_erj826_jcaluag#getSFAccidents', {prov.model.PROV_LABEL:'SF Accident List', prov.model.PROV_TYPE:'ont:DataSet'})
+        output = doc.entity('dat:alanbur_aquan_erj826_jcaluag#kMeansNY', {prov.model.PROV_LABEL:'NY KMeans', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(output, this_script)
         doc.wasGeneratedBy(output, action, endTime)
         doc.wasDerivedFrom(output, resource, action, action, action)
-        doc.wasDerivedFrom(output, resource2, action, action, action)
 
         repo.logout()
                   
