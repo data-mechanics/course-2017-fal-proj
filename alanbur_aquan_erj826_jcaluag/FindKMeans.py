@@ -44,7 +44,7 @@ class FindKMeans(dml.Algorithm):
     def execute(trial = False):
         '''Retrieve crime incident report information from Boston.'''
         startTime = datetime.datetime.now()
-
+        print('Finding optimal number of means')
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
@@ -161,6 +161,6 @@ class FindKMeans(dml.Algorithm):
 
 
 
-FindKMeans.execute(False)
+# FindKMeans.execute(False)
 
 ## eof

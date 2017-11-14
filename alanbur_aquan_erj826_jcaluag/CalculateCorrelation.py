@@ -17,14 +17,15 @@ import uuid
 import requests
 import numpy as np
 
-class timeAnalyzer(dml.Algorithm):
+class CalculateCorrelation(dml.Algorithm):
     contributor = 'alanbur_aquan_erj826_jcaluag'
-    reads = ['alanbur_aquan_erj826_jcaluag.timeAggregateNY', 'alanbur_aquan_erj826_jcaluag.timeAggregateSF']
+    reads = ['alanbur_aquan_erj826_jcaluag.boroughAggregateNY', 'alanbur_aquan_erj826_jcaluag.timeAggregateSF']
     writes = []
 
     @staticmethod
     def execute(trial = False):
         startTime = datetime.datetime.now()
+        print("Building 6 by 6 correlation matrix")
 
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
@@ -32,17 +33,23 @@ class timeAnalyzer(dml.Algorithm):
 
         repo.authenticate('alanbur_aquan_erj826_jcaluag', 'alanbur_aquan_erj826_jcaluag')          
 
-        timeNY = [entry['data'] for entry in repo.alanbur_aquan_erj826_jcaluag.timeAggregateNY.find()][0]
-        timeSF = [entry['data'] for entry in repo.alanbur_aquan_erj826_jcaluag.timeAggregateSF.find()][0]
-        # timeNY=[1,2,3,4,5,6]
-        # timeSF=[2,4,6,8,10,10]
-        print("New York: ",timeNY)
-        print("San Fran: ",timeSF)
+        ny = [entry for entry in repo.alanbur_aquan_erj826_jcaluag.boroughAggregateNY.find()][0]
+        sf = [entry['data'] for entry in repo.alanbur_aquan_erj826_jcaluag.timeAggregateSF.find()][0]
+
+
+        m= ny['MANHATTAN']
+        b = ny['BROOKLYN']
+        q = ny['QUEENS']
+        bronx = ny['BRONX']
+        s = ny['STATEN ISLAND']
+        cov = np.corrcoef([sf,m,b,q,bronx,s])
+
+        # cov = np.cov([sf,m,b,q,bronx, s])
+        print(cov)
+
+
         
 
-        print(np.corrcoef(timeNY,timeSF))
-        cov= np.corrcoef(timeNY,timeSF)[0][1]
-  
 
         repo.logout()
 
@@ -99,6 +106,6 @@ class timeAnalyzer(dml.Algorithm):
                   
         return doc
 
-timeAnalyzer.execute()
+# CalculateCorrelation.execute()
 
 ## eof

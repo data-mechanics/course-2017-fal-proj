@@ -13,95 +13,96 @@ import datetime
 import uuid
 import requests
 
-class getComplaints(dml.Algorithm):
+class getMeanAndStdev(dml.Algorithm):
     contributor = 'alanbur_aquan_erj826_jcaluag'
-    reads = ['alanbur_aquan_erj826_jcaluag.parseaccidents']
+    reads = ['alanbur_aquan_erj826_jcaluag.parseNYaccidents']
     writes = ['alanbur_aquan_erj826_jcaluag.baseStats']
 
     @staticmethod
     def execute(trial = False):
-        '''Retrieve crime incident report information from Boston.'''
-        startTime = datetime.datetime.now()
+        # '''Retrieve crime incident report information from Boston.'''
+        # startTime = datetime.datetime.now()
 
-        # Set up the database connection.
-        client = dml.pymongo.MongoClient()
-        repo = client.repo
+        # # Set up the database connection.
+        # client = dml.pymongo.MongoClient()
+        # repo = client.repo
 
-        repo.authenticate('alanbur_aquan_erj826_jcaluag', 'alanbur_aquan_erj826_jcaluag')          
+        # repo.authenticate('alanbur_aquan_erj826_jcaluag', 'alanbur_aquan_erj826_jcaluag')          
 
-        # collection = repo.alanbur_aquan_erj826_jcaluag.parseaccidents
-        collection = repo['alanbur_aquan_erj826_jcaluag.parseaccidents'].find()
+        # # collection = repo.alanbur_aquan_erj826_jcaluag.parseaccidents
+        # collection = repo['alanbur_aquan_erj826_jcaluag.parseaccidents'].find()
 
-        repo.dropCollection("alanbur_aquan_erj826_jcaluag.baseStats")
-        repo.createCollection("alanbur_aquan_erj826_jcaluag.baseStats")
+        # repo.dropCollection("alanbur_aquan_erj826_jcaluag.baseStats")
+        # repo.createCollection("alanbur_aquan_erj826_jcaluag.baseStats")
 
-        SampleSize=1000
+        # SampleSize=1000
 
 
-        if trial:
-            TrialSample=collection[:SampleSize]
-            for i in range(SampleSize+1,len(collection)):
-                j=random.randint(1,i)
-                if j<kSize:
-                    TrialSample[j] = self.Allreviews[i]
-            print('Running in trial mode')
-            collection=TrialSample
+        # if trial:
+        #     TrialSample=collection[:SampleSize]
+        #     for i in range(SampleSize+1,len(collection)):
+        #         j=random.randint(1,i)
+        #         if j<kSize:
+        #             TrialSample[j] = self.Allreviews[i]
+        #     print('Running in trial mode')
+        #     collection=TrialSample
 
-        print(len(collection))
-        timeSum=0
-        casualtySum=0
-        itemCount=0
-        for entry in collection:
-            #sum the casualties
-            casualtySum+=int(entry['total_casualties'])
+        # print(len(collection))
+        # timeSum=0
+        # casualtySum=0
+        # itemCount=0
+        # for entry in collection:
+        #     #sum the casualties
+        #     casualtySum+=int(entry['total_casualties'])
             
-            #sum the times, by minute
-            timeEntry = entry['time']
-            data = timeEntry.split(':')
-            hourMins = int(data[0]) * 60
-            dataSum = hourMins + int(data[1])
-            timeSum +=dataSum
+        #     #sum the times, by minute
+        #     timeEntry = entry['time']
+        #     data = timeEntry.split(':')
+        #     hourMins = int(data[0]) * 60
+        #     dataSum = hourMins + int(data[1])
+        #     timeSum +=dataSum
             
-            #count the entries
-            itemCount+=1
+        #     #count the entries
+        #     itemCount+=1
 
-        #average calculations    
-        avgCasualties = casualtySum/itemCount
-        avgTimeMins = timeSum/itemCount
-        theTrueHour = int(avgTimeMins/60)
-        theTrueMinute= avgTimeMins%60
-        avgTime=str(theTrueHour) + ":" + str(theTrueMinute)  
+        # #average calculations    
+        # avgCasualties = casualtySum/itemCount
+        # avgTimeMins = timeSum/itemCount
+        # theTrueHour = int(avgTimeMins/60)
+        # theTrueMinute= avgTimeMins%60
+        # avgTime=str(theTrueHour) + ":" + str(theTrueMinute)  
         
-        n = {} #the single entry of our dataset that contains statistics
-        n['avgCasualties'] = avgCasualties
-        n['avgTime'] = avgTime
+        # n = {} #the single entry of our dataset that contains statistics
+        # n['avgCasualties'] = avgCasualties
+        # n['avgTime'] = avgTime
 
-        #lets calculate stdev 
-        timeSumOfDifferences = 0
-        casualtiesSumOfDifferences = 0
-        for entry in collection.find():
-            timeDif = abs(int(n['avgTime'])-int(entry['time']))
-            timeDif = timeDif**timeDif
-            timeSumOfDifferences +=timeDif
+        # #lets calculate stdev 
+        # timeSumOfDifferences = 0
+        # casualtiesSumOfDifferences = 0
+        # for entry in collection.find():
+        #     timeDif = abs(int(n['avgTime'])-int(entry['time']))
+        #     timeDif = timeDif**timeDif
+        #     timeSumOfDifferences +=timeDif
 
-            casDif = abs(int(n['avgCasualties'])-int(entry['total_casualties']))
-            casDif = casDif ** casDif
-            casualtiesSumOfDifferences+=casDif
+        #     casDif = abs(int(n['avgCasualties'])-int(entry['total_casualties']))
+        #     casDif = casDif ** casDif
+        #     casualtiesSumOfDifferences+=casDif
 
-        n['casualtiesStdev']= (casualtiesSumOfDifferences/itemCount)**(1/2.0)
-        n['timeStdev']=(timeSumOfDifferences/itemCount)**(1/2.0)
+        # n['casualtiesStdev']= (casualtiesSumOfDifferences/itemCount)**(1/2.0)
+        # n['timeStdev']=(timeSumOfDifferences/itemCount)**(1/2.0)
 
-        repo['alanbur_aquan_erj826_jcaluag.baseStats'].insert(n, check_keys=False)
+        # repo['alanbur_aquan_erj826_jcaluag.baseStats'].insert(n, check_keys=False)
 
 
-        repo['alanbur_aquan_erj826_jcaluag.baseStats'].metadata({'complete':True})
-        print(repo['alanbur_aquan_erj826_jcaluag.baseStats'].metadata())
+        # repo['alanbur_aquan_erj826_jcaluag.baseStats'].metadata({'complete':True})
+        # print(repo['alanbur_aquan_erj826_jcaluag.baseStats'].metadata())
 
-        repo.logout()
+        # repo.logout()
 
-        endTime = datetime.datetime.now()
+        # endTime = datetime.datetime.now()
 
-        return {"start":startTime, "end":endTime}
+        # return {"start":startTime, "end":endTime}
+        return
 
     @staticmethod
 
@@ -152,6 +153,6 @@ class getComplaints(dml.Algorithm):
                   
         return doc
 
-getComplaints.execute()
+# getMeanAndStdev.execute()
 
 ## eof
