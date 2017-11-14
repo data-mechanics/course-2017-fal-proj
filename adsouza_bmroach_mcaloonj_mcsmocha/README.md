@@ -76,9 +76,10 @@ $$ - denotes a script with variable parameters for experimental outputs
 * pandas
 * prov
 * scipy
-* sklearn <br>
-* To easily get the environment used, run the following command with the provided environment.yml file (make sure in team folder): <br>
- conda env create -f environment.yml
+* sklearn 
+<br>
+To easily get the environment used, run the following command with the provided environment.yml file (make sure in team folder): <br>
+conda env create -f environment.yml
 
 
 ### Team Members:
