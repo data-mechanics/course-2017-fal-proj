@@ -5,10 +5,11 @@ import prov.model
 import datetime
 import uuid
 
-class example(dml.Algorithm):
+
+class neighbor(dml.Algorithm):
     contributor = 'lmy1031_zhuoshu'
     reads = []
-    writes = ['lmy1031_zhuoshu_corner_store']
+    writes = ['lmy1031_zhuoshu.neighbor']
 
     @staticmethod
     def execute(trial = False):
@@ -20,24 +21,14 @@ class example(dml.Algorithm):
         repo = client.repo
         repo.authenticate('lmy1031_zhuoshu', 'lmy1031_zhuoshu')
 
-        url = 'https://data.cityofboston.gov/resource/427a-3cn5.json'
+        url = 'http://datamechanics.io/data/lmy1031_zhuoshuo591/bostonclosezip.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("corner_store")
-        repo.createCollection("corner_store")
-        repo['lmy1031_zhuoshu_corner_store'].insert_many(r)
-        #repo['alice_bob.lost'].metadata({'complete':True})
-        #print(repo['alice_bob.lost'].metadata())
-
-        #url = 'http://cs-people.bu.edu/lapets/591/examples/found.json'
-        #response = urllib.request.urlopen(url).read().decode("utf-8")
-        #r = json.loads(response)
-        #s = json.dumps(r, sort_keys=True, indent=2)
-        #repo.dropCollection("found")
-        #repo.createCollection("found")
-        #repo['alice_bob.found'].insert_many(r)
-
+        repo.dropCollection("neighbor")
+        repo.createCollection("neighbor")
+        repo['lmy1031_zhuoshu.neighbor'].insert([r])
+        
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -60,10 +51,10 @@ class example(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/lmy1031_zhuoshu') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('corner_store', 'https://data.cityofboston.gov/resource/')
+        doc.add_namespace('neighbor', 'https://data.cityofboston.gov/')
 
-        this_script = doc.agent('alg:#corner_store', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('corner_store:427a-3cn5', {'prov:label':'Corner stores', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        this_script = doc.agent('alg:#neighbor', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource = doc.entity('neighbor:rdqf-ter7', {'prov:label':'neighbor', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         licence = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         #get_lost = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(licence, this_script)
@@ -73,28 +64,19 @@ class example(dml.Algorithm):
                   'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'
                   }
                   )
-        #doc.usage(get_lost, resource, startTime, None,
-        #          {prov.model.PROV_TYPE:'ont:Retrieval',
-        #         'ont:Query':'?type=Animal+Lost&$select=type,latitude,longitude,OPEN_DT'
-        #          }
-        #          )
+        
 
-        corner_store = doc.entity('dat:#corner_store', {prov.model.PROV_LABEL:'corner_stores', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(corner_store, this_script)
-        doc.wasGeneratedBy(corner_store, licence, endTime)
-        doc.wasDerivedFrom(corner_store, resource, licence, licence, licence)
-
-        #found = doc.entity('dat:alice_bob#found', {prov.model.PROV_LABEL:'Animals Found', prov.model.PROV_TYPE:'ont:DataSet'})
-        #doc.wasAttributedTo(found, this_script)
-        #doc.wasGeneratedBy(found, get_found, endTime)
-        #doc.wasDerivedFrom(found, resource, get_found, get_found, get_found)
+        public = doc.entity('dat:#neighbor', {prov.model.PROV_LABEL:'neighbor', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(public, this_script)
+        doc.wasGeneratedBy(public, licence, endTime)
+        doc.wasDerivedFrom(public, resource, licence, licence, licence)
 
         repo.logout()
                   
         return doc
 
-example.execute()
-doc = example.provenance()
+neighbor.execute()
+doc = neighbor.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
 

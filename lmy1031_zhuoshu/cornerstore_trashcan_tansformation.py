@@ -4,10 +4,10 @@ import dml
 import prov.model
 import datetime
 import uuid
-from math import radians, sqrt, sin, cos, atan2
+
 from collections import Counter
 
-def helper1(lat1, lon1, lat2, lon2):
+def helper(lat1, lon1, lat2, lon2):
         lat1 = radians(lat1)
         lon1 = radians(lon1)
         lat2 = radians(lat2)
@@ -27,7 +27,7 @@ def helper1(lat1, lon1, lat2, lon2):
 
 class cornerstore_trashcan_transformation(dml.Algorithm):
     contributor = 'lmy1031_zhuoshu'
-    reads = ['lmy1031_zhuoshu_healthy_corner_store', 'lmy1031_zhuoshu_trashcan']
+    reads = ['lmy1031_zhuoshu_cornerstore', 'lmy1031_zhuoshu_trashcan']
     writes = ['lmy1031_zhuoshu_recycle']
 
     @staticmethod
@@ -38,7 +38,7 @@ class cornerstore_trashcan_transformation(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate('lmy1031_zhuoshu', 'lmy1031_zhuoshu')  
-        bostonCornerstore = repo.lmy1031_zhuoshu_healthy_corner_store.find()
+        bostonCornerstore = repo.lmy1031_zhuoshu_cornerstore.find()
         bostonTrashcan = repo.lmy1031_zhuoshu_trashcan.find()
       
         repo.dropCollection("recycle")
@@ -46,15 +46,10 @@ class cornerstore_trashcan_transformation(dml.Algorithm):
 
         print("start cornerstore_trashcan transformation!")
 
-        # x = []
-        # # coordinates = []
-        # for i in bostonCornerstore:
-        #     if "location" in i:
-        #         x.append(i["location"])
-        # print(x)
-        # #     #if 'coordinates' in i:
-        # #         #coordinates.append(i['coordinates'])
-        # # print(bostonCornerstore)
+        #preprocess_store = []
+
+        for i in bostonCornerstore:
+            i.pop(":@computed_region_aywg_kpfh")
         
 
         location_trashcan = []
@@ -66,53 +61,25 @@ class cornerstore_trashcan_transformation(dml.Algorithm):
         for i in location_trashcan:
             if i!='':
                 longtitude_trashcan=''
-                latitude_trashcan=''
+                longt=''
                 for j in range((len(i)-1)):
                     if j >= 1 and i[j] != ',':
                         if i[j]!=' ' :
                             longtitude_trashcan += i[j]
                     elif i[j] == ',':
                     
-                        latitude_trashcan=float(longtitude_trashcan)
+                        longt=float(longtitude_trashcan)
                         longtitude_trashcan=''
                     
                     
-                sets.append([float(longtitude_trashcan),latitude_trashcan])
+                sets.append((float(longtitude_trashcan),longt))
 
-        # new_store = {}
-        # for kv in bostonCornerstore:
-        #     for i in kv:
-        #         if i == 'location':
-        #             for
-        #             print(i)
-        #             # location = [i["location"][0],i["location"][1]]
-        #             new_store["location"] = 0
-        # print("done")
-        
-        #for i in bostonCornerstore:
-            #print("1!!!", i["location"]["coordinates"])
-        #print(sets)
-        
-        minvalue = 10000
-        for i in bostonCornerstore:
-           
-            dis = []
-            for q in sets:
-                # "location" in i:
-                    # print("!!!", (i["location"]["coordinates"][0]))
-                lon1 = (i["location"]["coordinates"])[0]
-                la1 = (i["location"]["coordinates"])[1]
-                lon2 = q[0]
-                la2 = q[1]
-                dis = helper1(la1, lon1, la2, lon2)
-                if dis < minvalue:
-                    minvalue = dis
-                
-            i["min_dis"] = minvalue
-        
 
-        
 
+
+
+        print(location_trashcan)
+        
                     
         repo.logout()
 
