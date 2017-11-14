@@ -105,11 +105,11 @@ class transformation1(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         
         this_script = doc.agent('alg:htw93_tscheung_wenjun#transformation1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource_BostonCrime = doc.entity('dat:htw93_tscheung_wenjun#BostonCrime', {'prov:label':'BostonCrime', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        resource_MBTAStops = doc.entity('dat:htw93_tscheung_wenjun#MBTAStops', {'prov:label':'MBTAStops', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'txt'})
-        resource_BostonHotel = doc.entity('dat:htw93_tscheung_wenjun#BostonHotel', {'prov:label':'BostonHotel', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        resource_BostonFood = doc.entity('dat:htw93_tscheung_wenjun#BostonFood', {'prov:label':'BostonFood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        resource_BostonGarden = doc.entity('dat:htw93_tscheung_wenjun#BostonGarden', {'prov:label':'BostonGarden', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_BostonCrime = doc.entity('dat:htw93_tscheung_wenjun#BostonCrime', {'prov:label':'BostonCrime', prov.model.PROV_TYPE:'ont:DataSet', 'ont:Extension':'json'})
+        resource_MBTAStops = doc.entity('dat:htw93_tscheung_wenjun#MBTAStops', {'prov:label':'MBTAStops', prov.model.PROV_TYPE:'ont:DataSet', 'ont:Extension':'json'})
+        resource_BostonHotel = doc.entity('dat:htw93_tscheung_wenjun#BostonHotel', {'prov:label':'BostonHotel', prov.model.PROV_TYPE:'ont:DataSet', 'ont:Extension':'json'})
+        resource_BostonFood = doc.entity('dat:htw93_tscheung_wenjun#BostonFood', {'prov:label':'BostonFood', prov.model.PROV_TYPE:'ont:DataSet', 'ont:Extension':'json'})
+        resource_BostonGarden = doc.entity('dat:htw93_tscheung_wenjun#BostonGarden', {'prov:label':'BostonGarden', prov.model.PROV_TYPE:'ont:DataSet', 'ont:Extension':'json'})
         
         # define activity to represent invocation of the script
         get_BostonHotelData = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)

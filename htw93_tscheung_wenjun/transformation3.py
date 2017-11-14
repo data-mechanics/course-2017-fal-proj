@@ -118,7 +118,7 @@ class transformation3(dml.Algorithm):
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         
-        HotelCorrelation_script = doc.agent('alg:htw93_tscheung_wenjun#HotelCorrelation', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        HotelCorrelation_script = doc.agent('alg:htw93_tscheung_wenjun#transformation3', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource_BostonHotelCustomScore = doc.entity('dat:htw93_tscheung_wenjun#BostonHotelCustomScore', {'prov:label': 'BostonHotelCustomScore', prov.model.PROV_TYPE: 'ont:DataSet'})
         
         # define activity to represent invocaton of the script
