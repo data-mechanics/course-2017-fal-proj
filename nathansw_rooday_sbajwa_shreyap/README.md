@@ -1,8 +1,33 @@
 # CS591 Project 1
 
-Many residents in the City of Boston rely on the MBTA for transportation to and from work. It is also no secret that Boston's diverse weather throughout the year can take a toll on MBTA service - one notable example from recent memory would be the Winter of 2014-2015. The question we want to ask is how can MassDOT, the MBTA, and the governments of Boston and Massachusetts direct their resources in such a manner that communities that depend moreso on public transportation than others get the attention they need? Factors such as incliment weather would be explored with relevant datasets, as well as demographic data on various neighborhoods around Boston including but not limited to median household income, race, and means of commuting.
+Many residents in the City of Boston rely on the MBTA for transportation to and from work. Hence, the reliability of public transportation is of utmost importance to the city residents. Moreover, Boston neighborhoods are a diverse landscape; each varying in its culture and demographics.
 
-## MBTA Performance Data
+What we attempt to analyze as part of this project is two-fold:
+
+First, we focus on exactly "how" these neighborhoods contribute to the reliability of public transportation in Boston. Regression analysis on the reliability of public transport routes alongwith the neighborhoods they pass through, gives us a way to **Quantify** how much each neighborhood contributes to the overall reliability metric. 
+
+__How is this helpful to policy makers?__
+Our algorithm is fully paramterizable, and can predict reliability of a route you supply to it. If policy makers wish to implement a new T route, our algorithm can predict the reliability of the new route based on which neighborhoods it passes through, allowing descision makers to compare it among existing reliability statistics and making informed choices about implementing that route.
+
+
+Second, we dive into the wealth of demographic data which is available for Boston's neighborhoods,such as povert statistics, median household income, race, and means of commuting. We attempt to see how tightly **geograophical proximity** among neighborhoods is linked to (or can influence) the spread of this demographic data across neighborhoods. For example, one way to think about this can be:
+	*Given a neighborhood A, how does geographical proximity influence the spread or trickling of poverty from neighborhood 	A to its surrounding neighborhoods?*
+
+We do this by analyzing a distance matric between neighborhoods and computing its correlation with various demographic data.
+The coorelation provides us a sizeable measure of this "trickling"
+
+__How is this helpful to policy makers?__
+
+When we do the above analysis for *all* neighborhoods, we get a influencing score for each of them. This can be visualized as a heatmap, such as below:
+
+![Alt text](trickling_effect.png?raw=true "trickling Effect Heatmap")
+
+The more red a box, more is its tendency to influence the trickling of that demographic into its adjacent neighborhoods.
+
+Policy makers can make use of this heatmap for a particular demographic to answer some questions about implementing new policies. For example, looking at above heatmap for the Poverty section, we see that Charlestown has most tendency to influence poverty in its surrounding areas. So while implementing an reformative implementation for this neighboorhood, we can assure that the change will trickle to its neighbors as well. But for something like Allston, we would have to implement the policy for Allston as well as its adjacent neighborhoods (because there is no influence there)
+
+
+## Notes on MBTA Performance Data:
 
 Data regarding the reliability of the MBTA was collected from [MBTA Performance Dashboard](http://www.mbtabackontrack.com/performance/index.html#/download). This site provides historical data regarding the on time performance of the MBTA's three major types of mass transit vehicles: the bus, the rail, and the commuter rail. The following is a description of the column names provided in the original csv that were also included in our modified JSON file: 
 * *SERVICE_DATE* - Date at which the data was collected
@@ -33,23 +58,3 @@ The original csv file was converted to a JSON file that follows the format of a 
  ...}
  
 The keys to the JSON object are the dates in which performance data was collected. The values to each key are dictionaries representing each record of data collected for the given date. The data was organized this way because there were multiple entries for each date.
-
-## Analysis 2
-
-#TODO clean this up and add heatmaps from analysis with explanation.
-
-* For each neighborhood, 
-  * get all neighborhoods within a N mile distance
-	 * Make a DF with each neighborhood pair as rows, columns being geographical distance between neighborhoods and a demographic dimension such as 		difference in crime incidents between those neighborhoods
-	 * Compute correlation between the two columns of DF
-		* A high positive correlation implies that as geographical distance decreases, the difference in demographic dimensions also decreases, which implies 			that neighborhood A and those around it are similar in crime incidents, and hence serving as a crime hotspot. We can also assume that this hotspot is 			centered at A since we compute the correlation wrt A
-		
-  * We store the correlation value alongside that neighborhood
-  * Once we have a correlation value with each neighborhood, we can build a heat map of neighborhoods, the gradient being how tightly correlated that 			neighborhood is with those around it in terms of different statistics- crime/income/poverty
-	
- *	How can this help policy makers?
-	
-	Lets take the case for crime. Using the heat map, policy makers can immediately identify key crime areas that have a tight correlation with nearby neighborhoods, and those serve as target/priority focal points for them to implement any reformation policies. The policy can be applied to the highly correlated bunch of neighborhoods in order of priority.
-
-This could be done for many other reformative measures, such as poverty alleviation, 311 Violations, etc
-
