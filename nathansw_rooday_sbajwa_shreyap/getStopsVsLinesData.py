@@ -6,10 +6,10 @@ import datetime
 import uuid
 import requests
 
-class getData(dml.Algorithm):
+class getStopsVsLinesData(dml.Algorithm):
     contributor = 'nathansw_rooday_sbajwa_shreyap'
     reads = []
-    writes = ['nathansw_rooday_sbajwa_shreyap.otpByLine']
+    writes = ['nathansw_rooday_sbajwa_shreyap.stopsVsLines']
 
     @staticmethod
     def execute(trial = False):
@@ -18,13 +18,13 @@ class getData(dml.Algorithm):
         repo = client.repo
         repo.authenticate('nathansw_rooday_sbajwa_shreyap', 'nathansw_rooday_sbajwa_shreyap')
 
-        data_url = "http://datamechanics.io/data/nathansw_rooday_sbajwa_shreyapandit/otp_by_line.json"
+        data_url = "http://datamechanics.io/data/nathansw_rooday_sbajwa_shreyap/stop_vs_lines.json"
         response = requests.get(data_url).json()
 
-        repo.dropCollection("otpByLine")
-        repo.createCollection("otpByLine")
-        repo['nathansw_rooday_sbajwa_shreyap.otpByLine'].insert(response)
-        repo['nathansw_rooday_sbajwa_shreyap.otpByLine'].metadata({'complete':True})
+        repo.dropCollection("stopsVsLines")
+        repo.createCollection("stopsVsLines")
+        repo['nathansw_rooday_sbajwa_shreyap.stopsVsLines'].insert(response)
+        repo['nathansw_rooday_sbajwa_shreyap.stopsVsLines'].metadata({'complete':True})
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -48,26 +48,26 @@ class getData(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
 
         #Since the urls have a lot more information about the resource itself, we are treating everything apart from the actual document suffix as the namespace.
-        doc.add_namespace('otpByLine', 'https://data.boston.gov/api/action/datastore_search_sql')
+        doc.add_namespace('stopsVsLines', 'https://data.boston.gov/api/action/datastore_search_sql')
 
-        this_script = doc.agent('alg:#getotpByLineData', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('otpByLine:?sql=SELECT%20*%20from%20%2212cb3883-56f5-47de-afa5-3b1cf61b257b%22', {'prov:label':'otpByLine Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        get_otpByLine_data = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_otpByLine_data, this_script)
-        doc.usage(get_otpByLine_data, resource, startTime, None,
+        this_script = doc.agent('alg:#getstopsVsLinesData', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource = doc.entity('stopsVsLines:?sql=SELECT%20*%20from%20%2212cb3883-56f5-47de-afa5-3b1cf61b257b%22', {'prov:label':'stopsVsLines Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        get_stopsVsLines_data = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(get_stopsVsLines_data, this_script)
+        doc.usage(get_stopsVsLines_data, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
                   'ont:Query':'?sql=SELECT%20*%20from%20%2212cb3883-56f5-47de-afa5-3b1cf61b257b%22'
                   }
                   )        
-        otpByLine = doc.entity('dat:#otpByLine', {prov.model.PROV_LABEL:'otpByLine Data', prov.model.PROV_TYPE:'ont:DataSet'})
+        stopsVsLines = doc.entity('dat:#stopsVsLines', {prov.model.PROV_LABEL:'stopsVsLines Data', prov.model.PROV_TYPE:'ont:DataSet'})
 
-        doc.wasAttributedTo(otpByLine, this_script)
-        doc.wasGeneratedBy(otpByLine, get_otpByLine_data, endTime)
-        doc.wasDerivedFrom(otpByLine, resource, get_otpByLine_data, get_otpByLine_data, get_otpByLine_data)
+        doc.wasAttributedTo(stopsVsLines, this_script)
+        doc.wasGeneratedBy(stopsVsLines, get_stopsVsLines_data, endTime)
+        doc.wasDerivedFrom(stopsVsLines, resource, get_stopsVsLines_data, get_stopsVsLines_data, get_stopsVsLines_data)
 
         repo.logout()
                   
         return doc
 
 
-getData.execute()
+getStopsVsLinesData.execute()
