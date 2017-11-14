@@ -79,15 +79,24 @@ class incoming_outgoing(dml.Algorithm):
 		for j in out: 
 			out_l.append(j)
 
+		inter = []
+		for k in range(len(in_l)):
+			for l in range(len(in_l)):
+				if in_l[k]['end station'] == out_l[l]['station']:
+					inter.append([in_l[k],out_l[l]])
+
+		print(inter[:3])
+
+
 		#inc_out_list = inc_out_list.append(in_l)
 		#inc_out_list = inc_out_list.append(out_l)
 
 
 
 
-		print(in_l[1])
+		#print(in_l[0]['end station']== out_l[0]['station'])
 
-		print(out_l[1])
+		print(len(out_l))
 
 
 
