@@ -5,15 +5,16 @@ This repository pertains to CS591 - Fall 2017 taught by Andrei lapets.
 
 ## Narrative:
 ```
-    The purpose of our project was to gather data on overweight persons in the Boston city area, and calculate 
-    whether or not there exists a correlation between income/property values and the number of overweight people
-    in then vicinity. Furthermore, we gathered data on the location of current winter food markets and data on 
-    failed health inspections and their corresponding locations. This allows us to map/plot the locations that
-    have poor health standards and access to safe/healthy food. These two data points allow us to make a 
-    constrained decision of the optimal location of health food stores. Our findings are constrained to just 
-    the Zipcodes that are registered with the city of Boston (I.E Brookline is not included in our findings). 
-    Our data points are further constrained to just landmass, as optimal locations could indicate a non-viable 
-    placement for a store/restaurant.
+    The purpose of our project was to gather data on overweight persons in the Boston city area,
+    and calculate whether or not there exists a correlation between income/property values and 
+    the number of overweight peoplein then vicinity. Furthermore, we gathered data on the 
+    location of current winter food markets and data on failed health inspections and their 
+    corresponding locations. This allows us to map/plot the locations thathave poor health 
+    standards and access to safe/healthy food. These two data points allow us to make a 
+    constrained decision of the optimal location of health food stores. Our findings are 
+    constrained to just the Zipcodes that are registered with the city of Boston (I.E Brookline 
+    is not included in our findings). Our data points are further constrained to just landmass, 
+    as optimal locations could indicate a non-viable placement for a store/restaurant.
 ```
 
 
@@ -91,6 +92,7 @@ This repository pertains to CS591 - Fall 2017 taught by Andrei lapets.
 ```
     - Multiple Python libraries are required for this project:
         - geopy (pip install geopy)
+        - shapely (pip install shapely)
         - sklearn (pip install sklearn)
         - scipy (pip install scipy)
         - dml (pip install dml)
