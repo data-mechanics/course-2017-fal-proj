@@ -34,8 +34,8 @@ class get_datasets(dml.Algorithm):
 
 
         # Database 2: Hubway Station Locations
-        #url = 'https://boston.opendatasoft.com/explore/dataset/hubway-station-locations/download/?format=geojson&timezone=America/New_York'
-        url = 'http://datamechanics.io/data/jtbloom_rfballes/july-hubway-station-locations.geojson'
+        url = 'https://boston.opendatasoft.com/explore/dataset/hubway-station-locations/download/?format=geojson&timezone=America/New_York'
+       # url = 'http://datamechanics.io/data/jtbloom_rfballes_medinad/july-hubway-station-locations.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
@@ -79,6 +79,17 @@ class get_datasets(dml.Algorithm):
         repo['jtbloom_rfballes_medinad.tripHistory'].metadata({'complete':True})
         print(repo['jtbloom_rfballes_medinad.tripHistory'].metadata())
 
+        # Neighborhood Income
+        
+        url = 'http://datamechanics.io/data/jb_rfb_dm_proj2data/incomeByNeighborhood.json'
+        response = urllib.request.urlopen(url).read().decode("utf-8")
+        r = json.loads(response)
+        s = json.dumps(r, sort_keys=True, indent=2)
+        repo.dropCollection("neighborhood_income")
+        repo.createCollection("neighborhood_income")
+        repo['jtbloom_rfballes_medinad.neighborhood_income'].insert(r)
+        repo['jtbloom_rfballes_medinad.neighborhood_income'].metadata({'complete':True})
+        print(repo['jtbloom_rfballes_medinad.neighborhood_income'].metadata())
 
 
         repo.logout()
