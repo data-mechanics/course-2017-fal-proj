@@ -57,7 +57,7 @@ class FindKMeans(dml.Algorithm):
     def execute(trial = False):
         '''Retrieve crime incident report information from Boston.'''
         startTime = datetime.datetime.now()
-        print('Finding optimal number of means')
+        #print('Finding optimal number of means')
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
@@ -83,9 +83,9 @@ class FindKMeans(dml.Algorithm):
                 j=random.randint(1,i)
                 if j<SampleSize:
                     TrialSample[j] = coordinates[i]
-            print('Running in trial mode')
+           # print('Running in trial mode')
             coordinates=TrialSample
-            print(coordinates)
+           # print(coordinates)
 
         X = np.array(coordinates)
  
@@ -110,7 +110,7 @@ class FindKMeans(dml.Algorithm):
                 metric = getAvgDistance(kmeans,coordinates)
             else:
                 metric = getMaxDistance(kmeans,coordinates)
-        print("we're done! the " +  str({True: "avg", False: "max"} [avgOrMaxDistToggle])+ " distance is: " + str(metric) + " at " + str(clusters) + " clusters!")
+      #  print("we're done! the " +  str({True: "avg", False: "max"} [avgOrMaxDistToggle])+ " distance is: " + str(metric) + " at " + str(clusters) + " clusters!")
     
         #plug into the centroids into dictionary for returning
         n={}
@@ -120,7 +120,7 @@ class FindKMeans(dml.Algorithm):
         
         repo['alanbur_aquan_erj826_jcaluag.kMeansNY'].insert(n, check_keys=False)
         repo['alanbur_aquan_erj826_jcaluag.kMeansNY'].metadata({'complete':True})
-        print(repo['alanbur_aquan_erj826_jcaluag.kMeansNY'].metadata())
+      #  print(repo['alanbur_aquan_erj826_jcaluag.kMeansNY'].metadata())
         repo.logout()
         endTime = datetime.datetime.now()
 

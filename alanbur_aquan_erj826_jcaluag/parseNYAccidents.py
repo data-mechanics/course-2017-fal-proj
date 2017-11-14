@@ -51,7 +51,7 @@ class parseNYAccidents(dml.Algorithm):
 
 
         repo['alanbur_aquan_erj826_jcaluag.parseNYaccidents'].metadata({'complete':True})
-        print(repo['alanbur_aquan_erj826_jcaluag.parseNYaccidents'].metadata())
+     #   print(repo['alanbur_aquan_erj826_jcaluag.parseNYaccidents'].metadata())
 
         repo.logout()
 

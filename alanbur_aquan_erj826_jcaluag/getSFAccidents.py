@@ -50,13 +50,13 @@ class getSFAccidents(dml.Algorithm):
                 j=random.randint(1,i)
                 if j<SampleSize:
                     TrialSample[j] = data[i]
-            print('Running in trial mode')
+        #    print('Running in trial mode')
             data=TrialSample
-        print(data)
+     #   print(data)
 
         repo['alanbur_aquan_erj826_jcaluag.SFaccidents'].insert(data, check_keys=False)
         repo['alanbur_aquan_erj826_jcaluag.SFaccidents'].metadata({'complete':True})
-        print(repo['alanbur_aquan_erj826_jcaluag.SFaccidents'].metadata())
+      #  print(repo['alanbur_aquan_erj826_jcaluag.SFaccidents'].metadata())
 
         repo.logout()
 
