@@ -70,45 +70,50 @@ class transformation4(dml.Algorithm):
         
 
         X = np.array(mbta_list)
-        kmeans = KMeans(n_clusters=10, random_state=0).fit(X)
+        kmeans = KMeans(n_clusters=20, random_state=0).fit(X)
         kmeans_arr_mbta = kmeans.cluster_centers_
 
         ids = []
-        for i in range(10):
+        for i in range(20):
             ids.append(Clusts(i,kmeans.labels_).tolist())
 
+
+        
         ids = [len(i) for i in ids]
         max_index_mbta = ids.index(max(ids))
-        print (max_index_mbta)
+        print (kmeans_arr_mbta)
+        print(ids)
         print(kmeans_arr_mbta[max_index_mbta])
 
         
-    
+
         X = np.array(food_list)
-        kmeans = KMeans(n_clusters=10, random_state=0).fit(X)
+        kmeans = KMeans(n_clusters=20, random_state=0).fit(X)
         kmeans_arr_food = kmeans.cluster_centers_
-        print(kmeans_arr_food)
+        #print(kmeans_arr_food)
 
         ids = []
-        for i in range(10):
+        for i in range(20):
             ids.append(Clusts(i,kmeans.labels_).tolist())
         
         ids = [len(i) for i in ids]
         max_index_food = ids.index(max(ids))
-        print (max_index_food)
+        print (kmeans_arr_food)
+        print(ids)
         print(kmeans_arr_food[max_index_food])
 
         X = np.array(garden_list)
-        kmeans = KMeans(n_clusters=10, random_state=0).fit(X)
+        kmeans = KMeans(n_clusters=20, random_state=0).fit(X)
         kmeans_arr_garden = kmeans.cluster_centers_
 
         ids = []
-        for i in range(10):
+        for i in range(20):
             ids.append(Clusts(i,kmeans.labels_).tolist())
 
         ids = [len(i) for i in ids]
         max_index_garden = ids.index(max(ids))
-        print (max_index_garden)
+        print (kmeans_arr_garden)
+        print(ids)
         print(kmeans_arr_garden[max_index_garden])
 
         print('Finished creating collection htw93_tscheung_wenjun.BostonHotelCorrelation')
