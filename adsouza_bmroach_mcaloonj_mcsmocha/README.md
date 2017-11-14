@@ -21,7 +21,7 @@ We consider school, hospital, and open space locations, as well as accident clus
 In order to ensure that the placement of speed feedback signs would not be affected by any other variables that can be changed, namely, the number of clusters that is chosen to create the accident hotspots (from Phase 1 of Part 1), we must determine a reasonable number of clusters, a, that gives the most optimal placement of s signs.<br>
 
 * Phase 1:<br>
-For values from B = {200 to 100 in multiples of 10}, run all of Part 1 for each value of the "cluster_divisor" variable, c, in get_accident_clusters being a value within the set B (i.e., c will be 200, then 190, etc.). As you run these parts, get_avgs will store the average distances of each sign placed to schools, parks, hospitals, and accident clusters nearby for each value of c.
+For values from B = {200 to 80 in multiples of 10}, run all of Part 1 for each value of the "cluster_divisor" variable, c, in get_accident_clusters being a value within the set B (i.e., c will be 200, then 190, etc.). As you run these parts, get_avgs will store the average distances of each sign placed to schools, parks, hospitals, and accident clusters nearby for each value of c.
 * Phase 2:<br>
 For each value of c, find the average of the averages of all the triggers.
 * Phase 3:<br>
