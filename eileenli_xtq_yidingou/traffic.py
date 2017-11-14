@@ -62,8 +62,6 @@ class traffic(dml.Algorithm):
                     mb_cord.append([float(i['longitude']), float(i['latitude'])])
                 except:
                     pass
-
-
         all_cord = dict([("crash", cr_cord), ("hubway", hu_cord), ("signals", si_cord), ("MBTA", mb_cord)])
         # print(all_cord)
 
