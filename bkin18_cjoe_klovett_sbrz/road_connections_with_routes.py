@@ -19,6 +19,9 @@ class road_connections_with_routes(dml.Algorithm):
 
         startTime = datetime.datetime.now()
 
+        print("Finding roads and routes...            \n", end='\r')
+        sys.stdout.write("\033[F") # Cursor up one line
+
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
@@ -29,8 +32,6 @@ class road_connections_with_routes(dml.Algorithm):
         routes = routes_collection.find()
 
         # Obtains all roads in the Boston region, that have at least some associated street name data, and removes some entries.
-
-
         modifiedDictionary = []
 
         for route in routes:
@@ -41,7 +42,6 @@ class road_connections_with_routes(dml.Algorithm):
         finalDictionary = []
 
         i = 0
-
         for piece in modifiedDictionary:
 
             num_intersections = 0
@@ -53,7 +53,6 @@ class road_connections_with_routes(dml.Algorithm):
                     route_list += [duplicate['BELONGS_TO_ROUTE']]
 
             unique = 1
-
             for uniquePiece in finalDictionary:
                 if (piece['ST_NAME'] == uniquePiece['ST_NAME']):
                     unique = 0
@@ -94,21 +93,19 @@ class road_connections_with_routes(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/')  # The event log.
         doc.add_namespace('bdp', 'http://gis.massdot.state.ma.us/arcgis/rest/services/')
 
-
-
+        ## Agent
         this_script = doc.agent('alg:bkin18_cjoe_klovett_sbrz#road_connections_with_routes',
                                 {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
 
-
+        ## Activity
         this_run = doc.activity('log:a'+str(uuid.uuid4()), startTime, endTime, 
             { prov.model.PROV_TYPE:'ont:Retrieval', 'ont:Query':'.find()'})
 
+        ## Entity
         selection_input = doc.entity('dat:bkin18_cjoe_klovett_sbrz.emergency_traffic_aggregate', 
                 { prov.model.PROV_LABEL:'Emergency Traffic Selection', prov.model.PROV_TYPE:'ont:DataSet'})
-
         output = doc.entity('dat:bkin18_cjoe_klovett_sbrz.road_connections_with_routes', 
             { prov.model.PROV_LABEL:'Emergency Traffic Aggregation', prov.model.PROV_TYPE:'ont:DataSet'})
-
 
         doc.wasAssociatedWith(this_run, this_script)
         doc.used(this_run, selection_input, startTime)

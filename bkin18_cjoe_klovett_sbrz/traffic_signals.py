@@ -6,6 +6,7 @@ import datetime
 import uuid
 import pdb
 import csv
+import sys
 
 class traffic_signals(dml.Algorithm):
     contributor = 'bkin18_cjoe_klovett_sbrz'
@@ -16,6 +17,9 @@ class traffic_signals(dml.Algorithm):
     @staticmethod 
     def execute(trial=False):
         startTime = datetime.datetime.now()
+
+        print("Finding traffic signals...            \n", end='\r')
+        sys.stdout.write("\033[F") # Cursor up one line
 
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
@@ -58,22 +62,22 @@ class traffic_signals(dml.Algorithm):
         doc.add_namespace('bdp', 'http://bostonopendata-boston.opendata.arcgis.com/datasets/')
         doc.add_namespace('hdv', 'https://dataverse.harvard.edu/dataset.xhtml')
 
-
+        ## Agent
         this_script = doc.agent('alg:bkin18_cjoe_klovett_sbrz#traffic_signals', 
             { prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
+        ## Activity
         this_run = doc.activity('log:a'+str(uuid.uuid4()), startTime, endTime, 
             { prov.model.PROV_TYPE:'ont:Retrieval'})#, 'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'})
          
+        ## Entity
         traffic_input = doc.entity('bdp:de08c6fe69c942509089e6db98c716a3_0', 
-            { 'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
-        
+            { 'prov:label':'Traffic Signals', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
         output = doc.entity('dat:bkin18_cjoe_klovett_sbrz.traffic_signals', 
-            { prov.model.PROV_LABEL:'Traffic Signals', prov.model.PROV_TYPE:'ont:DataSet'})
+            { prov.model.PROV_LABEL:'traffic_signals', prov.model.PROV_TYPE:'ont:DataSet'})
     
         doc.wasAssociatedWith(this_run, this_script)
         doc.used(this_run, traffic_input, startTime)
-        # doc.usage(routes, resource, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
 
         doc.wasAttributedTo(output, this_script)
         doc.wasGeneratedBy(output, this_run, endTime)

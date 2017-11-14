@@ -62,25 +62,30 @@ class retrievePropertyAssessmentData(dml.Algorithm):
         repo.authenticate('bkin18_cjoe_klovett_sbrz', 'bkin18_cjoe_klovett_sbrz')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/')  # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/')  # The data sets are in <user>#<collection> format.
-        doc.add_namespace('ont','http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
+        doc.add_namespace('ont','http://datamechanics.io/ontology#')  # 'Extension', 'Dataproperty_input', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/')  # The event log.
         doc.add_namespace('bdp', 'https://data.boston.gov/api/action/')
 
-        this_script = doc.agent('alg:bkin18_cjoe_klovett_sbrz#retrievePropertyAssessmentData', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
-        resource = doc.entity('bdp:062fc6fa-b5ff-4270-86cf-202225e40858', {'prov:label': 'Property Assessment FY2017', prov.model.PROV_TYPE: 'ont:DataResource', 'ont:Extension': 'json'})
-        get_property_data = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
+        ## Agent
+        this_script = doc.agent('alg:bkin18_cjoe_klovett_sbrz#retrievePropertyAssessmentData', 
+            {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
 
-        doc.wasAssociatedWith(get_property_data, this_script)
-        doc.usage(get_property_data, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=property+data&$select=description'
-                  }
-                  )
+        ## Activity
+        this_run = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
-        property_db = doc.entity('dat:bkin18_cjoe_klovett_sbrz#property_assessment', {prov.model.PROV_LABEL: 'property_assessment', prov.model.PROV_TYPE: 'ont:DataSet'})
-        doc.wasAttributedTo(property_db, this_script)
-        doc.wasGeneratedBy(property_db,get_property_data, endTime)
-        doc.wasDerivedFrom(property_db, resource, get_property_data)
+        ## Entity
+        property_input = doc.entity('bdp:ecdf003-9348-4ddb-94e1-673b63940bb8', 
+            {'prov:label': 'Property Assessment FY2017', prov.model.PROV_TYPE: 'ont:Dataproperty_input', 'ont:Extension': 'json'})
+        output = doc.entity('dat:bkin18_cjoe_klovett_sbrz#property_assessment', 
+            {prov.model.PROV_LABEL: 'property_assessment', prov.model.PROV_TYPE: 'ont:DataSet'})
+
+        doc.wasAssociatedWith(this_run, this_script)
+        doc.usage(this_run, property_input, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Retrieval', 'ont:Query':'?type=property+data&$select=description'})
+
+        doc.wasAttributedTo(output, this_script)
+        doc.wasGeneratedBy(output,this_run, endTime)
+        doc.wasDerivedFrom(output, property_input, this_run)
 
         repo.logout()
 
