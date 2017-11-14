@@ -18,14 +18,14 @@ We consider school, hospital, and open space locations, as well as accident clus
 <br>
 
 **Part 2** - Statistical Analysis
-In order to ensure that the placement of speed feedback signs would not be affected by any other variables that can be changed, namely, the number of clusters that is chosen to create the accident hotspots (from Phase 1 of Part 1), we must determine a reasonable number of clusters, a, that gives the most optimal placement of s signs.<br>
+In order to ensure that the placement of speed feedback signs would not be affected by any other variables that can be changed, namely, the number of clusters that is chosen to create the accident hotspots (from Phase 1 of Part 1), we must determine a reasonable number of clusters, *a*, that gives the most optimal placement of s signs.<br>
 
 * Phase 1:<br>
-For values from B = {200 to 80 in multiples of 10}, run all of Part 1 for each value of the "cluster_divisor" variable, c, in get_accident_clusters being a value within the set B (i.e., c will be 200, then 190, etc.). As you run these parts, get_avgs will store the average distances of each sign placed to schools, parks, hospitals, and accident clusters nearby for each value of c.
+For values from *B* = {200 to 80 in multiples of 10}, run all of Part 1 for each value of the "cluster_divisor" variable, *c*, in get_accident_clusters being a value within the set *B* (i.e., c will be 200, then 190, etc.). As you run these parts, get_avgs will store the average distances of each sign placed to schools, parks, hospitals, and accident clusters nearby for each value of *c*.
 * Phase 2:<br>
-For each value of c, find the average of the averages of all the triggers.
+For each value of *c*, find the average of the averages of all the triggers.
 * Phase 3:<br>
-An optimal value for a is one that helps in minimizing the distance of a sign to other triggers, so the best value of a would be the number of accidents divided by c, which will be the number of clusters that minimizes the average overall distances of all trigger distances.
+An optimal value for *a* is one that helps in minimizing the distance of a sign to other triggers, so the best value of a would be the number of accidents divided by *c*, which will be the number of clusters that minimizes the average overall distances of all trigger distances.
 <br>
 
 #### Technical Details
@@ -33,7 +33,7 @@ An optimal value for a is one that helps in minimizing the distance of a sign to
 * --trial flag decreases radius of possible intersections for placement
 
 ## Statistical Findings
-In the case where the number of accidents determined to be approximately 23,200, according to the graph shown below, the value of a is one that minimizes the average overall distance, which is a = 212, or c = 110. The average distances of signs to other triggers is also shown on the graph to show the overall average's relation to the triggers: the average hospital distances increases the average slightly, but the similarities of the other three triggers allow the overall average to be an accurate measure of the overall distances of the signs. As a result, 212 clusters to cluster accident hotspots ends up being an optimal value of k.
+In the case where the number of accidents determined to be approximately 23,200, according to the graph shown below, the value of *a* is one that minimizes the average overall distance, which is *a* = 212, or *c* = 110. The average distances of signs to other triggers is also shown on the graph to show the overall average's relation to the triggers: the average hospital distances increases the average slightly, but the similarities of the other three triggers allow the overall average to be an accurate measure of the overall distances of the signs. As a result, 212 clusters to cluster accident hotspots ends up being an optimal value of *a*.
 
 <img src="graph_range(80,90,...,200).png" height='400' width='auto'><br>
 
