@@ -34,7 +34,6 @@ class get_avgs(dml.Algorithm):
         parks = clean_triggers["parks"]
         accident_clusters = clean_triggers["accident_clusters"]
         num_clusters = len(accident_clusters)
-        print (num_clusters)
 
         def avg(x): # Average
             return sum(x)/len(x)

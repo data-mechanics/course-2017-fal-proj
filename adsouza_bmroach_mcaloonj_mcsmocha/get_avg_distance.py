@@ -26,8 +26,6 @@ import matplotlib.pyplot as plt
 
 class get_avg_distance(dml.Algorithm):
     contributor = 'adsouza_bmroach_mcaloonj_mcsmocha'
-    #reads = ['adsouza_bmroach_mcaloonj_mcsmocha.signal_placements', 'adsouza_bmroach_mcaloonj_mcsmocha.street_info']
-    #writes = ['adsouza_bmroach_mcaloonj_mcsmocha.speed_stats']
 
     reads = ['adsouza_bmroach_mcaloonj_mcsmocha.num_clusters_stats']
     writes = ['adsouza_bmroach_mcaloonj_mcsmocha.avg_distance']
@@ -48,7 +46,6 @@ class get_avg_distance(dml.Algorithm):
         cluster_stats = repo['adsouza_bmroach_mcaloonj_mcsmocha.num_clusters_stats'].find({}, {'_id': False})
         cluster_stats = [d for d in cluster_stats]
 
-        print(cluster_stats)
         # turn data into lists containing each of the data points
         cluster_list = []
         avg_school_dist = []
@@ -69,7 +66,6 @@ class get_avg_distance(dml.Algorithm):
         for i in range(len(cluster_list)):
             average_dist.append(np.mean([avg_school_dist[i], avg_hosp_dist[i], avg_park_dist[i], avg_acc_dist[i]]))
 
-        print(average_dist)
         # print lowest average and the k value associated with it
         best_k_ind = 0
         lowest_avg = average_dist[0]
@@ -79,7 +75,6 @@ class get_avg_distance(dml.Algorithm):
                 lowest_avg = average_dist[i]
 
         best_k = cluster_list[best_k_ind]
-        print(best_k)
 
         # graph all the averages on the same graph
         plt.plot(cluster_list, avg_school_dist, 'b', label='Schools')
