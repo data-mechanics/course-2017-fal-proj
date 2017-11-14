@@ -15,9 +15,24 @@ For project 2, we decided to shift our focus away from Boston and take a look at
 
 Execution Instructions:
 
-###ADD STUFF HERE###
+-All our resource files are public and do not require authentication. 
+-In bash, within the directory of alanbur_aquan_erj826_jcaluag, run python3 execute.py alanbur_aquan_erj826_jcaluag 
+-This will go into the alanbur_aquan_erj826_jcaluag folder and run all the execute and provenance functions. 
+-In the same directory, you can now view ‘provenance.html’ to see how the different entities were derived via activities by the agents in our project.
 
-Breakdown of data:
 
-###ADD STUFF HERE###
+Resources:
+
+1. New York Accidents: https://data.cityofnewyork.us/resource/qiz3-axqb.json
+
+2. San Francisco Accidents: https://data.sfgov.org/resource/vv57-2fgy.json
+
+
+Algorithms:
+
+###EXPLAIN THESE###
+
+K-means with an optimization:
+
+Covariance comparison:
 
