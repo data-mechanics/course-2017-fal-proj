@@ -43,6 +43,7 @@ class comfort(dml.Algorithm):
                         en_cord += l
                     except:
                         pass
+        # print(en_cord)
 
         rs_cord = []
         for k in RS:
@@ -58,15 +59,17 @@ class comfort(dml.Algorithm):
                 result = result
             else:
                 result.append(i)
-
+        #print(result)
+        
         all_cord = dict([("entertainment",en_cord),("restaurants",(result))])
+        print(all_cord)
 
 
         repo.dropCollection("comfort")
         repo.createCollection("comfort")
 
         repo['eileenli_xtq_yidingou.comfort'].insert_one(all_cord)
-
+        setdis=[]
 
         repo.logout()
 
@@ -88,21 +91,31 @@ class comfort(dml.Algorithm):
         repo.authenticate('eileenli_xtq_yidingou', 'eileenli_xtq_yidingou')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/')  # The scripts are in <folder>#<fileEntRes> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/')  # The data sets are in <user>#<collection> format.
-        doc.add_namespace('ont', 'http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
+        doc.add_namespace('ont',
+                          'http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/')  # The event log.
 
-        this_script = doc.agent('alg:#comfort', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
-        resource_entertainments = doc.entity('dat:eileenli_xtq_yidingou#entertainments', {'prov:label': 'entertainments', prov.model.PROV_TYPE: 'ont:DataSet'})
-        resource_restaurants = doc.entity('dat:eileenli_xtq_yidingou#restaurants', {'prov:label': 'restaurants', prov.model.PROV_TYPE: 'ont:DataSet'})
+        this_script = doc.agent('alg:#comfort',
+                                {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
+        resource_entertainments = doc.entity('dat:eileenli_xtq_yidingou#entertainments',
+                                             {'prov:label': 'entertainments',
+                                              prov.model.PROV_TYPE: 'ont:DataSet'})
+        resource_restaurants = doc.entity('dat:eileenli_xtq_yidingou#restaurants',
+                                             {'prov:label': 'restaurants',
+                                              prov.model.PROV_TYPE: 'ont:DataSet'})
         
 
         get_EntRes = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_EntRes, this_script)
-        doc.usage(get_EntRes, resource_entertainments, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
-        doc.usage(get_EntRes, resource_restaurants, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
+        doc.usage(get_EntRes, resource_entertainments, startTime, None,
+                  {prov.model.PROV_TYPE: 'ont:Computation'})
+        doc.usage(get_EntRes, resource_restaurants, startTime, None,
+                  {prov.model.PROV_TYPE: 'ont:Computation'})
         
 
-        EntRes = doc.entity('dat:eileenli_xtq_yidingou#comfort', {prov.model.PROV_LABEL: 'Entertainment Restaurants', prov.model.PROV_TYPE: 'ont:DataSet'})
+        EntRes = doc.entity('dat:eileenli_xtq_yidingou#comfort',
+                          {prov.model.PROV_LABEL: 'Entertainment Restaurants',
+                           prov.model.PROV_TYPE: 'ont:DataSet'})
         doc.wasAttributedTo(EntRes, this_script)
         doc.wasGeneratedBy(EntRes, get_EntRes, endTime)
         doc.wasDerivedFrom(EntRes, resource_entertainments, get_EntRes, get_EntRes, get_EntRes)
