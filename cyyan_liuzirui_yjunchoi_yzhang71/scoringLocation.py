@@ -113,6 +113,7 @@ class scoringLocation(dml.Algorithm):
             lat += 42.23
             lng *= random.uniform(0,1)
             lng += 71.08
+            lng *= -1
             voterCoordinates.append([lng,lat])
 
         # Calculate scores from polling locations from each optimzed result
