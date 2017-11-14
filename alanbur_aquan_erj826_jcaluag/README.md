@@ -5,7 +5,19 @@ aquan6: aquan<br />
 erj826: erj826<br />
 jcaluag: jcaluag<br />
 
-For project 2, we decided to shift our focus away from Boston and take a look at other large cities in the United States. We decided to look at New York City and San Francisco with hopes of studying and solving issues surrounding traffic accidents throughout different times of day. Our first tool is an implementation of K-means with an added optimization algorithm. We perform this algorithm on the New York City data and find the number of means that are necessary to cluster each accident to within a certain distance threshold of each mean. This metric could be used as a method to place police stations around the city. The second thing that we wanted to study is whether or not each borough of New York City behaves as a miniature city in terms of percentage of accidents that occur between certain hours. Our hypothesis is that they would, and that bordering boroughs may be more closely correlated than the others that are not touching. We generated a covariance matrix with the data from each borough, and compared it with the data from San Francisco. Through this we were able to confirm both aspects of our hypothesis.   
+For project 2, we decided to shift our focus away from Boston and take a look at other large cities in the United States.
+We decided to look at New York City and San Francisco with hopes of studying and solving issues surrounding traffic accidents throughout different times of day.
+Our first tool is an implementation of K-means with an added constraint satisfaction algorithm.
+We perform this algorithm on the New York City data and find the number of means that are necessary to cluster each accident to within a certain distance threshold of each mean.
+Our findings could be a factor used in deciding optimal placement of police stations around the city.
+
+In our second area of study, we found data on the number of accidents per hour for San Francisco and for each borough in New York.
+With this data, we generated a covariance matrix that shows us how accidents between two areas correlate.
+We added San Francisco as a baseline, because San Francisco is a whole other city, and should be less correlated to a NY borough
+than two NY boroughs are. As you can see in the graph below, green means that it is more correlated than SF is to the corresponding borough, and red means less correlated.
+With this data, we can find the higher correlated cities, and use them to make predictions or mimic protocol in regards to vehicle accidents.
+![alt text](https://github.com/aquan6/course-2017-fal-proj/blob/master/alanbur_aquan_erj826_jcaluag/covTable.jpeg)
+
 
 
 Execution Instructions:
@@ -23,11 +35,3 @@ Resources:
 2. San Francisco Accidents: https://data.sfgov.org/resource/vv57-2fgy.json
 
 
-Algorithms:
-
-###EXPLAIN THESE###
-
-K-means with an optimization:
-
-Correlation coefficient comparison:
-![alt text](https://github.com/aquan6/course-2017-fal-proj/blob/master/alanbur_aquan_erj826_jcaluag/covTable.jpeg)
