@@ -28,7 +28,9 @@ This repository pertains to CS591 - Fall 2017 taught by Andrei lapets.
     placed around KFC/McDonalds/Taco Bell and other fast food stores). The data also indicated that 
     there was less of a need for Healthy food stores in the financial district and the Allston - 
     Brighton areas. This is conclusive with our findings of the correlation between income
-    and obesity.
+    and obesity. Our second constraint was to find the correlation of obesity and property values, 
+    with a subset that allows us to compute the correlation coefficient between the neighborhoods
+    in the shapefile and the overweight individual/property values from our other datasets. 
 ```
 
 
