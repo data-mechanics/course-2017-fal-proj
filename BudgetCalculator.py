@@ -25,22 +25,18 @@ class BudgetCalculator(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate('francisz_jrashaan','francisz_jrashaan')
-        data = [('North End', [0, 3, 236, 240]), ('Bay Village', [0, 0, 24, 42]), ('East Boston', [0, 19, 222, 3544]), ('Leather District', [8, 8, 34, 43]), ('Allston', [0, 1, 1888, 1994]), ('Hyde Park', [0, 0, 569, 1163]), ('Roslindale', [0, 0, 450, 608]), ('Charlestown', [0, 7, 189, 455]), ('Back Bay', [4, 17, 432, 817]), ('South End', [0, 0, 116, 150]), ('Downtown', [4, 33, 160, 420]), ('Dorchester', [0, 7, 1382, 3710]), ('South Boston Waterfront', [15, 7, 102, 222]), ('West Roxbury', [0, 0, 559, 708]), ('Longwood Medical Area', [0, 11, 136, 154]), ('Mission Hill', [0, 11, 135, 161]), ('Roxbury', [0, 7, 315, 525]), ('Beacon Hill', [1, 16, 149, 391]), ('Mattapan', [0, 0, 348, 627]), ('Harbor Islands', [0, 0, 0, 155]), ('Brighton', [0, 0, 983, 1466]), ('South Boston', [0, 1, 410, 1061]), ('West End', [0, 5, 387, 549]), ('Fenway', [4, 21, 893, 1034]), ('Chinatown', [11, 21, 74, 112]), ('Jamaica Plain', [0, 0, 356, 919])]
         scores =  repo.francisz_jrashaan.neighborhoodScores.find()
       
         scoreArray = []
         print(scores)
         for i in scores:
-            print(i)
+            #print(i)
             a = lambda t: (t['Charging Station'])
             b = lambda t: (t['Hubway Stations'])
             c = lambda t: (t['Bike Networks'])  
             d = lambda t: (t['Open Space'])
             e = lambda t:(t['Neighborhood'])
            
-    
-
- 
             co1 = a(i)
             co2 = b(i)
             co3 = c(i)
@@ -68,49 +64,18 @@ class BudgetCalculator(dml.Algorithm):
             bikeNetworks.append(x3)
             openspace.append(x4)
 
-            S.add(((c+x1) * 1000) + ((h+x2) * 2000) + ((b+x3) * 1500) + ((o+x4) * 10) <= 1000000)
-        S.add(sum(chargingStations) > 4)
-        S.add(sum(hubwayStations) > 5)
-        S.add(sum(bikeNetworks) > 8)
-        S.add(sum(openspace) > 3)
-
-
-
+            S.add(((c+x1) * 2000) + ((h+x2) * 1500) + ((b+x3) * 3000) + ((o+x4) * 10000) <= 1000000)
+            S.add(x1 >= x2 * 4)
+            S.add(x2 <= x3 * 3)
+            S.add(x4 >= x1 * 2)
+        S.add(sum(chargingStations) > 200)
+        S.add(sum(hubwayStations) > 100)
+        S.add(sum(bikeNetworks) > 100)
+        S.add(sum(openspace) > 20)
 
         S.check()
         print(S.model())
-
-
-
-
-
-        
-    
-        
-        data = [('North End', [0, 3, 236, 240]), ('Bay Village', [0, 0, 24, 42]), ('East Boston', [0, 19, 222, 3544]), ('Leather District', [8, 8, 34, 43]), ('Allston', [0, 1, 1888, 1994]), ('Hyde Park', [0, 0, 569, 1163]), ('Roslindale', [0, 0, 450, 608]), ('Charlestown', [0, 7, 189, 455]), ('Back Bay', [4, 17, 432, 817]), ('South End', [0, 0, 116, 150]), ('Downtown', [4, 33, 160, 420]), ('Dorchester', [0, 7, 1382, 3710]), ('South Boston Waterfront', [15, 7, 102, 222]), ('West Roxbury', [0, 0, 559, 708]), ('Longwood Medical Area', [0, 11, 136, 154]), ('Mission Hill', [0, 11, 135, 161]), ('Roxbury', [0, 7, 315, 525]), ('Beacon Hill', [1, 16, 149, 391]), ('Mattapan', [0, 0, 348, 627]), ('Harbor Islands', [0, 0, 0, 155]), ('Brighton', [0, 0, 983, 1466]), ('South Boston', [0, 1, 410, 1061]), ('West End', [0, 5, 387, 549]), ('Fenway', [4, 21, 893, 1034]), ('Chinatown', [11, 21, 74, 112]), ('Jamaica Plain', [0, 0, 356, 919])]
-        scores = []
-        newdata = []
-        for i in data:
-            temp = i[1]
-            score += temp[0] * 7 + temp[1] * 3 + temp[2] * 5
-            scores += [(score, i[0], i[1])]
-
-
-        scores.sort(key=takeFirst)
-        average = 0
-        count = 0
-        for i in scores:
-            average += i[0]
-            count += 1
-        average = average / count
-        budget = 1000000
-        Cstation = 7000
-        Hstation = 3000
-        Bnetwork = 10000
-        flag = True
-        while(flag):
-            lowest = scores[0]
-
+        print(chargingStations)
     @staticmethod
     def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
         '''
