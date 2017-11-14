@@ -15,7 +15,22 @@ This repository pertains to CS591 - Fall 2017 taught by Andrei lapets.
     constrained to just the Zipcodes that are registered with the city of Boston (I.E Brookline 
     is not included in our findings). Our data points are further constrained to just landmass, 
     as optimal locations could indicate a non-viable placement for a store/restaurant.
+    
+    Part II:
+    
+    For part II of the project to apply constraints, we first added constraints of the location
+    of each obese person to the market was limited to a distance of under 1 mile. The second 
+    constraint we used first required that we limit the shapefile of the Boston Area to just 
+    land mass (Couldn't remove ponds and lakes/rivers). We then calculated the optimal locations
+    of health food markets and if they were not in the shapefile, then they were adjusted to be
+    within the location constraints of the shapefile. Our findings indicated that there is a need
+    for more healthy foods in the areas of Dorchester/Roxbury (Some market locations were hilariously
+    placed around KFC/McDonalds/Taco Bell and other fast food stores). The data also indicated that 
+    there was less of a need for Healthy food stores in the financial district and the Allston - 
+    Brighton areas. This is conclusive with our findings of the correlation between income
+    and obesity.
 ```
+
 
 
 ## Data Sets:
@@ -79,6 +94,13 @@ This repository pertains to CS591 - Fall 2017 taught by Andrei lapets.
     are more overweight people in areas with lower property values.
 ```
 
+11. #### setOptimalHealthMarkets.py
+```
+    Runs k-means to determine the optimal locations for Health Food stores in the Boston
+    area based off of the location of overweight individuals in the Boston Area. 
+    Constraints are also applied from a shapeFile that is limited to the Boston
+    Area landmass.
+```
 ## Instructions:
 ```
     -  In order to run the code:
