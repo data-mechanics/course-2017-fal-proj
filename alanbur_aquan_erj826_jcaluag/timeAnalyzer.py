@@ -20,7 +20,7 @@ import numpy as np
 class timeAnalyzer(dml.Algorithm):
     contributor = 'alanbur_aquan_erj826_jcaluag'
     reads = ['alanbur_aquan_erj826_jcaluag.timeAggregateNY', 'alanbur_aquan_erj826_jcaluag.timeAggregateSF']
-    writes = []
+    writes = ['timeAnalysis']
 
     @staticmethod
     def execute(trial = False):
@@ -32,8 +32,8 @@ class timeAnalyzer(dml.Algorithm):
 
         repo.authenticate('alanbur_aquan_erj826_jcaluag', 'alanbur_aquan_erj826_jcaluag')          
 
-        repo.dropCollection("SFaccidents")
-        repo.createCollection("SFaccidents")
+        repo.dropCollection("timeAnalysis")
+        repo.createCollection("timeAnalysis")
 
         timeNY = [entry['data'] for entry in repo.alanbur_aquan_erj826_jcaluag.timeAggregateNY.find()][0]
         timeSF = [entry['data'] for entry in repo.alanbur_aquan_erj826_jcaluag.timeAggregateSF.find()][0]
@@ -49,8 +49,8 @@ class timeAnalyzer(dml.Algorithm):
         result={"correlation":cov}
   
         repo['alanbur_aquan_erj826_jcaluag.timeAnalysis'].insert(result, check_keys=False)
-        repo['alanbur_aquan_erj826_jcaluag.SFaccidents'].metadata({'complete':True})
-        print(repo['alanbur_aquan_erj826_jcaluag.SFaccidents'].metadata())
+        repo['alanbur_aquan_erj826_jcaluag.timeAnalysis'].metadata({'complete':True})
+        print(repo['alanbur_aquan_erj826_jcaluag.timeAnalysis'].metadata())
 
         repo.logout()
 
@@ -96,7 +96,7 @@ class timeAnalyzer(dml.Algorithm):
                   )
         
         #define the writeout 
-        output = doc.entity('dat:alanbur_aquan_erj826_jcaluag#getSFAccidents', {prov.model.PROV_LABEL:'SF Accident List', prov.model.PROV_TYPE:'ont:DataSet'})
+        output = doc.entity('dat:alanbur_aquan_erj826_jcaluag#timeAnalysis', {prov.model.PROV_LABEL:'Time Analysis of NY and SF', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(output, this_script)
         doc.wasGeneratedBy(output, action, endTime)
         doc.wasDerivedFrom(output, resource, action, action, action)

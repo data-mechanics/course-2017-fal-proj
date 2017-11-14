@@ -88,12 +88,12 @@ class getNYAccidents(dml.Algorithm):
         #define the activity of taking in the resource
         get_NY_accidents = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_NY_accidents, this_script)
-        doc.usage(get_crimes, resource, startTime, None,
+        doc.usage(get_NY_accidents, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval'}
                   )
         
         #define the writeout 
-        accidents = doc.entity('dat:alanbur_aquan_erj826_jcaluag#getNYAccidents', {prov.model.PROV_LABEL:'NY Accidents List', prov.model.PROV_TYPE:'ont:DataSet'})
+        accidents = doc.entity('dat:alanbur_aquan_erj826_jcaluag#NYaccidents', {prov.model.PROV_LABEL:'NY Accidents List', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(accidents, this_script)
         doc.wasGeneratedBy(accidents, get_NY_accidents, endTime)
         doc.wasDerivedFrom(accidents, resource, get_NY_accidents, get_NY_accidents, get_NY_accidents)

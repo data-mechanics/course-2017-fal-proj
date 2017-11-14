@@ -15,13 +15,19 @@ import math
 import numpy as np
 from sklearn.cluster import KMeans
 import random
+
+#prevents deprecation warnings, a known and fixed issue
+#(see https://stackoverflow.com/questions/36892390/deprecationwarning-in-sklearn-minibatchkmeans)
+import warnings 
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+
 #the largest acceptable distance between two data 
 acceptableDistance = 0.05 #this is about 3 miles from degree long//lat conversion to miles
 coordinates = []
 
 #takes all the coordinates and the kmeans cluster and returns the highest distance between
 #any point and its respective centroid    
-def getMaxDistance(kmeans):
+def getMaxDistance(kmeans, coordinates):
     maxDistance = 0
     for i in range(len(coordinates)):
         clusterCenter =kmeans.predict(coordinates[i])
@@ -30,6 +36,13 @@ def getMaxDistance(kmeans):
             maxDistance = current
     return maxDistance
 
+def getAvgDistance(kmeans, coordinates):
+    totalDistance = 0
+    for i in range(len(coordinates)):
+        clusterCenter = kmeans.predict(coordinates[i])
+        totalDistance += distance(kmeans.cluster_centers_[clusterCenter][0],coordinates[i])
+    return totalDistance/len(coordinates)
+        
 #returns the distance between two long/lat points
 def distance(p0, p1):
     return math.sqrt((p0[0] - p1[0])**2 + (p0[1] - p1[1])**2)
@@ -75,31 +88,36 @@ class FindKMeans(dml.Algorithm):
             print(coordinates)
 
         X = np.array(coordinates)
+ 
+        #True means find with averages, False means find with maxes
+        avgOrMaxDistToggle = True
 
-
-        
-        #X = np.array(coordinates).reshape((1,-1),(1,-1))
-        #X= scalar.transform(X)
-        #print(X)
-          
         #run kmeans with two clusters for starting point
         kmeans = KMeans(n_clusters=2, random_state=0).fit(X)
-        maxDistance = getMaxDistance(kmeans)
+        
+        if(avgOrMaxDistToggle):
+            metric = getAvgDistance(kmeans,coordinates)
+        else:
+            metric = getMaxDistance(kmeans,coordinates)
         clusters = 2
         
         #run kmeans while acceptableDistance is not fulfilled
-        while(maxDistance > acceptableDistance):
+        while(metric > acceptableDistance):
+            #print("the metric is: " + str(metric))
             clusters+=1
-            kmeans = KMeans(n_clusters=clusters, random_state=0).fit(X)
-            maxDistance = getMaxDistance(kmeans)
-        print("we're done! max distance is: " + str(maxDistance) + " at " + str(clusters) + " clusters!")
+            kmeans = KMeans(n_clusters=clusters, random_state=0).fit(X) 
+            if(avgOrMaxDistToggle):
+                metric = getAvgDistance(kmeans,coordinates)
+            else:
+                metric = getMaxDistance(kmeans,coordinates)
+        print("we're done! the " +  str({True: "avg", False: "max"} [avgOrMaxDistToggle])+ " distance is: " + str(metric) + " at " + str(clusters) + " clusters!")
     
         #plug into the centroids into dictionary for returning
         n={}
         centroids = kmeans.cluster_centers_
         for i in range(len(centroids)):
             n[str(i)]=centroids[i].tolist()
-
+        
         repo['alanbur_aquan_erj826_jcaluag.kMeansNY'].insert(n, check_keys=False)
         repo['alanbur_aquan_erj826_jcaluag.kMeansNY'].metadata({'complete':True})
         print(repo['alanbur_aquan_erj826_jcaluag.kMeansNY'].metadata())
@@ -125,16 +143,16 @@ class FindKMeans(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-<<<<<<< Updated upstream
+
         #resources:
         
         #define the agent
-        this_script = doc.agent('alg:alanbur_aquan_erj826_jcaluag#timeAnalyzer', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-=======
+        this_script = doc.agent('alg:alanbur_aquan_erj826_jcaluag#FindKMeans', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+
         
         #define the agent
         this_script = doc.agent('alg:alanbur_aquan_erj826_jcaluag#FindKMeans', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
->>>>>>> Stashed changes
+
         
         #define the input resource
         resource = doc.entity('dat:parseNYaccidents', {'prov:label':'NY Parsed Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
@@ -161,6 +179,6 @@ class FindKMeans(dml.Algorithm):
 
 
 
-# FindKMeans.execute(False)
+FindKMeans.execute(False)
 
 ## eof

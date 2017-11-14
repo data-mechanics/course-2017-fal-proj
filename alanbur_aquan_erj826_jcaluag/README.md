@@ -1,14 +1,9 @@
-Members:
-
-github:bu username
-
-alanbur:
-
-aquan6: aquan
-
-erj826: erj826
-
-jcaluag: jcaluag
+Members:<br />
+github: bu_username<br />
+osirissc2: alanbur<br />
+aquan6: aquan<br />
+erj826: erj826<br />
+jcaluag: jcaluag<br />
 
 For project 2, we decided to shift our focus away from Boston and take a look at other large cities in the United States.
 We decided to look at New York City and San Francisco with hopes of studying and solving issues surrounding traffic accidents throughout different times of day.
