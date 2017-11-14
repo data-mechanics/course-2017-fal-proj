@@ -34,7 +34,7 @@ class kmeans(dml.Algorithm):
     def execute(trial = False):
         '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
         startTime = datetime.datetime.now()
-        print("Creating kmeans...")
+#         print("Creating kmeans...")
 
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
