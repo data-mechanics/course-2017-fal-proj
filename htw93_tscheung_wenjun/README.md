@@ -78,3 +78,6 @@ We discard the crime factor, thus the new score will be:
 ### Apply K-means
 For K-means matrix, we use the coordinates and new custom rates of hotels. First we normalize the coordinates and rates separately. Then we slightly make coordinates with higer weights to make sure the clusters can be clusted based on there location first. We choose number of clusters as 10. For each calculated cluster. We select the cluster with higheset average custom rate and calculate the center coordinate of this cluster, which is [42.347708499999996 -71.0792716]
 
+### Protential hotel description
+
+As mentioned above, we select the coordinate [42.347708499999996 -71.0792716] to be the protential best place to build a hotel. The approximate address of this coordinate is 111 Huntington Avenue, where is downtown Boston, really close to Prudential tower, Copley Place, Boston Public Library, etc. It is reasonable to believe the coordinate is a good place to build a new hotel.
