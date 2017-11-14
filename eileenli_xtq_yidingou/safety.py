@@ -69,7 +69,7 @@ class safety(dml.Algorithm):
                         pass
         #print(dict([("hospitals",hp_cord)]))
         all_cord = dict([("hospitals",hp_cord),("crimes",(result)),("crash",(ca_cord))])
-        #print(all_cord)
+
 
 
         repo.dropCollection("safety")
