@@ -15,6 +15,7 @@ dependencies:
 - wincertstore=0.2=py36_0
 - pip:
   - chardet==3.0.4
+  - cycler==0.10.0
   - decorator==4.1.2
   - dml==0.0.16.0
   - geojson==2.3.0
@@ -23,8 +24,10 @@ dependencies:
   - geoql==0.0.8.0
   - idna==2.6
   - isodate==0.5.4
-  - lxml==3.8.0
-  - networkx==1.11
+  - language-check==1.1
+  - lxml==4.0.0
+  - matplotlib==2.1.0
+  - networkx==2.0
   - numpy==1.13.3
   - pandas==0.21.0
   - protoql==0.0.3.0
@@ -38,9 +41,9 @@ dependencies:
   - scikit-learn==0.19.1
   - scipy==1.0.0
   - shapely==1.6.2
-  - six==1.10.0
+  - six==1.11.0
   - sklearn==0.0
   - tqdm==4.19.4
   - urllib3==1.22
-prefix: C:\Users\mcsbu\Anaconda3\envs\cs591
+prefix: C:\Users\Monica\Anaconda3\envs\cs591
 
