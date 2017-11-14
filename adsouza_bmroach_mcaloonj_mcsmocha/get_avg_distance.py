@@ -1,7 +1,7 @@
 """
-Filename: this_run.py
+Filename: get_avg_distance.py
 
-Last edited by: BMR 11/12/17
+Last edited by: AD 11/14/17
 
 Boston University CS591 Data Mechanics Fall 2017 - Project 2
 Team Members:

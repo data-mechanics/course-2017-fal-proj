@@ -1,3 +1,20 @@
+"""
+Filename: get_avgs.py
+
+Last edited by: JM 11/14/17
+
+Boston University CS591 Data Mechanics Fall 2017 - Project 2
+Team Members:
+Adriana D'Souza     adsouza@bu.edu
+Brian Roach         bmroach@bu.edu
+Jessica McAloon     mcaloonj@bu.edu
+Monica Chiu         mcsmocha@bu.edu
+
+Original skeleton files provided by Andrei Lapets (lapets@bu.edu)
+
+Development Notes:
+"""
+
 import urllib.request
 import json
 import dml
