@@ -1,5 +1,7 @@
 # CS591 Project 2
 
+__Group Members:__ Sameena Bajwa, Shreya Pandit, Rudhra Raveendran, Nathan Weinberg 
+
 Many residents in the City of Boston rely on the MBTA for transportation to and from work. Hence, the reliability of public transportation is of utmost importance to the city residents. Moreover, Boston neighborhoods are a diverse landscape; each varying in its culture and demographics.
 
 What we attempt to analyze as part of this project is two-fold:
@@ -60,3 +62,18 @@ The original csv file was converted to a JSON file that follows the format of a 
  ...}
  
 The keys to the JSON object are the dates in which performance data was collected. The values to each key are dictionaries representing each record of data collected for the given date. The data was organized this way because there were multiple entries for each date.
+
+## Libraries to Install
+The following libraries can be installed using pip:
+* Pandas
+* Statsmodels
+* Sklearn
+* DML
+* Prov
+* Numpy
+* Seaborn
+* BSON
+* Itertools
+* Pprint
+* USZipCode
+
