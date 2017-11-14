@@ -107,6 +107,8 @@ class CalculateCorrelation(dml.Algorithm):
         doc.wasAttributedTo(output, this_script)
         doc.wasGeneratedBy(output, action, endTime)
         doc.wasDerivedFrom(output, resource, action, action, action)
+        doc.wasDerivedFrom(output, resource2, action, action, action)
+        doc.wasDerivedFrom(output, resource3, action, action, action)
 
         repo.logout()
                   
