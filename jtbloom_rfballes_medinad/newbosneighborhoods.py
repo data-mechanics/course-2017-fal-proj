@@ -29,6 +29,7 @@ class newbosneighborhoods(dml.Algorithm):
         neighborhood_list = list(r)
         nid_list = [{'Neighborhood':x["fields"]["neighborho"], 'Geo Shape':x["fields"]["geo_shape"]} for x in neighborhood_list]
 
+        
 
         repo.dropCollection("jtbloom_rfballes_medinad.neighborhoods")
         repo.createCollection("jtbloom_rfballes_medinad.neighborhoods")

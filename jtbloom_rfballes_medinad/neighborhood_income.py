@@ -12,7 +12,6 @@ class neighborhood_income(dml.Algorithm):
 
     @staticmethod
     def execute(trial = False):
-        pass
         '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
         startTime = datetime.datetime.now()
 
