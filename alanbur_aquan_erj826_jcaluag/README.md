@@ -1,6 +1,6 @@
 Members:<br />
 github: bu_username<br />
-alanbur: osirissc2<br />
+osirissc2: alanbur<br />
 aquan6: aquan<br />
 erj826: erj826<br />
 jcaluag: jcaluag<br />
