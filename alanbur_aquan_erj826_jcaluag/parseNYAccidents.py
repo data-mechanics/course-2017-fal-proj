@@ -43,7 +43,7 @@ class parseNYAccidents(dml.Algorithm):
                 location= (entry['location'])
                 n['longitude']=location['coordinates'][0]
                 n['latitude']=location['coordinates'][1]
-                print(n)
+                #print(n)
             except:
                 continue
 
@@ -101,6 +101,6 @@ class parseNYAccidents(dml.Algorithm):
                   
         return doc
 
-# parseNYAccidents.execute()
+#parseNYAccidents.execute()
 
 ## eof
