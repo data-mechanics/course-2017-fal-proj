@@ -7,9 +7,9 @@ jcaluag: jcaluag<br />
 
 For project 2, we decided to shift our focus away from Boston and take a look at other large cities in the United States.
 We decided to look at New York City and San Francisco with hopes of studying and solving issues surrounding traffic accidents throughout different times of day.
-Our first tool is an implementation of K-means with an added optimization algorithm.
+Our first tool is an implementation of K-means with an added constraint satisfaction algorithm.
 We perform this algorithm on the New York City data and find the number of means that are necessary to cluster each accident to within a certain distance threshold of each mean.
-Our findings could be factor for optimal placement of police stations around the city.
+Our findings could be a factor used in deciding optimal placement of police stations around the city.
 
 In our second area of study, we found data on the number of accidents per hour for San Francisco and for each borough in New York.
 With this data, we generated a covariance matrix that shows us how accidents between two areas correlate.
