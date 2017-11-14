@@ -1,7 +1,7 @@
 # CS 591 Fall 2017 Project #2: Modeling, Optimization, and Statistical Analysis
 Jake Bloomfeld (jtbloom@bu.edu), Ricardo Ballesteros (rfballes@bu.edu), Daniel Medina (medinad@bu.edu)
 
-#### Abstract
+### Abstract
 Hubway is a public bike-share system serving the people of Boston, Brookline, Cambridge, and Somerville. With roughly 1800 bikes in practically 200 stations, the Hubway serves as a fun, affordable, and convenient transportation option for quick trips around Boston and its surrounding municipalities. The objective of our project stemmed from this question: is there a correlation between income per capita in Boston's neighbrohoods with the number of Hubway trips taken in that neighborhood? Seeing if such a correltation exists can pose further questions for discussion, such as, are there more trips being taken to/from wealthier neighborhoods than poorer neighborhoods? Are wealthier/poorer neighborhoods over/underutilizing available Hubway bikes? Our project tries to solve this problem.
 
 ### Datasets
