@@ -1,5 +1,4 @@
-Members:
-
+Members:<br />
 github: bu_username<br />
 alanbur: osirissc2<br />
 aquan6: aquan<br />
