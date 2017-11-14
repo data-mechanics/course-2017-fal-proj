@@ -18,15 +18,19 @@ class getTricklingData(dml.Algorithm):
         repo = client.repo
         repo.authenticate('nathansw_rooday_sbajwa_shreyap', 'nathansw_rooday_sbajwa_shreyap')
 
+        print("Fetching trickling data...")
         data_url = "http://datamechanics.io/data/nathansw_rooday_sbajwa_shreyap/trickling.json"
         response = requests.get(data_url).json()
+        print("trickling data fetched!")
 
+        print("Saving trickling data...")
         repo.dropCollection("trickling")
         repo.createCollection("trickling")
         repo['nathansw_rooday_sbajwa_shreyap.trickling'].insert(response)
         repo['nathansw_rooday_sbajwa_shreyap.trickling'].metadata({'complete':True})
         repo.logout()
 
+        print("Done!")
         endTime = datetime.datetime.now()
         return {"start":startTime, "end":endTime}
     
