@@ -47,7 +47,7 @@ class crimesProperty(dml.Algorithm):
                 if street in crime_reports:
                     intersect.append(street)
                     iterations += 1
-                if iterations == 25:
+                if iterations == 10:
                     break
         else:
             for street in property_reports:
@@ -140,7 +140,7 @@ class crimesProperty(dml.Algorithm):
                   
         return doc
 
-# crimesProperty.execute()
+crimesProperty.execute()
 #doc = crimesProperty.provenance()
 #print(doc.get_provn())
 #print(json.dumps(json.loads(doc.serialize()), indent=4))

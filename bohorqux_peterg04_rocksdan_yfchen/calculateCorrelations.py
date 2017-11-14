@@ -5,6 +5,7 @@ import prov.model
 import datetime
 import uuid
 import math
+import random
 
 #calculations to get correlation for # crimes per street : # of properties per street
 class calculateCorrelations(dml.Algorithm):
@@ -14,6 +15,10 @@ class calculateCorrelations(dml.Algorithm):
 
 
     # Taking all the helper functions given in class by Professor Lapets
+    def permute(x):
+        shuffled = [xi for xi in x]
+        random.shuffle(shuffled)
+        return shuffled
 
     def avg(x): # Average
         return sum(x)/len(x)
@@ -28,6 +33,14 @@ class calculateCorrelations(dml.Algorithm):
     def corr(x, y): # Correlation coefficient.
         if calculateCorrelations.stddev(x)*calculateCorrelations.stddev(y) != 0:
             return calculateCorrelations.cov(x, y)/(calculateCorrelations.stddev(x)*calculateCorrelations.stddev(y))
+     
+    def p(x, y):
+        c0 = calculateCorrelations.corr(x, y)
+        corrs = []
+        for k in range(0, 2000):
+            y_permuted = calculateCorrelations.permute(y)
+            corrs.append(calculateCorrelations.corr(x, y_permuted))
+        return len([c for c in corrs if abs(c) > c0])/len(corrs)
         
     @staticmethod
     def execute(trial = False):
@@ -39,15 +52,9 @@ class calculateCorrelations(dml.Algorithm):
         repo = client.repo
         repo.authenticate('bohorqux_peterg04_rocksdan_yfchen', 'bohorqux_peterg04_rocksdan_yfchen')
 
-#         url = 'http://datamechanics.io/data/eileenli_yidingou/Restaurant.json'
-#         response = urllib.request.urlopen(url).read().decode("utf-8")
-#         r = json.loads(response)
-#         s = json.dumps(r, sort_keys=True, indent=2)
-
-        # code to calculate the correlation
+        # code to calculate the correlation between crimes and property related values
         # grabbing all the x and y from first read file
         c_p = repo[calculateCorrelations.reads[0]].find()
-#         print(list(c_p))
         x_vals = []
         y_vals = []
         
@@ -56,15 +63,40 @@ class calculateCorrelations(dml.Algorithm):
                 # do nothing
                 continue
             else:
-                # append to list of x-y arrays            
+                # append to list of x-y lists 
                 x_vals.append(c_p[0][key]['Crimes'])
                 y_vals.append(len(c_p[0][key]['Properties']))
         
-        correlation1 = calculateCorrelations.corr(x_vals, y_vals)
+        # I want to find two seperate correlations related to this data. Whether crime is more correlated
+        # with high density areas or lower density areas
+        # Do this by splitting the values into 2 sets: 1 lower than avg , 1 higher than avg for # of properties
+        prop_lower_x = []
+        prop_lower_y = []
+        prop_higher_x = []
+        prop_higher_y = []
+        avg_yvals = calculateCorrelations.avg(y_vals)
+        for i in range(len(y_vals)):
+            if y_vals[i] < avg_yvals:
+                prop_lower_x.append(x_vals[i])
+                prop_lower_y.append(y_vals[i])
+            else:
+                prop_higher_x.append(x_vals[i])
+                prop_higher_y.append(y_vals[i])
+        print(prop_higher_x)        
+        print(prop_higher_y)
+        print(prop_lower_x)
+        print(prop_lower_y)
+        # calc correlation 1 = the corr between low pop density to # crimes and its p value
+        correlation1 = calculateCorrelations.corr(prop_lower_x, prop_lower_y)
+        p1 = calculateCorrelations.p(prop_lower_x, prop_lower_y)
+        # calc correlation 2 = the corr between high pop density to # crimes and its p value
+        correlation2 = calculateCorrelations.corr(prop_higher_x, prop_higher_y)
+        p2 = calculateCorrelations.p(prop_higher_x, prop_higher_y)
          
         finalData = dict()
-        finalData['crimes_propertyLoc'] = correlation1
-        #finalData =  {'crimes': 5, 'properties' : 6, 'xyz' : 7 }   
+        finalData['crimes_lowPropertyDensity'] = [correlation1, p1]
+        finalData['crimes_highPropertyDensity'] = [correlation2, p2]
+        #structure : finalData =  {'category_comparison': [correlation, p-value]}   
         print(finalData)
               
         repo.dropCollection("calculateCorrelations")
@@ -118,7 +150,7 @@ class calculateCorrelations(dml.Algorithm):
                   
         return doc
 
-# calculateCorrelations.execute()
+calculateCorrelations.execute()
 # doc = example.provenance()
 # print(doc.get_provn())
 # print(json.dumps(json.loads(doc.serialize()), indent=4))

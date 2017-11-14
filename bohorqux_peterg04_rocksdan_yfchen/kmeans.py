@@ -5,7 +5,8 @@ import prov.model
 import datetime
 import uuid
 import random
-from scipy.cluster.vq import kmeans as km
+import math
+from scipy.cluster.vq import kmeans as km, kmeans2
 # import geopy
 # from geopy.geocoders import great_circle
 
@@ -17,6 +18,18 @@ class kmeans(dml.Algorithm):
     reads = ['bohorqux_peterg04_rocksdan_yfchen.Restaurants']
     writes = ['bohorqux_peterg04_rocksdan_yfchen.kmeans']
         
+    def plus(args):
+        p = [0,0]
+        for (x,y) in args:
+            p[0] += x
+            p[1] += y
+        return tuple(p)
+    
+    def dist(p, q):
+        (x1,y1) = p
+        (x2,y2) = q
+        return math.sqrt((x1-x2)**2 + (y1-y2)**2)
+
     @staticmethod
     def execute(trial = False):
         '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
@@ -35,17 +48,79 @@ class kmeans(dml.Algorithm):
                 xcoord = entry["location"]["coordinates"][0]
                 ycoord = entry["location"]["coordinates"][1]
                 P.append((xcoord, ycoord))
-                	
-        centroids = km(P,3)
+                
+#         # This part of the code is commented out -- it was used solely for the case of choosing K, for
+#         # kmeans by implementing the elbow method below. A line chart has been put into the readme
+#         sse = dict()
+#         for k in range(1,10):
+#             sse[k] = 0;
+#             centroids, labels = kmeans2(P,k)
+#             # for each cluster/mean
+#             center_index = 0
+#             for center in centroids:
+#                 datapoint_index = 0
+#                 mean = (center[0], center[1])
+#                 # take the datapoints associated with that cluster/mean and add their sse
+#                 # the formula is sse[k] += Math.pow(distance between two points, 2)
+#                 for datapoint in labels:
+#                     if datapoint == center_index:
+#                         sse[k] += math.pow(kmeans.dist(P[datapoint_index], mean), 2)
+#                     datapoint_index += 1
+#                     
+#                 center_index += 1
+#         print(sse)    
+
+        # After printing it out and looking at our graph, we see that the elbow test states
+        # that we should have a total of 5 means/centroids      	
+        centroids, labels = kmeans2(P,5)
         means = []
-        for x in range(len(centroids[0])):
-            means.append((centroids[0][x][0], centroids[0][x][1]))
         
+        for x in range(len(centroids)):
+            means.append((centroids[x][0], centroids[x][1]))
+         
         final_means = dict()
-        final_means['center1'] = means[0]
-        final_means['center2'] = means[1]
-        final_means['center3'] = means[2]
- 		
+        final_means['center1'] = dict()
+        final_means['center1']['centroid'] = means[0]
+        final_means['center2'] = dict()
+        final_means['center2']['centroid'] = means[1]
+        final_means['center3'] = dict()
+        final_means['center3']['centroid'] = means[2]
+        final_means['center4'] = dict()
+        final_means['center4']['centroid'] = means[3]
+        final_means['center5'] = dict()
+        final_means['center5']['centroid'] = means[4]
+        
+        # Now that we have the final means/centroids, we will use this to further along our goal and 
+        # apply a radius to these centroids by making the radius equal to the distance of the centroid
+        # to their farthest associated datapoint
+        
+        # make a list of radii pertaining to the longest distance for each centroid
+        radii = []
+        center_index = 0
+        for (x,y) in means:
+            largest_distance = 0
+            C = (x,y)
+            datapoint_index = 0
+            for datapoint in labels:
+                if datapoint == center_index:
+#                     center_datapoint[center_index].append((P[datapoint_index][0], P[datapoint_index][1]))
+                    temp = kmeans.dist(means[center_index], P[datapoint_index])
+                    if temp > largest_distance:
+                        largest_distance = temp
+                datapoint_index += 1
+            
+            radii.append(largest_distance)
+            center_index += 1    
+                    
+        # Now with all the appropiate distance radii stored in order for each center, append the radii
+        # to the correct centers within the final_means dictionary
+        final_means['center1']['radius'] = radii[0]
+        final_means['center2']['radius'] = radii[1]
+        final_means['center3']['radius'] = radii[2]
+        final_means['center4']['radius'] = radii[3]
+        final_means['center5']['radius'] = radii[4]
+        # {'center1' : {'centroid': [0.12, 0.145], 'radius': 0.12151 }}
+   		
         repo.dropCollection("kmeans")
         repo.createCollection("kmeans")
         repo['bohorqux_peterg04_rocksdan_yfchen.kmeans'].insert(final_means)
