@@ -24,12 +24,12 @@ class kmeans(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate('bohorqux_peterg04_rocksdan_yfchen', 'bohorqux_peterg04_rocksdan_yfchen')
-
-		restaurants = repo['bohorqux_peterg04_rocksdan_yfchen.Restaurants']
-		#collect all the coordinates
-		coors = []
-		for line in restaurants.find():
-			coors += [line["location"]["coordinates"],None]
+		
+		# restaurants = repo['bohorqux_peterg04_rocksdan_yfchen.Restaurants']
+		# #collects all the coordinates
+		# coors = []
+		# for line in restaurants.find():
+			# coors += [line["location"]["coordinates"],None]
 			
 			
 		centers = [[],[],[],[],[]]
@@ -65,7 +65,7 @@ class kmeans(dml.Algorithm):
 		
         repo.dropCollection("kmeans")
         repo.createCollection("kmeans")
-        repo['bohorqux_peterg04_rocksdan_yfchen.kmeans'].insert_many(r)
+        repo['bohorqux_peterg04_rocksdan_yfchen.kmeans'].insert_many(coors)
         repo['bohorqux_peterg04_rocksdan_yfchen.kmeans'].metadata({'complete':True})
         print(repo['bohorqux_peterg04_rocksdan_yfchen.kmeans'].metadata())
 
