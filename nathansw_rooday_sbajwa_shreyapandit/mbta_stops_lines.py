@@ -87,7 +87,6 @@ class mbta_stops_lines(dml.Algorithm):
 			try:
 				temp = json.loads(urlopen(url).read().decode('utf-8'))
 			except:
-				print ("this route gave me trouble: ", rte)
 				continue
 			for obj in temp['direction']:
 				# Iterate over every stop for each route 
@@ -171,8 +170,11 @@ class mbta_stops_lines(dml.Algorithm):
 		 	line_vals = ",".join(line_vals)
 		 	csv.write(line_vals + "\n")
 
+		repo.logout()
 
-		 ### Insert regression analysis code
+        endTime = datetime.datetime.now()
+
+        return {"start":startTime, "end":endTime}
 
 	@staticmethod
     def provenance(doc = prov.model.ProvDocument(), startTime=None, endTime=None):
@@ -188,31 +190,53 @@ class mbta_stops_lines(dml.Algorithm):
 		doc.add_namespace('ont', 'http://datamechanics.io/ontology#')
 		doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
 
-
+		doc.add_namespace('mbta', 'http://realtime.mbta.com/developer/api/v2/')
 
 		## Agents
 		this_script = doc.agent('alg:nathansw_rooday_sbajwa_shreyapandit#mbta_stops_lines', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
 		## Activities
-		get_mbta_stops_lines = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+		get_lines_vs_parents = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+		get_lines_vs_stops = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 
 		## Entitites
 		# Data Source
-		resource = 
+		resource1 = doc.entity('mbta:stopsbyroute', {'prov:label':'MBTA Stops By Route', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+		resource2 = doc.entity('dat:OTP_by_line.json', {'prov:label':'On-Time Performance by Line', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+		### Was this actually used?
+		resource3 = doc.entity('dat:MBTAPerformance.json', {'prov:label':'MBTA Performance Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+
 		# Data Generated
-		mbta_stops_lines = 
-       
+		lines_vs_parents = doc.entity('dat:nathansw_rooday_sbajwa_shreyapandit#lines_vs_parents', {prov.model.PROV_LABEL:'lines_vs_parents', prov.model.PROV_TYPE:'ont:DataSet', 'ont:Extension':'csv'})
+    	lines_vs_stops = doc.entity('dat:nathansw_rooday_sbajwa_shreyapandit#lines_vs_stops', {prov.model.PROV_LABEL:'lines_vs_stops', prov.model.PROV_TYPE:'ont:DataSet', 'ont:Extension':'csv'})
+
 		############################################################
 
-       	## wasAssociatedWith    	
+       	## wasAssociatedWith
+       	doc.wasAssociatedWith(get_lines_vs_parents, this_script)
+       	doc.wasAssociatedWith(get_lines_vs_stops, this_script)
 
 		## used		
+		doc.usage(get_lines_vs_parents, resource1, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval',})
+		doc.usage(get_lines_vs_stops, resource1, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval',})
+		
+		doc.usage(get_lines_vs_parents, resource2, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval',})
+		doc.usage(get_lines_vs_stops, resource2, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval',})
 
 		## wasGeneratedBy
+		doc.wasGeneratedBy(lines_vs_parents, get_lines_vs_parents, endTime)
+		doc.wasGeneratedBy(lines_vs_stops, get_lines_vs_stops, endTime)
 
 		## wasAttributedTo		
+		doc.wasAttributedTo(lines_vs_parents, this_script)
+		doc.wasAttributedTo(lines_vs_stops, this_script)
 
 		## wasDerivedFrom
+		doc.wasDerivedFrom(lines_vs_parents, resource1, get_lines_vs_parents, get_lines_vs_parents, get_lines_vs_parents)
+		doc.wasDerivedFrom(lines_vs_stops, resource1, get_lines_vs_stops, get_lines_vs_stops, get_lines_vs_stops)		
+
+		doc.wasDerivedFrom(lines_vs_parents, resource2, get_lines_vs_parents, get_lines_vs_parents, get_lines_vs_parents)
+		doc.wasDerivedFrom(lines_vs_stops, resource2, get_lines_vs_stops, get_lines_vs_stops, get_lines_vs_stops)
 
 		############################################################
 
