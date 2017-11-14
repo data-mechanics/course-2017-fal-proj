@@ -16,6 +16,7 @@ import datetime
 import uuid
 import requests
 import numpy as np
+import random
 
 class timeAnalyzer(dml.Algorithm):
     contributor = 'alanbur_aquan_erj826_jcaluag'
@@ -37,6 +38,26 @@ class timeAnalyzer(dml.Algorithm):
 
         timeNY = [entry['data'] for entry in repo.alanbur_aquan_erj826_jcaluag.timeAggregateNY.find()][0]
         timeSF = [entry['data'] for entry in repo.alanbur_aquan_erj826_jcaluag.timeAggregateSF.find()][0]
+
+        SampleSize=100
+        if trial:
+            TrialSample=timeNY[:SampleSize]
+            for i in range(SampleSize+1,len(timeNY)):
+                j=random.randint(1,i)
+                if j<SampleSize:
+                    TrialSample[j] = timeNY[i]
+        #    print('Running in trial mode')
+            timeNY=TrialSample
+
+            TrialSample=timeSF[:SampleSize]
+            for i in range(SampleSize+1,len(timeSF)):
+                j=random.randint(1,i)
+                if j<SampleSize:
+                    TrialSample[j] = timeSF[i]
+        #    print('Running in trial mode')
+            timeSF=TrialSample
+
+
         # timeNY=[1,2,3,4,5,6]
         # timeSF=[2,4,6,8,10,10]
 

@@ -16,6 +16,7 @@ import datetime
 import uuid
 import requests
 import numpy as np
+import random
 
 class CalculateCorrelation(dml.Algorithm):
     contributor = 'alanbur_aquan_erj826_jcaluag'
@@ -35,11 +36,38 @@ class CalculateCorrelation(dml.Algorithm):
         repo.createCollection("alanbur_aquan_erj826_jcaluag.correlation")
 
 
+
         ny = [entry for entry in repo.alanbur_aquan_erj826_jcaluag.boroughAggregateNY.find()][0]
         sf = [entry['data'] for entry in repo.alanbur_aquan_erj826_jcaluag.timeAggregateSF.find()][0]
 
 
         NYall = [entry['data'] for entry in repo.alanbur_aquan_erj826_jcaluag.timeAggregateNY.find()][0]
+
+        SampleSize=100
+        if trial:
+            # if len(ny)>SampleSize:
+            #     TrialSample=ny[:SampleSize]
+            #     for i in range(SampleSize+1,len(ny)):
+            #         j=random.randint(1,i)
+            #         if j<SampleSize:
+            #             TrialSample[j] = ny[i]
+            #     ny=TrialSample
+            if len(sf)>SampleSize:
+                TrialSample=sf[:SampleSize]
+                for i in range(SampleSize+1,len(sf)):
+                    j=random.randint(1,i)
+                    if j<SampleSize:
+                        TrialSample[j] = sf[i]
+                sf=TrialSample
+            if len(NYall)>SampleSize:
+                TrialSample=NYall[:SampleSize]
+                for i in range(SampleSize+1,len(NYall)):
+                    j=random.randint(1,i)
+                    if j<SampleSize:
+                        TrialSample[j] = NYall[i]
+                NYall=TrialSample
+
+
 
         m= ny['MANHATTAN']
         b = ny['BROOKLYN']
