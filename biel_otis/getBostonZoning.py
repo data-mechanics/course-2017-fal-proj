@@ -27,11 +27,22 @@ class getBostonZoning(dml.Algorithm):
         response = urlopen(url).read().decode("utf-8")
 
         r = json.loads(response)
+
+        dontInclude=['Harborpark: North End Waterfront', 'Harborpark: Charlestown Waterfront', 'Harborpark: Dorchester Bay/Neponset River Waterfront', 'Harborpark: Fort Point Waterfront','Boston Harbor']
+        goodData = {}
+        for i in range(len(r['features']) - 1):
+            if r['features'][i]['properties']['DISTRICT'] in dontInclude:
+                continue
+            else:
+                goodData[r['features'][i]['properties']['DISTRICT']] = r['features'][i]['geometry']
+
         repo.dropCollection("BostonZoning")
         repo.createCollection("BostonZoning")
-        repo['biel_otis.BostonZoning'].insert_many([r])
+        repo['biel_otis.BostonZoning'].insert_many([goodData])
         repo['biel_otis.BostonZoning'].metadata({'complete':True})
         print(repo['biel_otis.BostonZoning'].metadata())
+        
+
 
         repo.logout()
 
@@ -74,4 +85,6 @@ class getBostonZoning(dml.Algorithm):
           
         return doc
 
+
+getBostonZoning.execute(trial=True)
 ## eof

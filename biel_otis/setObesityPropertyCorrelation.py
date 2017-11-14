@@ -63,9 +63,13 @@ class setObesityPropertyCorrelation(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client['biel_otis']
         repo.authenticate('biel_otis', 'biel_otis')
-
         obesityValues = list(repo['biel_otis.ObesityData'].find())
         propertyValues = list(repo['biel_otis.PropertyValues'].find())
+
+        if (trial==True):
+            print("were here")
+            obesityValues = obesityValues[0:100]
+            propertyValues = propertyValues[0:100]
 
         #print(propertyValues)
         #print(obesityValues)
@@ -161,6 +165,6 @@ class setObesityPropertyCorrelation(dml.Algorithm):
         
         return doc
 
-setObesityPropertyCorrelation.execute()
+setObesityPropertyCorrelation.execute(trial=True)
 
 ## eof

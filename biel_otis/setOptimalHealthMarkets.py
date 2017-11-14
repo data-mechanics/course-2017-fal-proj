@@ -9,6 +9,10 @@ import ssl
 import random
 from math import radians, sin, cos, atan2, sqrt
 import scipy.stats as ss
+from sklearn.cluster import k_means
+from geopy.distance import vincenty as Distance
+from shapely.geometry import shape, Point, Polygon
+import numpy as np
 import sys
 
 def union(R, S):
@@ -33,84 +37,6 @@ def aggregate(R, f):
     keys = {r[0] for r in R}
     return [(key, f([v for (k,v) in R if k == key])) for key in keys]
 
-def plus(args):
-    p = [0,0]
-    for (x,y) in args:
-        p[0] += x
-        p[1] += y
-    return tuple(p)
-
-
-def scale(p, c):
-    (x,y) = p
-    return (x/c, y/c)
-
-
-def calculateDist(d1, d2):
-    R = 6373.0
-
-    lat1 = radians(d1[0])
-    lon1 = radians(d1[1])
-    lat2 = radians(d2[0])
-    lon2 = radians(d2[1])
-
-    dlon = lon2 - lon1
-    dlat = lat2 - lat1
-
-    a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
-    c = 2 * atan2(sqrt(a), sqrt(1 - a))
-
-    distance = R * c
-    return distance 
-
-def compTuples(t1, t2):
-    if(t1 == []):
-        return 100000000000000
-    comp = [abs(x[0] - y[0]) + abs(x[1] - y[1]) for x in t1 for y in t2]
-    return sum(comp)
-
-
-def kmeans(means, points):
-    old_compVal = 0
-    new_compVal = 1
-    pd = []
-    old = []
-    iter_num = 1
-    while (old_compVal != new_compVal):
-        print('Iteration', iter_num, end='')
-        sys.stdout.flush()
-        old_compVal = compTuples(old, means)
-        print(' |-', end='')
-        sys.stdout.flush()
-        old = means
-        mpd = [(m, p, calculateDist(m, p)) for (m,p) in product(means, points)]
-        print('-', end='')
-        sys.stdout.flush()        
-        pds = [(p, calculateDist(m,p)) for (m, p, d) in mpd]
-        print('-', end='')
-        sys.stdout.flush()
-        pd = aggregate(pds, min)
-        print('-', end='')
-        sys.stdout.flush()
-        mp = [(m, p) for ((m,p,d), (p2,d2)) in product(mpd, pd) if p==p2 and d==d2]
-        print('-', end='')
-        sys.stdout.flush()
-        mt = aggregate(mp, plus)
-        print('-', end='')
-        sys.stdout.flush()
-        m1 = [(m, 1) for ((m,p,d), (p2, d2)) in product(mpd, pd) if p==p2 and d==d2]
-        print('-', end='')
-        sys.stdout.flush()
-        mc = aggregate(m1, sum)
-        print('-', end='')
-        sys.stdout.flush()
-        means = [scale(t, c) for ((m,t), (m2,c)) in product(mt, mc) if m == m2]
-        print('-|')
-        sys.stdout.flush()
-        new_compVal = compTuples(old, means)
-        iter_num+=1
-
-    return (means, pd)
 
 class setOptimalHealthMarkets(dml.Algorithm):
     contributor = 'biel_otis'
@@ -118,7 +44,7 @@ class setOptimalHealthMarkets(dml.Algorithm):
     writes = ['biel_otis.OptimalHealthMarkets']
 
     @staticmethod
-    def execute(trial = False):        
+    def execute(trial = False):
         startTime = datetime.datetime.now()
 
         # Set up the database connection.
@@ -127,31 +53,66 @@ class setOptimalHealthMarkets(dml.Algorithm):
         repo.authenticate('biel_otis', 'biel_otis')
 
         obesityValues = list(repo['biel_otis.ObesityData'].find())
+        if (trial==True):
+            obesityValues = obesityValues
+            print(obesityValues)
+            sys.stdout.flush()        
+            exit()
+        else:
+            print("WERE NOT IN TRIAL")
+            sys.stdout.flush()
         mapValues = list(repo['biel_otis.BostonZoning'].find())
-
+        obesityValues = [x for x in obesityValues if x['cityname'] == 'Boston']
         obesityLoc = project(obesityValues, lambda x: (float(x['geolocation']['latitude']), float(x['geolocation']['longitude'])))
         avg_dist = 9999999
-        num_means = 10
+        num_means = 1
         dist_sum = 0
         dists = []
         lats = [x for (x,y) in obesityLoc]
         longs = [y for (x,y) in obesityLoc]
-        while (avg_dist >= 1.6):
-            means = [(random.uniform(min(lats), max(lats)), random.uniform(min(longs), max(longs))) for x in range(num_means)]
-            means, dists = kmeans(means, obesityLoc)
-            for p in dists:
-                dist_sum += p[1]
-            avg_dist = dist_sum / len(dists)
+        means = []
+        while (avg_dist >= 0.5):
+            dist_sum = 0
+            means = k_means(obesityLoc, n_clusters=num_means)[0]
+            pds = [(p, Distance(m, p).miles) for (m,p) in product(means, obesityLoc)]
+            pd = aggregate(pds, min)
+            for x in pd:
+                dist_sum += x[1]
+            avg_dist = dist_sum / len(pd)
             print(avg_dist)
             num_means += 1             
 
-        exit()
-
-        repo.dropCollection("ObesityPropertyCorrelation")
-        repo.createCollection("ObesityPropertyCorrelation")
-        repo['biel_otis.ObesityPropertyCorrelation'].insert_many([inputs])
-        repo['biel_otis.ObesityPropertyCorrelation'].metadata({'complete':True})
-        print(repo['biel_otis.ObesityPropertyCorrelation'].metadata())
+        correctedMeans = []
+        means = means.tolist()
+        inputs = {}
+        inputs['means'] = means
+        # adjustedMeans = [Point(m) for m in means]
+        # flag = False
+        # countVal = 0
+        # countInval = 0
+        # for f in mapValues[0]:
+        #         #polygon = shape(feature[f])
+        #     if (f == '_id'):
+        #         continue
+        #     else:
+        #         poly = shape(mapValues[0][f])
+        #         print(f)
+        #         print(mapValues[0][f])
+        #         exit()
+        #         for mean in adjustedMeans:
+        #             if (poly.contains(mean)):
+        #                 countVal += 1
+        #                 flag = True
+        #             else:
+        #                 countInval += 1
+        # print("num valid ", countVal)
+        # print("num inval ", countInval)
+        # exit()
+        repo.dropCollection("OptimalHealthMarkets")
+        repo.createCollection("OptimalHealthMarkets")
+        repo['biel_otis.OptimalHealthMarkets'].insert_many([inputs])
+        repo['biel_otis.OptimalHealthMarkets'].metadata({'complete':True})
+        print(repo['biel_otis.OptimalHealthMarkets'].metadata())
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -175,10 +136,10 @@ class setOptimalHealthMarkets(dml.Algorithm):
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
 
-        this_script = doc.agent('alg:biel_otis#setObesityPropertyCorrelation', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:biel_otis#setOptimalHealthMarkets', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         obesity_resource = doc.entity('dat:biel_otis#ObesityData', {prov.model.PROV_LABEL:'Obesity Data from City of Boston', prov.model.PROV_TYPE:'ont:DataSet'})
-        property_resource = doc.entity('dat:biel_otis#PropertyValues', {prov.model.PROV_LABEL:'Dataset containing property values & locations of properties', prov.model.PROV_TYPE:'ont:DataSet'})
-        correlation_resource = doc.entity('dat:biel_otis#ObesityPropertyCorrelation', {prov.model.PROV_LABEL: 'Dataset containing one entry: the correlation coefficient between number of obese people within proximity to a property, and that properties value', prov.model.PROV_TYPE:'ont:DataSet'})
+        zoning_resource = doc.entity('dat:biel_otis#BostonZoning', {prov.model.PROV_LABEL:'Dataset containing geojson of the Boston Districts', prov.model.PROV_TYPE:'ont:DataSet'})
+        output_resource = doc.entity('dat:biel_otis#OptimalHealthMarkets', {prov.model.PROV_LABEL: 'Dataset containing the optimal placements of health food markets based on locations of obese persons.', prov.model.PROV_TYPE:'ont:DataSet'})
 
         this_run = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
     
@@ -189,24 +150,22 @@ class setOptimalHealthMarkets(dml.Algorithm):
         #Usages
         doc.usage(this_run, obesity_resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval'})
-        doc.usage(this_run, property_resource, startTime, None,
+        doc.usage(this_run, zoning_resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval'})
 
         #Generated
-        doc.wasGeneratedBy(correlation_resource, this_run, endTime)
+        doc.wasGeneratedBy(output_resource, this_run, endTime)
 
 
         #Attributions
-        doc.wasAttributedTo(correlation_resource, this_script)
+        doc.wasAttributedTo(output_resource, this_script)
 
         #Derivations
-        doc.wasDerivedFrom(correlation_resource, obesity_resource, this_run, this_run, this_run)
-        doc.wasDerivedFrom(correlation_resource, property_resource, this_run, this_run, this_run)
+        doc.wasDerivedFrom(output_resource, obesity_resource, this_run, this_run, this_run)
+        doc.wasDerivedFrom(output_resource, zoning_resource, this_run, this_run, this_run)
 
         repo.logout()
         
         return doc
-
-setOptimalHealthMarkets.execute()
 
 ## eof
