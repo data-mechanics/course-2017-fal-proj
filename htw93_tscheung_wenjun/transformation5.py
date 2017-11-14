@@ -134,9 +134,11 @@ class transformation5(dml.Algorithm):
         print("***********")
         
 
-        
+        repo.dropCollection("BostonHotelPotential")
+        repo.createCollection("BostonHotelPotential")
+        repo['htw93_tscheung_wenjun.BostonHotelPotential'].insert({'id':'hotel_protential_1','lat':coorx_sum/len(ids[5]),'long':coory_sum/len(ids[5])})
 
-        print('Finished creating collection htw93_tscheung_wenjun.BostonHotelCorrelation')
+        print('Finished creating collection htw93_tscheung_wenjun.BostonHotelPotential')
         
         repo.logout()
 
