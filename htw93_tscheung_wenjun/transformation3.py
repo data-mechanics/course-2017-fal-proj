@@ -53,8 +53,19 @@ class transformation3(dml.Algorithm):
             #CustomScore.append([h['norm_custom_score']])
 
 
+        # Trial mode: randomly choose k elements from lists
+        if trial:
+            orginal_rate = random.choices(orginal_rate, k = 1)
+            norm_rate = random.choices(norm_rate, k = 1)
+            norm_crime = random.choices(norm_crime, k = 1)
+            norm_mbta = random.choices(norm_mbta, k = 1)
+            norm_garden = random.choices(norm_garden, k = 1)
+            norm_food = random.choices(norm_food, k = 1)
+            combine_rate_crime = random.choices(combine_rate_crime, k = 1)
+            
+
+
         math_score_crime = scipy.stats.pearsonr(combine_rate_crime, norm_crime)
-        
         math_score_mbta = scipy.stats.pearsonr(combine_rate_crime, norm_mbta)
         math_score_garden = scipy.stats.pearsonr(combine_rate_crime, norm_garden)
         math_score_food = scipy.stats.pearsonr(combine_rate_crime, norm_food)
