@@ -91,7 +91,7 @@ class get_avgs(dml.Algorithm):
         stats_dict = dict()
         stats_dict[str(num_clusters)] = [avg_sch, avg_hosp, avg_park, avg_acc]
 
-        #repo.dropCollection("num_clusters_stats") #if you want to get rid of all previous k values
+        # repo.dropCollection("num_clusters_stats") #if you want to get rid of all previous k values
         repo.createCollection("num_clusters_stats")
 
 

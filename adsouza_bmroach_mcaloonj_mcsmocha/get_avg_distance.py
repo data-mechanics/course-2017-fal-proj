@@ -86,10 +86,10 @@ class get_avg_distance(dml.Algorithm):
         plt.plot(cluster_list, avg_hosp_dist, 'r', label='Hospitals')
         plt.plot(cluster_list, avg_park_dist, 'g', label='Parks')
         plt.plot(cluster_list, avg_acc_dist, 'm', label='Accidents')
-        plt.plot(cluster_list, average_dist, 'k', linewidth=2.5, label='Overall Average')
-        plt.title('Average Distances from Sign for Different K Clusters')
+        plt.plot(cluster_list, average_dist, 'k', linewidth=3, label='Overall Average')
+        plt.title('Average Distances from Triggers')
         plt.xlabel('Number of Clusters')
-        plt.ylabel('Average Distance')
+        plt.ylabel('Average Distance in Miles')
         plt.legend()
         plt.show()
 
