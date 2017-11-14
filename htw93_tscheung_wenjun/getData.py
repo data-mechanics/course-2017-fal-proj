@@ -75,6 +75,10 @@ class getData(dml.Algorithm):
                 temp={}
                 temp['businessname']=f['businessname']
                 temp['location']=f['location']['coordinates'][::-1]
+                x = temp['location'][0]
+                y = temp['location'][1]
+                if(x<42.230280 or x>42.401714 or y < -71.185594 or y>-70.984888):
+                    continue
                 food_info.append(temp)
             except KeyError:
                 continue
