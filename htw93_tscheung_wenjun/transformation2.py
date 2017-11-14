@@ -65,7 +65,7 @@ class transformation2(dml.Algorithm):
         
 
         for h in HotelData:
-            norm_crime = (h['crime_count']-min_crime)/(max_crime-min_crime)
+            norm_crime = 1-((h['crime_count']-min_crime)/(max_crime-min_crime))
             norm_mbta = (h['mbta_count']-min_mbta)/(max_mbta-min_mbta)
             norm_score = (h['rate']-min_rating)/(max_rating-min_rating)
             norm_garden =(h['garden_count']-min_garden)/(max_garden-min_garden)
