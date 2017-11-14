@@ -2,7 +2,7 @@ import json
 import pprint 
 import datetime
 import dml
-import prov.mode
+import prov.model
 import uuid
 from bson import ObjectId
 
@@ -26,19 +26,23 @@ class OTP_by_line(dml.Algorithm):
 
     @staticmethod
     def execute(trial=False):
-
         startTime = datetime.datetime.now()
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate('nathansw_rooday_sbajwa_shreyap', 'nathansw_rooday_sbajwa_shreyap')
 
         performance_db = repo['nathansw_rooday_sbajwa_shreyap.MBTAPerformance']
-        perf = performance_db.find_one()
+
+        perf = {}
+        for obj in performance_db.find():
+            del obj['_id']
+            for key in obj.keys():
+                perf[key] = obj[key]
 
         # create a dict where each key is an MBTA line
         lines = {}
         for date in perf:
-        	for entry in perf[date]:
+          for entry in perf[date]:
                  route = (perf[date][entry]['ROUTE_OR_LINE'])
                  # if adding a key to dict, add values to hold peak/off-peak data
                  if route not in lines:
@@ -89,11 +93,11 @@ class OTP_by_line(dml.Algorithm):
             elif len(lines[rte]['Off-Peak Service']) == 0 and len(lines[rte]['Peak Service']) != 0:
                 peak_perc = float(lines[rte]['Peak Service'][0])/(lines[rte]['Peak Service'][1]) * 100
                 avg_OTP[rte]['Peak Service'] = round(peak_perc, 2)
-                avg_OTP[rte]['Off-Peak Service'] = 'Data not available'
+                avg_OTP[rte]['Off-Peak Service'] = ''
 
             # if only off-peak values were calculated 
             elif len(lines[rte]['Off-Peak Service']) != 0 and len(lines[rte]['Peak Service']) == 0:
-                avg_OTP[rte]['Peak Service'] = 'Data not available'
+                avg_OTP[rte]['Peak Service'] = ''
                 off_perc = float(lines[rte]['Off-Peak Service'][0])/(lines[rte]['Off-Peak Service'][1]) * 100
                 avg_OTP[rte]['Off-Peak Service'] = round(off_perc,2)
        
@@ -112,50 +116,51 @@ class OTP_by_line(dml.Algorithm):
 
     @staticmethod
     def provenance(doc = prov.model.ProvDocument(), startTime=None, endTime=None):
-
         client = dml.pymongo.MongoClient()
         repo = client.repo
 
         ##########################################################
 
         ## Namespaces
-		doc.add_namespace('alg', 'http://datamechanics.io/algorithm/nathansw_rooday_sbajwa_shreyapandit/') # The scripts in / format.
-		doc.add_namespace('dat', 'http://datamechanics.io/data/nathansw_rooday_sbajwa_shreyapandit/') # The data sets in / format.
-		doc.add_namespace('ont', 'http://datamechanics.io/ontology#')
-		doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
-		doc.add_namespace('json_data', 'http://datamechanics.io/data/nathansw_rooday_sbajwa_shreyap/') 
+        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/nathansw_rooday_sbajwa_shreyap/') # The scripts in / format.
+        doc.add_namespace('dat', 'http://datamechanics.io/data/nathansw_rooday_sbajwa_shreyap/') # The data sets in / format.
+        doc.add_namespace('ont', 'http://datamechanics.io/ontology#')
+        doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
+        doc.add_namespace('json_data', 'http://datamechanics.io/data/nathansw_rooday_sbajwa_shreyap/') 
 
-		## Agents
-		this_script = doc.agent('alg:nathansw_rooday_sbajwa_shreyap#OTP_by_line', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        ## Agents
+        this_script = doc.agent('alg:nathansw_rooday_sbajwa_shreyap#OTP_by_line', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
-		## Activities
-		get_OTP_by_line = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        ## Activities
+        get_OTP_by_line = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 
-		## Entitites
-		# Data Source
-		resource = doc.entity('dat:MBTAPerformance.json', {'prov:label':'MBTA Performance Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-		# Data Generated
-		OTP_by_line = doc.entity('dat:nathansw_rooday_sbajwa_shreyap#OTP_by_line', {prov.model.PROV_LABEL:'On-Time Performance by Line', prov.model.PROV_TYPE:'ont:DataSet'})
-       
-		############################################################
+        ## Entitites
+        # Data Source
+        resource = doc.entity('dat:MBTAPerformance.json', {'prov:label':'MBTA Performance Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        # Data Generated
+        OTP_by_line = doc.entity('dat:nathansw_rooday_sbajwa_shreyap#OTP_by_line', {prov.model.PROV_LABEL:'On-Time Performance by Line', prov.model.PROV_TYPE:'ont:DataSet'})
+           
+        ############################################################
 
-       	## wasAssociatedWith
-  		doc.wasAssociatedWith(get_OTP_by_line, this_script)     	
+        ## wasAssociatedWith
+        doc.wasAssociatedWith(get_OTP_by_line, this_script)       
 
-		## used
-		doc.usage(get_OTP_by_line, resource, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval',})		
+        ## used
+        doc.usage(get_OTP_by_line, resource, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval',})    
 
-		## wasGeneratedBy
-		doc.wasGeneratedBy(OTP_by_line, get_OTP_by_line, endTime)
+        ## wasGeneratedBy
+        doc.wasGeneratedBy(OTP_by_line, get_OTP_by_line, endTime)
 
-		## wasAttributedTo
-		doc.wasAttributedTo(OTP_by_line, this_script)		
+        ## wasAttributedTo
+        doc.wasAttributedTo(OTP_by_line, this_script)   
 
-		## wasDerivedFrom
-		doc.wasDerivedFrom(OTP_by_line, resource, get_OTP_by_line, get_OTP_by_line, get_OTP_by_line)
+        ## wasDerivedFrom
+        doc.wasDerivedFrom(OTP_by_line, resource, get_OTP_by_line, get_OTP_by_line, get_OTP_by_line)
 
-		############################################################
+        ############################################################
 
-		repo.logout()
+        repo.logout()
 
-		return doc
+        return doc
+
+OTP_by_line.execute()

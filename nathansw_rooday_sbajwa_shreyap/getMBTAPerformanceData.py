@@ -6,10 +6,10 @@ import datetime
 import uuid
 import requests
 
-class getOTPByLineData(dml.Algorithm):
+class getMBTAPerformanceData(dml.Algorithm):
     contributor = 'nathansw_rooday_sbajwa_shreyap'
     reads = []
-    writes = ['nathansw_rooday_sbajwa_shreyap.otpByLine']
+    writes = ['nathansw_rooday_sbajwa_shreyap.MBTAPerformance']
 
     @staticmethod
     def execute(trial = False):
@@ -18,13 +18,28 @@ class getOTPByLineData(dml.Algorithm):
         repo = client.repo
         repo.authenticate('nathansw_rooday_sbajwa_shreyap', 'nathansw_rooday_sbajwa_shreyap')
 
-        data_url = "http://datamechanics.io/data/nathansw_rooday_sbajwa_shreyap/otp_by_line.json"
+        data_url = "http://datamechanics.io/data/nathansw_rooday_sbajwa_shreyap/MBTAPerformance.json"
         response = requests.get(data_url).json()
 
-        repo.dropCollection("otpByLine")
-        repo.createCollection("otpByLine")
-        repo['nathansw_rooday_sbajwa_shreyap.otpByLine'].insert(response)
-        repo['nathansw_rooday_sbajwa_shreyap.otpByLine'].metadata({'complete':True})
+        count = 0
+        obj1 = {}
+        obj2 = {}
+        obj3 = {}
+        for key in response.keys():
+          if count % 3 == 0:
+            obj1[key] = response[key]
+          elif count % 3 == 1:
+            obj2[key] = response[key]
+          elif count % 3 == 2:
+            obj3[key] = response[key]
+          count += 1
+
+        final = [obj1, obj2, obj3]
+
+        repo.dropCollection("MBTAPerformance")
+        repo.createCollection("MBTAPerformance")
+        repo['nathansw_rooday_sbajwa_shreyap.MBTAPerformance'].insert_many(final)
+        repo['nathansw_rooday_sbajwa_shreyap.MBTAPerformance'].metadata({'complete':True})
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -48,26 +63,26 @@ class getOTPByLineData(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
 
         #Since the urls have a lot more information about the resource itself, we are treating everything apart from the actual document suffix as the namespace.
-        doc.add_namespace('otpByLine', 'https://data.boston.gov/api/action/datastore_search_sql')
+        doc.add_namespace('MBTAPerformance', 'https://data.boston.gov/api/action/datastore_search_sql')
 
-        this_script = doc.agent('alg:#getotpByLineData', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('otpByLine:?sql=SELECT%20*%20from%20%2212cb3883-56f5-47de-afa5-3b1cf61b257b%22', {'prov:label':'otpByLine Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        get_otpByLine_data = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_otpByLine_data, this_script)
-        doc.usage(get_otpByLine_data, resource, startTime, None,
+        this_script = doc.agent('alg:#getMBTAPerformanceData', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource = doc.entity('MBTAPerformance:?sql=SELECT%20*%20from%20%2212cb3883-56f5-47de-afa5-3b1cf61b257b%22', {'prov:label':'MBTAPerformance Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        get_MBTAPerformance_data = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(get_MBTAPerformance_data, this_script)
+        doc.usage(get_MBTAPerformance_data, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
                   'ont:Query':'?sql=SELECT%20*%20from%20%2212cb3883-56f5-47de-afa5-3b1cf61b257b%22'
                   }
                   )        
-        otpByLine = doc.entity('dat:#otpByLine', {prov.model.PROV_LABEL:'otpByLine Data', prov.model.PROV_TYPE:'ont:DataSet'})
+        MBTAPerformance = doc.entity('dat:#MBTAPerformance', {prov.model.PROV_LABEL:'MBTAPerformance Data', prov.model.PROV_TYPE:'ont:DataSet'})
 
-        doc.wasAttributedTo(otpByLine, this_script)
-        doc.wasGeneratedBy(otpByLine, get_otpByLine_data, endTime)
-        doc.wasDerivedFrom(otpByLine, resource, get_otpByLine_data, get_otpByLine_data, get_otpByLine_data)
+        doc.wasAttributedTo(MBTAPerformance, this_script)
+        doc.wasGeneratedBy(MBTAPerformance, get_MBTAPerformance_data, endTime)
+        doc.wasDerivedFrom(MBTAPerformance, resource, get_MBTAPerformance_data, get_MBTAPerformance_data, get_MBTAPerformance_data)
 
         repo.logout()
                   
         return doc
 
 
-getOTPByLineData.execute()
+getMBTAPerformanceData.execute()

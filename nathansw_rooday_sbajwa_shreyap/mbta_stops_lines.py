@@ -4,7 +4,7 @@ import time
 import pprint 
 import datetime
 import dml
-import prov.mode
+import prov.model
 import uuid
 from bson import ObjectId
 
@@ -15,9 +15,8 @@ class mbta_stops_lines(dml.Algorithm):
   contributor = 'nathansw_rooday_sbajwa_shreyap'
   ### Make sure this is the correct dataset file name
   reads = ['nathansw_rooday_sbajwa_shreyap.MBTAPerformance', 'nathansw_rooday_sbajwa_shreyap.OTP_by_line']
-    
-    # Currently it just creates a csv file 
-    writes = []
+  # Currently it just creates a csv file 
+  writes = []
 
   @staticmethod
   def execute(trial=False):

@@ -23,7 +23,7 @@ class regressionAnalysis(dml.Algorithm):
 
   contributor = 'nathansw_rooday_sbajwa_shreyap'
   ### Make sure this is the correct dataset file name
-  reads = ['nathansw_rooday_sbajwa_shreyap.otpByLine', 'nathansw_rooday_sbajwa_shreyap.stops', 'nathansw_rooday_sbajwa_shreyap.stopsVsLines']
+  reads = ['nathansw_rooday_sbajwa_shreyap.OTP_by_line', 'nathansw_rooday_sbajwa_shreyap.stops', 'nathansw_rooday_sbajwa_shreyap.stopsVsLines']
     
   # Currently it just creates a csv file 
   writes = ['nathansw_rooday_sbajwa_shreyap.regressionAnalysis']
@@ -36,7 +36,7 @@ class regressionAnalysis(dml.Algorithm):
     repo.authenticate('nathansw_rooday_sbajwa_shreyap', 'nathansw_rooday_sbajwa_shreyap')
 
     # Read data from mongo
-    mbta_db = repo['nathansw_rooday_sbajwa_shreyap.otpByLine']
+    mbta_db = repo['nathansw_rooday_sbajwa_shreyap.OTP_by_line']
     stops_db = repo['nathansw_rooday_sbajwa_shreyap.stops']
     stopsVsLines_db = repo['nathansw_rooday_sbajwa_shreyap.stopsVsLines']
 
@@ -77,6 +77,9 @@ class regressionAnalysis(dml.Algorithm):
     coefficients = {}
     for key in resultsKeys:
       coefficients[key] = results.params[key]
+
+    pp = pprint.PrettyPrinter(indent=4)
+    pp.pprint(coefficients)
 
     repo.dropCollection('regressionAnalysis')
     repo.createCollection('regressionAnalysis')
