@@ -19,10 +19,10 @@ from bson import ObjectId
 
 
 class OTP_by_line(dml.Algorithm):
-    contributor = 'nathansw_rooday_sbajwa_shreyapandit'
+    contributor = 'nathansw_rooday_sbajwa_shreyap'
     ### make sure this is the correct dataset file name
-    reads = ['nathansw_rooday_sbajwa_shreyapandit.MBTAPerformance']
-    writes = ['nathansw_rooday_sbajwa_shreyapandit.OTP_by_line']
+    reads = ['nathansw_rooday_sbajwa_shreyap.MBTAPerformance']
+    writes = ['nathansw_rooday_sbajwa_shreyap.OTP_by_line']
 
     @staticmethod
     def execute(trial=False):
@@ -30,9 +30,9 @@ class OTP_by_line(dml.Algorithm):
         startTime = datetime.datetime.now()
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('nathansw_rooday_sbajwa_shreyapandit', 'nathansw_rooday_sbajwa_shreyapandit')
+        repo.authenticate('nathansw_rooday_sbajwa_shreyap', 'nathansw_rooday_sbajwa_shreyap')
 
-        performance_db = repo['nathansw_rooday_sbajwa_shreyapandit.MBTAPerformance']
+        performance_db = repo['nathansw_rooday_sbajwa_shreyap.MBTAPerformance']
         perf = performance_db.find_one()
 
         # create a dict where each key is an MBTA line
@@ -102,7 +102,7 @@ class OTP_by_line(dml.Algorithm):
 
         repo.dropCollection('OTP_by_line')
         repo.createCollection('OTP_by_line')
-        repo['nathansw_rooday_sbajwa_shreyapandit.OTP_by_line'].insert_one(json_performance)
+        repo['nathansw_rooday_sbajwa_shreyap.OTP_by_line'].insert_one(json_performance)
 
         repo.logout()
 
@@ -124,10 +124,10 @@ class OTP_by_line(dml.Algorithm):
 		doc.add_namespace('ont', 'http://datamechanics.io/ontology#')
 		doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
 
-		doc.add_namespace('json_data', 'http://datamechanics.io/data/nathansw_rooday_sbajwa_shreyapandit/') 
+		doc.add_namespace('json_data', 'http://datamechanics.io/data/nathansw_rooday_sbajwa_shreyap/') 
 
 		## Agents
-		this_script = doc.agent('alg:nathansw_rooday_sbajwa_shreyapandit#OTP_by_line', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+		this_script = doc.agent('alg:nathansw_rooday_sbajwa_shreyap#OTP_by_line', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
 		## Activities
 		get_OTP_by_line = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
@@ -136,7 +136,7 @@ class OTP_by_line(dml.Algorithm):
 		# Data Source
 		resource = doc.entity('json_data:MBTAPerformance.json', {'prov:label':'MBTA Performance Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 		# Data Generated
-		OTP_by_line = doc.entity('dat:nathansw_rooday_sbajwa_shreyapandit#OTP_by_line', {prov.model.PROV_LABEL:'On-Time Performance by Line', prov.model.PROV_TYPE:'ont:DataSet'})
+		OTP_by_line = doc.entity('dat:nathansw_rooday_sbajwa_shreyap#OTP_by_line', {prov.model.PROV_LABEL:'On-Time Performance by Line', prov.model.PROV_TYPE:'ont:DataSet'})
        
 		############################################################
 
