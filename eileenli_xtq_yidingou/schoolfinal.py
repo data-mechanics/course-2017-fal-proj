@@ -180,11 +180,18 @@ class schoolfinal(dml.Algorithm):
                 {"hubway": hubway},
                 {"traffic signal": signal},
                 {"MBTA": MBTA},
-                {"safety": (2000 + hospital*2 - crime*2 - crash) / 100},
+                {"safety": (1000 + hospital * 100 - crime - crash) / 100},
                 {"comfort": (restaurant + entertainment) / 100},
                 {"traffic": (1500 + MBTA + hubway - signal - crash * 2) / 100}
                 ]
                 })
+
+        list_hospital = []
+        
+        for i in score:
+            list_hospital.append(i["properties"][0]["hospital"])
+
+        index = list_hospital.index(min(list_hospital))
 
         repo.dropCollection("schoolfinal")
         repo.createCollection("schoolfinal")
