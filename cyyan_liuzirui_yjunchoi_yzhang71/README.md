@@ -8,15 +8,15 @@ Young Jun Choi (yjunchoi)
 Yuchen Zhang (yzhang71)
 
 ## Data set
-###Data set for Wards:
+### Data set for Wards:
 https://data.boston.gov/dataset/wards
-###Data set for Polling Location:
+### Data set for Polling Location:
 https://data.boston.gov/dataset/polling-locations
-###Data set for Bus Stop:
+### Data set for Bus Stop:
 http://datamechanics.io/data/wuhaoyu_yiran123/MBTA_Bus_Stops.geojson
-###Data set for MBTA:
+### Data set for MBTA:
 http://erikdemaine.org/maps/mbta/mbta.yaml
-###Data set for President Election Result by Precinct:
+### Data set for President Election Result by Precinct:
 http://datamechanics.io/data/yjunchoi_yzhang71/presidentElectionByPrecinct.csv
 
 ## Optimization and Statistical Analysis
