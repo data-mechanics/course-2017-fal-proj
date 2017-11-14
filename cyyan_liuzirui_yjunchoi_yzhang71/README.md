@@ -44,5 +44,5 @@ python execute.py cyyan_liuzirui_yjunchoi_yzhang71
 ```
 To execute the algorithms in trial mode
 ```
-python execute.py cyyan_liuzirui_yjunchoi_yzhang71
+python execute.py cyyan_liuzirui_yjunchoi_yzhang71 -t
 ```
