@@ -41,9 +41,13 @@ class crimesProperty(dml.Algorithm):
                 crime_reports.append(reports["STREET"])
 
         #Place identical street names in array
+        iterations = 0
         for street in property_reports:
             if street in crime_reports:
                 intersect.append(street)
+                iterations += 1
+            if iterations == 10:
+                break
 
         print("Shared Data:", str(len(intersect)))
         
@@ -59,30 +63,28 @@ class crimesProperty(dml.Algorithm):
         #                                {All Data from the Properties Database that occured on BUSWELL ST goes in here}
         #                             }
         #                 }
-
         indice = 0
         for key in properties_crimes: #iterating through all street names
             
             #Insert Crimes data related to this street in this key
             print(key)
             
-            properties_crimes[key] = {"Crimes": list(), "Properties": list()}
+            properties_crimes[key] = {"Crimes": 0, "Properties": list()}
             for reports in crimes.find():
-                if reports["STREET"] == key or reports["STREET"] in key:
-                    properties_crimes[key]["Crimes"].append({"Offense Code": reports["OFFENSE_CODE_GROUP"], "Description": reports["OFFENSE_DESCRIPTION"], "Shooting": reports["SHOOTING"],                     "DateTime": reports["OCCURRED_ON_DATE"], "Location": reports["Location"]})
+                if reports["STREET"] == key:
+                   # properties_crimes[key]["Crimes"].append({"Offense Code": reports["OFFENSE_CODE_GROUP"], "Description": reports["OFFENSE_DESCRIPTION"], "Shooting": reports["SHOOTING"],                    "Location": reports["Location"]})
+                    properties_crimes[key]["Crimes"] += 1
             print('*****' + key + " CRIMES COMPLETE")
             
             #Insert Properties data related to this street in this key
             for reports in properties.find():
-                if reports["ST_NAME"] == key or reports["ST_NAME"] in key:
+                street = reports["ST_NAME"] + " " + reports["ST_NAME_SUF"]
+                if street == key:
                     properties_crimes[key]["Properties"].append({"ZIPCODE": reports["ZIPCODE"], "AVG_LAND": reports["AV_LAND"], "AVG_BLDG": reports["AV_BLDG"],
                                                                  "AVG_TOTAL": reports["AV_TOTAL"], "GROSS_TAX": reports["GROSS_TAX"], "Floors": reports["NUM_FLOORS"],
                                                                  "Year Built": reports["YR_BUILT"]})
-                    
-            indice += 1
+            indice += 1        
             print('-----' + key + " PROPERTIES COMPLETE" + "\t" + str(indice))
-            if indice == 10:
-                break
         
         p_c = list()
         p_c.append(properties_crimes)
