@@ -63,7 +63,7 @@ class transformation5(dml.Algorithm):
         combine_rate_crime=[]
         count = 0
         for h in hotel_score:
-            print(h)
+            #print(h)
             orginal_rate.append([h['orginal_rate']])
             norm_rate.append([h['norm_rate']])
             norm_mbta.append([h['norm_mbta']])
@@ -75,7 +75,10 @@ class transformation5(dml.Algorithm):
             count+=1
         hotel_score.rewind()
         
-        
+
+        if trial:
+            combine_rate_crime=combine_rate_crime[:100]
+            res= res[:100]
         
 
         X = np.array(res)
@@ -97,9 +100,9 @@ class transformation5(dml.Algorithm):
         idx = [len(i) for i in ids]
         max_index_mbta = idx.index(max(idx))
         #print (kmeans_arr_mbta)
-        print(idx)
-        print(kmeans_arr_mbta[max_index_mbta])
-        print(scores)
+        #print(idx)
+        #print(kmeans_arr_mbta[max_index_mbta])
+        #print(scores)
         
         fig = plt.figure(figsize=(16,12))
         colors = ['red','blue','green','pink','yellow','cyan','black','orange','lightblue','lightgreen']
@@ -113,9 +116,9 @@ class transformation5(dml.Algorithm):
             x = []
             y = []
             for j in range(len(indexs)):
-                if i == 5:
-                    print(hotel_lists[indexs[j]])
-                print(res[indexs[j]][0],res[indexs[j]][1])
+                #if i == 5:
+                    #print(hotel_lists[indexs[j]])
+                #print(res[indexs[j]][0],res[indexs[j]][1])
                 x.append(res[indexs[j]][0])
                 y.append(res[indexs[j]][1])
             plt.scatter(x, y, color=colors[i],s = 50,label=scores[i])
@@ -192,9 +195,9 @@ class transformation5(dml.Algorithm):
 
 
 
-transformation5.execute()
-doc = transformation5.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+#transformation5.execute()
+#doc = transformation5.provenance()
+#print(doc.get_provn())
+#print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof

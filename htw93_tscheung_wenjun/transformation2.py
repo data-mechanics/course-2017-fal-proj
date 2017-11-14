@@ -17,7 +17,6 @@ class transformation2(dml.Algorithm):
     def execute(trial = False):
         '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
         startTime = datetime.datetime.now()
-        print("here")
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
@@ -80,7 +79,7 @@ class transformation2(dml.Algorithm):
 
         
             
-        print(CustomScore)
+        #print(CustomScore)
         repo.dropCollection("BostonHotelCustomScore")
         repo.createCollection("BostonHotelCustomScore")
         repo['htw93_tscheung_wenjun.BostonHotelCustomScore'].insert_many(CustomScore)
@@ -130,9 +129,9 @@ class transformation2(dml.Algorithm):
                   
         return doc
 
-transformation2.execute(True)
-doc = transformation2.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+#transformation2.execute(True)
+#doc = transformation2.provenance()
+#print(doc.get_provn())
+#print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof

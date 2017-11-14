@@ -8,6 +8,7 @@ import sodapy
 import geojson
 from vincenty import vincenty
 import scipy.stats
+import random
 
 class transformation3(dml.Algorithm):
     contributor = 'htw93_tscheung_wenjun'
@@ -41,7 +42,7 @@ class transformation3(dml.Algorithm):
         
     
         for h in CustomScoreArr:
-            print(h)
+            #print(h)
             orginal_rate.append([h['orginal_rate']])
             norm_rate.append([h['norm_rate']])
             norm_crime.append([h['norm_crime']])
@@ -55,13 +56,13 @@ class transformation3(dml.Algorithm):
 
         # Trial mode: randomly choose k elements from lists
         if trial:
-            orginal_rate = random.choices(orginal_rate, k = 1)
-            norm_rate = random.choices(norm_rate, k = 1)
-            norm_crime = random.choices(norm_crime, k = 1)
-            norm_mbta = random.choices(norm_mbta, k = 1)
-            norm_garden = random.choices(norm_garden, k = 1)
-            norm_food = random.choices(norm_food, k = 1)
-            combine_rate_crime = random.choices(combine_rate_crime, k = 1)
+            orginal_rate = orginal_rate[:100]
+            norm_rate = norm_rate[:100]
+            norm_crime = norm_crime[:100]
+            norm_mbta = norm_mbta[:100]
+            norm_garden = norm_garden[:100]
+            norm_food = norm_food[:100]
+            combine_rate_crime = combine_rate_crime[:100]
             
 
 
@@ -75,6 +76,7 @@ class transformation3(dml.Algorithm):
         math_score_garden = scipy.stats.pearsonr(norm_rate, norm_garden)
         math_score_food = scipy.stats.pearsonr(norm_rate, norm_food)
         '''
+        '''
         print("Crime Correlation coefficient is " + str(math_score_crime[0]))
         print("Crime P-value is " + str(math_score_crime[1]))
         print("mbta Correlation coefficient is " + str(math_score_mbta[0]))
@@ -82,7 +84,8 @@ class transformation3(dml.Algorithm):
         print("Garden Correlation coefficient is " + str(math_score_garden[0]))
         print("Garden P-value is " + str(math_score_garden[1]))
         print("Food Correlation coefficient is " + str(math_score_food[0]))
-        print("Fodd P-value is " + str(math_score_food[1]))        
+        print("Fodd P-value is " + str(math_score_food[1]))
+        '''
         res.append({'crime_coefficient':math_score_crime[0][0], 'crime_p_value':math_score_crime[1][0]})
         res.append({'mbta_coefficient':math_score_mbta[0][0], 'mbta_p_value':math_score_mbta[1][0]})
         res.append({'garden_coefficient':math_score_garden[0][0], 'garden_p_value':math_score_garden[1][0]})
@@ -136,9 +139,9 @@ class transformation3(dml.Algorithm):
                   
         return doc
 
-transformation3.execute()
-doc = transformation3.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+#transformation3.execute()
+#doc = transformation3.provenance()
+#print(doc.get_provn())
+#print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof
