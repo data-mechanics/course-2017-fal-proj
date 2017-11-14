@@ -14,7 +14,7 @@ class crimesProperty(dml.Algorithm):
     def execute(trial = False):
         '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
         startTime = datetime.datetime.now()
-
+        print("Creating CrimesProperty...")
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
@@ -41,13 +41,18 @@ class crimesProperty(dml.Algorithm):
                 crime_reports.append(reports["STREET"])
 
         #Place identical street names in array
-        iterations = 0
-        for street in property_reports:
-            if street in crime_reports:
-                intersect.append(street)
-                iterations += 1
-            if iterations == 10:
-                break
+        if(trial == True):
+            iterations = 0
+            for street in property_reports:
+                if street in crime_reports:
+                    intersect.append(street)
+                    iterations += 1
+                if iterations == 10:
+                    break
+        else:
+            for street in property_reports:
+                if street in crime_reports:
+                    intersect.append(street)
 
         print("Shared Data:", str(len(intersect)))
         
@@ -135,7 +140,7 @@ class crimesProperty(dml.Algorithm):
                   
         return doc
 
-crimesProperty.execute()
+# crimesProperty.execute()
 #doc = crimesProperty.provenance()
 #print(doc.get_provn())
 #print(json.dumps(json.loads(doc.serialize()), indent=4))
