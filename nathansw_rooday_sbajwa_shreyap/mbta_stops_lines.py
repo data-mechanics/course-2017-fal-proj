@@ -203,18 +203,16 @@ class mbta_stops_lines(dml.Algorithm):
     # Data Source
     resource1 = doc.entity('mbta:stopsbyroute', {'prov:label':'MBTA Stops By Route', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
     resource2 = doc.entity('dat:OTP_by_line.json', {'prov:label':'On-Time Performance by Line', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-    ### Was this actually used?
-    resource3 = doc.entity('dat:MBTAPerformance.json', {'prov:label':'MBTA Performance Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 
     # Data Generated
     lines_vs_parents = doc.entity('dat:nathansw_rooday_sbajwa_shreyap#lines_vs_parents', {prov.model.PROV_LABEL:'lines_vs_parents', prov.model.PROV_TYPE:'ont:DataSet', 'ont:Extension':'csv'})
-      lines_vs_stops = doc.entity('dat:nathansw_rooday_sbajwa_shreyap#lines_vs_stops', {prov.model.PROV_LABEL:'lines_vs_stops', prov.model.PROV_TYPE:'ont:DataSet', 'ont:Extension':'csv'})
+    lines_vs_stops = doc.entity('dat:nathansw_rooday_sbajwa_shreyap#lines_vs_stops', {prov.model.PROV_LABEL:'lines_vs_stops', prov.model.PROV_TYPE:'ont:DataSet', 'ont:Extension':'csv'})
 
     ############################################################
 
-        ## wasAssociatedWith
-        doc.wasAssociatedWith(get_lines_vs_parents, this_script)
-        doc.wasAssociatedWith(get_lines_vs_stops, this_script)
+    ## wasAssociatedWith
+    doc.wasAssociatedWith(get_lines_vs_parents, this_script)
+    doc.wasAssociatedWith(get_lines_vs_stops, this_script)
 
     ## used   
     doc.usage(get_lines_vs_parents, resource1, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval',})
