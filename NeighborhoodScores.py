@@ -6,7 +6,7 @@ import datetime
 import uuid
 import requests
 import geojson
-from tqdm import tqdm
+#from tqdm import tqdm
 import pdb
 
 
