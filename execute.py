@@ -63,6 +63,7 @@ import protoql
 agents = [[a] for a in prov_json['agent']]
 entities = [[e] for e in prov_json['entity']]
 activities = [[v] for v in prov_json['activity']]
+print(v)
 wasAssociatedWith = [(v['prov:activity'], v['prov:agent'], 'wasAssociatedWith') for v in prov_json['wasAssociatedWith'].values()]
 wasAttributedTo = [(v['prov:entity'], v['prov:agent'], 'wasAttributedTo') for v in prov_json['wasAttributedTo'].values()]
 wasDerivedFrom = [(v['prov:usedEntity'], v['prov:generatedEntity'], 'wasDerivedFrom') for v in prov_json['wasDerivedFrom'].values()]
