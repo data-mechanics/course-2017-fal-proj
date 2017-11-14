@@ -11,18 +11,6 @@ from collections import defaultdict
 def map(f, R):
     return [t for (k,v) in R for t in f(k,v)]
 
-def finde(x,y):
-    all_e = []
-    for k,v in x.items():
-        # print(k)
-        # print(v)
-        for c in y:
-            m = distance(v,c)
-            if m < 2:
-                all_e.append((k,c))
-    return all_e
-
-
 def cro(x,y):
     all_cord = []
     for key,value in x.items():
@@ -36,18 +24,8 @@ def project(R, p):
 def comb(ls):
     result ={}
     for k,v in ls:
-        if k in result:
-            if v not in result[k]:
-                result[k].append(v)
-        else:
-            result[k] = []
-
-    # print(result)
+        result.setdefault(k,[]).append(v)
     return result
-
-
-
-
 
 def distance(origin, destination):
     lat1 = origin[0] 
@@ -78,17 +56,10 @@ def counter(ls):
         c = 0
     return dict(result)
 
-
-
-
-
-
-
-
 class schoolfinal(dml.Algorithm):
     contributor = 'eileenli_xtq_yidingou'
     reads = ['eileenli_xtq_yidingou.schools', 'eileenli_xtq_yidingou.comfort', 'eileenli_xtq_yidingou.safety', 'eileenli_xtq_yidingou.traffic']
-    writes = ['eileenli_xtq_yidingou.schoolfinal_data']
+    writes = ['eileenli_xtq_yidingou.schoolfinal_data', 'eileenli_xtq_yidingou.schoolscore_data']
 
 
     @staticmethod
@@ -104,216 +75,127 @@ class schoolfinal(dml.Algorithm):
 
         # loads the collection
         SC = repo['eileenli_xtq_yidingou.schools'].find()
+
         CM = repo['eileenli_xtq_yidingou.comfort'].find()
         SF = repo['eileenli_xtq_yidingou.safety'].find()
         TR = repo['eileenli_xtq_yidingou.traffic'].find()
 
-        final_dic = {}
+
+        final = []
+        score = []
+
+        for i in SC:
+            safety = []
+            comfort = []
+            traffic = []
+            entertainment = 0
+            restaurant = 0
+            hospital = 0
+            crime = 0
+            crash = 0
+            hubway = 0
+            signal = 0
+            MBTA = 0
+
+            for j in CM:
+                temp = []
+                for k in j['entertainment']:
+                    if distance(k, i["geometry"]["coordinates"]) <= 2:
+                        entertainment += 1
+                        temp.append(k)
+                comfort.append({"entertainment": temp})
+                temp = []
+                for k in j['restaurants']:
+                    if distance(k, i["geometry"]["coordinates"]) <= 2:
+                        restaurant += 1
+                        temp.append(k)
+                comfort.append({"restaurants": temp})
+            CM.rewind()
+
+            for j in SF:
+                temp = []
+                for k in j["hospitals"]:
+                    if distance(k, i["geometry"]["coordinates"]) <= 2:
+                        hospital += 1
+                        temp.append(k)
+                safety.append({"hospitals": temp})
+                temp = []
+                for k in j["crimes"]:
+                    if distance(k, i["geometry"]["coordinates"]) <= 2:
+                        crime += 1
+                        temp.append(k)
+                safety.append({"crimes": temp})
+                temp = []
+                for k in j['crash']:
+                    if distance(k, i["geometry"]["coordinates"]) <= 2:
+                        crash += 1
+                        temp.append(k)
+                safety.append({"crash": temp})
+            SF.rewind()
+            
+            for j in TR:
+                temp = []
+                for k in j["crash"]:
+                    if distance(k, i["geometry"]["coordinates"]) <= 2:
+                        temp.append(k)
+                traffic.append({"crash": temp})
+                temp = []
+                for k in j["hubway"]:
+                    if distance(k, i["geometry"]["coordinates"]) <= 2:
+                        hubway += 1
+                        temp.append(k)
+                traffic.append({"hubway": temp})
+                temp = []
+                for k in j['signals']:
+                    if distance(k, i["geometry"]["coordinates"]) <= 2:
+                        signal += 1
+                        temp.append(k)
+                traffic.append({"signals": temp})
+                temp = []
+                for k in j['MBTA']:
+                    if distance(k, i["geometry"]["coordinates"]) <= 2:
+                        MBTA += 1
+                        temp.append(k)
+                traffic.append({"MBTA": temp})
+            TR.rewind()
 
 
-        name_cord = {}
-        c = []
-        l = []
-        for k in SC:
-            #print(k)
-            for v in k['properties']:
-                # print(v)
-                # for i in v:
-                    #print(i)
-                if v == "Name":
-                    # print(v)
-                    c.append(k['properties']["Name"])
-                    # name = i['NAME']
-            for m in k['geometry']:
-                if m =="coordinates":
-                    # print(m)
-                    l.append(k['geometry']["coordinates"])
+            final.append({
+                "school": i["properties"]["Name"],
+                "properties": [
+                {"coordinates": i["geometry"]["coordinates"]},
+                {"safety": safety},
+                {"comfort": comfort},
+                {"traffic": traffic}]
+                })
 
-
-        for i in range(len(c)):
-            name_cord.update({c[i]:l[i]})            
-
-        # for m in SC:
-        #     print(m)
-        #     for n in m:
-        #         print(n)
-        #         if n == "coordinates":
-        #             print(n)
-                        
-        entertainment_list = []
-
-        for k in CM:
-            # print(k)
-            for v in k:
-                if v == "entertainment":
-                    # print(v)
-                    entertainment_list = k["entertainment"]
-
-        en_sc = finde(name_cord, entertainment_list)
-        en_sc = comb(en_sc) #school: coordinate of entertainment within 2 miles
-        print('entertainment finished')
-
-        CM.rewind()
-
-
-        restaurants_list = []
-
-        print('restaurant start')
-
-        # print(CM)
-        for k in CM:
-            # print(k)
-            for v in k:
-                if v == "restaurants":
-                    # print(v)
-                    restaurants_list = k["restaurants"]
-
-        re_sc = finde(name_cord, restaurants_list)
-        re_sc = comb(re_sc)#school: coordinates of restaurants within 2 miles
-
-
-        #crime starts
-        crime_list = []
-
-        for k in SF:
-            for v in k:
-                if v == "crimes":
-                    # print(v)
-                    crime_list = k["crimes"]
-
-        cr_sc = finde(name_cord, crime_list)
-        cr_sc = comb(cr_sc)#school: coordinates of crimes within 2 miles
-
-        #hospital starts
-        SF.rewind()
-
-        hospital_list = []
-
-        for k in SF:
-            for v in k:
-                if v == "hospitals":
-                    # print(v)
-                    hospital_list = k["hospitals"]
-
-        hos_sc = finde(name_cord, hospital_list)
-        hos_sc = comb(hos_sc)#school: coordinates of hospitals within 2 miles
-
-        #crash starts
-        SF.rewind()
-
-        crash_list = []
-
-        for k in SF:
-            for v in k:
-                if v == "crash":
-                    # print(v)
-                    crash_list = k["crash"]
-
-        crash_sc = finde(name_cord, crash_list)
-        crash_sc = comb(crash_sc)#school: coordinates of crashs within 2 miles
-
-        #hubway starts
-        hubway_list = []
-
-        for k in TR:
-            for v in k:
-                if v == "hubway":
-                    # print(v)
-                    hubway_list = k["hubway"]
-
-        hub_sc = finde(name_cord, hubway_list)
-        hub_sc = comb(hub_sc)#school: coordinates of hubways within 2 miles
-
-        TR.rewind()
-
-        #signals starts
-        signal_list = []
-
-        for k in TR:
-            for v in k:
-                if v == "signals":
-                    # print(v)
-                    signal_list = k["signals"]
-
-        sig_sc = finde(name_cord, signal_list)
-        sig_sc = comb(sig_sc)#school: coordinates of signals within 2 miles
-
-        TR.rewind()
-
-        #MBTA starts
-        MBTA_list = []
-
-        for k in TR:
-            for v in k:
-                if v == "MBTA":
-                    # print(v)
-                    MBTA_list = k["MBTA"]
-
-        mb_sc = finde(name_cord, MBTA_list)
-        mb_sc = comb(mb_sc)#school: coordinates of MBTA within 2 miles
-                
-
-                
-                
-
-
-
-
-
-
-
-
-
-
-        print(mb_sc)
-
-
-
-
-
-
-        # en_cord = {}
-        # l = []
-        # for k in EN:
-        #     for i in k:
-        #         if i == 'businessname' or i == 'location':
-        #             try:
-        #                 nt = k['location'].strip("()").split(",")
-        #                 l = [float(nt[1]),float(nt[0])]
-        #                 en_cord.setdefault(k['businessname'],l).append()
-        #             except:
-        #                 pass
-
-        # result = []
-        # for k,v in en_cord.items():
-        #     if v != 'NULL':
-        #         try:
-        #             result.append((k,v))
-        #         except KeyError:
-        #             result == result
-        # en_cord = dict(result)
-
-
-
-        # crime_cord = []
-        # for key in CR:
-        #     for i in key['location']:
-        #         if i == 'coordinates':
-        #             try:
-        #                 crime_cord.append((key['location']['coordinates']))
-                        
-        #             except:
-        #                 pass
-        # all_cord = cro(en_cord,crime_cord)
-        # all_cord = comb(all_cord)
-        # re_cord = counter(all_cord)
-
+            score.append({
+                "school": i["properties"]["Name"],
+                "properties": [
+                {"hospital": hospital},
+                {"crime": crime},
+                {"crash": crash},
+                {"restaurant": restaurant},
+                {"entertainment": entertainment},
+                {"hubway": hubway},
+                {"traffic signal": signal},
+                {"MBTA": MBTA},
+                {"safety": (2000 + hospital*2 - crime*2 - crash) / 100},
+                {"comfort": (restaurant + entertainment) / 100},
+                {"traffic": (1500 + MBTA + hubway - signal - crash * 2) / 100}
+                ]
+                })
 
         repo.dropCollection("schoolfinal")
         repo.createCollection("schoolfinal")
 
-        repo['eileenli_xtq_yidingou.schoolfinal'].insert_one(re_sc)
-        setdis=[]
+        repo['eileenli_xtq_yidingou.schoolfinal'].insert_many(final)
+
+        repo.dropCollection("schoolscore")
+        repo.createCollection("schoolscore")
+
+        repo['eileenli_xtq_yidingou.schoolscore'].insert_many(score)
+
 
         repo.logout()
 
@@ -335,43 +217,46 @@ class schoolfinal(dml.Algorithm):
         repo.authenticate('eileenli_xtq_yidingou', 'eileenli_xtq_yidingou')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/')  # The scripts are in <folder>#<fileEnCrime> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/')  # The data sets are in <user>#<collection> format.
-        doc.add_namespace('ont',
-                          'http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
+        doc.add_namespace('ont', 'http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/')  # The event log.
 
-        this_script = doc.agent('alg:#schoolfinal',
-                                {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
-        resource_schoolss = doc.entity('dat:eileenli_xtq_yidingou#schoolss',
-                                             {'prov:label': 'schoolss',
-                                              prov.model.PROV_TYPE: 'ont:DataSet'})
-        resource_crime = doc.entity('dat:eileenli_xtq_yidingou#crime',
-                                             {'prov:label': 'crime',
-                                              prov.model.PROV_TYPE: 'ont:DataSet'})
-        
+        this_script = doc.agent('alg:#schoolfinal', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
+        resource_schools = doc.entity('dat:eileenli_xtq_yidingou#schools', {'prov:label': 'schools', prov.model.PROV_TYPE: 'ont:DataSet'})
+        resource_comfort = doc.entity('dat:eileenli_xtq_yidingou#comfort', {'prov:label': 'comfort', prov.model.PROV_TYPE: 'ont:DataSet'})
+        resource_safety = doc.entity('dat:eileenli_xtq_yidingou#safety', {'prov:label': 'safety', prov.model.PROV_TYPE: 'ont:DataSet'})
+        resource_traffic = doc.entity('dat:eileenli_xtq_yidingou#traffic', {'prov:label': 'traffic', prov.model.PROV_TYPE: 'ont:DataSet'})
+ 
+        get = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(get, this_script)
+        doc.usage(get, resource_schools, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
+        doc.usage(get, resource_comfort, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
+        doc.usage(get, resource_safety, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
+        doc.usage(get, resource_traffic, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})        
 
-        get_EnCrime = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_EnCrime, this_script)
-        doc.usage(get_EnCrime, resource_schoolss, startTime, None,
-                  {prov.model.PROV_TYPE: 'ont:Computation'})
-        doc.usage(get_EnCrime, resource_crime, startTime, None,
-                  {prov.model.PROV_TYPE: 'ont:Computation'})
-        
+        EntSch = doc.entity('dat:eileenli_xtq_yidingou#schoolfinal', {prov.model.PROV_LABEL:'School ranking data', prov.model.PROV_TYPE: 'ont:DataSet'})
+        doc.wasAttributedTo(EntSch, this_script)
+        doc.wasGeneratedBy(EntSch, get, endTime)
+        doc.wasDerivedFrom(EntSch, resource_schools, get, get, get)
+        doc.wasDerivedFrom(EntSch, resource_comfort, get, get, get)
+        doc.wasDerivedFrom(EntSch, resource_safety, get, get, get)
+        doc.wasDerivedFrom(EntSch, resource_traffic, get, get, get)
 
-        EnCrime = doc.entity('dat:eileenli_xtq_yidingou#schoolfinal',
-                          {prov.model.PROV_LABEL: 'schools Cirme',
-                           prov.model.PROV_TYPE: 'ont:DataSet'})
-        doc.wasAttributedTo(EnCrime, this_script)
-        doc.wasGeneratedBy(EnCrime, get_EnCrime, endTime)
-        doc.wasDerivedFrom(EnCrime, resource_schoolss, get_EnCrime, get_EnCrime, get_EnCrime)
-        doc.wasDerivedFrom(EnCrime, resource_crime, get_EnCrime, get_EnCrime, get_EnCrime)
-        
+        this_script2 = doc.agent('alg:#schoolscore', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
+        doc.wasAssociatedWith(get, this_script2)
+        EntSco = doc.entity('dat:eileenli_xtq_yidingou#schoolscore', {prov.model.PROV_LABEL:'School scores', prov.model.PROV_TYPE: 'ont:DataSet'})
+        doc.wasAttributedTo(EntSco, this_script2)
+        doc.wasGeneratedBy(EntSco, get, endTime)
+        doc.wasDerivedFrom(EntSco, resource_schools, get, get, get)
+        doc.wasDerivedFrom(EntSco, resource_comfort, get, get, get)
+        doc.wasDerivedFrom(EntSco, resource_safety, get, get, get)
+        doc.wasDerivedFrom(EntSco, resource_traffic, get, get, get)
         repo.logout()
 
         return doc
 
 schoolfinal.execute()
 doc = schoolfinal.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+#print(doc.get_provn())
+#print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof
