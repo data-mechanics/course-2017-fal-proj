@@ -13,7 +13,6 @@ class calculateCorrelations(dml.Algorithm):
     reads = ['bohorqux_peterg04_rocksdan_yfchen.property_crimes']
     writes = ['bohorqux_peterg04_rocksdan_yfchen.calculateCorrelations']
 
-
     # Taking all the helper functions given in class by Professor Lapets
     def permute(x):
         shuffled = [xi for xi in x]
@@ -46,6 +45,7 @@ class calculateCorrelations(dml.Algorithm):
     def execute(trial = False):
         '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
         startTime = datetime.datetime.now()
+        print("Creating calculateCorrelations...")
 
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
@@ -82,10 +82,10 @@ class calculateCorrelations(dml.Algorithm):
             else:
                 prop_higher_x.append(x_vals[i])
                 prop_higher_y.append(y_vals[i])
-        print(prop_higher_x)        
-        print(prop_higher_y)
-        print(prop_lower_x)
-        print(prop_lower_y)
+#         print(prop_higher_x)        
+#         print(prop_higher_y)
+#         print(prop_lower_x)
+#         print(prop_lower_y)
         # calc correlation 1 = the corr between low pop density to # crimes and its p value
         correlation1 = calculateCorrelations.corr(prop_lower_x, prop_lower_y)
         p1 = calculateCorrelations.p(prop_lower_x, prop_lower_y)
@@ -97,7 +97,7 @@ class calculateCorrelations(dml.Algorithm):
         finalData['crimes_lowPropertyDensity'] = [correlation1, p1]
         finalData['crimes_highPropertyDensity'] = [correlation2, p2]
         #structure : finalData =  {'category_comparison': [correlation, p-value]}   
-        print(finalData)
+#         print(finalData)
               
         repo.dropCollection("calculateCorrelations")
         repo.createCollection("calculateCorrelations")
@@ -150,7 +150,7 @@ class calculateCorrelations(dml.Algorithm):
                   
         return doc
 
-calculateCorrelations.execute()
+# calculateCorrelations.execute()
 # doc = example.provenance()
 # print(doc.get_provn())
 # print(json.dumps(json.loads(doc.serialize()), indent=4))

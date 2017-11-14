@@ -14,7 +14,7 @@ class crimesProperty(dml.Algorithm):
     def execute(trial = False):
         '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
         startTime = datetime.datetime.now()
-
+        print("Creating CrimesProperty...")
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
@@ -140,7 +140,7 @@ class crimesProperty(dml.Algorithm):
                   
         return doc
 
-crimesProperty.execute()
+# crimesProperty.execute()
 #doc = crimesProperty.provenance()
 #print(doc.get_provn())
 #print(json.dumps(json.loads(doc.serialize()), indent=4))

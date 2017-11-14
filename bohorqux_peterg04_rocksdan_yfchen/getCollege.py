@@ -14,6 +14,7 @@ class getCollege(dml.Algorithm):
     @staticmethod
     def execute(trial = False):
         startTime = datetime.datetime.now()
+        print("Retrieving getColleges...")
         
         # Set up the db connection
         client = dml.pymongo.MongoClient()
