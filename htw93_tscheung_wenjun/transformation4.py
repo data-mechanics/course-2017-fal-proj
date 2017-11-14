@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 def Clusts(clustnum,labels_array):
     return (np.where(labels_array == clustnum)[0])
 
-class transformation5(dml.Algorithm):
+class transformation4(dml.Algorithm):
     contributor = 'htw93_tscheung_wenjun'
     reads = ['htw93_tscheung_wenjun.BostonHotelCustomScore','htw93_tscheung_wenjun.BostonHotel']
     writes = ['htw93_tscheung_wenjun.BostonHotelPotential']
@@ -165,7 +165,7 @@ class transformation5(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
 
         # define entity to represent resources
-        Potential_script = doc.agent('alg:htw93_tscheung_wenjun#transformation5', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        Potential_script = doc.agent('alg:htw93_tscheung_wenjun#transformation4', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource_BostonHotelCustomScore = doc.entity('dat:htw93_tscheung_wenjun#BostonHotelCustomScore', {'prov:label': 'BostonHotelCustomScore', prov.model.PROV_TYPE: 'ont:DataSet'})
         resource_BostonHotel = doc.entity('dat:htw93_tscheung_wenjun#BostonHotel', {'prov:label': 'BostonHotel', prov.model.PROV_TYPE: 'ont:DataSet'})
         
