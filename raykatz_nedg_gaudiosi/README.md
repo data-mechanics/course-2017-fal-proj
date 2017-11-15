@@ -43,7 +43,7 @@ Our second computation is used to find correlations between the variables that w
 For the most part, our results aligned with our intuitions: areas like the North End and Finanical District had low suspecibility to gentrification, while areas like Allston and Dorchester were more suspectible. 
 Thus, we've created a way to rank the risk of gentrification in the various neighborhoods of Boston using the factors available to us. 
 
-# Correlation Analysis
+### Correlation Analysis
 Gentrification is a proccess that occurs over time. Naturally, we look to examine the relation between each of the independent data sets.
 Over time we hope to see a correlation or anti-correlation between statistics, and from this we will be able to identify which areas are gentified and or currently undergoing the process of gentrification
 
