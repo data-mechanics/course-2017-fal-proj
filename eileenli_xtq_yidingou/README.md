@@ -3,7 +3,7 @@
 
 # Databases:
 1. Crash: http://datamechanics.io/data/eileenli_xtq_yidingou/crash.json
-2. MTBA: http://datamechanics.io/data/cyung20_kwleung/mbta-t-stops.json
+2. MBTA: http://datamechanics.io/data/cyung20_kwleung/mbta-t-stops.json
 3. Hubway: http://datamechanics.io/data/eileenli_xtq_yidingou/Hubway_Stations.geojson
 4. Schools: http://datamechanics.io/data/eileenli_xtq_yidingou/Colleges_and_Universities.geojson
 5. Restaurants: http://datamechanics.io/data/eileenli_xtq_yidingou/Restaurant.json
