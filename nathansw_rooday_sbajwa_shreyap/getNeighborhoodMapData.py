@@ -70,5 +70,4 @@ class getNeighborhoodMapData(dml.Algorithm):
         doc.wasDerivedFrom(neighborhoodMap, resource, get_neighborhoodMap_data, get_neighborhoodMap_data, get_neighborhoodMap_data)
 
         repo.logout()
-                  
         return doc

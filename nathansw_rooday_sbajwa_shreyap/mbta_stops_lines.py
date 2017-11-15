@@ -29,8 +29,8 @@ class mbta_stops_lines(dml.Algorithm):
     mbta_data = mbta_db.find_one()
     del mbta_data['_id']
 
-    url_base = "http://realtime.mbta.com/developer/api/v2/stopsbyroute?\
-    api_key=TYDhtqF81Ua27IfG2lXEqA"
+    url_base = "http://realtime.mbta.com/developer/api/v2/stopsbyroute?"
+    api_key = 'api_key=' + dml.auth['services']['MBTADevelopmentPortal']['key']
     form = "&format=json"
 
     # Grab all unique route_ids from previously acquired mbta data, set as keys

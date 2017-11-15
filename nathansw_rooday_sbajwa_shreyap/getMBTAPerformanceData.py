@@ -88,5 +88,4 @@ class getMBTAPerformanceData(dml.Algorithm):
         doc.wasDerivedFrom(MBTAPerformance, resource, get_MBTAPerformance_data, get_MBTAPerformance_data, get_MBTAPerformance_data)
 
         repo.logout()
-                  
         return doc

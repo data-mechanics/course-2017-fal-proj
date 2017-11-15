@@ -70,5 +70,4 @@ class getTricklingData(dml.Algorithm):
         doc.wasDerivedFrom(trickling, resource, get_trickling_data, get_trickling_data, get_trickling_data)
 
         repo.logout()
-                  
         return doc

@@ -70,5 +70,4 @@ class getStopsVsLinesData(dml.Algorithm):
         doc.wasDerivedFrom(stopsVsLines, resource, get_stopsVsLines_data, get_stopsVsLines_data, get_stopsVsLines_data)
 
         repo.logout()
-                  
         return doc

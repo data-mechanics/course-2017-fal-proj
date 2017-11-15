@@ -70,5 +70,4 @@ class getStopsData(dml.Algorithm):
         doc.wasDerivedFrom(stops, resource, get_stops_data, get_stops_data, get_stops_data)
 
         repo.logout()
-                  
         return doc
