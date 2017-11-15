@@ -4,6 +4,10 @@ import dml
 import prov.model
 import datetime
 import uuid
+from random import shuffle
+from math import sqrt
+import decimal
+
 
 class incoming_outgoing(dml.Algorithm):
 	contributor = 'jtbloom_rfballes_medinad'
@@ -30,20 +34,32 @@ class incoming_outgoing(dml.Algorithm):
 	def intersect(R, S):
 		return [t for t in R if t in S]
 
+	def permute(x):
+		shuffled = [xi for xi in x]
+		shuffle(shuffled)
+		return shuffled
 
 	def avg(x): # Average
 		return sum(x)/len(x)
 
 	def stddev(x): # Standard deviation.
-		m = avg(x)
+		m = incoming_outgoing.avg(x)
 		return sqrt(sum([(xi-m)**2 for xi in x])/len(x))
 
 	def cov(x, y): # Covariance.
-		return sum([(xi-avg(x))*(yi-avg(y)) for (xi,yi) in zip(x,y)])/len(x)
+		return sum([(xi-incoming_outgoing.avg(x))*(yi-incoming_outgoing.avg(y)) for (xi,yi) in zip(x,y)])/len(x)
 
 	def corr(x, y): # Correlation coefficient.
-		if stddev(x)*stddev(y) != 0:
-			return cov(x, y)/(stddev(x)*stddev(y))
+		if incoming_outgoing.stddev(x)*incoming_outgoing.stddev(y) != 0:
+			return incoming_outgoing.cov(x, y)/(incoming_outgoing.stddev(x)*incoming_outgoing.stddev(y))
+
+	def p(x, y):
+		c0 = incoming_outgoing.corr(x, y)
+		corrs = []
+		for k in range(0, 2000):
+			y_permuted = incoming_outgoing.permute(y)
+			corrs.append(incoming_outgoing.corr(x, y_permuted))
+		return len([c for c in corrs if abs(c) > c0])/len(corrs)
 
 
 
@@ -86,6 +102,47 @@ class incoming_outgoing(dml.Algorithm):
 					inter.append([in_l[k],out_l[l]])
 
 		print(inter[:3])
+
+
+
+		inct = []
+		outt = []
+		for i in inter:
+			#print(i[0]['# incoming trips'])
+			inct.append(i[0]['# incoming trips'])
+			outt.append(i[1]['# outgoing trips'])
+
+		print(inct)
+
+		pval = incoming_outgoing.p(inct,outt)
+
+		correl = incoming_outgoing.corr(inct,outt)
+
+		covarr = incoming_outgoing.cov(inct,outt)
+
+		stdevi = incoming_outgoing.stddev(inct)
+
+		stdevo = incoming_outgoing.stddev(outt)
+
+		avgi = incoming_outgoing.avg(inct)
+
+
+
+		print("Incoming Avg: "+ str(avgi))
+		print("Incoming Stdev: "+ str(stdevi) + " Outgoing Stdev: "+ str(stdevo))
+		print("Covariance: ", covarr)
+		print("Correlation: ", correl)
+		print("P-Value: ",decimal.Decimal(pval))
+		
+
+
+
+
+
+
+
+
+
 
 
 		#inc_out_list = inc_out_list.append(in_l)
@@ -135,9 +192,9 @@ class incoming_outgoing(dml.Algorithm):
 
 		#for i in range(len(num_trips)):
 		#	print(num_trips[i]['end station'])
+		inter = [{'features':x} for x in inter]
 
-
-		#repo['jtbloom_rfballes_medinad.incoming_trips'].insert_many(num_trips)
+		repo['jtbloom_rfballes_medinad.incoming_outgoing'].insert_many(inter)
 
 			
 
