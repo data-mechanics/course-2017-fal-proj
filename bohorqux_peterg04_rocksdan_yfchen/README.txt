@@ -5,7 +5,7 @@ Assignment: Project #2
 
 *************************
 Important Notes to Notice:
-	- we are using Scipy for k-means: therefore the Scipy package must be installed on the system
+	- we are using Scipy for k-means: therefore the Scipy package must be installed on the system "pip install Scipy"
 	- just a note in case the crimesProperty.py takes 10-15 seconds to start running even in trial - it is parsing through
 		thousands of entries. it will be quick after that initial parsing
 	- calculateCorrelations takes about 1 second per entry, it'll need to run 100 entries in trial mode, so that takes about 1.5 mins
