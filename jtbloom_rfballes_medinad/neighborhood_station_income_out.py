@@ -35,51 +35,28 @@ class neighborhood_station_income_out(dml.Algorithm):
 
 		s_by_n = list(repo['jtbloom_rfballes_medinad.stationsByneighborhood'].find())
 		income = list(repo['jtbloom_rfballes_medinad.neighborhood_income_final'].find())
-		#print(s_by_n)
 
-
+		#data projections
 		tripsby_neighborhood = neighborhood_station_income_out.aggregate(neighborhood_station_income_out.project(s_by_n, lambda t: (t['Neighborhood'], t['station'], t['trips'])), sum)
-		print(tripsby_neighborhood)
-		print(len(tripsby_neighborhood))
-
-
-
-
-		out_proj = neighborhood_station_income_out.project(out, lambda t: (t['station'], t['# outgoing trips']))
-		#print(len(out_proj))
-
-		#test = []
-		# pair = [j[1] for j in s_proj]
-		# pair2 = [i[0] for i in out_proj]
-
-		# count = 0
-		# for s in pair:
-		# 	for k in pair2:
-		# 		if s == k:
-		# 			count+=1
-
-		# print(pair)
-		# print(pair2)
-		# print(count)
-
-		#for j in s_proj:
-		#	test.append(j[1])
-
-		#for i in out_proj:
-		#	test.append(i[0])
-		#print(s_proj)
-		#for i in range(len())
-
-
+		income_proj = neighborhood_station_income_out.project(income, lambda t: [t['Neighborhood'], t['Income']])
+		
+		#fix tuples for correlation
+		for i in income_proj:
+			i[1] = i[1].replace(',', '')
+			i[1] = i[1].replace('$', '')
+			if i[0] == 'Longwood':
+				i[0] = 'Longwood Medical Area'
+			
+			
 		newincout = []
-		for x in s_by_n:
-			for y in out:
-				if x['station']!=y['station']:
-					#print(x['Station'], y['station'])
-					newincout.append({'Neighborhood':x['Neighborhood'], 'Station':x['Station'],"Outgoing Trips":y['# outgoing trips']})
+		for x in tripsby_neighborhood:
+			for y in income_proj:
+				if x[0]==y[0]:
+					newincout.append({'trips':x[1], 'income':y[1]})
 
-		#print(len(newincout))
 
+
+		repo['jtbloom_rfballes_medinad.neighborhood_station_income_out'].insert_many(newincout)
 
 	@staticmethod
 	def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
