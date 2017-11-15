@@ -20,7 +20,6 @@ class boston_hubway_stations(dml.Algorithm):
 
     @staticmethod
     def execute(trial = False):
-        pass
         '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
         startTime = datetime.datetime.now()
         
@@ -35,13 +34,16 @@ class boston_hubway_stations(dml.Algorithm):
         hubway_list = []
         
         for item in repo.jtbloom_rfballes_medinad.hubway_stations.find():
-            new_dict = {}
-            new_dict['Station Name'] = item['Station']
-            new_dict['Longitude'] = item['Longitude']
-            new_dict['Latitude'] = item['Latitude']
-            #new_dict['Municipality'] = item['Municipality']
-            new_dict['Number of Docks'] = item['# of Docks']    
-            hubway_list.append(new_dict)
+            #print(item)
+            for feature in item['features']:
+                #print(feature)
+                new_dict = {}
+                new_dict['Station Name'] = feature['properties']['station']
+                new_dict['Longitude'] = feature['properties']['longitude']
+                new_dict['Latitude'] = feature['properties']['latitude']
+                #new_dict['Municipality'] = item['Municipality']
+                new_dict['Number of Docks'] = feature['properties']['of_docks']    
+                hubway_list.append(new_dict)
         #print(hubway_list)
 
         x = boston_hubway_stations.project(hubway_list, lambda t: (t['Station Name'], t['Number of Docks'], t['Latitude'], t['Longitude']))
