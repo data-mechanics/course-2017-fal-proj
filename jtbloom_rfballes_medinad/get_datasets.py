@@ -80,7 +80,6 @@ class get_datasets(dml.Algorithm):
         print(repo['jtbloom_rfballes_medinad.tripHistory'].metadata())
 
         # Neighborhood Income
-        
         url = 'http://datamechanics.io/data/jb_rfb_dm_proj2data/incomeByNeighborhood.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
@@ -91,6 +90,14 @@ class get_datasets(dml.Algorithm):
         repo['jtbloom_rfballes_medinad.neighborhood_income'].metadata({'complete':True})
         print(repo['jtbloom_rfballes_medinad.neighborhood_income'].metadata())
 
+        #Neighborhood Population
+        url = 'http://datamechanics.io/data/boston_neighborhood_census.json'
+        response = urllib.request.urlopen(url).read().decode("utf-8")
+        repo.dropCollection("neighborhood_populatio")
+        repo.createCollection("neighborhood_population")
+        repo['jtbloom_rfballes_medinad.neighborhood_population'].insert(r)
+        repo['jtbloom_rfballes_medinad.neighborhood_population'].metadata({'complete':True})
+        print(repo['jtbloom_rfballes_medinad.neighborhood_population'].metadata())
 
         repo.logout()
 
