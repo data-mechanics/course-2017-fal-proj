@@ -20,7 +20,6 @@ class permitgeodata(dml.Algorithm):
         response = urllib.request.urlopen(url).read().decode("utf-8")
         #print("this", response)
         r = json.loads(response)
-        #print("$$$$$", r)
         foodlocale = list()
         for locations in r:
             coor = {

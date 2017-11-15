@@ -7,6 +7,7 @@ import json
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 import numpy as np
+#import image
 
 def evaluate_clusters(X,max_clusters):
     error = np.zeros(max_clusters+1)
@@ -36,7 +37,6 @@ class kmeans(dml.Algorithm):
         url = 'https://data.cityofboston.gov/resource/g5b5-xrwi.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
-        print("#########################")
 
         zipcode = []
         lalo = []
@@ -45,45 +45,16 @@ class kmeans(dml.Algorithm):
         longitude = []
 
         for i in r:
-            #if (len(zipcode)<120):
-
-
-            #if (len(latitude)<120):
             if ((i['latitude']!='#N/A' and i['latitude']!="" ) and (i['longitude']!='#N/A' and i['longitude']!="" )):
                 latitude.append(i['latitude'])
-
-            #if (len(longitude)<120):
-                #if (i['longitude']!='#N/A' and i['longitude']!="" ):
                 longitude.append(i['longitude'])
-                #print(longitude, i['longitude'])
                 zipcode.append( i['zipcode'])
 
-        print(len(latitude))
-        print(len(longitude))
-
         for i in range(118):
-
             lalo += [latitude[i], longitude[i]]
-
-            #street.append( i['st_name'])
-        print("$$$$$$$$$$$$$$$$$$")
         print(len(latitude), len(longitude))
-        #print(lalo)
         total = {'zipcode': zipcode, 'address': lalo, 'street': street}
 
-        #print(total)
-        #s = json.dumps(total, sort_keys= True, indent = 2)
-        #    print(type(s))
-        #repo.dropCollection("propety")
-        #repo.createCollection("propety")
-        #repo["lc546_jofranco.propety"].insert_many(total)
-        #repo["lc546_jofranco.propety"].metadata({'complete':True})
-        #print(repo["lc546_jofranco.propety"].metadata())
-        #repo.dropPermanent("kmeans")
-        #repo.createPermanent("kmeans")
-
-
-        #values = repo.lc546_jofranco.propety.find()
 
 
         location = total['address']
@@ -97,10 +68,16 @@ class kmeans(dml.Algorithm):
         kmeans = KMeans(n_clusters = 1).fit(location)
         centers = [x[:2] for x in kmeans.cluster_centers_]
         print(centers)
-        plt.scatter(x,y)
-        plt.xlabel('Latitude')
-        plt.ylabel('Longitude')
-        plt.show()
+        try:
+            plt.scatter(x,y)
+            plt.xlabel('Latitude')
+            plt.ylabel('Longitude')
+            plt.savefig("kmeans.png")
+            print("plot has been created. please look for it within the directory")
+        #    plt.show()
+        except ValueError:
+            print("You have exited out of the plot. Continuing on! :D")
+
 
     @staticmethod
     def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
@@ -131,7 +108,7 @@ class kmeans(dml.Algorithm):
         doc.wasGeneratedBy(maintenance, this_run, endTime)
         doc.wasDerivedFrom(maintenance, constraint, this_run, this_run, this_run)
 
-        repo.record(doc.serialize()) # Record the provenance document.
+        #repo.record(doc.serialize()) # Record the provenance document.
         repo.logout()
 
         return doc

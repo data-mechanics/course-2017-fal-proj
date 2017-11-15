@@ -29,8 +29,6 @@ class propetymap(dml.Algorithm):
         for i in r:
             zipcode += i['zipcode']
             lalo += [i['latitude'], i['longitude']]
-           # latitude += i['latitude']
-           # longitude += i['longitude']
             street += i['st_name']
 
         total = {'zipcode': zipcode, 'address': lalo, 'street': street}
@@ -42,7 +40,7 @@ class propetymap(dml.Algorithm):
     #    print(type(s))
         repo.dropCollection("propety")
         repo.createCollection("propety")
-        repo["lc546_jofranco.propety"].insert_many(total)
+        repo["lc546_jofranco.propety"].insert_many([total])
         repo["lc546_jofranco.propety"].metadata({'complete':True})
         print(repo["lc546_jofranco.propety"].metadata())
         repo.logout()

@@ -18,39 +18,26 @@ class findhubwaysRestaurants(dml.Algorithm):
         repo.authenticate('lc546_jofranco', 'lc546_jofranco')
 
         '''Find list of restaurants that are near the hubway stations'''
-        #print(repo['lc546_jofranco.hubway'].find())
         hubs = repo.lc546_jofranco.hubway
-        #print(hubs.find())
-        #food = repo.lc546_jofranco.permitgeodata
-        #print("food", food.find())
+
         url = 'https://data.cityofboston.gov/resource/fdxy-gydq.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         df = pd.read_json(url)
-        #print("this", response)
+
         zip = df[['location']]
         zip.columns = ['location']
         r = json.loads(zip.to_json(orient='records'))
-        #r = json.loads(response)
-        #print("$$$$$", r)
         foodlocale = list()
-        # for locations in r:
-        #     coor = {
-        #     'location': locations['location']['coordinates']
-        #     }
-        #     foodlocale.append(coor)
-        #print(foodlocale)
+
         s = json.dumps(r, sort_keys = True, indent = 2)
         repo.dropCollection("permitgeodata")
         repo.createCollection("permitgeodata")
         repo["lc546_jofranco.permitgeodata"].ensure_index([("location", dml.pymongo.GEOSPHERE)])
         repo["lc546_jofranco.permitgeodata"].insert_many(r)
         repo["lc546_jofranco.permitgeodata"].metadata({'complete':True})
-        #print(foodlocale)
 
         restaurants_near_hubway = []
         for i in hubs.find():
-            #print(i)
-            #print(i["lo"])
             restaurants = len(repo.command(
             'geoNear','lc546_jofranco.permitgeodata',
              near = { 'coordinates':[i["lo"], i["la"]]},
@@ -62,10 +49,8 @@ class findhubwaysRestaurants(dml.Algorithm):
             restaurants_near_hubway.append(food_bike)
 
         s = json.dumps(restaurants_near_hubway, sort_keys=True, indent = 2)
-        print("#######",restaurants_near_hubway)
         repo.dropCollection("HubwayRestaurants")
         repo.createCollection("HubwayRestaurants")
-        #repo["lc546_jofranco.HubwayRestaurants"].ensure_index([("location", dml.pymongo.GEOSPHERE)])
         repo["lc546_jofranco.HubwayRestaurants"].insert_many(restaurants_near_hubway)
         repo["lc546_jofranco.HubwayRestaurants"].metadata({'complete':True})
         repo.logout()

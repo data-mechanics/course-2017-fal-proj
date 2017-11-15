@@ -16,16 +16,12 @@ class MBTAredlinedata(dml.Algorithm):
     	# Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate("lc546_jofranco", "lc546_jofranco")		
+        repo.authenticate("lc546_jofranco", "lc546_jofranco")
         url = 'http://Developer.mbta.com/lib/rthr/red.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         TripList = r['TripList']['Trips']
-       # result = []
-        #for item in r:
-         #   my_dict = {}
-          #  my_dict['Prediction'] = item.get('Predictions')
-           # result.append(my_dict)
+
         '''result = []
 for item in json_decode:
     my_dict={}
@@ -34,10 +30,6 @@ for item in json_decode:
     my_dict['id']=item.get('id')
     print my_dict
     result.append(my_dict) ''' 
-        #TripList =r["Trips"]
-        print(type(TripList))
-        #print(TripList)
-        print(type(r))
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("realtime_MBTA")
         repo.createCollection("realtime_MBTA")
