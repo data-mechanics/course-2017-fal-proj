@@ -20,7 +20,7 @@ class newbosneighborhoods(dml.Algorithm):
         repo = client.repo
         repo.authenticate('jtbloom_rfballes_medinad', 'jtbloom_rfballes_medinad')
 
-        url = 'http://datamechanics.io/data/jb_rfb_dm_proj2data/bos_neighborhoods_shapes.json'#'http://bostonopendata-boston.opendata.arcgis.com/datasets/962da9bb739f440ba33e746661921244_9.geojson'
+        url = 'http://datamechanics.io/data/jb_rfb_dm_proj2data/bos_neighborhoods_shapes.json' #'http://bostonopendata-boston.opendata.arcgis.com/datasets/962da9bb739f440ba33e746661921244_9.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
@@ -28,6 +28,9 @@ class newbosneighborhoods(dml.Algorithm):
 
         neighborhood_list = list(r)
         nid_list = [{'Neighborhood':x["fields"]["neighborho"], 'Geo Shape':x["fields"]["geo_shape"]} for x in neighborhood_list]
+
+
+        #print(neighborhood_list[0]['fields']['geo_shape']['coordinates'][0][0])
 
         
 
