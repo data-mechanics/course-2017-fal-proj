@@ -18,8 +18,10 @@ class getMBTAPerformanceData(dml.Algorithm):
         repo = client.repo
         repo.authenticate('nathansw_rooday_sbajwa_shreyap', 'nathansw_rooday_sbajwa_shreyap')
 
+        print("Fetching MBTAPerformance data...")
         data_url = "http://datamechanics.io/data/nathansw_rooday_sbajwa_shreyap/MBTAPerformance.json"
         response = requests.get(data_url).json()
+        print("MBTAPerformance fetched!")
 
         count = 0
         obj1 = {}
@@ -36,12 +38,14 @@ class getMBTAPerformanceData(dml.Algorithm):
 
         final = [obj1, obj2, obj3]
 
+        print("Saving MBTAPerformance data...")
         repo.dropCollection("MBTAPerformance")
         repo.createCollection("MBTAPerformance")
         repo['nathansw_rooday_sbajwa_shreyap.MBTAPerformance'].insert_many(final)
         repo['nathansw_rooday_sbajwa_shreyap.MBTAPerformance'].metadata({'complete':True})
         repo.logout()
 
+        print("Done!")
         endTime = datetime.datetime.now()
         return {"start":startTime, "end":endTime}
     

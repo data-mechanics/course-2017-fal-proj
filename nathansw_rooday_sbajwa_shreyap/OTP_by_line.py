@@ -31,14 +31,19 @@ class OTP_by_line(dml.Algorithm):
         repo = client.repo
         repo.authenticate('nathansw_rooday_sbajwa_shreyap', 'nathansw_rooday_sbajwa_shreyap')
 
-        performance_db = repo['nathansw_rooday_sbajwa_shreyap.MBTAPerformance']
+        print("Loading MBTAPerformance Data")
+        performance_db = repo['nathansw_rooday_sbajwa_shreyap.MBTAPerformance']        
+        if trial:
+          perf = performance_db.find_one()
+        else:
+          perf = {}
+          for obj in performance_db.find():
+              del obj['_id']
+              for key in obj.keys():
+                  perf[key] = obj[key]
+          
 
-        perf = {}
-        for obj in performance_db.find():
-            del obj['_id']
-            for key in obj.keys():
-                perf[key] = obj[key]
-
+        print("Create dictionary of MBTA Lines")
         # create a dict where each key is an MBTA line
         lines = {}
         for date in perf:
@@ -48,6 +53,7 @@ class OTP_by_line(dml.Algorithm):
                  if route not in lines:
                      lines[route] = {'Peak Service': [], 'Off-Peak Service': []}
              
+        print("Aggregate values for each line")
         # aggregate all otp numerator and denominator values for each line     
         for date in perf:
             for entry in perf[date]:
@@ -77,6 +83,7 @@ class OTP_by_line(dml.Algorithm):
         # peak OTP numerators and denominators and off-peak OTP numerators
         # and denominators (ex: {'57' {'Peak Service': [1000, 2000], 'Off-Peak Service': [3000, 40000]}})
         avg_OTP = {}
+        print("Calculate OTP Percentage")
         # calculate OTP percentage
         for rte in lines.keys():
             # create dictionary key and values template for each route 
@@ -104,14 +111,14 @@ class OTP_by_line(dml.Algorithm):
         avg_OTP = json.dumps(avg_OTP, indent=4)
         json_performance = json.loads(avg_OTP)
 
+        print("Saving OTP_by_line data")
         repo.dropCollection('OTP_by_line')
         repo.createCollection('OTP_by_line')
         repo['nathansw_rooday_sbajwa_shreyap.OTP_by_line'].insert_one(json_performance)
 
+        print("Done!")
         repo.logout()
-
         endTime = datetime.datetime.now()
-
         return {"start":startTime, "end":endTime}
 
     @staticmethod

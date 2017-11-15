@@ -11,7 +11,6 @@ from bson import ObjectId
 ### Algorithm 1
 
 class mbta_stops_lines(dml.Algorithm):
-
   contributor = 'nathansw_rooday_sbajwa_shreyap'
   ### Make sure this is the correct dataset file name
   reads = ['nathansw_rooday_sbajwa_shreyap.MBTAPerformance', 'nathansw_rooday_sbajwa_shreyap.OTP_by_line']
@@ -20,12 +19,13 @@ class mbta_stops_lines(dml.Algorithm):
 
   @staticmethod
   def execute(trial=False):
-
     startTime=datetime.datetime.now()
     client = dml.pymongo.MongoClient()
     repo = client.repo
-      repo.authenticate('nathansw_rooday_sbajwa_shreyap', 'nathansw_rooday_sbajwa_shreyap')
+    repo.authenticate('nathansw_rooday_sbajwa_shreyap', 'nathansw_rooday_sbajwa_shreyap')
     
+    print("")
+    # Trial mode is unnecessary for this operation as OTP_by_line is constant size
     mbta_db = repo['nathansw_rooday_sbajwa_shreyap.OTP_by_line']
     mbta_data = mbta_db.find_one()
 
@@ -170,22 +170,34 @@ class mbta_stops_lines(dml.Algorithm):
       csv.write(line_vals + "\n")
 
     repo.logout()
+<<<<<<< HEAD
 
     endTime = datetime.datetime.now()
 
+=======
+    endTime = datetime.datetime.now()
+>>>>>>> 50998629eca92780b6ff0c29fb17667817bac347
     return {"start":startTime, "end":endTime}
 
   @staticmethod
   def provenance(doc = prov.model.ProvDocument(), startTime=None, endTime=None):
+<<<<<<< HEAD
 
+=======
+>>>>>>> 50998629eca92780b6ff0c29fb17667817bac347
     client = dml.pymongo.MongoClient()
     repo = client.repo
 
     ##########################################################
 
     ## Namespaces
+<<<<<<< HEAD
     doc.add_namespace('alg', 'http://datamechanics.io/algorithm/nathansw_rooday_sbajwa_shreyap/') # The scripts in / format.
     doc.add_namespace('dat', 'http://datamechanics.io/data/nathansw_rooday_sbajwa_shreyap/') # The data sets in / format.
+=======
+    doc.add_namespace('alg', 'http://datamechanics.io/algorithm/sbajwa_nathansw/') # The scripts in / format.
+    doc.add_namespace('dat', 'http://datamechanics.io/data/sbajwa_nathansw/') # The data sets in / format.
+>>>>>>> 50998629eca92780b6ff0c29fb17667817bac347
     doc.add_namespace('ont', 'http://datamechanics.io/ontology#')
     doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
 

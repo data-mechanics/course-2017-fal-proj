@@ -18,15 +18,19 @@ class getStopsData(dml.Algorithm):
         repo = client.repo
         repo.authenticate('nathansw_rooday_sbajwa_shreyap', 'nathansw_rooday_sbajwa_shreyap')
 
+        print("Fetching stops data...")
         data_url = "http://datamechanics.io/data/nathansw_rooday_sbajwa_shreyap/stops.json"
         response = requests.get(data_url).json()
+        print("stops data fetched!")
 
+        print("Saving stops data...")
         repo.dropCollection("stops")
         repo.createCollection("stops")
         repo['nathansw_rooday_sbajwa_shreyap.stops'].insert(response)
         repo['nathansw_rooday_sbajwa_shreyap.stops'].metadata({'complete':True})
         repo.logout()
 
+        print("Done!")
         endTime = datetime.datetime.now()
         return {"start":startTime, "end":endTime}
     

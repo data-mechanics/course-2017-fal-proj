@@ -18,15 +18,19 @@ class getStopsVsLinesData(dml.Algorithm):
         repo = client.repo
         repo.authenticate('nathansw_rooday_sbajwa_shreyap', 'nathansw_rooday_sbajwa_shreyap')
 
+        print("Fetching stopsVsLines data...")
         data_url = "http://datamechanics.io/data/nathansw_rooday_sbajwa_shreyap/stop_vs_lines.json"
         response = requests.get(data_url).json()
+        print("stopsVsLines data fetched!")
 
+        print("Saving stopsVsLines data...")
         repo.dropCollection("stopsVsLines")
         repo.createCollection("stopsVsLines")
         repo['nathansw_rooday_sbajwa_shreyap.stopsVsLines'].insert(response)
         repo['nathansw_rooday_sbajwa_shreyap.stopsVsLines'].metadata({'complete':True})
         repo.logout()
 
+        print("Done!")
         endTime = datetime.datetime.now()
         return {"start":startTime, "end":endTime}
     

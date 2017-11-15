@@ -18,15 +18,19 @@ class getNeighborhoodMapData(dml.Algorithm):
         repo = client.repo
         repo.authenticate('nathansw_rooday_sbajwa_shreyap', 'nathansw_rooday_sbajwa_shreyap')
 
+        print("Fetching neighborhoodMap data...")
         data_url = "http://datamechanics.io/data/nathansw_rooday_sbajwa_shreyap/neighborhood_map.json"
         response = requests.get(data_url).json()
+        print("neighborhoodMap data fetched!")
 
+        print("Saving neighborhoodMap data...")
         repo.dropCollection("neighborhoodMap")
         repo.createCollection("neighborhoodMap")
         repo['nathansw_rooday_sbajwa_shreyap.neighborhoodMap'].insert(response)
         repo['nathansw_rooday_sbajwa_shreyap.neighborhoodMap'].metadata({'complete':True})
         repo.logout()
 
+        print("Done!")
         endTime = datetime.datetime.now()
         return {"start":startTime, "end":endTime}
     
