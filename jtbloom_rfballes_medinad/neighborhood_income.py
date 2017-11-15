@@ -8,7 +8,7 @@ import uuid
 class neighborhood_income(dml.Algorithm):
     contributor = 'jtbloom_rfballes_medinad'
     reads = ['jtbloom_rfballes_medinad.neighborhood_income']
-    writes = ['jtbloom_rfballes_medinad.neighborhood_income2']
+    writes = ['jtbloom_rfballes_medinad.neighborhood_income_final']
 
     @staticmethod
     def execute(trial = False):
@@ -20,8 +20,8 @@ class neighborhood_income(dml.Algorithm):
         repo = client.repo
         repo.authenticate('jtbloom_rfballes_medinad', 'jtbloom_rfballes_medinad')      
 
-        repo.dropCollection("jtbloom_rfballes_medinad.neighborhood_income2")
-        repo.createCollection("jtbloom_rfballes_medinad.neighborhood_income2")
+        repo.dropCollection("jtbloom_rfballes_medinad.neighborhood_income_final")
+        repo.createCollection("jtbloom_rfballes_medinad.neighborhood_income_final")
 
         neighborhood_list = []
 
@@ -32,10 +32,10 @@ class neighborhood_income(dml.Algorithm):
                         new_dict['Neighborhood'] = i['Neighborhood']
                         new_dict['Income'] = i['Per Capita Income ']
                         neighborhood_list.append(new_dict)
-        print(neighborhood_list)
+        #print(neighborhood_list)
 
         
-
+        repo['jtbloom_rfballes_medinad.neighborhood_income_final'].insert_many(neighborhood_list)
 
         repo.logout()
         endTime = datetime.datetime.now()
