@@ -81,13 +81,19 @@ def compTuples(t1, t2):
 
 
 class setObesityMarkets(dml.Algorithm):
+    print('setObesityMarkets')
     contributor = 'biel_otis'
     reads = ['biel_otis.ObesityData']
-    writes = ['biel_otis.OptimalMarketLoc']
+    writes = ['biel_otis.OptimalMarketLoc_OLD']
 
     @staticmethod
-    def execute(trial = False):        
+    def execute(trial = False):
         startTime = datetime.datetime.now()
+        if (trial == True):
+            #IF IN TRIAL MODE, SKIP THIS SCRIPT -- SEE EXTENDED SCRIPT (setOptimalHealthMarkets.py) FOR ADDED CONSTRAINT
+            #SATISFACTION AND OPTIMIZATION
+
+            return {"start":startTime, "end":startTime}
 
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
@@ -121,11 +127,11 @@ class setObesityMarkets(dml.Algorithm):
         
         inputs = [{'optimal_market': str(x)} for x in means]
 
-        repo.dropCollection("OptimalMarketLoc")
-        repo.createCollection("OptimalMarketLoc")
-        repo['biel_otis.OptimalMarketLoc'].insert_many(inputs)
-        repo['biel_otis.OptimalMarketLoc'].metadata({'complete':True})
-        print(repo['biel_otis.OptimalMarketLoc'].metadata())
+        repo.dropCollection("OptimalMarketLoc_OLD")
+        repo.createCollection("OptimalMarketLoc_OLD")
+        repo['biel_otis.OptimalMarketLoc_OLD'].insert_many(inputs)
+        repo['biel_otis.OptimalMarketLoc_OLD'].metadata({'complete':True})
+        print(repo['biel_otis.OptimalMarketLoc_OLD'].metadata())
         repo.logout()
 
         endTime = datetime.datetime.now()

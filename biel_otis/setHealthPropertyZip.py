@@ -100,6 +100,9 @@ class setHealthPropertyZip(dml.Algorithm):
         PropertyValues = list(repo['biel_otis.PropertyValues'].find())
         ZipCodes = repo['biel_otis.ZipCodes'].find()
         Zips = ZipCodes.distinct('1')
+        if (trial == True):
+            HealthInspections = HealthInspections[0:100]
+            PropertyValues = PropertyValues[0:100]
         print("finished getting data...")
         props = [x for x in PropertyValues if x['owner_mail_zipcode'] in Zips] # Join operation on ZipCodes (had to append leading 0 to zipcode)
         

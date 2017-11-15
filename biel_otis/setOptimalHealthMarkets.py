@@ -39,6 +39,7 @@ def aggregate(R, f):
 
 
 class setOptimalHealthMarkets(dml.Algorithm):
+    print('setOptimalHealthMarkets')
     contributor = 'biel_otis'
     reads = ['biel_otis.ObesityData', 'biel_otis.BostonZoning']
     writes = ['biel_otis.OptimalHealthMarkets']
@@ -54,10 +55,7 @@ class setOptimalHealthMarkets(dml.Algorithm):
 
         obesityValues = list(repo['biel_otis.ObesityData'].find())
         if (trial==True):
-            obesityValues = obesityValues
-            print(obesityValues)
-            sys.stdout.flush()        
-            exit()
+            obesityValues = obesityValues[0:100]
         else:
             print("WERE NOT IN TRIAL")
             sys.stdout.flush()
@@ -202,5 +200,4 @@ class setOptimalHealthMarkets(dml.Algorithm):
         
         return doc
 
-setOptimalHealthMarkets.execute()
 ## eof
