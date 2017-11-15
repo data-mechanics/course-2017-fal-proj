@@ -136,10 +136,12 @@ class statsmodel(dml.Algorithm):
         x1 = range(len(df4.index))
         ax.plot(x1, df4.CO2Emissions, 'o', label="Data")
         ax.plot(x1, pred, 'r', label="OLS prediction")
-        ax.legend(loc="best");\
+        ax.legend(loc="best")
         plt.savefig('angelay_maulikjs/statsmodel_results_with_outliers')
         
         print('\nThe R-squared value is %f, even higher than the one we got from clean data without outliers. We can be pretty confident about our model being able to predict future values now.\n' % R2)
+        endTime = datetime.datetime.now()
+        return {"Start ":startTime, "End ":endTime}
 
         
     @staticmethod
