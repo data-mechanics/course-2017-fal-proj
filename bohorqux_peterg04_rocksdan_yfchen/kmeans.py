@@ -153,7 +153,7 @@ class kmeans(dml.Algorithm):
  
         this_script = doc.agent('alg:bohorqux_peterg04_rocksdan_yfchen#kmeans', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('dat: bohorqux_peterg04_rocksdan_yfchen#Restaurants', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'Computation'})
-        get_Restaurants = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        getRestaurants = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_Restaurants, this_script)
         doc.usage(get_Restaurants, resource, startTime, None,
             {prov.model.PROV_TYPE:'ont:Retrieval',
