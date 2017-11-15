@@ -40,6 +40,7 @@ Algorithms for three non-trivial transformations
 -----------------
 
 Please notice: we put size 500 in the trial mode and it will affect the accuracy of the results.
+Files: correlationcoefficient.py, kmeans.py
 
 Project 2:
 
