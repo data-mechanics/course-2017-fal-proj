@@ -36,7 +36,7 @@ class boston_hubway_stations(dml.Algorithm):
         for item in repo.jtbloom_rfballes_medinad.hubway_stations.find():
             #print(item)
             for feature in item['features']:
-                #print(feature)
+                print(feature)
                 new_dict = {}
                 new_dict['Station Name'] = feature['properties']['station']
                 new_dict['Longitude'] = feature['properties']['longitude']

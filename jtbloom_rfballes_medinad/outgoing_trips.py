@@ -17,7 +17,7 @@ class outgoing_trips(dml.Algorithm):
 	#taken from notes 	
 	def aggregate(R, f):
 		keys = {r[0] for r in R}
-		return {(key, f([v for (k,v) in R if k == key])) for key in keys}	
+		return [(key, f([v for (k,v) in R if k == key])) for key in keys]	
 
 	#buil for the aggregate to be able to count trips instead of adding bike id's together
 	def count_trips(iterable):
@@ -52,16 +52,22 @@ class outgoing_trips(dml.Algorithm):
 		for trip_dict in trip_history:
 			trip_selection = {}
 			for item in trip_dict:
+				#print(trip_dict['start station id'])
 				trip_selection['start station name'] = trip_dict['start station name']
+				trip_selection['start station latitude'] = trip_dict['start station latitude']
+				trip_selection['start station longitude'] = trip_dict['start station longitude']
 				trip_selection['end station name'] = trip_dict['end station name']
 				trip_selection['bikeid'] = trip_dict['bikeid']
+
 			trip_list.append(trip_selection)
 
-		#projecting to (trip end station, bike id) for aggregation 
-		outgoing = outgoing_trips.project(trip_list, lambda t: (t['start station name'], t['bikeid'])) 
-
+		#projecting to (trip start station, bike id) for aggregation 
+		outgoing = outgoing_trips.project(trip_list, lambda t: ((t['start station name'], t['start station latitude'], t['start station longitude']), t['bikeid'])) 
 		num_trips = outgoing_trips.aggregate(outgoing, outgoing_trips.count_trips) #aggregation 
-		num_trips = [{'# outgoing trips': n, 'station': s} for (s, n) in num_trips] #turns tuple list back to dictionary
+		num_trips = [{'# outgoing trips': n, 'station': s, 'latitude': lat, 'longitude':lon} for ((s, lat, lon), n) in num_trips] #turns tuple list back to dictionary
+
+
+
 		repo['jtbloom_rfballes_medinad.outgoing_trips'].insert_many(num_trips)
 
 			
