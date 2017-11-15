@@ -138,8 +138,8 @@ class BudgetCalculator(dml.Algorithm):
         return doc
 BudgetCalculator.execute()
 doc = BudgetCalculator.provenance()
-#print(doc.get_provn())
-#print(json.dumps(json.loads(doc.serialize()), indent=4))
+print(doc.get_provn())
+print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof
 
