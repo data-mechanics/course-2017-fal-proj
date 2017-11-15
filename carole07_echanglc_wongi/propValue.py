@@ -6,9 +6,9 @@ import datetime
 import uuid
 
 class propValue(dml.Algorithm):
-    contributor = 'wongi'
+    contributor = 'carole07_echanglc_wongi'
     reads = []
-    writes = ['wongi.propValue']
+    writes = ['carole07_echanglc_wongi.propValue']
 
     @staticmethod
     def execute(trial = False):
@@ -18,7 +18,7 @@ class propValue(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('wongi', 'wongi')
+        repo.authenticate('carole07_echanglc_wongi', 'carole07_echanglc_wongi')
 
         url = 'https://data.cityofboston.gov/resource/g5b5-xrwi.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -26,7 +26,7 @@ class propValue(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("propValue")
         repo.createCollection("propValue")
-        repo['wongi.propValue'].insert_many(r)
+        repo['carole07_echanglc_wongi.propValue'].insert_many(r)
         print('Load property value')
         repo.logout()
 
@@ -43,7 +43,7 @@ class propValue(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('wongi', 'wongi')
+        repo.authenticate('carole07_echanglc_wongi', 'carole07_echanglc_wongi')
         
         url = 'https://data.cityofboston.gov/resource/g5b5-xrwi.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -51,7 +51,7 @@ class propValue(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("propValue")
         repo.createCollection("propValue")
-        repo['wongi.propValue'].insert_many(r)
+        repo['carole07_echanglc_wongi.propValue'].insert_many(r)
         print('Load property value')
         repo.logout()
         
@@ -71,7 +71,7 @@ class propValue(dml.Algorithm):
          # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('wongi', 'wongi')
+        repo.authenticate('carole07_echanglc_wongi', 'carole07_echanglc_wongi')
 
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
@@ -79,7 +79,7 @@ class propValue(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
-        this_script = doc.agent('alg:wongi#propValue', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:carole07_echanglc_wongi#propValue', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:g5b5-xrwi', {'prov:label':'Boston Property Values', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_propValue = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_propValue, this_script)
@@ -87,7 +87,7 @@ class propValue(dml.Algorithm):
                 {prov.model.PROV_TYPE:'ont:Retrieval'}
             )
 
-        propValue = doc.entity('dat:wongi#propValue', {prov.model.PROV_LABEL:'Boston Property Values ', prov.model.PROV_TYPE:'ont:DataSet'})
+        propValue = doc.entity('dat:carole07_echanglc_wongi#propValue', {prov.model.PROV_LABEL:'Boston Property Values ', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(propValue, this_script)
         doc.wasGeneratedBy(propValue, get_propValue, endTime)
         doc.wasDerivedFrom(propValue, resource, get_propValue, get_propValue, get_propValue)

@@ -9,9 +9,9 @@ from operator import itemgetter
 from collections import defaultdict
 
 class developmentScore(dml.Algorithm):
-    contributor = 'wongi'
-    reads = ['wongi.schoolsAgg', 'wongi.camSchoolsAgg', 'wongi.aggpropValue', 'wongi.hospitalAgg', 'wongi.lightCoordinates', 'wongi.policeAgg']
-    writes = ['wongi.developmentScore']
+    contributor = 'carole07_echanglc_wongi'
+    reads = ['carole07_echanglc_wongi.schoolsAgg', 'carole07_echanglc_wongi.camSchoolsAgg', 'carole07_echanglc_wongi.aggpropValue', 'carole07_echanglc_wongi.hospitalAgg', 'carole07_echanglc_wongi.lightCoordinates', 'carole07_echanglc_wongi.policeAgg']
+    writes = ['carole07_echanglc_wongi.developmentScore']
     
     def union(R, S):
         return R + S
@@ -57,29 +57,29 @@ class developmentScore(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('wongi', 'wongi')
+        repo.authenticate('carole07_echanglc_wongi', 'carole07_echanglc_wongi')
 
         repo.dropPermanent("developmentScore")
         repo.createPermanent("developmentScore")
 
         total = []
         propVal = []
-        for entry in repo.wongi.schoolsAgg.find():
+        for entry in repo.carole07_echanglc_wongi.schoolsAgg.find():
             keys = list(entry)
             total += [(entry[keys[1]], entry[keys[2]])]
-        for entry in repo.wongi.camSchoolsAgg.find():
+        for entry in repo.carole07_echanglc_wongi.camSchoolsAgg.find():
             keys = list(entry)
             total += [(entry[keys[1]], entry[keys[2]])]
-        for entry in repo.wongi.aggpropValue.find():
+        for entry in repo.carole07_echanglc_wongi.aggpropValue.find():
             keys = list(entry)
             propVal += [(entry[keys[1]], entry[keys[2]])]
-        for entry in repo.wongi.hospitalAgg.find():
+        for entry in repo.carole07_echanglc_wongi.hospitalAgg.find():
             keys = list(entry)
             total += [(entry[keys[1]], entry[keys[2]])]
-        for entry in repo.wongi.lightCoordinates.find():
+        for entry in repo.carole07_echanglc_wongi.lightCoordinates.find():
             keys = list(entry)
             total += [(entry[keys[1]], entry[keys[2]])]
-        for entry in repo.wongi.policeAgg.find():
+        for entry in repo.carole07_echanglc_wongi.policeAgg.find():
             keys = list(entry)
             total += [(entry[keys[1]], entry[keys[2]])]
         #Aggregate transformation for totalCount
@@ -99,9 +99,9 @@ class developmentScore(dml.Algorithm):
             score = [a*i+b for i in entry[1]]
             final.append({'zipcode:':entry[0], 'devScore':score})
 
-        repo['wongi.developmentScore'].insert_many(final)
+        repo['carole07_echanglc_wongi.developmentScore'].insert_many(final)
         
-        for entry in repo.wongi.developmentScore.find():
+        for entry in repo.carole07_echanglc_wongi.developmentScore.find():
              print(entry)
              
         repo.logout()
@@ -118,29 +118,29 @@ class developmentScore(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('wongi', 'wongi')
+        repo.authenticate('carole07_echanglc_wongi', 'carole07_echanglc_wongi')
         
         repo.dropPermanent("developmentScore")
         repo.createPermanent("developmentScore")
         
         total = []
         propVal = []
-        for entry in repo.wongi.schoolsAgg.find():
+        for entry in repo.carole07_echanglc_wongi.schoolsAgg.find():
             keys = list(entry)
             total += [(entry[keys[1]], entry[keys[2]])]
-        for entry in repo.wongi.camSchoolsAgg.find():
+        for entry in repo.carole07_echanglc_wongi.camSchoolsAgg.find():
             keys = list(entry)
             total += [(entry[keys[1]], entry[keys[2]])]
-        for entry in repo.wongi.aggpropValue.find():
+        for entry in repo.carole07_echanglc_wongi.aggpropValue.find():
             keys = list(entry)
             propVal += [(entry[keys[1]], entry[keys[2]])]
-        for entry in repo.wongi.hospitalAgg.find():
+        for entry in repo.carole07_echanglc_wongi.hospitalAgg.find():
             keys = list(entry)
             total += [(entry[keys[1]], entry[keys[2]])]
-        for entry in repo.wongi.lightCoordinates.find():
+        for entry in repo.carole07_echanglc_wongi.lightCoordinates.find():
             keys = list(entry)
             total += [(entry[keys[1]], entry[keys[2]])]
-        for entry in repo.wongi.policeAgg.find():
+        for entry in repo.carole07_echanglc_wongi.policeAgg.find():
             keys = list(entry)
             total += [(entry[keys[1]], entry[keys[2]])]
         #Aggregate transformation for totalCount
@@ -160,9 +160,9 @@ class developmentScore(dml.Algorithm):
             score = [a*i+b for i in entry[1]]
             final.append({'zipcode:':entry[0], 'devScore':score})
 
-        repo['wongi.developmentScore'].insert_many(final)
+        repo['carole07_echanglc_wongi.developmentScore'].insert_many(final)
     
-        for entry in repo.wongi.developmentScore.find():
+        for entry in repo.carole07_echanglc_wongi.developmentScore.find():
             print(entry)
         
         repo.logout()
@@ -182,7 +182,7 @@ class developmentScore(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('wongi', 'wongi')
+        repo.authenticate('carole07_echanglc_wongi', 'carole07_echanglc_wongi')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
@@ -191,14 +191,14 @@ class developmentScore(dml.Algorithm):
         doc.add_namespace('bdp1', 'https://data.nlc.org/resource/')
         doc.add_namespace('bdp2', 'https://data.boston.gov/export/622/208/')
 
-        this_script = doc.agent('alg:wongi#developmentScore', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:carole07_echanglc_wongi#developmentScore', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         
-        resource_camSchools = doc.entity('dat:wongi#camSchoolsAgg', {'prov:label':' Cam Schools Aggregate Zips', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        resource_schools = doc.entity('dat:wongi#schoolsAgg', {'prov:label':' Schools Aggregate Zips', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        resource_hospitals = doc.entity('dat:wongi#hospitalAgg', {'prov:label':' Hospitals Aggregate Zips', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        resource_streetlights = doc.entity('dat:wongi#lightCoordinates', {'prov:label':' Streetlights Aggregate Zips', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        resource_propValue = doc.entity('dat:wongi#aggpropValue', {'prov:label':' propValue Aggregate Zips', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        resource_polices = doc.entity('dat:wongi#policeAgg', {'prov:label':' Police Stations Aggregate Zips', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_camSchools = doc.entity('dat:carole07_echanglc_wongi#camSchoolsAgg', {'prov:label':' Cam Schools Aggregate Zips', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_schools = doc.entity('dat:carole07_echanglc_wongi#schoolsAgg', {'prov:label':' Schools Aggregate Zips', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_hospitals = doc.entity('dat:carole07_echanglc_wongi#hospitalAgg', {'prov:label':' Hospitals Aggregate Zips', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_streetlights = doc.entity('dat:carole07_echanglc_wongi#lightCoordinates', {'prov:label':' Streetlights Aggregate Zips', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_propValue = doc.entity('dat:carole07_echanglc_wongi#aggpropValue', {'prov:label':' propValue Aggregate Zips', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_polices = doc.entity('dat:carole07_echanglc_wongi#policeAgg', {'prov:label':' Police Stations Aggregate Zips', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_developmentScore = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_developmentScore, this_script)
         doc.usage(get_developmentScore, resource_camSchools, startTime,None,
@@ -209,7 +209,7 @@ class developmentScore(dml.Algorithm):
         doc.usage(get_developmentScore, resource_propValue, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
         doc.usage(get_developmentScore, resource_polices, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
 
-        developmentScore = doc.entity('dat:wongi#developmentScore', {prov.model.PROV_LABEL:' Complete Dev Scores', prov.model.PROV_TYPE:'ont:DataSet'})
+        developmentScore = doc.entity('dat:carole07_echanglc_wongi#developmentScore', {prov.model.PROV_LABEL:' Complete Dev Scores', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(developmentScore, this_script)
         doc.wasGeneratedBy(developmentScore, get_developmentScore, endTime)
         doc.wasDerivedFrom(developmentScore, resource_camSchools, get_developmentScore, get_developmentScore, get_developmentScore)

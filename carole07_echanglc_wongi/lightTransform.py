@@ -6,9 +6,9 @@ import datetime
 import uuid
 
 class lightTransform(dml.Algorithm):
-    contributor = 'wongi'
-    reads = ['wongi.streetlights']
-    writes = ['wongi.lightTransform']
+    contributor = 'carole07_echanglc_wongi'
+    reads = ['carole07_echanglc_wongi.streetlights']
+    writes = ['carole07_echanglc_wongi.lightTransform']
     
     @staticmethod
     def execute(trial = False):
@@ -24,7 +24,7 @@ class lightTransform(dml.Algorithm):
 
         repo = client.repo
 
-        repo.authenticate('wongi','wongi')
+        repo.authenticate('carole07_echanglc_wongi','carole07_echanglc_wongi')
 
         repo.dropPermanent("lightTransform")
 
@@ -33,12 +33,12 @@ class lightTransform(dml.Algorithm):
         lights = []
         #projection to get coordinates
 		 
-        for entry in repo.wongi.streetlights.find():
+        for entry in repo.carole07_echanglc_wongi.streetlights.find():
             x = lambda t: ({'Long:':t['Long'],'Lat:':t['Lat']})
             y = x(entry)
             lights.append(y)
 
-        repo['wongi.lightTransform'].insert_many(lights)
+        repo['carole07_echanglc_wongi.lightTransform'].insert_many(lights)
 
         #print("streetlight coordinates", lights)
 
@@ -61,7 +61,7 @@ class lightTransform(dml.Algorithm):
 
         repo = client.repo
 
-        repo.authenticate('wongi','wongi')
+        repo.authenticate('carole07_echanglc_wongi','carole07_echanglc_wongi')
 
         repo.dropPermanent("lightTransform")
 
@@ -71,12 +71,12 @@ class lightTransform(dml.Algorithm):
 		
         #projection to get coordinates
 
-        for entry in repo.wongi.streetlights.find():
+        for entry in repo.carole07_echanglc_wongi.streetlights.find():
             x = lambda t: ({'Long:':t['Long'],'Lat:':t['Lat']})
             y = x(entry)
             lights.append(y)
 
-        repo['wongi.lightTransform'].insert_many(lights)
+        repo['carole07_echanglc_wongi.lightTransform'].insert_many(lights)
         
         #print("streetlight coordinates", lights)
 
@@ -101,7 +101,7 @@ class lightTransform(dml.Algorithm):
 
         repo = client.repo
 
-        repo.authenticate('wongi', 'wongi')
+        repo.authenticate('carole07_echanglc_wongi', 'carole07_echanglc_wongi')
 
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
 
@@ -115,7 +115,7 @@ class lightTransform(dml.Algorithm):
 
 
 
-        this_script = doc.agent('alg:wongi#lightTransform', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:carole07_echanglc_wongi#lightTransform', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
 
 
@@ -128,7 +128,7 @@ class lightTransform(dml.Algorithm):
         doc.usage(get_project, resource_project, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval'})
 
-        project = doc.entity('dat:wongi#lightTransform', {prov.model.PROV_LABEL:'New Dataset after Projection', prov.model.PROV_TYPE:'ont:DataSet'})
+        project = doc.entity('dat:carole07_echanglc_wongi#lightTransform', {prov.model.PROV_LABEL:'New Dataset after Projection', prov.model.PROV_TYPE:'ont:DataSet'})
 
         doc.wasAttributedTo(project, this_script)
 

@@ -8,9 +8,9 @@ import uuid
 import numpy as np
 
 class lightCoordinates(dml.Algorithm):
-    contributor = 'wongi'
-    reads = ['wongi.lightTransform']
-    writes = ['wongi.lightCoordinates']
+    contributor = 'carole07_echanglc_wongi'
+    reads = ['carole07_echanglc_wongi.lightTransform']
+    writes = ['carole07_echanglc_wongi.lightCoordinates']
     
     
     @staticmethod
@@ -21,14 +21,14 @@ class lightCoordinates(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('wongi', 'wongi')
+        repo.authenticate('carole07_echanglc_wongi', 'carole07_echanglc_wongi')
 
         repo.dropPermanent("lightCoordinates")
         repo.createPermanent("lightCoordinates")
 
         zipCount= []
         geolocator = Nominatim()
-        for entry in repo.wongi.lightTransform.find():
+        for entry in repo.carole07_echanglc_wongi.lightTransform.find():
             #print(entry)
             if "Long:" and "Lat:" in entry:
                 #print(entry)
@@ -47,9 +47,9 @@ class lightCoordinates(dml.Algorithm):
         for entry in aggregate_val:
             final.append({'lightZipcode:':entry[0], 'lightCount':entry[1]})
         
-        repo['wongi.lightCoordinates'].insert_many(final)
+        repo['carole07_echanglc_wongi.lightCoordinates'].insert_many(final)
         
-        #for entry in repo.wongi.lightCoordinates.find():
+        #for entry in repo.carole07_echanglc_wongi.lightCoordinates.find():
         #     print(entry)
              
         repo.logout()
@@ -66,14 +66,14 @@ class lightCoordinates(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('wongi', 'wongi')
+        repo.authenticate('carole07_echanglc_wongi', 'carole07_echanglc_wongi')
         
         repo.dropPermanent("lightCoordinates")
         repo.createPermanent("lightCoordinates")
         
         zipCount= []
         geolocator = Nominatim()
-        for entry in repo.wongi.lightTransform.find():
+        for entry in repo.carole07_echanglc_wongi.lightTransform.find():
             #print(entry)
             if "Long:" and "Lat:" in entry:
                 #print(entry)
@@ -92,9 +92,9 @@ class lightCoordinates(dml.Algorithm):
         for entry in aggregate_val:
             final.append({'lightZipcode:':entry[0], 'lightCount':entry[1]})
                 
-        repo['wongi.lightCoordinates'].insert_many(final)
+        repo['carole07_echanglc_wongi.lightCoordinates'].insert_many(final)
         
-        #for entry in repo.wongi.lightCoordinates.find():
+        #for entry in repo.carole07_echanglc_wongi.lightCoordinates.find():
         #     print(entry)
                 
         repo.logout()
@@ -115,7 +115,7 @@ class lightCoordinates(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('wongi', 'wongi')
+        repo.authenticate('carole07_echanglc_wongi', 'carole07_echanglc_wongi')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
@@ -124,16 +124,16 @@ class lightCoordinates(dml.Algorithm):
         doc.add_namespace('bdp1', 'https://data.nlc.org/resource/')
         doc.add_namespace('bdp2', 'https://data.boston.gov/export/622/208/')
 
-        this_script = doc.agent('alg:wongi#lightCoordinates', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:carole07_echanglc_wongi#lightCoordinates', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         
-        resource_properties = doc.entity('dat:wongi#lightTransform', {'prov:label':'Light Aggregate Zips', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_properties = doc.entity('dat:carole07_echanglc_wongi#lightTransform', {'prov:label':'Light Aggregate Zips', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_aggLights = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_aggLights, this_script)
         doc.usage(get_aggLights, resource_properties, startTime,None,
                   {prov.model.PROV_TYPE:'ont:Computation'})
 
 
-        aggregateLights = doc.entity('dat:wongi#lightCoordinates', {prov.model.PROV_LABEL:'Light Aggregate Zips', prov.model.PROV_TYPE:'ont:DataSet'})
+        aggregateLights = doc.entity('dat:carole07_echanglc_wongi#lightCoordinates', {prov.model.PROV_LABEL:'Light Aggregate Zips', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(aggregateLights, this_script)
         doc.wasGeneratedBy(aggregateLights, get_aggLights, endTime)
         doc.wasDerivedFrom(aggregateLights, resource_properties, get_aggLights, get_aggLights, get_aggLights)

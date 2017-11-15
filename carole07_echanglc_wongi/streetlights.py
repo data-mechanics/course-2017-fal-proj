@@ -6,9 +6,9 @@ import datetime
 import uuid
 
 class streetlights(dml.Algorithm):
-    contributor = 'wongi'
+    contributor = 'carole07_echanglc_wongi'
     reads = []
-    writes = ['wongi.streetlights']
+    writes = ['carole07_echanglc_wongi.streetlights']
 
     @staticmethod
     def execute(trial = False):
@@ -18,7 +18,7 @@ class streetlights(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('wongi', 'wongi')
+        repo.authenticate('carole07_echanglc_wongi', 'carole07_echanglc_wongi')
 
         url = 'https://data.boston.gov/datastore/odata3.0/c2fcc1e3-c38f-44ad-a0cf-e5ea2a6585b5?$top=500&$format=json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -26,7 +26,7 @@ class streetlights(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("streetlights")
         repo.createCollection("streetlights")
-        repo['wongi.streetlights'].insert_many(r['value'])
+        repo['carole07_echanglc_wongi.streetlights'].insert_many(r['value'])
         print('Load streetlights')
         repo.logout()
 
@@ -42,7 +42,7 @@ class streetlights(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('wongi', 'wongi')
+        repo.authenticate('carole07_echanglc_wongi', 'carole07_echanglc_wongi')
         
         url = 'https://data.boston.gov/datastore/odata3.0/c2fcc1e3-c38f-44ad-a0cf-e5ea2a6585b5?$top=10&$format=json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -50,7 +50,7 @@ class streetlights(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("streetlights")
         repo.createCollection("streetlights")
-        repo['wongi.streetlights'].insert_many(r['value'])
+        repo['carole07_echanglc_wongi.streetlights'].insert_many(r['value'])
         print('Load streetlights')
         repo.logout()
         
@@ -70,7 +70,7 @@ class streetlights(dml.Algorithm):
          # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('wongi', 'wongi')
+        repo.authenticate('carole07_echanglc_wongi', 'carole07_echanglc_wongi')
 
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
@@ -78,7 +78,7 @@ class streetlights(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.boston.gov/datastore/odata3.0/')
 
-        this_script = doc.agent('alg:wongi#streetlights', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:carole07_echanglc_wongi#streetlights', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:c2fcc1e3-c38f-44ad-a0cf-e5ea2a6585b5', {'prov:label':'Boston Streetlights', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_streetlights = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_streetlights, this_script)
@@ -86,7 +86,7 @@ class streetlights(dml.Algorithm):
                 {prov.model.PROV_TYPE:'ont:Retrieval'}
             )
 
-        streetlights = doc.entity('dat:wongi#streetlights', {prov.model.PROV_LABEL:'Boston Streetlights ', prov.model.PROV_TYPE:'ont:DataSet'})
+        streetlights = doc.entity('dat:carole07_echanglc_wongi#streetlights', {prov.model.PROV_LABEL:'Boston Streetlights ', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(streetlights, this_script)
         doc.wasGeneratedBy(streetlights, get_streetlights, endTime)
         doc.wasDerivedFrom(streetlights, resource, get_streetlights, get_streetlights, get_streetlights)

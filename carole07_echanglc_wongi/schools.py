@@ -6,9 +6,9 @@ import datetime
 import uuid
 
 class schools(dml.Algorithm):
-    contributor = 'wongi'
+    contributor = 'carole07_echanglc_wongi'
     reads = []
-    writes = ['wongi.schools']
+    writes = ['carole07_echanglc_wongi.schools']
 
     @staticmethod
     def execute(trial = False):
@@ -18,7 +18,7 @@ class schools(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('wongi', 'wongi')
+        repo.authenticate('carole07_echanglc_wongi', 'carole07_echanglc_wongi')
 
         url = 'https://data.cityofboston.gov/resource/492y-i77g.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -26,7 +26,7 @@ class schools(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("schools")
         repo.createCollection("schools")
-        repo['wongi.schools'].insert_many(r)
+        repo['carole07_echanglc_wongi.schools'].insert_many(r)
         print('Load public schools')
         repo.logout()
 
@@ -42,7 +42,7 @@ class schools(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('wongi', 'wongi')
+        repo.authenticate('carole07_echanglc_wongi', 'carole07_echanglc_wongi')
         
         url = 'https://data.cityofboston.gov/resource/492y-i77g.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -50,7 +50,7 @@ class schools(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("schools")
         repo.createCollection("schools")
-        repo['wongi.schools'].insert_many(r)
+        repo['carole07_echanglc_wongi.schools'].insert_many(r)
         print('Load public schools')
         repo.logout()
         
@@ -69,7 +69,7 @@ class schools(dml.Algorithm):
          # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('wongi', 'wongi')
+        repo.authenticate('carole07_echanglc_wongi', 'carole07_echanglc_wongi')
 
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
@@ -77,7 +77,7 @@ class schools(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'http://bostonopendata-boston.opendata.arcgis.com/datasets/')
 
-        this_script = doc.agent('alg:wongi#schools', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:carole07_echanglc_wongi#schools', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:1d9509a8b2fd485d9ad471ba2fdb1f90_0', {'prov:label':'Boston Public School', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_schools = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_schools, this_script)
@@ -85,7 +85,7 @@ class schools(dml.Algorithm):
                 {prov.model.PROV_TYPE:'ont:Retrieval'}
             )
 
-        schools = doc.entity('dat:wongi#schools', {prov.model.PROV_LABEL:'Boston Public Schools ', prov.model.PROV_TYPE:'ont:DataSet'})
+        schools = doc.entity('dat:carole07_echanglc_wongi#schools', {prov.model.PROV_LABEL:'Boston Public Schools ', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(schools, this_script)
         doc.wasGeneratedBy(schools, get_schools, endTime)
         doc.wasDerivedFrom(schools, resource, get_schools, get_schools, get_schools)

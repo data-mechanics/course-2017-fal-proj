@@ -6,9 +6,9 @@ import datetime
 import uuid
 
 class polices(dml.Algorithm):
-    contributor = 'wongi'
+    contributor = 'carole07_echanglc_wongi'
     reads = []
-    writes = ['wongi.polices']
+    writes = ['carole07_echanglc_wongi.polices']
 
     @staticmethod
     def execute(trial = False):
@@ -18,7 +18,7 @@ class polices(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('wongi', 'wongi')
+        repo.authenticate('carole07_echanglc_wongi', 'carole07_echanglc_wongi')
 
         url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/e5a0066d38ac4e2abbc7918197a4f6af_6.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -26,9 +26,9 @@ class polices(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("polices")
         repo.createCollection("polices")
-        repo['wongi.polices'].insert_one(r)
+        repo['carole07_echanglc_wongi.polices'].insert_one(r)
         print('Load polices')
-        for entry in repo.wongi.polices.find():
+        for entry in repo.carole07_echanglc_wongi.polices.find():
              print(entry)
         repo.logout()
 
@@ -44,7 +44,7 @@ class polices(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('wongi', 'wongi')
+        repo.authenticate('carole07_echanglc_wongi', 'carole07_echanglc_wongi')
         
         url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/e5a0066d38ac4e2abbc7918197a4f6af_6.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -52,9 +52,9 @@ class polices(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("polices")
         repo.createCollection("polices")
-        repo['wongi.polices'].insert_one(r)
+        repo['carole07_echanglc_wongi.polices'].insert_one(r)
         print('Load polices')
-        for entry in repo.wongi.polices.find():
+        for entry in repo.carole07_echanglc_wongi.polices.find():
             print(entry)
         repo.logout()
         
@@ -73,7 +73,7 @@ class polices(dml.Algorithm):
          # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('wongi', 'wongi')
+        repo.authenticate('carole07_echanglc_wongi', 'carole07_echanglc_wongi')
 
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
@@ -81,7 +81,7 @@ class polices(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.boston.gov/export/622/208/')
 
-        this_script = doc.agent('alg:wongi#polices', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:carole07_echanglc_wongi#polices', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:e5a0066d38ac4e2abbc7918197a4f6af_6', {'prov:label':'Boston police stations', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_polices = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_polices, this_script)
@@ -89,7 +89,7 @@ class polices(dml.Algorithm):
                 {prov.model.PROV_TYPE:'ont:Retrieval'}
             )
 
-        polices = doc.entity('dat:wongi#polices', {prov.model.PROV_LABEL:'Boston police stations', prov.model.PROV_TYPE:'ont:DataSet'})
+        polices = doc.entity('dat:carole07_echanglc_wongi#polices', {prov.model.PROV_LABEL:'Boston police stations', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(polices, this_script)
         doc.wasGeneratedBy(polices, get_polices, endTime)
         doc.wasDerivedFrom(polices, resource, get_polices, get_polices, get_polices)

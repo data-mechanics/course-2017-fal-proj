@@ -6,9 +6,9 @@ import datetime
 import uuid
 
 class camSchools(dml.Algorithm):
-    contributor = 'wongi'
+    contributor = 'carole07_echanglc_wongi'
     reads = []
-    writes = ['wongi.camSchools']
+    writes = ['carole07_echanglc_wongi.camSchools']
 
     @staticmethod
     def execute(trial = False):
@@ -18,7 +18,7 @@ class camSchools(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('wongi', 'wongi')
+        repo.authenticate('carole07_echanglc_wongi', 'carole07_echanglc_wongi')
 
         url = 'https://data.cambridgema.gov/api/views/fmjd-dgre/rows.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -26,9 +26,9 @@ class camSchools(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("camSchools")
         repo.createCollection("camSchools")
-        repo['wongi.camSchools'].insert_one(r)
+        repo['carole07_echanglc_wongi.camSchools'].insert_one(r)
         print('Load cambridge schools')
-        #for entry in repo.wongi.camSchools.find():
+        #for entry in repo.carole07_echanglc_wongi.camSchools.find():
         #     print(entry)
              
         repo.logout()
@@ -45,7 +45,7 @@ class camSchools(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('wongi', 'wongi')
+        repo.authenticate('carole07_echanglc_wongi', 'carole07_echanglc_wongi')
         
         url = 'https://data.cambridgema.gov/api/views/fmjd-dgre/rows.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -53,9 +53,9 @@ class camSchools(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("camSchools")
         repo.createCollection("camSchools")
-        repo['wongi.camSchools'].insert_one(r)
+        repo['carole07_echanglc_wongi.camSchools'].insert_one(r)
         print('Load cambridge schools')
-        #for entry in repo.wongi.camSchools.find():
+        #for entry in repo.carole07_echanglc_wongi.camSchools.find():
         #     print(entry)
         
         repo.logout()
@@ -76,7 +76,7 @@ class camSchools(dml.Algorithm):
          # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('wongi', 'wongi')
+        repo.authenticate('carole07_echanglc_wongi', 'carole07_echanglc_wongi')
 
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
@@ -84,7 +84,7 @@ class camSchools(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cambridgema.gov/api/views/')
 
-        this_script = doc.agent('alg:wongi#camSchools', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:carole07_echanglc_wongi#camSchools', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('bdp:fmjd-dgre/rows', {'prov:label':'Cambridge Schools', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_camSchools = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_camSchools, this_script)
@@ -92,7 +92,7 @@ class camSchools(dml.Algorithm):
                 {prov.model.PROV_TYPE:'ont:Retrieval'}
             )
 
-        camSchools = doc.entity('dat:wongi#camSchools', {prov.model.PROV_LABEL:'Cambridge Schools ', prov.model.PROV_TYPE:'ont:DataSet'})
+        camSchools = doc.entity('dat:carole07_echanglc_wongi#camSchools', {prov.model.PROV_LABEL:'Cambridge Schools ', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(camSchools, this_script)
         doc.wasGeneratedBy(camSchools, get_camSchools, endTime)
         doc.wasDerivedFrom(camSchools, resource, get_camSchools, get_camSchools, get_camSchools)

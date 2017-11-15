@@ -8,9 +8,9 @@ import uuid
 import numpy as np
 
 class camSchoolsAgg(dml.Algorithm):
-    contributor = 'wongi'
-    reads = ['wongi.camSchools']
-    writes = ['wongi.camSchoolsAgg']
+    contributor = 'carole07_echanglc_wongi'
+    reads = ['carole07_echanglc_wongi.camSchools']
+    writes = ['carole07_echanglc_wongi.camSchoolsAgg']
     
     
     @staticmethod
@@ -21,14 +21,14 @@ class camSchoolsAgg(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('wongi', 'wongi')
+        repo.authenticate('carole07_echanglc_wongi', 'carole07_echanglc_wongi')
 
         repo.dropPermanent("camSchoolsAgg")
         repo.createPermanent("camSchoolsAgg")
 
         zipCount= []
         geolocator = Nominatim()
-        for entry in repo.wongi.camSchools.find():
+        for entry in repo.carole07_echanglc_wongi.camSchools.find():
             for entry2 in entry["meta"]["view"]["columns"]:
                 if entry2["id"] == 232084408:
                     for entry3 in entry2["cachedContents"]["top"]:
@@ -48,9 +48,9 @@ class camSchoolsAgg(dml.Algorithm):
         for entry in aggregate_val:
             final.append({'camSchoolsZipcode:':entry[0], 'camSchoolsCount':entry[1]})
 
-        repo['wongi.camSchoolsAgg'].insert_many(final)
+        repo['carole07_echanglc_wongi.camSchoolsAgg'].insert_many(final)
         
-        for entry in repo.wongi.camSchoolsAgg.find():
+        for entry in repo.carole07_echanglc_wongi.camSchoolsAgg.find():
              print(entry)
              
         repo.logout()
@@ -68,14 +68,14 @@ class camSchoolsAgg(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('wongi', 'wongi')
+        repo.authenticate('carole07_echanglc_wongi', 'carole07_echanglc_wongi')
         
         repo.dropPermanent("camSchoolsAgg")
         repo.createPermanent("camSchoolsAgg")
         
         zipCount= []
         geolocator = Nominatim()
-        for entry in repo.wongi.camSchools.find():
+        for entry in repo.carole07_echanglc_wongi.camSchools.find():
             for entry2 in entry["meta"]["view"]["columns"]:
                 if entry2["id"] == 232084408:
                     for entry3 in entry2["cachedContents"]["top"]:
@@ -95,9 +95,9 @@ class camSchoolsAgg(dml.Algorithm):
         for entry in aggregate_val:
             final.append({'camSchoolsZipcode:':entry[0], 'camSchoolsCount':entry[1]})
                 
-        repo['wongi.camSchoolsAgg'].insert_many(final)
+        repo['carole07_echanglc_wongi.camSchoolsAgg'].insert_many(final)
                         
-        for entry in repo.wongi.camSchoolsAgg.find():
+        for entry in repo.carole07_echanglc_wongi.camSchoolsAgg.find():
             print(entry)
                                 
         repo.logout()
@@ -117,7 +117,7 @@ class camSchoolsAgg(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('wongi', 'wongi')
+        repo.authenticate('carole07_echanglc_wongi', 'carole07_echanglc_wongi')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
@@ -126,16 +126,16 @@ class camSchoolsAgg(dml.Algorithm):
         doc.add_namespace('bdp1', 'https://data.nlc.org/resource/')
         doc.add_namespace('bdp2', 'https://data.boston.gov/export/622/208/')
 
-        this_script = doc.agent('alg:wongi#camSchoolsAgg', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:carole07_echanglc_wongi#camSchoolsAgg', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         
-        resource_properties = doc.entity('dat:wongi#camSchools', {'prov:label':'Cam Schools Aggregate Zips', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_properties = doc.entity('dat:carole07_echanglc_wongi#camSchools', {'prov:label':'Cam Schools Aggregate Zips', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_aggCamSchools = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_aggCamSchools, this_script)
         doc.usage(get_aggCamSchools, resource_properties, startTime,None,
                   {prov.model.PROV_TYPE:'ont:Computation'})
 
 
-        aggCamSchools = doc.entity('dat:wongi#camSchoolsAgg', {prov.model.PROV_LABEL:'Cam Schools Aggregate Zips', prov.model.PROV_TYPE:'ont:DataSet'})
+        aggCamSchools = doc.entity('dat:carole07_echanglc_wongi#camSchoolsAgg', {prov.model.PROV_LABEL:'Cam Schools Aggregate Zips', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(aggCamSchools, this_script)
         doc.wasGeneratedBy(aggCamSchools, get_aggCamSchools, endTime)
         doc.wasDerivedFrom(aggCamSchools, resource_properties, get_aggCamSchools, get_aggCamSchools, get_aggCamSchools)
