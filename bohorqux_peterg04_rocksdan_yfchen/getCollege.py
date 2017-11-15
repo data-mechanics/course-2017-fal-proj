@@ -52,14 +52,15 @@ class getCollege(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('bdp', 'https://data.boston.gov/dataset/')
+        doc.add_namespace('gcd', 'http://bostonopendata-boston.opendata.arcgis.com/datasets/cbf14bb032ef4bd38e20429f71acb61a_2.geojson')
 
         this_script = doc.agent('alg:bohorqux_peterg04_rocksdan_yfchen#getCollege', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource = doc.entity('gcd:Data', {'prov:label':'College Resource', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_colleges = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_colleges, this_script)
         doc.usage(get_colleges, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval'
+                  {prov.model.PROV_TYPE:'ont:Retrieval',
+                   'ont:Query':'?type=Colleges/University&$select=type,City,Zipcode,Contact'
                   }
                   )
 

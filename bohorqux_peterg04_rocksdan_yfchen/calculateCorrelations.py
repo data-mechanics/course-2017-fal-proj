@@ -66,7 +66,7 @@ class calculateCorrelations(dml.Algorithm):
                 # append to list of x-y lists 
                 x_vals.append(c_p[0][key]['Crimes'])
                 y_vals.append(len(c_p[0][key]['Properties']))
-        
+                
         # I want to find two seperate correlations related to this data. Whether crime is more correlated
         # with high density areas or lower density areas
         # Do this by splitting the values into 2 sets: 1 lower than avg , 1 higher than avg for # of properties
@@ -149,7 +149,7 @@ class calculateCorrelations(dml.Algorithm):
                   
         return doc
 
-# calculateCorrelations.execute()
+#calculateCorrelations.execute()
 # doc = example.provenance()
 # print(doc.get_provn())
 # print(json.dumps(json.loads(doc.serialize()), indent=4))
