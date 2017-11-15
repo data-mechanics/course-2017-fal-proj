@@ -80,4 +80,12 @@ here are the code for the further process:
 '''
 we performed product -> select -> remove reverse duplicate -> project -> select -> minimum algorithm.
 if there are no 2 universities that are within the range of 4 miles or their hospital number is bigger than 10,then there is no place that can build hospital and benefits 2 or more schools that need hospital. if there are, then we show them something like "The best place to build a hospital next is between Boston College and Massachusetts School of Professional Psychology at [-71.17503590191852, 42.306371114768865]"
+
+
+# Run for Project 2
+python3 execute.py eileenli_xtq_yiding
+
+However, entering an infinite loop when running.
+
+ 
  
