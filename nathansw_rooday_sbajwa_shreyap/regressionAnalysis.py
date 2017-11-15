@@ -92,45 +92,55 @@ class regressionAnalysis(dml.Algorithm):
 
   @staticmethod
   def provenance(doc = prov.model.ProvDocument(), startTime=None, endTime=None):
+
     client = dml.pymongo.MongoClient()
     repo = client.repo
 
     ##########################################################
 
     ## Namespaces
-    doc.add_namespace('alg', 'http://datamechanics.io/algorithm/sbajwa_nathansw/') # The scripts in / format.
-    doc.add_namespace('dat', 'http://datamechanics.io/data/sbajwa_nathansw/') # The data sets in / format.
+    doc.add_namespace('alg', 'http://datamechanics.io/algorithm/nathansw_rooday_sbajwa_shreyap/') # The scripts in / format.
+    doc.add_namespace('dat', 'http://datamechanics.io/data/nathansw_rooday_sbajwa_shreyap/') # The data sets in / format.
     doc.add_namespace('ont', 'http://datamechanics.io/ontology#')
     doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
 
-
-    """
     ## Agents
-    this_script = doc.agent('alg:nathansw_rooday_sbajwa_shreyap#mbta_stops_lines', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+    this_script = doc.agent('alg:nathansw_rooday_sbajwa_shreyap#regressionAnalysis', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
     ## Activities
-    get_mbta_stops_lines = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+    get_regressionAnalysis = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 
     ## Entitites
     # Data Source
-    resource = 
+    resource1 = doc.entity('dat:otp_by_line.json', {'prov:label':'Trickle', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+    resource2 = doc.entity('dat:stops.json', {'prov:label':'Stops', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+    resource3 = doc.entity('dat:stops_vs_lines.json', {'prov:label':'Stops vs Lines', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
     # Data Generated
-    mbta_stops_lines = 
+    regressionAnalysis = doc.entity('dat:nathansw_rooday_sbajwa_shreyap#regressionAnalysis', {prov.model.PROV_LABEL:'Regression Analysis', prov.model.PROV_TYPE:'ont:DataSet'})
        
     ############################################################
 
-        ## wasAssociatedWith      
+    ## wasAssociatedWith
+    doc.wasAssociatedWith(get_regressionAnalysis, this_script)
 
     ## used   
+    doc.usage(get_regressionAnalysis, resource1, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval',}) 
+    doc.usage(get_regressionAnalysis, resource2, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval',}) 
+    doc.usage(get_regressionAnalysis, resource3, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval',}) 
 
     ## wasGeneratedBy
+    doc.wasGeneratedBy(regressionAnalysis, get_regressionAnalysis, endTime)
 
     ## wasAttributedTo    
+    doc.wasAttributedTo(regressionAnalysis, this_script)
 
     ## wasDerivedFrom
+    doc.wasDerivedFrom(regressionAnalysis, resource1, get_regressionAnalysis, get_regressionAnalysis, get_regressionAnalysis)
+    doc.wasDerivedFrom(regressionAnalysis, resource2, get_regressionAnalysis, get_regressionAnalysis, get_regressionAnalysis)
+    doc.wasDerivedFrom(regressionAnalysis, resource3, get_regressionAnalysis, get_regressionAnalysis, get_regressionAnalysis)
 
     ############################################################
-    """
+
     repo.logout()
 
     return doc

@@ -47,10 +47,10 @@ class getNeighborhoodMapData(dml.Algorithm):
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
 
-        #Since the urls have a lot more information about the resource itself, we are treating everything apart from the actual document suffix as the namespace.
+        # Since the urls have a lot more information about the resource itself, we are treating everything apart from the actual document suffix as the namespace.
         doc.add_namespace('neighborhoodMap', 'https://data.boston.gov/api/action/datastore_search_sql')
 
-        this_script = doc.agent('alg:#getNeighborhoodMapData', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:nathansw_rooday_sbajwa_shreyap#getNeighborhoodMapData', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('neighborhoodMap:?sql=SELECT%20*%20from%20%2212cb3883-56f5-47de-afa5-3b1cf61b257b%22', {'prov:label':'neighborhoodMap Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_neighborhoodMap_data = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_neighborhoodMap_data, this_script)
@@ -59,7 +59,7 @@ class getNeighborhoodMapData(dml.Algorithm):
                   'ont:Query':'?sql=SELECT%20*%20from%20%2212cb3883-56f5-47de-afa5-3b1cf61b257b%22'
                   }
                   )        
-        neighborhoodMap = doc.entity('dat:#neighborhoodMap', {prov.model.PROV_LABEL:'neighborhoodMap Data', prov.model.PROV_TYPE:'ont:DataSet'})
+        neighborhoodMap = doc.entity('dat:nathansw_rooday_sbajwa_shreyap#neighborhoodMap', {prov.model.PROV_LABEL:'neighborhoodMap Data', prov.model.PROV_TYPE:'ont:DataSet'})
 
         doc.wasAttributedTo(neighborhoodMap, this_script)
         doc.wasGeneratedBy(neighborhoodMap, get_neighborhoodMap_data, endTime)

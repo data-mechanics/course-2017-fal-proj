@@ -47,10 +47,10 @@ class getTricklingData(dml.Algorithm):
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
 
-        #Since the urls have a lot more information about the resource itself, we are treating everything apart from the actual document suffix as the namespace.
+        # Since the urls have a lot more information about the resource itself, we are treating everything apart from the actual document suffix as the namespace.
         doc.add_namespace('trickling', 'https://data.boston.gov/api/action/datastore_search_sql')
 
-        this_script = doc.agent('alg:#getTricklingData', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:nathansw_rooday_sbajwa_shreyap#getTricklingData', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('trickling:?sql=SELECT%20*%20from%20%2212cb3883-56f5-47de-afa5-3b1cf61b257b%22', {'prov:label':'trickling Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         get_trickling_data = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_trickling_data, this_script)
@@ -59,7 +59,7 @@ class getTricklingData(dml.Algorithm):
                   'ont:Query':'?sql=SELECT%20*%20from%20%2212cb3883-56f5-47de-afa5-3b1cf61b257b%22'
                   }
                   )        
-        trickling = doc.entity('dat:#trickling', {prov.model.PROV_LABEL:'trickling Data', prov.model.PROV_TYPE:'ont:DataSet'})
+        trickling = doc.entity('dat:nathansw_rooday_sbajwa_shreyap#trickling', {prov.model.PROV_LABEL:'trickling Data', prov.model.PROV_TYPE:'ont:DataSet'})
 
         doc.wasAttributedTo(trickling, this_script)
         doc.wasGeneratedBy(trickling, get_trickling_data, endTime)

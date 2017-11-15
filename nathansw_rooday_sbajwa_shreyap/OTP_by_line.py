@@ -126,7 +126,6 @@ class OTP_by_line(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/nathansw_rooday_sbajwa_shreyap/') # The data sets in / format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#')
         doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
-        doc.add_namespace('json_data', 'http://datamechanics.io/data/nathansw_rooday_sbajwa_shreyap/') 
 
         ## Agents
         this_script = doc.agent('alg:nathansw_rooday_sbajwa_shreyap#OTP_by_line', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})

@@ -171,21 +171,21 @@ class mbta_stops_lines(dml.Algorithm):
 
     repo.logout()
 
-        endTime = datetime.datetime.now()
+    endTime = datetime.datetime.now()
 
-        return {"start":startTime, "end":endTime}
+    return {"start":startTime, "end":endTime}
 
   @staticmethod
-    def provenance(doc = prov.model.ProvDocument(), startTime=None, endTime=None):
+  def provenance(doc = prov.model.ProvDocument(), startTime=None, endTime=None):
 
-        client = dml.pymongo.MongoClient()
-        repo = client.repo
+    client = dml.pymongo.MongoClient()
+    repo = client.repo
 
-        ##########################################################
+    ##########################################################
 
-        ## Namespaces
-    doc.add_namespace('alg', 'http://datamechanics.io/algorithm/sbajwa_nathansw/') # The scripts in / format.
-    doc.add_namespace('dat', 'http://datamechanics.io/data/sbajwa_nathansw/') # The data sets in / format.
+    ## Namespaces
+    doc.add_namespace('alg', 'http://datamechanics.io/algorithm/nathansw_rooday_sbajwa_shreyap/') # The scripts in / format.
+    doc.add_namespace('dat', 'http://datamechanics.io/data/nathansw_rooday_sbajwa_shreyap/') # The data sets in / format.
     doc.add_namespace('ont', 'http://datamechanics.io/ontology#')
     doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
 
@@ -201,7 +201,7 @@ class mbta_stops_lines(dml.Algorithm):
     ## Entitites
     # Data Source
     resource1 = doc.entity('mbta:stopsbyroute', {'prov:label':'MBTA Stops By Route', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-    resource2 = doc.entity('dat:OTP_by_line.json', {'prov:label':'On-Time Performance by Line', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+    resource2 = doc.entity('dat:otp_by_line.json', {'prov:label':'On-Time Performance by Line', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 
     # Data Generated
     lines_vs_parents = doc.entity('dat:nathansw_rooday_sbajwa_shreyap#lines_vs_parents', {prov.model.PROV_LABEL:'lines_vs_parents', prov.model.PROV_TYPE:'ont:DataSet', 'ont:Extension':'csv'})
@@ -216,7 +216,7 @@ class mbta_stops_lines(dml.Algorithm):
     ## used   
     doc.usage(get_lines_vs_parents, resource1, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval',})
     doc.usage(get_lines_vs_stops, resource1, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval',})
-    
+
     doc.usage(get_lines_vs_parents, resource2, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval',})
     doc.usage(get_lines_vs_stops, resource2, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval',})
 

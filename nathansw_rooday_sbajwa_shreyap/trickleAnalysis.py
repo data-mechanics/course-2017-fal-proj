@@ -45,6 +45,7 @@ class trickleAnalysis(dml.Algorithm):
     repo = client.repo
     repo.authenticate('nathansw_rooday_sbajwa_shreyap', 'nathansw_rooday_sbajwa_shreyap')
     
+    # Five db uses
     trickle_db = repo['nathansw_rooday_sbajwa_shreyap.trickling']
     neighborhoodMap_db = repo['nathansw_rooday_sbajwa_shreyap.neighborhoodMap']
     householdincome_db = repo['nathansw_sbajwa.householdincome']
@@ -138,39 +139,56 @@ class trickleAnalysis(dml.Algorithm):
     ##########################################################
 
     ## Namespaces
-    doc.add_namespace('alg', 'http://datamechanics.io/algorithm/sbajwa_nathansw/') # The scripts in / format.
-    doc.add_namespace('dat', 'http://datamechanics.io/data/sbajwa_nathansw/') # The data sets in / format.
+    doc.add_namespace('alg', 'http://datamechanics.io/algorithm/nathansw_rooday_sbajwa_shreyap/') # The scripts in / format.
+    doc.add_namespace('dat', 'http://datamechanics.io/data/nathansw_rooday_sbajwa_shreyap/') # The data sets in / format.
     doc.add_namespace('ont', 'http://datamechanics.io/ontology#')
     doc.add_namespace('log', 'http://datamechanics.io/log#') # The event log.
 
+    doc.add_namespace('dat2', 'http://datamechanics.io/data/nathansw_sbajwa/')
 
-    """
     ## Agents
-    this_script = doc.agent('alg:nathansw_rooday_sbajwa_shreyap#mbta_stops_lines', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+    this_script = doc.agent('alg:nathansw_rooday_sbajwa_shreyap#trickleAnalysis', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
     ## Activities
-    get_mbta_stops_lines = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+    get_trickleAnalysis = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 
     ## Entitites
     # Data Source
-    resource = 
+    resource1 = doc.entity('dat:trickling.json', {'prov:label':'Trickle', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+    resource2 = doc.entity('dat:neighborhood_map.json', {'prov:label':'Neighborhood Map', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+    resource3 = doc.entity('dat2:HouseholdIncome.json', {'prov:label':'Household Income', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+    resource4 = doc.entity('dat2:PovertyRates.json', {'prov:label':'Poverty Rates', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+    resource5 = doc.entity('dat2:MeansOfCommuting.json', {'prov:label':'Commuting', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
     # Data Generated
-    mbta_stops_lines = 
+    trickleAnalysis = doc.entity('dat:nathansw_rooday_sbajwa_shreyap#trickleAnalysis', {prov.model.PROV_LABEL:'Trickle Analysis', prov.model.PROV_TYPE:'ont:DataSet'})
        
     ############################################################
 
-        ## wasAssociatedWith      
+    ## wasAssociatedWith      
+    doc.wasAssociatedWith(get_trickleAnalysis, this_script)
 
-    ## used   
+    ## used
+    doc.usage(get_trickleAnalysis, resource1, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval',})
+    doc.usage(get_trickleAnalysis, resource2, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval',})
+    doc.usage(get_trickleAnalysis, resource3, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval',})
+    doc.usage(get_trickleAnalysis, resource4, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval',})
+    doc.usage(get_trickleAnalysis, resource5, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval',})
 
     ## wasGeneratedBy
+    doc.wasGeneratedBy(trickleAnalysis, get_trickleAnalysis, endTime)
 
-    ## wasAttributedTo    
+    ## wasAttributedTo
+    doc.wasAttributedTo(trickleAnalysis, this_script)
 
     ## wasDerivedFrom
+    doc.wasDerivedFrom(trickleAnalysis, resource1, get_trickleAnalysis, get_trickleAnalysis, get_trickleAnalysis)
+    doc.wasDerivedFrom(trickleAnalysis, resource2, get_trickleAnalysis, get_trickleAnalysis, get_trickleAnalysis)
+    doc.wasDerivedFrom(trickleAnalysis, resource3, get_trickleAnalysis, get_trickleAnalysis, get_trickleAnalysis)
+    doc.wasDerivedFrom(trickleAnalysis, resource4, get_trickleAnalysis, get_trickleAnalysis, get_trickleAnalysis)
+    doc.wasDerivedFrom(trickleAnalysis, resource5, get_trickleAnalysis, get_trickleAnalysis, get_trickleAnalysis)
 
     ############################################################
-    """
+
     repo.logout()
 
     return doc
