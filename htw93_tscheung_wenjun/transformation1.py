@@ -138,9 +138,9 @@ class transformation1(dml.Algorithm):
                   
         return doc
 
-transformation1.execute()
-doc = transformation1.provenance()
-print(doc.get_provn())
-print(json.dumps(json.loads(doc.serialize()), indent=4))
+#transformation1.execute()
+#doc = transformation1.provenance()
+#print(doc.get_provn())
+#print(json.dumps(json.loads(doc.serialize()), indent=4))
 
 ## eof
