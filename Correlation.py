@@ -36,7 +36,7 @@ class Correlation(dml.Algorithm):
             scoreArray.append(x)
 
 
-        print(scoreArray[1]['Charging Station'])
+        #print(scoreArray[1]['Charging Station'])
         print("TESTING")
         #scores = [('North End', [0, 3, 236, 240]), ('Bay Village', [0, 0, 24, 42]), ('East Boston', [0, 19, 222, 3544]), ('Leather District', [8, 8, 34, 43]), ('Allston', [0, 1, 1888, 1994]), ('Hyde Park', [0, 0, 569, 1163]), ('Roslindale', [0, 0, 450, 608]), ('Charlestown', [0, 7, 189, 455]), ('Back Bay', [4, 17, 432, 817]), ('South End', [0, 0, 116, 150]), ('Downtown', [4, 33, 160, 420]), ('Dorchester', [0, 7, 1382, 3710]), ('South Boston Waterfront', [15, 7, 102, 222]), ('West Roxbury', [0, 0, 559, 708]), ('Longwood Medical Area', [0, 11, 136, 154]), ('Mission Hill', [0, 11, 135, 161]), ('Roxbury', [0, 7, 315, 525]), ('Beacon Hill', [1, 16, 149, 391]), ('Mattapan', [0, 0, 348, 627]), ('Harbor Islands', [0, 0, 0, 155]), ('Brighton', [0, 0, 983, 1466]), ('South Boston', [0, 1, 410, 1061]), ('West End', [0, 5, 387, 549]), ('Fenway', [4, 21, 893, 1034]), ('Chinatown', [11, 21, 74, 112]), ('Jamaica Plain', [0, 0, 356, 919])]
         relationdata1 = []
@@ -89,37 +89,26 @@ class Correlation(dml.Algorithm):
         y5 = [yi for (xi, yi) in relationdata5]
         x6 = [xi for (xi, yi) in relationdata6]
         y6 = [yi for (xi, yi) in relationdata6]
-        
-
-
-
-    
-
-
-
 
         score = []
         score.append(("correlation between charging stations & hubway stations ",scipy.stats.pearsonr(x1,y1)))
         score.append(("correlation between charging stations & bikenetworks",scipy.stats.pearsonr(x2,y2)))
         score.append(("correlation between charging stations & openspaces",scipy.stats.pearsonr(x3,y3)))
-        score.append(("correlation between hubway stations   & bikenetworks",scipy.stats.pearsonr(x4,y4)))
+        score.append(("correlation between hubway stations & bikenetworks",scipy.stats.pearsonr(x4,y4)))
         score.append(("correlation between hubway stations & openspaces",scipy.stats.pearsonr(x5,y5)))
         score.append(("correlation between bikenetworks & openspaces",scipy.stats.pearsonr(x6,y6)))
 
-        fixedScore= []
+        fixedScore=[]
         for x in score:
-             print(x)
-             y = lambda t: ({t[0],t[1]})
-             z = y(x)
-             fixedScore.append(z)
+            y = lambda t: ({t[0]: t[1]})
+            z = y(x)
+            fixedScore.append(z)
              
     
-        print(fixedScore)
+#print(fixedScore)
 
-
-
-        #repo['francisz_jrashaan.correlationScore'].insert_many(fixedScore)
-        #repo['francisz_jrashaan.correlationScore'].metadata({'complete':True})
+        repo['francisz_jrashaan.correlationScore'].insert_many(fixedScore)
+        repo['francisz_jrashaan.correlationScore'].metadata({'complete':True})
         
 
 

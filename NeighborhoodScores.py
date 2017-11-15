@@ -186,7 +186,7 @@ class NeighborhoodScores(dml.Algorithm):
                     definiteNeighborhoodCoordinates[i] = a,b,c,1,e,f
 
         abridgedTuple = bikeCoordsTuple[:8000]
-        print(len(definiteNeighborhoodCoordinates))
+        #print(len(definiteNeighborhoodCoordinates))
         abridgedCoords = definiteNeighborhoodCoordinates[:5000]
         for (i,tup) in enumerate(abridgedCoords):
             a,b,c,d,e,f = tup
@@ -207,7 +207,7 @@ class NeighborhoodScores(dml.Algorithm):
 
 
 
-        print(definiteNeighborhoodCoordinates)
+        #print(definiteNeighborhoodCoordinates)
 
         url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/2868d370c55d4d458d4ae2224ef8cddd_7.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -275,7 +275,7 @@ class NeighborhoodScores(dml.Algorithm):
              agg.append(z)
              
 
-        print(aggregate)
+        #print(aggregate)
 
         repo.dropCollection("neighborhoodScores")
         repo.createCollection("neighborhoodScores")

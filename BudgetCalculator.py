@@ -10,6 +10,11 @@ import geojson
 import pdb
 import scipy.stats
 import z3
+import z3core
+import z3types
+import z3consts
+import z3printer
+import random
 
 class BudgetCalculator(dml.Algorithm):
     contributor = 'francisz_jrashaan'
@@ -28,7 +33,7 @@ class BudgetCalculator(dml.Algorithm):
         scores =  repo.francisz_jrashaan.neighborhoodScores.find()
       
         scoreArray = []
-        print(scores)
+        #print(scores)
         for i in scores:
             #print(i)
             a = lambda t: (t['Charging Station'])
@@ -51,31 +56,48 @@ class BudgetCalculator(dml.Algorithm):
         hubwayStations = []
         bikeNetworks = []
         openspace = []
+        Neighborhoods = []
+        results = []
         #change .s in z3 printer z3 core and z3 
         for i in range(len(scoreArray)):
-            c = scoreArray[i][0] 
+            c = scoreArray[i][0]
             h = scoreArray[i][1]
             b = scoreArray[i][2]
             o = scoreArray[i][3]
-            n = scoreArray[i][4]
+            Neighborhoods += [scoreArray[i][4]]
             (x1,x2,x3,x4) = [z3.Real('x'+str(j) + "_" + str(i)) for j in range(1,5)]
-            chargingStations.append(x1)
-            hubwayStations.append(x2)
-            bikeNetworks.append(x3)
-            openspace.append(x4)
-
-            S.add(((c+x1) * 2000) + ((h+x2) * 1500) + ((b+x3) * 3000) + ((o+x4) * 10000) <= 1000000)
-            S.add(x1 >= x2 * 4)
-            S.add(x2 <= x3 * 3)
-            S.add(x4 >= x1 * 2)
-        S.add(sum(chargingStations) > 200)
-        S.add(sum(hubwayStations) > 100)
-        S.add(sum(bikeNetworks) > 100)
-        S.add(sum(openspace) > 20)
-
+            S.add(x1 > 0)
+            S.add(x2 > 0)
+            S.add(x3 > 0)
+            S.add(x4 > 0)
+            S.add(x1 >= x2 + random.randint(4, 20))
+            S.add(x2 >= random.randint(0, 10))
+            S.add(x3 > x1 + random.randint(1, 20))
+            S.add(x4 >= x1 + random.randint(1, 6))
+            S.add(((x1) * 2000) + ((x2) * 1500) + ((x3) * 3000) + ((x4) * 8000) <= 1000000)
+        
         S.check()
-        print(S.model())
-        print(chargingStations)
+        X = S.model()
+        #print(int(z3._to_int_str(X[7])))
+        for i in range(len(scoreArray)):
+            (x1,x2,x3,x4) = [z3.Real('x'+str(j) + "_" + str(i)) for j in range(1,5)]
+            chargingStations.append(X[x1])
+            hubwayStations.append(X[x2])
+            bikeNetworks.append(X[x3])
+            openspace.append(X[x4])
+    
+        #print(chargingStations)
+        for j in range(len(chargingStations)):
+            tuple = (Neighborhoods[j], chargingStations[j], hubwayStations[j], bikeNetworks[j], openspace[j])
+            y = lambda t: ({str(t[0]): str((t[1], t[2], t[3], t[4]))})
+            results.append(y(tuple))
+
+        print(results)
+        repo.dropCollection("optimalScore")
+        repo.createCollection("optimalScore")
+        repo['francisz_jrashaan.optimalScore'].insert_many(results)
+        repo['francisz_jrashaan.optimalScore'].metadata({'complete':True})
+
     @staticmethod
     def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
         '''
