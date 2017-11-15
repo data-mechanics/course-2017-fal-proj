@@ -38,6 +38,7 @@ class statsmodel(dml.Algorithm):
         axes = pd.plotting.scatter_matrix(df, alpha=1, figsize=(10, 10))
         plt.tight_layout()
         plt.savefig('angelay_maulikjs/statsmodel_correlations')
+        print('\nCorrelation coefficients:\n')
         print(df.corr())
         print()
         print(df.describe())
@@ -49,14 +50,14 @@ class statsmodel(dml.Algorithm):
         results = model.fit()
         print(results.summary())
         print()
-        print('\nThis is our linear least-square model. It does not yield a good R-squared value. We are going to build our model by adding one variable at a time, starting with the variable that yields the highest R-squared value when fitted to a linear model against CO2 emissions. After doing some research, we found a theory called Kaya Identity which states that CO2 emissions is roughy equal to population * GDP per capita * energy intensity * carbon intensity we will incorporate that into our model and see if adding energy use and HDI will make it better.\n')
+        print('\nThis is our linear least-square model. It does not yield a good R-squared value. We are going to build our model by adding one variable at a time, starting with the variable that yields the highest R-squared value when fitted to a linear model against CO2 emissions. After doing some research, we found a theory called Kaya Identity which states that CO2 emissions is roughly equal to population * GDP per capita * energy intensity * carbon intensity. We will incorporate that into our model and see if adding energy use and HDI will make it better.\n')
         ind = ['CarbonIntensity','EnergyIntensity','EnergyUse','GDPperCapita', 'HDI','Population']
         for i in range(len(ind)):
             model = sm.OLS(Dependent, df[ind[i]])
             results = model.fit()
             print('\nCO2Emissions vs ' + ind[i] + '\n')
             print(results.summary())
-        print('\nLooks like population yields the highest R-squared value, and energy use comes next. Build a model with population and energy use and see if R-squared value goes up\n')
+        print('\nLooks like population yields the highest R-squared value, and energy use comes next. Build a model with population and energy use and see if R-squared value goes up.\n')
         model = smf.ols(formula='CO2Emissions ~ Population * EnergyUse', data=df)
         results = model.fit()
         print('\nCO2Emissions vs Population + EnergyUse\n')
@@ -81,7 +82,7 @@ class statsmodel(dml.Algorithm):
         results = model.fit()
         print('\nCO2Emissions vs Population * EnergyUse * CarbonIntensity * GDPperCapita * HDI * EnergyIntensity\n')
         print(results.summary())
-        print(results.params)
+        #print(results.params)
         print('\nR-squared value went up to 0.998. This is a really high R-squared value. We might be at risk of overfitting the data. Lets test our model on the 2013 data and see how we do.\n')
         
         # getting the 2013 data
@@ -117,7 +118,7 @@ class statsmodel(dml.Algorithm):
         results = model.fit()
         print('\nCO2Emissions vs Population * EnergyUse * CarbonIntensity * GDPperCapita * HDI * EnergyIntensity\n')
         print(results.summary())
-        print(results.params)
+        #print(results.params)
         
         print('\nWe got an R-squared value of 1, but we might be overfitting the data. Lets test the model on all 2013 data to see how we do.\n')
         
