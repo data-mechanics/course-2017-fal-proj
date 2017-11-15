@@ -8,78 +8,90 @@ import math
 from collections import defaultdict
 
 
-def map(f, R):
-    return [t for (k,v) in R for t in f(k,v)]
 
-def cro(x,y):
-    all_cord = []
-    for key,value in x.items():
-        for c2 in y:
-            all_cord.append((key,distance(value,c2)))
-    return all_cord
-
-def union(R, S):
-    return R + S
-
-def difference(R, S):
-    return [t for t in R if t not in S]
-
-def intersect(R, S):
-    return [t for t in R if t in S]
-
-def project(R, p):
-    return [p(t) for t in R]
-
-def select(R, s):
-    return [t for t in R if s(t)]
- 
-def product(R, S):
-    return [(t,u) for t in R for u in S]
-
-def aggregate(R, f):
-    keys = {r[0] for r in R}
-    return [(key, f([v for (k,v) in R if k == key])) for key in keys]
-
-def comb(ls):
-    result ={}
-    for k,v in ls:
-        result.setdefault(k,[]).append(v)
-    return result
-
-def distance(origin, destination):
-    lat1 = origin[0] 
-    lon1 = origin[1]
-    lat2 = destination[0] 
-    lon2 = destination[1]
-    radius = 3959 #miles
-
-    dlat = math.radians(lat2-lat1)
-    dlon = math.radians(lon2-lon1)
-    a = math.sin(dlat/2) * math.sin(dlat/2) + math.cos(math.radians(lat1)) \
-        * math.cos(math.radians(lat2)) * math.sin(dlon/2) * math.sin(dlon/2)
-    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
-    d = radius * c
-    return d
-
-
-def counter(ls):
-    c = 0
-    result =[]
-    for k,v in ls.items():
-        for i in v:
-            if i <=1.5:
-                c += 1
-            else:
-                c == c
-        result.append(((k),c))
-        c = 0
-    return dict(result)
 
 class schoolfinal(dml.Algorithm):
     contributor = 'eileenli_xtq_yidingou'
     reads = ['eileenli_xtq_yidingou.schools', 'eileenli_xtq_yidingou.comfort', 'eileenli_xtq_yidingou.safety', 'eileenli_xtq_yidingou.traffic']
-    writes = ['eileenli_xtq_yidingou.schoolfinal', 'eileenli_xtq_yidingou.schoolscore']
+    writes = ['eileenli_xtq_yidingou.schoolfinal_data', 'eileenli_xtq_yidingou.schoolscore_data']
 
+    @staticmethod
+    def map(f, R):
+        return [t for (k,v) in R for t in f(k,v)]
+
+    @staticmethod
+    def cro(x,y):
+        all_cord = []
+        for key,value in x.items():
+            for c2 in y:
+                all_cord.append((key,schoolfinal.distance(value,c2)))
+        return all_cord
+
+    @staticmethod
+    def union(R, S):
+        return R + S
+
+    @staticmethod
+    def difference(R, S):
+        return [t for t in R if t not in S]
+
+    @staticmethod
+    def intersect(R, S):
+        return [t for t in R if t in S]
+
+    @staticmethod
+    def project(R, p):
+        return [p(t) for t in R]
+
+    @staticmethod
+    def select(R, s):
+        return [t for t in R if s(t)]
+    
+    @staticmethod 
+    def product(R, S):
+        return [(t,u) for t in R for u in S]
+
+    @staticmethod
+    def aggregate(R, f):
+        keys = {r[0] for r in R}
+        return [(key, f([v for (k,v) in R if k == key])) for key in keys]
+
+    @staticmethod
+    def comb(ls):
+        result ={}
+        for k,v in ls:
+            result.setdefault(k,[]).append(v)
+        return result
+
+    @staticmethod
+    def distance(origin, destination):
+        lat1 = origin[0] 
+        lon1 = origin[1]
+        lat2 = destination[0] 
+        lon2 = destination[1]
+        radius = 3959 #miles
+
+        dlat = math.radians(lat2-lat1)
+        dlon = math.radians(lon2-lon1)
+        a = math.sin(dlat/2) * math.sin(dlat/2) + math.cos(math.radians(lat1)) \
+            * math.cos(math.radians(lat2)) * math.sin(dlon/2) * math.sin(dlon/2)
+        c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
+        d = radius * c
+        return d
+
+    @staticmethod
+    def counter(ls):
+        c = 0
+        result =[]
+        for k,v in ls.items():
+            for i in v:
+                if i <=1.5:
+                    c += 1
+                else:
+                    c == c
+            result.append(((k),c))
+            c = 0
+        return dict(result)
 
     @staticmethod
     def execute(trial = False):
@@ -120,13 +132,13 @@ class schoolfinal(dml.Algorithm):
             for j in CM:
                 temp = []
                 for k in j['entertainment']:
-                    if distance(k, i["geometry"]["coordinates"]) <= 2:
+                    if schoolfinal.distance(k, i["geometry"]["coordinates"]) <= 2:
                         entertainment += 1
                         temp.append(k)
                 comfort.append({"entertainment": temp})
                 temp = []
                 for k in j['restaurants']:
-                    if distance(k, i["geometry"]["coordinates"]) <= 2:
+                    if schoolfinal.distance(k, i["geometry"]["coordinates"]) <= 2:
                         restaurant += 1
                         temp.append(k)
                 comfort.append({"restaurants": temp})
@@ -135,20 +147,20 @@ class schoolfinal(dml.Algorithm):
             for j in SF:
                 temp = []
                 for k in j["hospitals"]:
-                    if distance(k, i["geometry"]["coordinates"]) <= 2:
+                    if schoolfinal.distance(k, i["geometry"]["coordinates"]) <= 2:
                         hospital += 1
                         temp.append(k)
                 safety.append({"hospitals": temp})
                 school_hospital.append((i["properties"]["Name"], i["geometry"]["coordinates"], len(temp)))
                 temp = []
                 for k in j["crimes"]:
-                    if distance(k, i["geometry"]["coordinates"]) <= 2:
+                    if schoolfinal.distance(k, i["geometry"]["coordinates"]) <= 2:
                         crime += 1
                         temp.append(k)
                 safety.append({"crimes": temp})
                 temp = []
                 for k in j['crash']:
-                    if distance(k, i["geometry"]["coordinates"]) <= 2:
+                    if schoolfinal.distance(k, i["geometry"]["coordinates"]) <= 2:
                         crash += 1
                         temp.append(k)
                 safety.append({"crash": temp})
@@ -157,24 +169,24 @@ class schoolfinal(dml.Algorithm):
             for j in TR:
                 temp = []
                 for k in j["crash"]:
-                    if distance(k, i["geometry"]["coordinates"]) <= 2:
+                    if schoolfinal.distance(k, i["geometry"]["coordinates"]) <= 2:
                         temp.append(k)
                 traffic.append({"crash": temp})
                 temp = []
                 for k in j["hubway"]:
-                    if distance(k, i["geometry"]["coordinates"]) <= 2:
+                    if schoolfinal.distance(k, i["geometry"]["coordinates"]) <= 2:
                         hubway += 1
                         temp.append(k)
                 traffic.append({"hubway": temp})
                 temp = []
                 for k in j['signals']:
-                    if distance(k, i["geometry"]["coordinates"]) <= 2:
+                    if schoolfinal.distance(k, i["geometry"]["coordinates"]) <= 2:
                         signal += 1
                         temp.append(k)
                 traffic.append({"signals": temp})
                 temp = []
                 for k in j['MBTA']:
-                    if distance(k, i["geometry"]["coordinates"]) <= 2:
+                    if schoolfinal.distance(k, i["geometry"]["coordinates"]) <= 2:
                         MBTA += 1
                         temp.append(k)
                 traffic.append({"MBTA": temp})
@@ -207,15 +219,15 @@ class schoolfinal(dml.Algorithm):
                 ]
                 })
 
-        two_school_hospital = select(product(school_hospital, school_hospital), lambda t: t[0][0] != t[1][0])
+        two_school_hospital = schoolfinal.select(schoolfinal.product(school_hospital, school_hospital), lambda t: t[0][0] != t[1][0])
 
         for i in two_school_hospital:
             two_school_hospital.remove((i[1], i[0]))
 
-        sum_num = project(two_school_hospital, lambda t: ((t[0][0], t[0][1], t[1][0], t[1][1], t[0][2] + t[1][2])))
+        sum_num = schoolfinal.project(two_school_hospital, lambda t: ((t[0][0], t[0][1], t[1][0], t[1][1], t[0][2] + t[1][2])))
 
         target = ()
-        sum_num = select(sum_num, lambda t: t[4] < 10 and distance(t[1], t[3]) < 4)
+        sum_num = schoolfinal.select(sum_num, lambda t: t[4] < 10 and schoolfinal.distance(t[1], t[3]) < 4)
 
 
         if len(sum_num) == 0:
