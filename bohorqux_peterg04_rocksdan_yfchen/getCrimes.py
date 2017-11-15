@@ -55,7 +55,7 @@ class getCrimes(dml.Algorithm):
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
 #        doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
-		doc.add_namespace('cd', 'https://data.boston.gov/export/12c/b38/12cb3883-56f5-47de-afa5-3b1cf61b257b.json')
+	doc.add_namespace('cd', 'https://data.boston.gov/export/12c/b38/12cb3883-56f5-47de-afa5-3b1cf61b257b.json')
 
 		
         this_script = doc.agent('alg:bohorqux_peterg04_rocksdan_yfchen#getCrimes', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
@@ -72,9 +72,6 @@ class getCrimes(dml.Algorithm):
         doc.wasGeneratedBy(crimes, get_crimes, endTime)
         doc.wasDerivedFrom(crimes, resource, get_crimes, get_crimes, get_crimes)
 
-		#
-		
-		#
 		
         repo.logout()
                   
