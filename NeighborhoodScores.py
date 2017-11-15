@@ -6,7 +6,7 @@ import datetime
 import uuid
 import requests
 import geojson
-from tqdm import tqdm
+#from tqdm import tqdm
 import pdb
 
 
@@ -186,7 +186,7 @@ class NeighborhoodScores(dml.Algorithm):
                     definiteNeighborhoodCoordinates[i] = a,b,c,1,e,f
 
         abridgedTuple = bikeCoordsTuple[:8000]
-        print(len(definiteNeighborhoodCoordinates))
+        #print(len(definiteNeighborhoodCoordinates))
         abridgedCoords = definiteNeighborhoodCoordinates[:5000]
         for (i,tup) in enumerate(abridgedCoords):
             a,b,c,d,e,f = tup
@@ -207,7 +207,7 @@ class NeighborhoodScores(dml.Algorithm):
 
 
 
-        print(definiteNeighborhoodCoordinates)
+        #print(definiteNeighborhoodCoordinates)
 
         url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/2868d370c55d4d458d4ae2224ef8cddd_7.geojson'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -269,13 +269,13 @@ class NeighborhoodScores(dml.Algorithm):
 
         agg = []
         for x in aggregate:
-             print(x)
+             #print(x)
              y = lambda t: ({"Neighborhood":t[0],'Charging Station':t[1][0],'Hubway Stations':t[1][1],'Bike Networks':t[1][2],'Open Space':t[1][3]})
              z = y(x)
              agg.append(z)
              
 
-        print(aggregate)
+        #print(aggregate)
 
         repo.dropCollection("neighborhoodScores")
         repo.createCollection("neighborhoodScores")

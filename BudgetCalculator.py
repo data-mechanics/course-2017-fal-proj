@@ -6,10 +6,15 @@ import datetime
 import uuid
 import requests
 import geojson
-from tqdm import tqdm
+#from tqdm import tqdm
 import pdb
 import scipy.stats
 import z3
+import z3core
+import z3types
+import z3consts
+import z3printer
+import random
 
 class BudgetCalculator(dml.Algorithm):
     contributor = 'francisz_jrashaan'
@@ -25,22 +30,18 @@ class BudgetCalculator(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate('francisz_jrashaan','francisz_jrashaan')
-        data = [('North End', [0, 3, 236, 240]), ('Bay Village', [0, 0, 24, 42]), ('East Boston', [0, 19, 222, 3544]), ('Leather District', [8, 8, 34, 43]), ('Allston', [0, 1, 1888, 1994]), ('Hyde Park', [0, 0, 569, 1163]), ('Roslindale', [0, 0, 450, 608]), ('Charlestown', [0, 7, 189, 455]), ('Back Bay', [4, 17, 432, 817]), ('South End', [0, 0, 116, 150]), ('Downtown', [4, 33, 160, 420]), ('Dorchester', [0, 7, 1382, 3710]), ('South Boston Waterfront', [15, 7, 102, 222]), ('West Roxbury', [0, 0, 559, 708]), ('Longwood Medical Area', [0, 11, 136, 154]), ('Mission Hill', [0, 11, 135, 161]), ('Roxbury', [0, 7, 315, 525]), ('Beacon Hill', [1, 16, 149, 391]), ('Mattapan', [0, 0, 348, 627]), ('Harbor Islands', [0, 0, 0, 155]), ('Brighton', [0, 0, 983, 1466]), ('South Boston', [0, 1, 410, 1061]), ('West End', [0, 5, 387, 549]), ('Fenway', [4, 21, 893, 1034]), ('Chinatown', [11, 21, 74, 112]), ('Jamaica Plain', [0, 0, 356, 919])]
         scores =  repo.francisz_jrashaan.neighborhoodScores.find()
       
         scoreArray = []
-        print(scores)
+        #print(scores)
         for i in scores:
-            print(i)
+            #print(i)
             a = lambda t: (t['Charging Station'])
             b = lambda t: (t['Hubway Stations'])
             c = lambda t: (t['Bike Networks'])  
             d = lambda t: (t['Open Space'])
             e = lambda t:(t['Neighborhood'])
            
-    
-
- 
             co1 = a(i)
             co2 = b(i)
             co3 = c(i)
@@ -55,15 +56,22 @@ class BudgetCalculator(dml.Algorithm):
         hubwayStations = []
         bikeNetworks = []
         openspace = []
+        Neighborhoods = []
+        results = []
         #change .s in z3 printer z3 core and z3 
         for i in range(len(scoreArray)):
+<<<<<<< HEAD
 
             c = scoreArray[i][0] 
+=======
+            c = scoreArray[i][0]
+>>>>>>> 54b0d0c7a9013ae250ac8d740b57ac107736517f
             h = scoreArray[i][1]
             b = scoreArray[i][2]
             o = scoreArray[i][3]
-            n = scoreArray[i][4]
+            Neighborhoods += [scoreArray[i][4]]
             (x1,x2,x3,x4) = [z3.Real('x'+str(j) + "_" + str(i)) for j in range(1,5)]
+<<<<<<< HEAD
             S.add(x1 > 10)
             S.add(x2 > 20)
             S.add(x3 > 15)
@@ -103,9 +111,39 @@ class BudgetCalculator(dml.Algorithm):
 
 
 
+=======
+            S.add(x1 > 0)
+            S.add(x2 > 0)
+            S.add(x3 > 0)
+            S.add(x4 > 0)
+            S.add(x1 >= x2 + random.randint(4, 20))
+            S.add(x2 >= random.randint(0, 10))
+            S.add(x3 > x1 + random.randint(1, 20))
+            S.add(x4 >= x1 + random.randint(1, 6))
+            S.add(((x1) * 2000) + ((x2) * 1500) + ((x3) * 3000) + ((x4) * 8000) <= 1000000)
+>>>>>>> 54b0d0c7a9013ae250ac8d740b57ac107736517f
         
+        S.check()
+        X = S.model()
+        #print(int(z3._to_int_str(X[7])))
+        for i in range(len(scoreArray)):
+            (x1,x2,x3,x4) = [z3.Real('x'+str(j) + "_" + str(i)) for j in range(1,5)]
+            chargingStations.append(X[x1])
+            hubwayStations.append(X[x2])
+            bikeNetworks.append(X[x3])
+            openspace.append(X[x4])
     
-        
+        #print(chargingStations)
+        for j in range(len(chargingStations)):
+            tuple = (Neighborhoods[j], chargingStations[j], hubwayStations[j], bikeNetworks[j], openspace[j])
+            y = lambda t: ({"Neighborhood": t[0], 'Charging Station': str(t[1]), 'Hubway Stations': str(t[2]), 'Bike Networks': str(t[3]), 'Open Space': str(t[4])})
+            results.append(y(tuple))
+
+        #print(results)
+        repo.dropCollection("optimalScore")
+        repo.createCollection("optimalScore")
+        repo['francisz_jrashaan.optimalScore'].insert_many(results)
+        repo['francisz_jrashaan.optimalScore'].metadata({'complete':True})
 
     @staticmethod
     def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
