@@ -6,10 +6,9 @@ Assignment: Project #2
 *************************
 Important Notes to Notice:
 	- we are using Scipy for k-means: therefore the Scipy package must be installed on the system
-	- Currently, our crimesProperty.py when run in normal mode, will have to create 2741 entries - each one taking 7-9 seconds each. Please
-		run the code in --trial mode as it is then set to create 10 entries -- which gave us close to the correlation that we obtained based on
-		larger amount of entries. (Note: even in trial mode, this part of the code takes a little longer than a minute to run through the entries
-		unfortunately)
+	- just a note in case the crimesProperty.py takes 10-15 seconds to start running even in trial - it is parsing through
+		thousands of entries. it will be quick after that initial parsing
+	- calculateCorrelations takes about 1 second per entry, it'll need to run 100 entries in trial mode, so that takes about 1.5 mins
 *************************		
 
 After combining our two groups together, we decided to keep the direction of the "happy hour problem" from project #1. We scrapped a lot of our
