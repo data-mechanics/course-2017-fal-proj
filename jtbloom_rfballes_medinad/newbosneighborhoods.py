@@ -63,34 +63,25 @@ class newbosneighborhoods(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('nei', 'http://datamechanics.io/data/jb_rfb_dm_proj2data/')
+        doc.add_namespace('dm', 'http://datamechanics.io/data/jb_rfb_dm_proj2data/')
         
-        this_script = doc.agent('nei:jtbloom_rfballes_medinad#newbosneighborhoods', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('nei:boston-neighborhoods', {'prov:label':'boston neighborhoods', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        #get_found = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        get_neighbor = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_neighbor, this_script)
-        #doc.wasAssociatedWith(get_lost, this_script)
-        doc.usage(get_neighbor, resource, startTime, None,
+        this_script = doc.agent('dmLjtbloom_rfballes_medinad#bos_neighborhoods_shapes', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        neighborhood_resource = doc.entity('nei:boston-neighborhoods', {'prov:label':'boston neighborhoods', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+  
+        this_run = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(this_run, this_script)
+
+        doc.usage(this_run, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
                   'ont:Query':'/boston-neighborhoods.json'
                   }
                   )
-        #doc.usage(get_lost, resource, startTime, None,
-        #          {prov.model.PROV_TYPE:'ont:Retrieval',
-        #          'ont:Query':'?type=Animal+Lost&$select=type,latitude,longitude,OPEN_DT'
-        #          }
-        #          )
 
         neighbor = doc.entity('dat:medinad#neighbor', {prov.model.PROV_LABEL:'NEIGHBOR', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(neighbor, this_script)
-        doc.wasGeneratedBy(neighbor, get_neighbor, endTime)
-        doc.wasDerivedFrom(neighbor, resource, get_neighbor, get_neighbor, get_neighbor)
+        doc.wasGeneratedBy(neighbor, this_run, endTime)
+        doc.wasDerivedFrom(neighbor, resource, this_run, this_run, this_run)
 
-        #found = doc.entity('dat:alice_bob#found', {prov.model.PROV_LABEL:'Animals Found', prov.model.PROV_TYPE:'ont:DataSet'})
-        #doc.wasAttributedTo(found, this_script)
-        #doc.wasGeneratedBy(found, get_found, endTime)
-        #doc.wasDerivedFrom(found, resource, get_found, get_found, get_found)
 
         repo.logout()
                   
