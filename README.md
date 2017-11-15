@@ -7,7 +7,7 @@ This repository pertains to CS591 - Fall 2017 taught by Andrei lapets.
 ```
     The purpose of our project was to gather data on overweight persons in the Boston city area,
     and calculate whether or not there exists a correlation between income/property values and 
-    the number of overweight peoplein then vicinity. Furthermore, we gathered data on the 
+    the number of overweight people in then vicinity. Furthermore, we gathered data on the 
     location of current winter food markets and data on failed health inspections and their 
     corresponding locations. This allows us to map/plot the locations thathave poor health 
     standards and access to safe/healthy food. These two data points allow us to make a 
@@ -32,7 +32,7 @@ This repository pertains to CS591 - Fall 2017 taught by Andrei lapets.
         Our second constraint was to find the correlation of obesity and property values, 
     with a subset that allows us to compute the correlation coefficient between the neighborhoods
     in the shapefile and the overweight individual/property values from our other datasets. This 
-    data allowed us to conclude that HuntingAve/Prudential Center, Bay Village Neighborhood, Fenway 
+    data allowed us to conclude that HuntingtonAve/Prudential Center, Bay Village Neighborhood, Fenway 
     Neighborhood, Government Center and Central Artery had no major correlation between
     obesity and property value, while Charleston, and the South End districs had a significant,
     measurable correlation between the two metrics.
