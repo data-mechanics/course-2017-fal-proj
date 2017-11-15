@@ -6,30 +6,18 @@ In this project, you will implement platform components that can obtain a some d
 **This project description will be updated as we continue work on the infrastructure.**
 
 ## Datasets
-**Bike Network Data from Boston Maps Open Data**
+**Crime.csv from Analyze Boston**
 
-**Neighborhood Data from Analyze Boston**
+**streetlight-locations.csv from Analyze Boston**
 
-**Hubway Station Data from Analyze Boston**
+**Land_Use_Map.csv from data.cambridge.gov**
 
-**Charging Station Data from Boston Maps Open Data**
+**2010_Neighborhood_Population_Density.csv from data.cambridge.gov**
 
 **Open_Space.csv from BostonMaps: Open Data;**
 
-## Narrative 
-Expanding public transportation and car sharing are two of the most popular solutions to reduce emissions in urban environments. However, these options are not necessarily zero emission options and may still pollute the environment. Therefore it's important that more effective measures be considered to reduce emissions.
-
-By looking at charging stations, hubway stations, biking networks, and open space data in each Boston neighborhood we determined a green score for each neighborhood. From here we created a statistical analysis in an attempt to find out if there exists any correlation between subset entities of our data and if these correlations corresponded to the number of placements of select entities in each neighborhood. To do this, we iterated through all the possible subsets of two entities within neighborhoods and calculated correlations.
-
-Finally we took the green scores we computed initially and set up a constraint satisfaction problem where we attempted to optimize the green score for each neighborhood given a budget of $1,000,000. The constraints we added attempted to make the computation realistic, meaning that solutions of 0 or less than 0 were not acceptable, in an effort to deplete the budget.We also randomized the maximum and minimum number of specific entities that could be built in neighborhoods in an effort to create a unique solution for each neighborhood.
-
-Notes:
-Our Z3 files are modified slightly:
-For Z3core, Z3printer and Z3 we removed the ". import" lines
-If you do not have z3 on your machine we have added a supplementary folder which contains z3, all that needs to be done is to move the files inside the folder to the parent file titled francis_jrashaan. Additionally, we set the trial parameter to true.
-
-
-
+## Narrative
+We are looking to answer questions about crime and how it is correlated to various factors within the cities of Boston and Cambridge.  For example, the three transformations which we perform maps the correlation of homicides to the positioning of streetlights in the city, namely by finding intersections between the latitude and longitude of the homicides and the latitude and longitude of the streetlights within the city.  Other datasets we included deal with open spaces such as parks and other community spaces, land use, and population density within neighborhoods in Cambridge. Through the combination  of the various datasets from our three sources, we can answer several questions by observing the intersections and patters in our data.  Our transformations answer questions that helps our understanding of the way we look at homicides and their correlation to streetlights; this leads to improved police patrol routes, emergency box placements, response time, and other factors. The data we generated can be used by the city as an indicator of what streets need to be revamped in order to reduce crime.         The other datasets we extracted, but did not transform, can answer questions, if transformed in the future, about the correlation between open space, population density, and land use in Cambridge and Boston respectively, such as serving as an indicator for the areas that need to be improved economically by developing and repurposing areas of real estate throughout the city to reduce crime, and looking at the relationship between open space and land use.
 
 ## MongoDB infrastructure
 
@@ -62,9 +50,9 @@ However, you should be unable to create new collections using `db.createCollecti
 ```
 > db.createCollection("EXAMPLE");
 {
-  "ok" : 0,
-  "errmsg" : "not authorized on repo to execute command { create: \"EXAMPLE\" }",
-  "code" : 13
+"ok" : 0,
+"errmsg" : "not authorized on repo to execute command { create: \"EXAMPLE\" }",
+"code" : 13
 }
 ```
 Instead, load the server-side functions so that you can use the customized `createCollection()` function, which creates a collection that can be read by everyone but written only by you:
@@ -100,20 +88,20 @@ Note that you may need to use `python -m pip install <library>` to avoid issues 
 The `auth.json` file should remain empty and should not be submitted. When you are running your algorithms, you should use the file to store your credentials for any third-party data resources, APIs, services, or repositories that you use. An example of the contents you might store in your `auth.json` file is as follows:
 ```
 {
-    "services": {
-        "cityofbostondataportal": {
-            "service": "https://data.cityofboston.gov/",
-            "username": "alice_bob@example.org",
-            "token": "XxXXXXxXxXxXxxXXXXxxXxXxX",
-            "key": "xxXxXXXXXXxxXXXxXXXXXXxxXxxxxXXxXxxX"
-        },
-        "mbtadeveloperportal": {
-            "service": "http://realtime.mbta.com/",
-            "username": "alice_bob",
-            "token": "XxXX-XXxxXXxXxXXxXxX_x",
-            "key": "XxXX-XXxxXXxXxXXxXxx_x"
-        }
-    }
+"services": {
+"cityofbostondataportal": {
+"service": "https://data.cityofboston.gov/",
+"username": "alice_bob@example.org",
+"token": "XxXXXXxXxXxXxxXXXXxxXxXxX",
+"key": "xxXxXXXXXXxxXXXxXXXXXXxxXxxxxXXxXxxX"
+},
+"mbtadeveloperportal": {
+"service": "http://realtime.mbta.com/",
+"username": "alice_bob",
+"token": "XxXX-XXxxXXxXxXXxXxX_x",
+"key": "XxXX-XXxxXXxXxXXxXxx_x"
+}
+}
 }
 ```
 To access the contents of the `auth.json` file after you have loaded the `dml` library, use `dml.auth`.
