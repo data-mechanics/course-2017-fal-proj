@@ -37,8 +37,6 @@ class demographics(dml.Algorithm):
         result2 = json.loads(response)
         r = []
         for i in range(1,len(result)):
-            if int(result[i][2]) == 0 or int(result[i][4]) ==0: 
-               continue
             zipcode = result[i][8]
             if trial and zipcode not in trial_zips:
                 continue

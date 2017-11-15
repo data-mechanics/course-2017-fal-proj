@@ -31,16 +31,18 @@ class income(dml.Algorithm):
         result = json.loads(response)
         r = []
         for i in range(1,len(result)):
-            if result[i][0] == None or int(result[i][2]) == 0 or result[i][3] == None or int(result[i][5]) == 0:
+            if int(result[i][5]) == 0:
                 continue
+            #if result[i][0] == None or int(result[i][2]) == 0 or result[i][3] == None or int(result[i][5]) == 0:
+            #    continue
             zipcode = result[i][6]
             if trial and zipcode not in trial_zips:
                 continue
             d = {}
-            d["median_income"] = int(result[i][0])
+            d["median_income"] = int(result[i][0]) if not result[i][0] == None else 0
             d["50_income_rent"] = int(result[i][1])
             d["total_renters"] = int(result[i][2])
-            d["median_rent"] = int(result[i][3])
+            d["median_rent"] = int(result[i][3]) if not result[i][3] == None else 0
             d["people_in_poverty"] = int(result[i][4]) 
             d["total_people"] = int(result[i][5])
             d["zipcode"] = zipcode
