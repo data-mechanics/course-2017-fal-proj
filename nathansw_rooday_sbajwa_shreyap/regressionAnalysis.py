@@ -9,7 +9,6 @@ import uuid
 from bson import ObjectId
 import pandas as pd
 import numpy as np
-import seaborn
 from sklearn.model_selection import cross_val_predict
 from sklearn import linear_model
 from sklearn import metrics
