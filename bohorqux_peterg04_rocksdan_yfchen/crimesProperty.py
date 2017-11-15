@@ -129,24 +129,24 @@ class crimesProperty(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-#        doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
-	doc.add_namespace('prd', 'https://data.boston.gov/export/062/fc6/062fc6fa-b5ff-4270-86cf-202225e40858.json')
-	doc.add_namespace('cd', 'https://data.boston.gov/export/12c/b38/12cb3883-56f5-47de-afa5-3b1cf61b257b.json')
+        
+        doc.add_namespace('prd', 'https://data.boston.gov/export/062/fc6/062fc6fa-b5ff-4270-86cf-202225e40858.json')
+        doc.add_namespace('cd', 'https://data.boston.gov/export/12c/b38/12cb3883-56f5-47de-afa5-3b1cf61b257b.json')
 		
         this_script = doc.agent('alg:bohorqux_peterg04_rocksdan_yfchen#crimesProperty', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         props = doc.entity('dat:bohorqux_peterg04_rocksdan_yfchen#getProperties', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         crimes = doc.entity('dat:bohorqux_peterg04_rocksdan_yfchen#getCrimes', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-	merge_data = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        merge_data = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 		
-	doc.wasAssociatedWith(merge_data, this_script)
+        doc.wasAssociatedWith(merge_data, this_script)
         doc.usage(merge_data, props, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
-	doc.usage(merge_data, crimes, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
+        doc.usage(merge_data, crimes, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
 		
-	merge = doc.entity('dat:bohorqux_peterg04_rocksdan_yfchen#crimesProperty', {prov.model.PROV_LABEL: 'Merged Set', prov.model.PROV_TYPE:'ont:DataSet'})
-	doc.wasAttributedTo(merge, this_script)
-	doc.wasGeneratedBy(merge, merge_data, endTime)
-	doc.wasDerivedFrom(merge, props, merge_data, merge_data, merge_data)
-	doc.wasDerivedFrom(merge, crimes, merge_data, merge_data, merge_data)
+        merge = doc.entity('dat:bohorqux_peterg04_rocksdan_yfchen#crimesProperty', {prov.model.PROV_LABEL: 'Merged Set', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(merge, this_script)
+        doc.wasGeneratedBy(merge, merge_data, endTime)
+        doc.wasDerivedFrom(merge, props, merge_data, merge_data, merge_data)
+        doc.wasDerivedFrom(merge, crimes, merge_data, merge_data, merge_data)
 		
         
         repo.logout()
