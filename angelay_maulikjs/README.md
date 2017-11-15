@@ -1,23 +1,16 @@
-# angelay_Project1
-In this project, I performed preparations for modeling CO2 emissions by country. I plan to use data from one year to build the model and test it on data from another year.
+# angelay_maulikjs Project 2
 
-I first downloaded data on CO2 emissions (MMTons) from the Energy Information Administration:
-https://www.eia.gov/beta/international/data/browser/#/?pa=00000000000000000000000002&c=ruvvvvvfvtvnvv1urvvvvfvvvvvvfvvvou20evvvvvvvvvnvvuvo&ct=0&vs=INTL.44-8-AFG-MMTCD.A&vo=0&v=H&end=2014
-
-Then I downloaded data on GDP per capita (2011 PPP $) and Human Development Index from the United Nations Development Programme:
-http://hdr.undp.org/en/data
-
-Finally, I downloaded data on carbon intensity (kg per kg of oil equivalent energy use), energy intensity (MJ/$2011 PPP), energy use (kg of oil equivalent per capita) and total populations from The World Bank:
-https://data.worldbank.org/
-
-I manually cleaned up all the data because it would be difficult to perform cleanup in python since there are different ways to write some country names. I chose data from 2012 and 2013 because they were fairly comprehensive and recent. I organized the data and stored them as .json files, and then uploaded them to http://datamechanics.io/ in order to access them.
+This project is a continuation of angelay's project 1.
 
 getData.py retrieves the 7 datasets <br />
 merge2012.py merges all the data from 2012 and puts them into a collection called all2012. There are 129 entries in all2012. <br />
 removeOutliers.py takes the data in all2012 and removes all entries with outliers. This leaves us 87 entries left and stored in collection clean2012. <br />
 correlations.py takes all the data from clean2012 and returns the correlation coefficient of CO2 emissions and all 6 other attributes: carbon intensity, energy intensity, energy use, GDP per capita, Human Development Index, and population. The results are stored in collection corr2012. <br />
+In project 2, we are trying to build a model that will predict a country's CO2 emissions given its population, GDP per capita, carbon intensity, energy intensity, energy use, and HDI. We took two different approaches to solve this problem: machine learning and statistical analysis. <br />
+In statsmodel.py, we performed statistical analysis and built our model by adding one independent variable at a time, in descending order of the R-squared value of the linear model of CO2 emissions with only that variable. We based our methodology on the Kaya Identity, which states that CO2 emissions is equal to population * GDP per capita * carbon intensity * energy intensity. We added energy use and HDI to optimize our model. <br />
+We first built our model with clean 2012 data without outliers and tested it on clean 2013 data without outliers, and obtained an R-squared value of 0.984442. Then we built our model with all 2012 data with outliers and tested it in all 2013 data with outliers, and obtained an R-squared value of 0.998919. When running statsmodel.py, it will produce three graphs saved in the same directory, the first one is the pair-wise correlations between all variables, the second one is the results of the model on clean data, and the third one is the result of the model on all data.
 
 To run all files, execute the following command in root directory (course-2017-fal-proj):
 ```
-python3 execute.py angelay
+python3 execute.py angelay_maulikjs
 ```
