@@ -44,12 +44,13 @@ class crimesProperty(dml.Algorithm):
         #Place identical street names in array
 
         if(trial == True):
+            limit = 100
             iterations = 0
             for street in property_reports:
                 if street in crime_reports:
                     intersect.append(street)
                     iterations += 1
-                if iterations == 10:
+                if iterations == limit:
                     break
         else:
             iterations = 0
@@ -97,7 +98,8 @@ class crimesProperty(dml.Algorithm):
             indice += 1        
             if indice == limit:
                 break
-        
+
+        print("{}/{} records parsed: Parsing Complete".format(limit, limit))
         p_c = list()
         p_c.append(properties_crimes)
         
@@ -147,7 +149,7 @@ class crimesProperty(dml.Algorithm):
                   
         return doc
 
-# crimesProperty.execute()
+crimesProperty.execute(True)
 #doc = crimesProperty.provenance()
 #print(doc.get_provn())
 #print(json.dumps(json.loads(doc.serialize()), indent=4))
