@@ -145,7 +145,7 @@ class incoming_outgoing(dml.Algorithm):
 			
 
 
-	@staticmethod
+		@staticmethod
 	def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
 
         # Set up the database connection.
@@ -156,26 +156,35 @@ class incoming_outgoing(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('nei', 'http://datamechanics.io/data/jb_rfb_dm_proj2data/')
+        doc.add_namespace('dm', 'http://datamechanics.io/data/jb_rfb_dm_proj2data/')
         
-        this_script = doc.agent('nei:jtbloom_rfballes_medinad#incoming_outgoing', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('nei:incoming_outgoing', {'prov:label':'Incoming/Outgoing Hubway Trips', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-  
-        get_incoming_outgoing = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_incoming_outgoing, this_script)
+        this_script = doc.agent('dm:jtbloom_rfballes_medinad#incoming_outgoing', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        incoming_resource = doc.entity('nei:incoming_outgoing', {'prov:label':'Incoming Hubway Trips', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'DataSet'})
+		outgoing_resource = doc.entity('nei:incoming_outgoing', {'prov:label':'Outgoing Hubway Trips', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'DataSet'})
+		incoming_outgoing_resource = = doc.entity('nei:incoming_outgoing', {'prov:label':'Incoming/Outgoing Hubway Trips', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'DataSet'})
+
+        this_run = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        
+        doc.wasAssociatedWith(this_run this_script)
  
-        doc.usage(get_incoming_outgoing, resource, startTime, None,
+        doc.usage(this_run, incoming_resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval'}
                   )
 
-        incoming_outgoing = doc.entity('nei:jtbloom_rfballes_medinad#incoming_outgoing', {prov.model.PROV_LABEL:'Incoming/Outgoing Hubway Trips', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(incoming_outgoing, this_script)
-        doc.wasGeneratedBy(incoming_outgoing, get_incoming_outgoing, endTime)
-        doc.wasDerivedFrom(incoming_outgoing, resource, get_incoming_outgoing, get_incoming_outgoing, get_incoming_outgoing)
+         doc.usage(this_run, outgoing_resource, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Retrieval'}
+                  )
+
+        doc.wasAttributedTo(incoming_outgoing_resource, this_script)
+
+        doc.wasGeneratedBy(incoming_outgoing_resource, this_run, endTime)
+
+        doc.wasDerivedFrom(incoming_outgoing_resource, incoming_resource, this_run, this_run, this_run)
+        doc.wasDerivedFrom(incoming_outgoing_resource, outgoing_resource, this_run, this_run, this_run)
 
 
         repo.logout()
                   
         return doc
 
-incoming_outgoing.execute()
+#incoming_outgoing.execute()
