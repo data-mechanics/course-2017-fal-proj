@@ -71,7 +71,7 @@ class colleges(dml.Algorithm):
                   
         return doc
         
-        
+colleges.execute()        
         
     
     

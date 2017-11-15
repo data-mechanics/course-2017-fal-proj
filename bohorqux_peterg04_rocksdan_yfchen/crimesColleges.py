@@ -5,15 +5,14 @@ import prov.model
 import datetime
 import uuid
 
-class crimesProperty(dml.Algorithm):
+class crimesColleges(dml.Algorithm):
     contributor = 'bohorqux_peterg04_rocksdan_yfchen'
-    reads = ['bohorqux_peterg04_rocksdan_yfchen.properties', 'bohorqux_peterg04_rocksdan_yfchen.crimes']
-    writes = ['bohorqux_peterg04_rocksdan_yfchen.property_crimes']
+    reads = ['bohorqux_peterg04_rocksdan_yfchen.colleges', 'bohorqux_peterg04_rocksdan_yfchen.crimes']
+    writes = ['bohorqux_peterg04_rocksdan_yfchen.crimes_colleges']
 
     @staticmethod
     def execute(trial = False):
         '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
-        limit = 1000 #cap records retrieval with this value
         startTime = datetime.datetime.now()
 
         # Set up the database connection.
@@ -21,39 +20,38 @@ class crimesProperty(dml.Algorithm):
         repo = client.repo
         repo.authenticate('bohorqux_peterg04_rocksdan_yfchen', 'bohorqux_peterg04_rocksdan_yfchen')
 
-        properties = repo['bohorqux_peterg04_rocksdan_yfchen.properties']
+        colleges = repo['bohorqux_peterg04_rocksdan_yfchen.colleges']
         crimes = repo['bohorqux_peterg04_rocksdan_yfchen.crimes']
 
-        property_reports = []
+        college_reports = []
         crime_reports = []
         intersect = []
 
-        crimes_data = list(crimes.find())
-        properties_data = list(properties.find())
-        
         #Create distinct list of streets corresponding to each database
-        for houses in properties_data:
-            street = houses["ST_NAME"] + " " + houses["ST_NAME_SUF"]
-            if street not in property_reports:
-                property_reports.append(street)
+        print("Parsing college...")
+        for feature in colleges.find():
+            whole_data = feature["features"]
+            for reports in whole_data:
+                street = reports["properties"]["Address"]
+                if street not in college_reports:
+                    college_reports.append(street.upper())
 
-        for reports in crimes_data:
+        print("Parsing Crimes...")
+        for reports in crimes.find():
             if reports["STREET"] not in crime_reports:
                 crime_reports.append(reports["STREET"])
 
         #Place identical street names in array
-        iterations = 0
-        for street in property_reports:
-            if street in crime_reports:
+        for street in crime_reports:
+            if street in college_reports:
                 intersect.append(street)
-                iterations += 1
-            if iterations == limit: #unable to use entire data set as its too large, working with 330 records
-                break
 
         print("Shared Data:", str(len(intersect)))
-        
+        print(len(college_reports))
+        print("******\n******\n******")
+        print(len(crime_reports))
+        print(intersect)
         #Create dictionary of streets, setting None as initial values
-        properties_crimes = dict().fromkeys(intersect)
 
         #All information from both databases go under their respective street names.
         #Ex: BUSWELL ST: {
@@ -64,36 +62,11 @@ class crimesProperty(dml.Algorithm):
         #                                {All Data from the Properties Database that occured on BUSWELL ST goes in here}
         #                             }
         #                 }
-        indice = 0
         
-        for key in properties_crimes: #iterating through all street names
-            
-            #Insert Crimes data related to this street in this key
-            if indice%10 == 0:
-                print("{}/{} records parsed".format(indice, limit))
-            
-            properties_crimes[key] = {"Crimes": 0, "Properties": list()}
-            for reports in crimes_data:
-                if reports["STREET"] == key:
-                    properties_crimes[key]["Crimes"] += 1
-            
-            #Insert Properties data related to this street in this key
-            for reports in properties_data:
-                street = reports["ST_NAME"] + " " + reports["ST_NAME_SUF"]
-                if street == key:
-                    properties_crimes[key]["Properties"].append({"ZIPCODE": reports["ZIPCODE"], "AVG_LAND": reports["AV_LAND"], "AVG_BLDG": reports["AV_BLDG"],
-                                                                 "AVG_TOTAL": reports["AV_TOTAL"], "GROSS_TAX": reports["GROSS_TAX"], "Floors": reports["NUM_FLOORS"],
-                                                                 "Year Built": reports["YR_BUILT"]})
-            indice += 1        
-            if indice == limit:
-                break
-        
-        p_c = list()
-        p_c.append(properties_crimes)
-        
-        repo.dropCollection("property_crimes")
-        repo.createCollection("property_crimes")
-        repo['bohorqux_peterg04_rocksdan_yfchen.property_crimes'].insert_many(p_c)
+        p_c.append(intersect)
+        repo.dropCollection("crimes_colleges")
+        repo.createCollection("crimes_colleges")
+        repo['bohorqux_peterg04_rocksdan_yfchen.crimes_colleges'].insert_many(p_c)
         
         repo.logout()
 
@@ -137,7 +110,7 @@ class crimesProperty(dml.Algorithm):
                   
         return doc
 
-crimesProperty.execute()
+crimesColleges.execute()
 #doc = crimesProperty.provenance()
 #print(doc.get_provn())
 #print(json.dumps(json.loads(doc.serialize()), indent=4))
