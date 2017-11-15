@@ -13,7 +13,7 @@ from collections import defaultdict
 class schoolfinal(dml.Algorithm):
     contributor = 'eileenli_xtq_yidingou'
     reads = ['eileenli_xtq_yidingou.schools', 'eileenli_xtq_yidingou.comfort', 'eileenli_xtq_yidingou.safety', 'eileenli_xtq_yidingou.traffic']
-    writes = ['eileenli_xtq_yidingou.schoolfinal_data', 'eileenli_xtq_yidingou.schoolscore_data']
+    writes = ['eileenli_xtq_yidingou.schoolfinal', 'eileenli_xtq_yidingou.schoolscore']
 
     @staticmethod
     def map(f, R):
