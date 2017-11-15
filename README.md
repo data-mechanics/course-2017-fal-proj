@@ -1,104 +1,83 @@
-# course-2017-fal-proj
-Joint repository for the collection of student course projects in the Fall 2017 iteration of the Data Mechanics course at Boston University.
+# Objective:
+ Since Boston is a quite densely populated are in US, the quality of life is very important to everyone. We are exploring the rating of living around the schools in Boston by calculating the safety rate, the comfort rate, and the convenience rate. Our objective is to use k-mean to find the area that needs a hospital the most. Our safety rate will include data from crime, crash and hospitals. Our comfort rate will include data from entertainment and restaurants. Our convenience rate will include data from crash, hubway, traffic signals and MBTA. 
 
-In this project, you will implement platform components that can obtain a some data sets from web services of your choice, and platform components that combine these data sets into at least two additional derived data sets. These components will interct with the backend repository by inserting and retrieving data sets as necessary. They will also satisfy a standard interface by supporting specified capabilities (such as generation of dependency information and provenance records).
+# Databases:
+1. Crash: http://datamechanics.io/data/eileenli_xtq_yidingou/crash.json
+2. MTBA: http://datamechanics.io/data/cyung20_kwleung/mbta-t-stops.json
+3. Hubway: http://datamechanics.io/data/eileenli_xtq_yidingou/Hubway_Stations.geojson
+4. Schools: http://datamechanics.io/data/eileenli_xtq_yidingou/Colleges_and_Universities.geojson
+5. Restaurants: http://datamechanics.io/data/eileenli_xtq_yidingou/Restaurant.json
+6. Crime: http://datamechanics.io/data/eileenli_xtq_yidingou/crime.json
+7. Hospitals: http://datamechanics.io/data/eileenli_xtq_yidingou/hospital.json
+8. Entertainment: http://datamechanics.io/data/eileenli_xtq_yidingou/new.json
+9. Traffic signals: http://datamechanics.io/data/eileenli_xtq_yidingou/Traffic_Signals.geojson
 
-**This project description will be updated as we continue work on the infrastructure.**
+# Process:
+1. Extracting data from databases:
+a). Comfort Section: we extract the coordinates of every entertainment from Entertainment database and coordinates of every restaurant from Restaurant database, and put them into a new dictionary.
+b). Safety Section: we extract the coordinates of every crime insident from Crime database, the coordinates of every car crash from Crash database, and the coordinates of hospitals from Hospital database, and put them into a new dictionary.
+c). Convenience Section: we extract the coordinates of every car crash from Crash database, the coordinates of every hubway from Hubway database, the coordinates of every traffic signals from Signals database and the coordinates of every MBTA from MBTA database, and put them into a new dictionary.
 
-## MongoDB infrastructure
-
-### Setting up
-
-We have committed setup scripts for a MongoDB database that will set up the database and collection management functions that ensure users sharing the project data repository can read everyone's collections but can only write to their own collections. Once you have installed your MongoDB instance, you can prepare it by first starting `mongod` _without authentication_:
-```
-mongod --dbpath "<your_db_path>"
-```
-If you're setting up after previously running `setup.js`, you may want to reset (i.e., delete) the repository as follows.
-```
-mongo reset.js
-```
-Next, make sure your user directories (e.g., `alice_bob` if Alice and Bob are working together on a team) are present in the same location as the `setup.js` script, open a separate terminal window, and run the script:
-```
-mongo setup.js
-```
-Your MongoDB instance should now be ready. Stop `mongod` and restart it, enabling authentication with the `--auth` option:
-```
-mongod --auth --dbpath "<your_db_path>"
-```
-
-### Working on data sets with authentication
-
-With authentication enabled, you can start `mongo` on the repository (called `repo` by default) with your user credentials:
-```
-mongo repo -u alice_bob -p alice_bob --authenticationDatabase "repo"
-```
-However, you should be unable to create new collections using `db.createCollection()` in the default `repo` database created for this project:
-```
-> db.createCollection("EXAMPLE");
-{
-  "ok" : 0,
-  "errmsg" : "not authorized on repo to execute command { create: \"EXAMPLE\" }",
-  "code" : 13
-}
-```
-Instead, load the server-side functions so that you can use the customized `createCollection()` function, which creates a collection that can be read by everyone but written only by you:
-```
-> db.loadServerScripts();
-> var EXAMPLE = createCollection("EXAMPLE");
-```
-Notice that this function also prefixes the user name to the name of the collection (unless the prefix is already present in the name supplied to the function).
-```
-> EXAMPLE
-alice_bob.EXAMPLE
-> db.alice_bob.EXAMPLE.insert({value:123})
-WriteResult({ "nInserted" : 1 })
-> db.alice_bob.EXAMPLE.find()
-{ "_id" : ObjectId("56b7adef3503ebd45080bd87"), "value" : 123 }
-```
-If you do not want to run `db.loadServerScripts()` every time you open a new terminal, you can use a `.mongorc.js` file in your home directory to store any commands or calls you want issued whenever you run `mongo`.
-
-## Other required libraries and tools
-
-You will need the latest versions of the PROV, DML, and Protoql Python libraries. If you have `pip` installed, the following should install the latest versions automatically:
-```
-pip install prov --upgrade --no-cache-dir
-pip install dml --upgrade --no-cache-dir
-pip install protoql --upgrade --no-cache-dir
-```
-If you are having trouble installing `lxml` in a Windows environment, you could try retrieving it [here](http://www.lfd.uci.edu/~gohlke/pythonlibs/).
-
-Note that you may need to use `python -m pip install <library>` to avoid issues if you have multiple versions of `pip` and Python on your system.
-
-## Formatting the `auth.json` file
-
-The `auth.json` file should remain empty and should not be submitted. When you are running your algorithms, you should use the file to store your credentials for any third-party data resources, APIs, services, or repositories that you use. An example of the contents you might store in your `auth.json` file is as follows:
-```
-{
-    "services": {
-        "cityofbostondataportal": {
-            "service": "https://data.cityofboston.gov/",
-            "username": "alice_bob@example.org",
-            "token": "XxXXXXxXxXxXxxXXXXxxXxXxX",
-            "key": "xxXxXXXXXXxxXXXxXXXXXXxxXxxxxXXxXxxX"
+2.	Data Relation to School:
+We first extracts the coordinates of every school from school database, and to calculate the distance from every coordinate of entertainment, restaurant, crime, crash, hospitals, hubway, traffic signals and MBTA. Then we will find the coordinates of those places that are within 2 miles from each school and put them into a new disctionary called "schoolfinal":
+		[{  "school": "Boston example School ",
+            "properties": [
+                {"coordinates": [-71.000000, 42.000000]},
+                {"safety": [{"hospitals": [[A, B], [C, D]...]},
+               				{"crimes": [[A, B], [C, D]...]},
+               				{"crash": [[A, B], [C, D]...]}
+               				]},
+               	{"comfort": [{"entertainment": [[A, B], [C, D]...]},
+               				{"restaurants": [[A, B], [C, D]...]}
+               				]},
+               	{"traffic": [{"crash": [[A, B], [C, D]...]},
+               				{"hubway": [[A, B], [C, D]...]},
+               				{"signals": [[A, B], [C, D]...]},
+               				{"MBTA": [[A, B], [C, D]...]}
+               				]}
+               ]
         },
-        "mbtadeveloperportal": {
-            "service": "http://realtime.mbta.com/",
-            "username": "alice_bob",
-            "token": "XxXX-XXxxXXxXxXXxXxX_x",
-            "key": "XxXX-XXxxXXxXxXXxXxx_x"
-        }
-    }
-}
-```
-To access the contents of the `auth.json` file after you have loaded the `dml` library, use `dml.auth`.
+        {...}, ...].
 
-## Running the execution script for a contributed project.
+3.	Statistics Relation to School:
+	Here is an example of our score statistics:
+	{
+	"_id" : ObjectId("5a0b764d1c9de70b8e4f9936"),
+	"school" : "Boston University Trustees",
+	"properties" : [
+		{"hospital" : 14},
+		{"crime" : 219},
+		{"crash" : 1196},
+		{"restaurant" : 165},
+		{"entertainment" : 342},
+		{"hubway" : 85},
+		{"traffic signal" : 226},
+		{"MBTA" : 62},
+		{"safety" : 9.85},
+		{"comfort" : 5.07},
+		{"traffic" : -9.71}
+	]}
+	where we calcualted the score of safety, comfort and traffic as follow:
+	            {"safety": (1000 + hospital * 100 - crime - crash) / 100},
+                {"comfort": (restaurant + entertainment) / 100},
+                {"traffic": (1500 + MBTA + hubway - signal - crash * 2) / 100}
+   	The higher each score is the better the university it.
+.
+4. K-means Analysis for best hospital place:
+We use the k means algorithm to find the new optimal hospital place for any 2 schools, at where needs the hospital the most base on the rates of comfort, safety and convenience. 
 
-To execute all the algorithms for a particular contributor (e.g., `alice_bob`) in an order that respects their explicitly specified data flow dependencies, you can run the following from the root directory:
-```
-python execute.py alice_bob
-```
-To execute the algorithms for a particular contributor in trial mode, use the `-t` or `--trial` option:
-```
-python execute.py alice_bob --trial
-```
+We first collection the data we have about school and the hospitals around it as follow: ('Massachusetts General Hospital Dietetic Internship', [-71.0701413170573, 42.36259933182846], 11). They are accordingly the name of the school, the coordinates of the school and the number of hospital with the range of 2 miles of that school.
+
+here are the code for the further process:
+
+'''
+        two_school_hospital = select(product(school_hospital, school_hospital), lambda t: t[0][0] != t[1][0])
+        for i in two_school_hospital:
+            two_school_hospital.remove((i[1], i[0]))
+        sum_num = project(two_school_hospital, lambda t: ((t[0][0], t[0][1], t[1][0], t[1][1], t[0][2] + t[1][2])))
+        target = ()
+        sum_num = select(sum_num, lambda t: t[4] < 10 and distance(t[1], t[3]) < 4)
+'''
+we performed product -> select -> remove reverse duplicate -> project -> select -> minimum algorithm.
+if there are no 2 universities that are within the range of 4 miles or their hospital number is bigger than 10,then there is no place that can build hospital and benefits 2 or more schools that need hospital. if there are, then we show them something like "The best place to build a hospital next is between Boston College and Massachusetts School of Professional Psychology at [-71.17503590191852, 42.306371114768865]"
+ 

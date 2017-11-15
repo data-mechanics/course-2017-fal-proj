@@ -18,8 +18,27 @@ def cro(x,y):
             all_cord.append((key,distance(value,c2)))
     return all_cord
 
+def union(R, S):
+    return R + S
+
+def difference(R, S):
+    return [t for t in R if t not in S]
+
+def intersect(R, S):
+    return [t for t in R if t in S]
+
 def project(R, p):
     return [p(t) for t in R]
+
+def select(R, s):
+    return [t for t in R if s(t)]
+ 
+def product(R, S):
+    return [(t,u) for t in R for u in S]
+
+def aggregate(R, f):
+    keys = {r[0] for r in R}
+    return [(key, f([v for (k,v) in R if k == key])) for key in keys]
 
 def comb(ls):
     result ={}
@@ -83,6 +102,7 @@ class schoolfinal(dml.Algorithm):
 
         final = []
         score = []
+        school_hospital = []
 
         for i in SC:
             safety = []
@@ -119,6 +139,7 @@ class schoolfinal(dml.Algorithm):
                         hospital += 1
                         temp.append(k)
                 safety.append({"hospitals": temp})
+                school_hospital.append((i["properties"]["Name"], i["geometry"]["coordinates"], len(temp)))
                 temp = []
                 for k in j["crimes"]:
                     if distance(k, i["geometry"]["coordinates"]) <= 2:
@@ -186,12 +207,31 @@ class schoolfinal(dml.Algorithm):
                 ]
                 })
 
-        list_hospital = []
-        
-        for i in score:
-            list_hospital.append(i["properties"][0]["hospital"])
+        two_school_hospital = select(product(school_hospital, school_hospital), lambda t: t[0][0] != t[1][0])
 
-        index = list_hospital.index(min(list_hospital))
+        for i in two_school_hospital:
+            two_school_hospital.remove((i[1], i[0]))
+
+        sum_num = project(two_school_hospital, lambda t: ((t[0][0], t[0][1], t[1][0], t[1][1], t[0][2] + t[1][2])))
+
+        target = ()
+        sum_num = select(sum_num, lambda t: t[4] < 10 and distance(t[1], t[3]) < 4)
+
+
+        if len(sum_num) == 0:
+            print("there is no place that can build hospital and benefits 2 or more schools that need hospital")
+        else:   
+            min_num = 10000
+            for i in sum_num:
+                if i[4] < min_num:
+                    min_num = i[4]
+                    target = i
+            location = [(target[1][0] + target[3][0]) / 2, (target[1][1] + target[3][1]) / 2]
+            print("The best place to build a hospital next is between " + target[0] + " and " + target[2] + " at " + str(location))
+            
+
+
+
 
         repo.dropCollection("schoolfinal")
         repo.createCollection("schoolfinal")
