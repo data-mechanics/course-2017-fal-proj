@@ -85,5 +85,6 @@ if there are no 2 universities that are within the range of 4 miles or their hos
 # Run for Project 2
 python3 execute.py eileenli_xtq_yiding
 
+However, entering an infinite loop when running.
 
  
