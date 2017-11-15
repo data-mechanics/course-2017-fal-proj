@@ -20,7 +20,6 @@ class mbta_stops_lines(dml.Algorithm):
 
   @staticmethod
   def execute(trial=False):
-
     startTime=datetime.datetime.now()
     client = dml.pymongo.MongoClient()
     repo = client.repo
@@ -28,6 +27,7 @@ class mbta_stops_lines(dml.Algorithm):
     
     mbta_db = repo['nathansw_rooday_sbajwa_shreyap.OTP_by_line']
     mbta_data = mbta_db.find_one()
+    del mbta_data['_id']
 
     url_base = "http://realtime.mbta.com/developer/api/v2/stopsbyroute?\
     api_key=TYDhtqF81Ua27IfG2lXEqA"

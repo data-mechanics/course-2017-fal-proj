@@ -72,6 +72,3 @@ class getTricklingData(dml.Algorithm):
         repo.logout()
                   
         return doc
-
-
-getTricklingData.execute()

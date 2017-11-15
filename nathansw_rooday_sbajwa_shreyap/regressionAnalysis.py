@@ -20,12 +20,8 @@ import statsmodels
 ### Algorithm 1
 
 class regressionAnalysis(dml.Algorithm):
-
   contributor = 'nathansw_rooday_sbajwa_shreyap'
-  ### Make sure this is the correct dataset file name
   reads = ['nathansw_rooday_sbajwa_shreyap.OTP_by_line', 'nathansw_rooday_sbajwa_shreyap.stops', 'nathansw_rooday_sbajwa_shreyap.stopsVsLines']
-    
-  # Currently it just creates a csv file 
   writes = ['nathansw_rooday_sbajwa_shreyap.regressionAnalysis']
 
   @staticmethod
@@ -45,8 +41,6 @@ class regressionAnalysis(dml.Algorithm):
     otpData = mbta_db.find_one()
     del otpData['_id']
     otp_by_line = pd.DataFrame.from_dict(otpData)
-    if trial:
-      otp_by_line = otp_by_line.sample(frac=0.1, replace=False)
     otp_by_line = otp_by_line.transpose()
     otp_by_line[otp_by_line['Peak Service']==''] = np.nan
     otp_by_line[otp_by_line['Off-Peak Service']==''] = np.nan
@@ -60,8 +54,6 @@ class regressionAnalysis(dml.Algorithm):
     stop_by_line_data = stopsVsLines_db.find_one()
     del stop_by_line_data['_id']
     stop_by_line = pd.DataFrame([(key, x) for key,val in stop_by_line_data.items() for x in val], columns=['Name', 'Values'])
-    if trial:
-      stop_by_line = stop_by_line.sample(frac=0.1, replace=False)
     stop_by_line.columns = ['Route','Stop']
     stop_by_line  = stop_by_line.set_index('Stop')
     
@@ -158,5 +150,3 @@ class regressionAnalysis(dml.Algorithm):
     repo.logout()
 
     return doc
-
-regressionAnalysis.execute()

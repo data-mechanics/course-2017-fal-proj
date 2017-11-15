@@ -35,6 +35,7 @@ class OTP_by_line(dml.Algorithm):
         performance_db = repo['nathansw_rooday_sbajwa_shreyap.MBTAPerformance']        
         if trial:
           perf = performance_db.find_one()
+          del perf['_id']
         else:
           perf = {}
           for obj in performance_db.find():
@@ -168,5 +169,3 @@ class OTP_by_line(dml.Algorithm):
         repo.logout()
 
         return doc
-
-OTP_by_line.execute()

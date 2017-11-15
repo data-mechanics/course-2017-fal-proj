@@ -31,10 +31,7 @@ class trickleAnalysis(dml.Algorithm):
     return filtered_df['neighborhood_distance'].corr(filtered_df[correlation_col])
 
   contributor = 'nathansw_rooday_sbajwa_shreyap'
-  ### Make sure this is the correct dataset file name
   reads = ['nathansw_rooday_sbajwa_shreyap.trickling', 'nathansw_rooday_sbajwa_shreyap.neighborhoodMap', 'nathansw_sbajwa.householdincome', 'nathansw_sbajwa.povertyrates', 'nathansw_sbajwa.commuting']
-    
-  # Currently it just creates a csv file 
   writes = ['nathansw_rooday_sbajwa_shreyap.trickleAnalysis']
 
   @staticmethod
@@ -55,8 +52,6 @@ class trickleAnalysis(dml.Algorithm):
     trickle_data = trickle_db.find_one()
     del trickle_data['_id']
     neighborhood_distance_matrix = pd.DataFrame.from_dict(trickle_data)
-    if trial:
-      neighborhood_distance_matrix = neighborhood_distance_matrix.sample(frac=0.1, replace=False)
     neighborhood_distance_matrix.index = neighborhood_distance_matrix.neighborhood
 
     print("Creating neighborhood pairs")
@@ -70,8 +65,6 @@ class trickleAnalysis(dml.Algorithm):
     neighborhoodMap_data = neighborhoodMap_db.find_one()
     del neighborhoodMap_data['_id']
     neighborhood = pd.DataFrame([(key, x) for key,val in neighborhoodMap_data.items() for x in val], columns=['neighborhood1', 'neighborhood1'])
-    if trial:
-      neighborhood = neighborhood.sample(frac=0.1, replace=False)
     neighborhood.columns = ['neighborhood1','neighborhood2']
     neighborhood['is_neighbor']=1
 
@@ -84,8 +77,6 @@ class trickleAnalysis(dml.Algorithm):
     povertyrates_data = povertyrates_db.find_one()
     del povertyrates_data['_id']
     PovertyRates = pd.DataFrame.from_dict(povertyrates_data).transpose()
-    if trial:
-      PovertyRates = PovertyRates.sample(frac=0.1, replace=False)  
     PovertyRates.columns = 'Income_' + PovertyRates.columns
     poverty_rate = PovertyRates['Income_Poverty rate']
     poverty_rate = poverty_rate.apply(lambda x: float(x.split("%")[0]))
@@ -103,8 +94,6 @@ class trickleAnalysis(dml.Algorithm):
     householdincome_data = householdincome_db.find_one()
     del householdincome_data['_id']
     HouseholdIncome = pd.DataFrame.from_dict(householdincome_data).transpose()
-    if trial:
-      HouseholdIncome = HouseholdIncome.sample(frac=0.1, replace=False)
     HouseholdIncome.columns = 'Income_' + HouseholdIncome.columns
 
     print("Calculating Median Income Difference")
@@ -117,8 +106,6 @@ class trickleAnalysis(dml.Algorithm):
     commuting_data = commuting_db.find_one()
     del commuting_data['_id']
     MeansOfCommuting = pd.DataFrame.from_dict(commuting_data).transpose()
-    if trial:
-      MeansOfCommuting = MeansOfCommuting.sample(frac=0.1, replace=False)
 
     print("Calculating Bike Commute Difference")
     bike_commute = MeansOfCommuting['Bicycle %']
@@ -221,5 +208,3 @@ class trickleAnalysis(dml.Algorithm):
     repo.logout()
 
     return doc
-
-trickleAnalysis.execute()

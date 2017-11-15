@@ -72,6 +72,3 @@ class getStopsVsLinesData(dml.Algorithm):
         repo.logout()
                   
         return doc
-
-
-getStopsVsLinesData.execute()

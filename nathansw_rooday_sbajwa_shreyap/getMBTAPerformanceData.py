@@ -9,7 +9,7 @@ import requests
 class getMBTAPerformanceData(dml.Algorithm):
     contributor = 'nathansw_rooday_sbajwa_shreyap'
     reads = []
-    writes = ['nathansw_rooday_sbajwa_shreyap.MBTAPerformance']
+    writes = ['nathansw_rooday_sbajwa_shreyap.MBTAPerformance', 'nathansw_sbajwa.householdincome', 'nathansw_sbajwa.povertyrates', 'nathansw_sbajwa.commuting']
 
     @staticmethod
     def execute(trial = False):
@@ -41,7 +41,10 @@ class getMBTAPerformanceData(dml.Algorithm):
         print("Saving MBTAPerformance data...")
         repo.dropCollection("MBTAPerformance")
         repo.createCollection("MBTAPerformance")
-        repo['nathansw_rooday_sbajwa_shreyap.MBTAPerformance'].insert_many(final)
+        if trial:
+          repo['nathansw_rooday_sbajwa_shreyap.MBTAPerformance'].insert_one(final[0])
+        else:
+          repo['nathansw_rooday_sbajwa_shreyap.MBTAPerformance'].insert_many(final)
         repo['nathansw_rooday_sbajwa_shreyap.MBTAPerformance'].metadata({'complete':True})
         repo.logout()
 
@@ -87,6 +90,3 @@ class getMBTAPerformanceData(dml.Algorithm):
         repo.logout()
                   
         return doc
-
-
-getMBTAPerformanceData.execute()

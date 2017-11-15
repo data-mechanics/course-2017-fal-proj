@@ -72,6 +72,3 @@ class getStopsData(dml.Algorithm):
         repo.logout()
                   
         return doc
-
-
-getStopsData.execute()

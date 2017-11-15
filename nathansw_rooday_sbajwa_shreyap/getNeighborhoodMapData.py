@@ -72,6 +72,3 @@ class getNeighborhoodMapData(dml.Algorithm):
         repo.logout()
                   
         return doc
-
-
-getNeighborhoodMapData.execute()

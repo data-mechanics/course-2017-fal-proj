@@ -1,5 +1,8 @@
 # CS591 Project 2
 
+### NOTE
+Please run the files in nathansw_sbajwa first, as some of those datasets are required for our analysis.
+
 __Group Members:__ Sameena Bajwa, Shreya Pandit, Rudhra Raveendran, Nathan Weinberg 
 
 Many residents in the City of Boston rely on the MBTA for transportation to and from work. Hence, the reliability of public transportation is of utmost importance to the city residents. Moreover, Boston neighborhoods are a diverse landscape; each varying in its culture and demographics.
