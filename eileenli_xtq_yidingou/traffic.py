@@ -12,7 +12,7 @@ from collections import defaultdict
 class traffic(dml.Algorithm):
     contributor = 'eileenli_xtq_yidingou'
     reads = ['eileenli_xtq_yidingou.crash', 'eileenli_xtq_yidingou.hubway', 'eileenli_xtq_yidingou.signals', 'eileenli_xtq_yidingou.MBTA']
-    writes = ['eileenli_xtq_yidingou.traffic_data']
+    writes = ['eileenli_xtq_yidingou.traffic']
 
 
     @staticmethod

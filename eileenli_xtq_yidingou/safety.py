@@ -12,7 +12,7 @@ from collections import defaultdict
 class safety(dml.Algorithm):
     contributor = 'eileenli_xtq_yidingou'
     reads = ['eileenli_xtq_yidingou.hospitals', 'eileenli_xtq_yidingou.Crime','eileenli_xtq_yidingou.crash']
-    writes = ['eileenli_xtq_yidingou.safety_data']
+    writes = ['eileenli_xtq_yidingou.safety']
 
 
     @staticmethod

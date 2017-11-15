@@ -12,7 +12,7 @@ from collections import defaultdict
 class comfort(dml.Algorithm):
     contributor = 'eileenli_xtq_yidingou'
     reads = ['eileenli_xtq_yidingou.Entertainment', 'eileenli_xtq_yidingou.Restaurants']
-    writes = ['eileenli_xtq_yidingou.comfort_data']
+    writes = ['eileenli_xtq_yidingou.comfort']
 
 
     @staticmethod
