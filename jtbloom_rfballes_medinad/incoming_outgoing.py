@@ -133,65 +133,11 @@ class incoming_outgoing(dml.Algorithm):
 		print("Covariance: ", covarr)
 		print("Correlation: ", correl)
 		print("P-Value: ",decimal.Decimal(pval))
-		
-
-
-
-
-
-
-
-
-
-
-
-		#inc_out_list = inc_out_list.append(in_l)
-		#inc_out_list = inc_out_list.append(out_l)
-
-
-
-
-		#print(in_l[0]['end station']== out_l[0]['station'])
+	
 
 		print(len(out_l))
-
-
-
-
-		
 		
 
-		
-
-		#trip_list = []
-
-    	#selecting from jtbloom_rfballes_medinad.tripHistory
-		#for trip_dict in trip_history:
-		#	trip_selection = {}
-		#	for item in trip_dict:
-		#		trip_selection['start station name'] = trip_dict['start station name']
-		#		trip_selection['end station name'] = trip_dict['end station name']
-		#		trip_selection['end station latitude'] = trip_dict['end station latitude']
-		#		trip_selection['end station longitude'] = trip_dict['end station longitude']
-		#		trip_selection['bikeid'] = trip_dict['bikeid']
-		#	trip_list.append(trip_selection)
-
-
-
-		#incoming = incoming_trips.project(trip_list, lambda t: ((t['end station name'], t['bikeid']), t['end station latitude'], t['end station longitude']))
-		#lat_lon = incoming_trips.project(trip_list, lambda t:(t['end station name'], t['end station latitude'], t['end station longitude']))
-		#print(incoming)
-		#num_trips = incoming_trips.aggregate(incoming, incoming_trips.count_trips)
-		#num_trips = incoming_trips.product(incoming, num_trips)
-		#print(num_trips)
-
-		
-
-		#num_trips = [{'# incoming trips': n, 'end station': s} for (s, n) in num_trips]
-		
-
-		#for i in range(len(num_trips)):
-		#	print(num_trips[i]['end station'])
 		inter = [{'features':x} for x in inter]
 
 		repo['jtbloom_rfballes_medinad.incoming_outgoing'].insert_many(inter)
@@ -201,6 +147,35 @@ class incoming_outgoing(dml.Algorithm):
 
 	@staticmethod
 	def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
-		pass
+
+        # Set up the database connection.
+        client = dml.pymongo.MongoClient()
+        repo = client.repo
+        repo.authenticate('jtbloom_rfballes_medinad', 'jtbloom_rfballes_medinad')
+        doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
+        doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
+        doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
+        doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
+        doc.add_namespace('nei', 'http://datamechanics.io/data/jb_rfb_dm_proj2data/')
+        
+        this_script = doc.agent('nei:jtbloom_rfballes_medinad#incoming_outgoing', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource = doc.entity('nei:incoming_outgoing', {'prov:label':'Incoming/Outgoing Hubway Trips', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+  
+        get_incoming_outgoing = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+        doc.wasAssociatedWith(get_incoming_outgoing, this_script)
+ 
+        doc.usage(get_incoming_outgoing, resource, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Retrieval'}
+                  )
+
+        incoming_outgoing = doc.entity('nei:jtbloom_rfballes_medinad#incoming_outgoing', {prov.model.PROV_LABEL:'Incoming/Outgoing Hubway Trips', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(incoming_outgoing, this_script)
+        doc.wasGeneratedBy(incoming_outgoing, get_incoming_outgoing, endTime)
+        doc.wasDerivedFrom(incoming_outgoing, resource, get_incoming_outgoing, get_incoming_outgoing, get_incoming_outgoing)
+
+
+        repo.logout()
+                  
+        return doc
 
 incoming_outgoing.execute()
