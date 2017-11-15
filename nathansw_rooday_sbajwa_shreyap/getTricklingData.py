@@ -74,4 +74,4 @@ class getTricklingData(dml.Algorithm):
         return doc
 
 
-getTricklingData.execute()
+#getTricklingData.execute()

@@ -74,4 +74,4 @@ class getNeighborhoodMapData(dml.Algorithm):
         return doc
 
 
-getNeighborhoodMapData.execute()
+#getNeighborhoodMapData.execute()

@@ -159,4 +159,4 @@ class regressionAnalysis(dml.Algorithm):
 
     return doc
 
-regressionAnalysis.execute()
+#regressionAnalysis.execute()

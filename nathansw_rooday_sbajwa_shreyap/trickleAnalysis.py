@@ -222,4 +222,4 @@ class trickleAnalysis(dml.Algorithm):
 
     return doc
 
-trickleAnalysis.execute()
+#trickleAnalysis.execute()
