@@ -269,7 +269,7 @@ class NeighborhoodScores(dml.Algorithm):
 
         agg = []
         for x in aggregate:
-             print(x)
+             #print(x)
              y = lambda t: ({"Neighborhood":t[0],'Charging Station':t[1][0],'Hubway Stations':t[1][1],'Bike Networks':t[1][2],'Open Space':t[1][3]})
              z = y(x)
              agg.append(z)

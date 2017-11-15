@@ -89,10 +89,10 @@ class BudgetCalculator(dml.Algorithm):
         #print(chargingStations)
         for j in range(len(chargingStations)):
             tuple = (Neighborhoods[j], chargingStations[j], hubwayStations[j], bikeNetworks[j], openspace[j])
-            y = lambda t: ({str(t[0]): str((t[1], t[2], t[3], t[4]))})
+            y = lambda t: ({"Neighborhood": t[0], 'Charging Station': str(t[1]), 'Hubway Stations': str(t[2]), 'Bike Networks': str(t[3]), 'Open Space': str(t[4])})
             results.append(y(tuple))
 
-        print(results)
+        #print(results)
         repo.dropCollection("optimalScore")
         repo.createCollection("optimalScore")
         repo['francisz_jrashaan.optimalScore'].insert_many(results)
