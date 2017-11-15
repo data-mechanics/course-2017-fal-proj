@@ -156,23 +156,30 @@ class setObesityMarkets(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
 
         this_script = doc.agent('alg:biel_otis#setObesityMarkets', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        obesity = doc.entity('dat:biel_otis#obesity', {prov.model.PROV_LABEL:'Obesity Data from City of Boston', prov.model.PROV_TYPE:'ont:DataSet'})
-        obesityMarkets = doc.entity('dat:biel_otis#obesity_market_locations', {prov.model.PROV_LABEL:'Dataset containing the optimal locations for healty food markets', prov.model.PROV_TYPE:'ont:DataSet'})
+        obesity_resource = doc.entity('dat:biel_otis#ObesityData', {prov.model.PROV_LABEL:'Obesity Data from City of Boston', prov.model.PROV_TYPE:'ont:DataSet'})
+        output_resource = doc.entity('dat:biel_otis#OptimalHealthMarkets', {prov.model.PROV_LABEL: 'Dataset containing the optimal placements of health food markets based on locations of obese persons.', prov.model.PROV_TYPE:'ont:DataSet'})
 
-
-        get_obesityMarkets = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_obesityMarkets, this_script)
+        this_run = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
+    
         
-        doc.usage(get_obesityMarkets, obesity, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Transformation'})
+        #Associations
+        doc.wasAssociatedWith(this_run, this_script)
+     
+        #Usages
+        doc.usage(this_run, obesity_resource, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Retrieval'})
 
-        doc.wasAttributedTo(obesityMarkets, this_script)
-        doc.wasGeneratedBy(obesityMarkets, obesityMarkets, endTime)
-        doc.wasDerivedFrom(obesity, get_obesityMarkets, get_obesityMarkets, get_obesityMarkets, get_obesityMarkets, get_obesityMarkets)
+        #Generated
+        doc.wasGeneratedBy(output_resource, this_run, endTime)
+
+
+        #Attributions
+        doc.wasAttributedTo(output_resource, this_script)
+
+        #Derivations
+        doc.wasDerivedFrom(output_resource, obesity_resource, this_run, this_run, this_run)
         repo.logout()
         
         return doc
-
-print("finished setObesityMarkets")
 
 ## eof

@@ -71,21 +71,30 @@ class getBostonZoning(dml.Algorithm):
 
         this_script = doc.agent('alg:biel_otis#getBostonZoning', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('zones:eebd3daed05a45678894db30d9bf0cfb_0', {'prov:label':'Multipolygon Shape of Boston', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
-        get_zones = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_zones, this_script)
+        output_resource = doc.entity('dat:biel_otis#BostonZoning', {prov.model.PROV_LABEL: 'Dataset containing geojson for shapefiles of Boston Neighborhoods.', prov.model.PROV_TYPE:'ont:DataSet'})
+
+        this_run = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
+    
         
-        doc.usage(get_zones, resource, startTime, None,
+        #Associations
+        doc.wasAssociatedWith(this_run, this_script)
+     
+        #Usages
+        doc.usage(this_run, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval'})
 
+        #Generated
+        doc.wasGeneratedBy(output_resource, this_run, endTime)
 
-        output = doc.entity('dat:biel_otis#BostonZoning', {prov.model.PROV_LABEL:'GeoJson of Boston', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(output, this_script)
-        doc.wasGeneratedBy(output, get_zones, endTime)
-        doc.wasDerivedFrom(output, resource, get_zones, get_zones, get_zones)
+
+        #Attributions
+        doc.wasAttributedTo(output_resource, this_script)
+
+        #Derivations
+        doc.wasDerivedFrom(output_resource, resource, this_run, this_run, this_run)
         repo.logout()
           
         return doc
 
 
-getBostonZoning.execute(trial=True)
 ## eof
