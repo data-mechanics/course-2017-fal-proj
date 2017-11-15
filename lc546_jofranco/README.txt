@@ -39,8 +39,9 @@ Algorithms for three non-trivial transformations
 
 -----------------
 
-Please notice: we put size 500 in the trial mode and it will affect the accuracy of the results.
-Files: correlationcoefficient.py, kmeans.py
+Please notice: we put size 500 in the trial mode and it will affect the accuracy of the results. Moreover, please don't close the plt.show graph when it is running. It may take a while since the size of the dataset is big.
+
+Grading Files: correlationcoefficient.py, kmeans.py
 
 Project 2:
 
