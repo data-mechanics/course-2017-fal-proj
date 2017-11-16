@@ -96,11 +96,37 @@ class trips_income_correlation(dml.Algorithm):
 	@staticmethod
 	def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
 		pass
+		 # Set up the database connection.
+		client = dml.pymongo.MongoClient()
+		repo = client.repo
+		repo.authenticate('jtbloom_rfballes_medinad', 'jtbloom_rfballes_medinad')
+		doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
+		doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
+		doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
+		doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
+		doc.add_namespace('dm', 'http://datamechanics.io/data/jb_rfb_dm_proj2data/')
+
+		this_script = doc.agent('dm:jtbloom_rfballes_medinad#trips_income_correlation', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+		neighborhood_station_income_out_resource = doc.entity('dm:neighborhood_station_income_out', {'prov:label':'Neighborhood Income', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'DataSet'})
+		ntrips_income_correlation_resource = doc.entity('dm:trips_income_correlation', {'prov:label':'Correlation between trips per neighborhood and neighborhood income', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'DataSet'})
 
 
+		this_run = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+		doc.wasAssociatedWith(this_run, this_script)
+
+		doc.usage(this_run, neighborhood_station_income_out_resource, startTime, None,
+			  {prov.model.PROV_TYPE:'ont:Retrieval'})
 
 
+		doc.wasAttributedTo(ntrips_income_correlation_resource, this_script)
+		doc.wasGeneratedBy(ntrips_income_correlation_resource, this_run, endTime)
+
+		doc.wasDerivedFrom(ntrips_income_correlation_resource, neighborhood_station_income_out_resource, this_run, this_run, this_run)
 
 
+		repo.logout()
 
-trips_income_correlation.execute()
+		return doc
+
+#trips_income_correlation.execute()
+
