@@ -17,7 +17,9 @@ Hubway is a public bike-share system serving the people of Boston, Brookline, Ca
 * trips_population_correlation.py: 
 * neighborhood_income.py: was used to transform the data from out income per capita by neighborhood data set. Was used to aggregate trips and to again execute a correlation. This time between the population and trips. Our findings suggest a negative correlation. This might be intersting to further investogate in project 3 and see what is it that affects this number. 
 
-
+### note
+Be sure to run get_datasets.py before anything else.
+In order to run the two correlation files newbosneighborhoods.py, outgoing_trips.py, neighborhood_income.py, neighborhood_station_income_out.py must be run beforehand. 
 
 
 # CS 591 Fall 2017 Project #1: Data Retrieval, Storage, Provenance, and Transformations 
