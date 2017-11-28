@@ -62,7 +62,7 @@ class make_graph(dml.Algorithm):
                 return geo_json
 
             placements_geojson = df_to_geojson(df_geo, properties="")
-            with open('./adsouza_bmroach_mcaloonj_mcsmocha/placements.html', 'w') as output:
+            with open('./adsouza_bmroach_mcaloonj_mcsmocha/templates/placements.html', 'w') as output:
                 output.write(geoleaflet.html(placements_geojson)) # Create visualization.
 
 

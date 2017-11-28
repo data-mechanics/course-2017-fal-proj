@@ -1,7 +1,7 @@
 """
 Filename: get_signal_placements.py
 
-Last edited by: BMR 11/12/17
+Last edited by: BMR 11/28/17
 
 Boston University CS591 Data Mechanics Fall 2017 - Project 2
 Team Members:
@@ -13,8 +13,6 @@ Monica Chiu         mcsmocha@bu.edu
 Original skeleton files provided by Andrei Lapets (lapets@bu.edu)
 
 Development Notes:
-- Decided on limiting signals we can plce to 30.
-- Go to line 61 and change value of n_clusters to desired amount.
 
 """
 
@@ -39,27 +37,19 @@ class get_signal_placements(dml.Algorithm):
         writes = ['adsouza_bmroach_mcaloonj_mcsmocha.signal_placements']
 
         @staticmethod
-        def execute(trial=False, logging=True):
+        def execute(trial=False, logging=True, sign_count=30, buffer_size=.5):
             startTime = datetime.datetime.now()
 
-            #__________________________
-            #Parameters
-
-            speed_feedback_sign_count = 30
-            # ^ Varies the number of signs which can be placed
-
+            """
+            Parameters            
+            - sign_count varies the number of signs which can be placed
+            - buffer_size disallows signs to be placed within this radius (in miles) from already placed signs
+              Use caution increasing this too much - it may cause the inability to find a candidate intersection
+            """
             if trial:
-                speed_feedback_sign_count = 5
-            # ^ you'll disallow signs to be placed if you alter this too much. Smaller area, fewer signs.
-            # It'll soft fail via a caught exception, but still not ideal
-
-            buffer_size = .5
-            # ^ disallows signs to be placed within this radius (in miles) from already placed signs
-            # Use caution increasing this too much - it may cause the inability to find a candidate intersection
-
-
-            #End Parameters
-            #__________________________
+                sign_count = 5
+                # ^ you'll disallow signs to be placed if you alter this too much. Smaller area, fewer signs.
+                # It'll soft fail via a caught exception, but still not ideal
 
             if logging:
                 print("in get_signal_placements.py")
@@ -79,10 +69,9 @@ class get_signal_placements(dml.Algorithm):
                     for crd in coords:
                         triggers.append(crd)
 
-            n_clusters = speed_feedback_sign_count
             X =  np.array(triggers)
 
-            kmeans_output = KMeans(n_clusters, random_state=0).fit(X)
+            kmeans_output = KMeans(sign_count, random_state=0).fit(X)
             centroids = kmeans_output.cluster_centers_.tolist()
             del(centroids[1])
 
