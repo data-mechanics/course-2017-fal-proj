@@ -9,6 +9,9 @@ import re
 import sys
 
 class emergency_traffic_aggregate(dml.Algorithm):
+    """
+    Aggregates all intersections from the same street
+    """
     contributor = 'bkin18_cjoe_klovett_sbrz'
     reads = ['bkin18_cjoe_klovett_sbrz.emergency_traffic_selection']
     writes = ['bkin18_cjoe_klovett_sbrz.emergency_traffic_aggregate']
@@ -26,10 +29,9 @@ class emergency_traffic_aggregate(dml.Algorithm):
         repo = client.repo
         repo.authenticate('bkin18_cjoe_klovett_sbrz', 'bkin18_cjoe_klovett_sbrz') # should probably move this to auth
 
+        # Build our lists
         traffic_selection = repo['bkin18_cjoe_klovett_sbrz.emergency_traffic_selection'].find()
-
         traffic_keys, traffic_intersecs, traffic_dicts = [], [], []
-
         route_names = []
 
         for signals in traffic_selection:
@@ -62,12 +64,6 @@ class emergency_traffic_aggregate(dml.Algorithm):
                         #traffic_dicts[i][key_name].append(traffic_intersecs[j][k])
                         intersection_list.append(traffic_intersecs[j][k])
             
-            '''
-            modifiedPiece = {'RT_NAME': route_name, 'INTERSECTIONS': intersection_list}
-            if (modifiedPiece not in modifiedDictionary):
-                modifiedDictionary.append(modifiedPiece)
-            '''
-
             modifiedPiece = {'RT_NAME': route_name, 'INTERSECTIONS': intersection_list}
 
             unique = 1
@@ -79,34 +75,13 @@ class emergency_traffic_aggregate(dml.Algorithm):
             if (unique == 1):
                 modifiedDictionary.append(modifiedPiece)
 
-
-
-
-
-        '''
-        # This is terrible, gotta fix it later
-        for i in range(len(traffic_keys)):
-            key_name = traffic_keys[i]
-            traffic_dicts.append({key_name:[]})
-            for j in range(len(traffic_intersecs)):
-                if traffic_intersecs[j][0] == key_name:
-                    for k in range(1, len(traffic_intersecs[j])):
-                        if(traffic_intersecs[j][k] not in traffic_dicts[i][key_name]): 
-                            traffic_dicts[i][key_name].append(traffic_intersecs[j][k])
-        '''
-
-        #pdb.set_trace()
-
-
         repo.dropCollection("emergency_traffic_aggregate")
         repo.createCollection("emergency_traffic_aggregate")
         repo['bkin18_cjoe_klovett_sbrz.emergency_traffic_aggregate'].insert_many(modifiedDictionary)
 
-
         endTime = datetime.datetime.now()
 
         return {"start":startTime, "end":endTime}
-
 
     @staticmethod
     def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
