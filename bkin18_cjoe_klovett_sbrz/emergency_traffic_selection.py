@@ -8,6 +8,9 @@ import pdb
 import sys
 
 class emergency_traffic_selection(dml.Algorithm):
+    """
+    This algorithm outputs traffic signals that are within snow emergency routes
+    """
     contributor = 'bkin18_cjoe_klovett_sbrz'
     reads = ['bkin18_cjoe_klovett_sbrz.emergency_routes', 'bkin18_cjoe_klovett_sbrz.traffic_signals']
     writes = ['bkin18_cjoe_klovett_sbrz.emergency_traffic_selection']
@@ -22,35 +25,30 @@ class emergency_traffic_selection(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('bkin18_cjoe_klovett_sbrz', 'bkin18_cjoe_klovett_sbrz') # should probably move this to auth
+        repo.authenticate('bkin18_cjoe_klovett_sbrz', 'bkin18_cjoe_klovett_sbrz')
 
+        # Pull data from our local datasets
         emergency_routes = [x for x in repo['bkin18_cjoe_klovett_sbrz.emergency_routes'].find()]
         traffic_signals = [x for x in repo['bkin18_cjoe_klovett_sbrz.traffic_signals'].find()]
 
         emergency_keys, traffic_selection = [], []
 
+        # Get traffic signals that are within the emergency routes
         for routes in emergency_routes:
             if routes['properties']['FULL_NAME'] not in emergency_keys:
-                emergency_keys.append(routes['properties']['FULL_NAME'])
-
-
+                emergency_keys.append(routes['properties']['FULL_NAME'])        
         for key in emergency_keys:
             for signal in traffic_signals:
                 if key in signal['properties']['Location']:
                     traffic_selection.append({'Location': signal['properties']['Location']})
 
-        #pdb.set_trace()
-
-
         repo.dropCollection("emergency_traffic_selection")
         repo.createCollection("emergency_traffic_selection")
         repo['bkin18_cjoe_klovett_sbrz.emergency_traffic_selection'].insert_many(traffic_selection)
 
-
         endTime = datetime.datetime.now()
 
         return {"start":startTime, "end":endTime}
-
 
     @staticmethod
     def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
