@@ -22,8 +22,8 @@ class z3_route_optimization(dml.Algorithm):
             This algorithm uses the z3 library to prioritize the emergency snow
             routes. A set of emergency routes where all regular streets have
             access to at least one emergency route will be defined as a high
-            priority set. We will be taking the smallest high pririorty set and
-            storing it in the database, as well as it's complement.
+            priority set. We will be taking the smallest high priorty set and
+            storing it in the database, as well as its complement.
         """
 
         startTime = datetime.datetime.now()
