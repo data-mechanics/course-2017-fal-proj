@@ -42,7 +42,7 @@ def algo():
               'buffer_size': bs, #default .5
             }
 
-    algo(parameters=params)
+    algo(params)
     #placements.html is generated from make_graph
     return render_template('placements.html')
 

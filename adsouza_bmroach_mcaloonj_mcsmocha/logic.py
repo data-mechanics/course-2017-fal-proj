@@ -18,7 +18,6 @@ Was originally execute.py from parent directory. Modified for use by
 web service for project 3
 
 Development Notes:
--Need to implement passing parameters to each module
 
 """
 import sys
@@ -30,7 +29,7 @@ import prov.model
 import protoql
 
 
-def algo(trialRun=False, doProv=False, parameters={}):
+def algo(parameters, trialRun=False, doProv=False):
 
     # Extract the algorithm classes from the modules in the
     # current directory.
@@ -107,5 +106,5 @@ if __name__ == '__main__':
               'cluster_divisor': 15, #get_accident_clusters
               'sign_count': 30, #get_signal_placements 
               'buffer_size': .5, #get_signal_placements 
-                  }
-    algo(trialRun=True, parameters=params)
+             }
+    algo(params, trialRun=True)
