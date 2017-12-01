@@ -45,6 +45,9 @@ There were 23,200 total accidents in our accident dataset. According to the grap
 * Open Spaces (Boston Open Data - opendata.arcgis.com)
 * Schools (boston.opendatasoft.com)
 
+## Known issue
+It appears that there's an issue with one of our resources that gives us an http error when we run the project. This error did not exist when we submitted our project. For some reason, we can't access the open_spaces resource on the first try. If you get the error when running our project, please try running it again a couple of times, because we've found that the error goes away after running it 2-4 times. 
+
 ## Scripts
 * *fetch_accidents.py* 
 * *fetch_hospitals.py*
@@ -63,6 +66,8 @@ There were 23,200 total accidents in our accident dataset. According to the grap
 * *make_graph.py* - Plots the determined locations for speed feedback sign placements.
 
 $$ - denotes a script with variable parameters for experimental outputs
+
+
 ## Notes
 * No Authentication for Datasets
 * No Authentication for Transformations
