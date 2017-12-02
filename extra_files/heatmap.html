@@ -1,0 +1,20 @@
+<html>
+	<head>
+		<title>Heat Map</title>
+		<link rel="stylesheet" type="text/css" href="heatmap.css">
+
+			<!--Imports library necessary to generate heat map. May want to include key eventually.-->
+		<script async defer src="https://maps.googleapis.com/maps/api/js?&libraries=visualization&callback=initMap"></script>
+	</head>
+	<body>
+		<!--Generates buttons for interaction.-->
+		<div id="buttons">
+  			<button onclick="addCentroid()">Add Centroid</button>
+  			<button onclick="removeCentroid()">Remove Centroid</button>
+		</div>
+		<!--Runs script necessary to generate heatmap.-->
+		<div id="map">
+			<script src="heatmap.js"></script>
+		</div>
+	</body>
+</html>

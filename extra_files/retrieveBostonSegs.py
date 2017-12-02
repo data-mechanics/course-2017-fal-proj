@@ -47,7 +47,9 @@ class retrieveBostonSegs(dml.Algorithm):
         roads_inventory_json = json_util.loads(roads_response)
         roads_inventory_json = roads_inventory_json['features']
 
+        
         x = []
+        '''
         removeEntries = ['SEGMENT_ID', 'L_F_ADD', 'L_T_ADD', 'R_F_ADD', 'R_T_ADD', 'PRE_DIR', 'SUF_DIR', 'CFCC', 'SPEEDLIMIT', 'ONEWAY', 'HEIGHT', 
         'WEIGHT', 'WIDTH', 'F_ZLEV', 'T_ZLEV', 'SHIELD', 'HWY_NUM', 'NBHD_L', 'NBHD_R', 'FT_COST', 'TF_COST', 'TF_DIR', 'FT_DIR', 'STATE00_L', 'STATE00_R', 'COUNTY00_L', 
         'COUNTY00_R', 'PLACE00_L', 'PLACE00_R', 'TRACT00_L', 'TRACT00_R', 'BLOCK00_L', 'BLOCK00_R', 'MCD00_L', 'MCD00_R', 'MCD00_R', 'STREET_ID', 'OBJECTID', 'SHAPElen']
@@ -59,7 +61,8 @@ class retrieveBostonSegs(dml.Algorithm):
                 for entry in removeEntries:
                     road['properties'].pop(entry, None)
                 if road['properties'] not in x and '.' not in road['properties']['ST_NAME']:
-                    x.append(road['properties'])
+                    x.append({ 'properties': road['properties'], 'geometry': road['geometry'] })
+        '''
 
         ## IMPORTANT KEYS: Route_ID, Urban_Type, Number_of_Lanes, Street_Name (duh), Length, Toll_Road (nobody likes tolls), struct_cd(?)
         repo.dropCollection("road_segs")
@@ -80,6 +83,7 @@ class retrieveBostonSegs(dml.Algorithm):
         document describing that invocation event.
         '''
 
+        '''
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
@@ -109,3 +113,4 @@ class retrieveBostonSegs(dml.Algorithm):
         repo.logout()
 
         return doc
+        '''

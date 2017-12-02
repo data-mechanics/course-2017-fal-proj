@@ -1,0 +1,18 @@
+#map {
+	height: 100%;
+}
+
+html, body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+#buttons {
+	position: absolute;
+	text-align: center;
+	z-index: 5;
+	top: 45px;
+	left: 1%;
+	background-color: #fff;
+}
