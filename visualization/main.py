@@ -53,8 +53,8 @@ def register_user():
 				Loc.append(o)
 	else:
 		print("Error")
-		return render_template('index.html')
-	
+		return render_template('index.html', location = Loc)
+
 
 
 
