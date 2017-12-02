@@ -1,5 +1,5 @@
 # **Important Note**
-This set of scripts is no longer designed to be run via execute in the parent directory. To enable this functionality, one would need to remove the logic.py and server.py files. Instead, we modified execute and made it functional in logic.py so that our web server, server.py, can run our entire algorithm with variable inputs.
+This set of scripts is no longer designed to be run via execute in the parent directory. To enable this functionality, one would need to remove the logic.py and server.py files. Instead, we modified execute and made it functional in logic.py so that our web server, server.py, can run our entire algorithm with variable inputs. Additionally, Mongo must still be running, as it would be for the previous part. 
 
 # Optimal Placement of Speed Feedback Signs in the City of Boston
 <img src='https://www.boston.gov/sites/default/files/speed-limit-3.jpg' height='200' width='auto'><br>

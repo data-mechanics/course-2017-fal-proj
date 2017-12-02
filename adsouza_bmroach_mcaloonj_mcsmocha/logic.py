@@ -18,6 +18,8 @@ Was originally execute.py from parent directory. Modified for use by
 web service for project 3
 
 Development Notes:
+-trialRun not currently operable
+-implement fault tolerance on each algorithm so we don't need to rerun in the case that one fails
 
 """
 import sys
@@ -36,10 +38,11 @@ def algo(parameters, trialRun=False, doProv=False):
     # current directory.
     startTime = datetime.datetime.now()
     path = "."
+    excluded = ["logic.py", "server.py"]
     algorithms = []
     for r,d,f in os.walk(path):
         for file in f:            
-            if r.find(os.sep) == -1 and file.split(".")[-1] == "py" and file not in ["logic.py", "server.py"]:
+            if r.find(os.sep) == -1 and file.split(".")[-1] == "py" and file not in excluded:
                 name_module = ".".join(file.split(".")[0:-1])
                 module = importlib.import_module( name_module)
                 algorithms.append(module.__dict__[name_module])
@@ -62,20 +65,23 @@ def algo(parameters, trialRun=False, doProv=False):
         provenance = prov.model.ProvDocument()
 
     for algorithm in ordered:
-        # print("for loop algo name is:", algorithm)
-        if 'fetch_nodes' in str(algorithm):
+        algo_name = str(algorithm)
+        if 'fetch_nodes' in algo_name:
             ms = parameters['mean_skew']
             r = parameters['radius']
             algorithm.execute(trial=trialRun,mean_skew=ms, radius=r)
 
-        elif 'get_accident_clusters' in str(algorithm):
+        elif 'get_accident_clusters' in algo_name:
             cd = parameters['cluster_divisor']
             algorithm.execute(trial=trialRun,cluster_divisor=cd)
         
-        elif 'get_signal_placements' in str(algorithm):
+        elif 'get_signal_placements' in algo_name:
             sc = parameters['sign_count']
             bs = parameters['buffer_size']
             algorithm.execute(trial=trialRun,sign_count=sc, buffer_size=bs)
+
+        elif 'get_avg_distance' in algo_name:
+            algorithm.execute(trial=trialRun, web=True)
 
         else:
             algorithm.execute(trial=trialRun)
@@ -102,7 +108,7 @@ def algo(parameters, trialRun=False, doProv=False):
         open('provenance.html', 'w').write(protoql.html("graph(" + str(entities + agents + activities) + ", " + str(wasAssociatedWith + wasAttributedTo + wasDerivedFrom + wasGeneratedBy + used) + ")"))
 
     endTime = datetime.datetime.now()
-    elapsed = round(endTime - startTime, 2)
+    elapsed = endTime - startTime
     print("Elapsed time to run algorithm:", elapsed)
     return
 
@@ -113,4 +119,4 @@ if __name__ == '__main__':
               'sign_count': 30, #get_signal_placements 
               'buffer_size': .5, #get_signal_placements 
              }
-    algo(params, trialRun=True)
+    algo(params)

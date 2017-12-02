@@ -9,7 +9,7 @@
     <h3>Optimal Placements of Speed FeedBack Signs Throughout Boston</h3>
     <p>Enter parameters and click submit to see the resulting map</p>
 
-    <form action="{{url_for('algo')}}" method='post'>
+    <form action="{{url_for('getmap')}}" method='post'>
 
         <p>Mean Skew</p>
         <output name="msOutput" id="msOutputID">1</output><br/>
@@ -34,7 +34,8 @@
         <input type="submit">
         <input type="reset">
     </form>
-
+    <p>Requests will take about 60 seconds on average, but invalid responses from our datasets may 
+        require our algorithm to repeat. </p>
 
 </body>
 

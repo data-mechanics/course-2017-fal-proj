@@ -27,12 +27,12 @@ def main():
     return render_template('index.html')
 
 
-@app.route('/algo', methods=['POST'])
-def algo():
+@app.route('/getmap', methods=['POST'])
+def getmap():
     ms = float(request.form['Mean Skew'])
     r = float(request.form['Radius'])
-    cd = float(request.form['Cluster Divisors'])
-    sc = float(request.form['Sign Count'])
+    cd = int(request.form['Cluster Divisors'])
+    sc = int(request.form['Sign Count'])
     bs = float(request.form['Buffer Size'])
 
     params = {'mean_skew': ms, #default 1.0
@@ -42,13 +42,15 @@ def algo():
               'buffer_size': bs, #default .5
             }
 
-    
-    try: 
-        algo(params)
-        #placements.html is generated from make_graph
-        return render_template('placements.html')
-    except:
-        return render_template('error.html')
+    algo(params)
+    return render_template('placements.html')
+
+    # try: 
+    #     algo(params)
+    #     #placements.html is generated from make_graph
+    #     return render_template('placements.html')
+    # except:
+    #     return render_template('error.html')
 
 
 

@@ -81,6 +81,7 @@ class fetch_nodes(dml.Algorithm):
             for i in range(len(nodes)):
                 #find the k nearest neighbors
                 dist, idx = cluster_tree.query(nodes[i], k=1, p=2) #p=2 means euclidean distance
+                assert idx < len(nodes)
                 distances.append((dist,idx))
 
             #Get average distance to closest cluster
@@ -88,19 +89,7 @@ class fetch_nodes(dml.Algorithm):
 
 
             #Filter out nodes that have distance to nearest cluster that is less than the mean            
-            # filtered_nodes = [nodes[x[1]] for x in distances if x[0] >= mean]
-
-            #alt method for error trapping during development
-            filtered_nodes = []
-            for x in distances:
-                try:
-                    if x[0] >= mean:
-                        filtered_nodes.append(nodes[x[1]])            
-                except:
-                    print("exception caught")
-                    print(x[1])
-                    print(len(nodes))
-                    raise ValueError("fetch nodes issue")
+            filtered_nodes = [nodes[x[1]] for x in distances if x[0] >= mean]
                     
 
             #Insert into repo {"nodes": [[lat,long], [lat,long]..............]}
