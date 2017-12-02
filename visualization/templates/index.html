@@ -54,7 +54,7 @@
   </div>
 </header> -->
   <!-- End page content -->
-  </div>
+
   <!-- leaflet map -->
   <div id="map" class="w3-grayscale" style="width:100%;height:450px;"></div>
   <script>
@@ -70,12 +70,11 @@
       accessToken: 'pk.eyJ1Ijoid2h5anVuIiwiYSI6ImNqYXBwNXQwNTQycDEzM25xczkwMWpxa3cifQ.fJvofVFlpAWF_uPQtmygFQ'
       //accessToken: 'your.mapbox.access.token'
     }).addTo(map);
-
-    var location = {{location}}
-    for(i=0;i<255;i++){
-        var marker = L.marker(location[i]).addTo(map);
-    }
-
+    //
+    // var location = {{location}}
+    // for(i=0;i<255;i++){
+    //     var marker = L.marker(location[i]).addTo(map);
+    // }
   </script>
   <!-- Footer -->
   <footer class="w3-center w3-black w3-padding-16">
