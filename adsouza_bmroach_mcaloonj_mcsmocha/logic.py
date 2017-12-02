@@ -19,7 +19,7 @@ web service for project 3
 
 Development Notes:
 -trialRun not currently operable
--don't repeat fetch if they're already there
+
 
 """
 import sys
