@@ -17,7 +17,7 @@ Development Notes:
 
 import geojson
 from geoql import geoql
-import geoleaflet
+import our_geoleaflet
 import dml
 import pandas as pd, requests, json
 import datetime
@@ -63,7 +63,7 @@ class make_graph(dml.Algorithm):
 
             placements_geojson = df_to_geojson(df_geo, properties="")
             with open('./templates/placements.html', 'w') as output:
-                output.write(geoleaflet.html(placements_geojson)) # Create visualization.
+                output.write(our_geoleaflet.html(placements_geojson)) # Create visualization.
 
 
             repo.logout()

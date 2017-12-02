@@ -1,7 +1,7 @@
 """
 Filename: logic.py
 
-Last edited by: BMR 11/28/17
+Last edited by: BMR 12/2/17
 
 Boston University CS591 Data Mechanics Fall 2017 - Project 3
 Team Members:
@@ -19,7 +19,6 @@ web service for project 3
 
 Development Notes:
 -trialRun not currently operable
--implement fault tolerance on each algorithm so we don't need to rerun in the case that one fails
 -don't repeat fetch if they're already there
 
 """
@@ -33,13 +32,13 @@ import protoql
 import datetime
 
 
-def algo(parameters, trialRun=False, doProv=False):
+def algo(parameters, requestCount, trialRun=False, doProv=False):
 
     # Extract the algorithm classes from the modules in the
     # current directory.
     startTime = datetime.datetime.now()
     path = "."
-    excluded = ["logic.py", "server.py"]
+    excluded = ["logic.py", "server.py", "our_geoleaflet.py"]
     algorithms = []
     for r,d,f in os.walk(path):
         for file in f:            
@@ -67,28 +66,44 @@ def algo(parameters, trialRun=False, doProv=False):
 
     for algorithm in ordered:
         algo_name = str(algorithm)
-        if 'fetch_nodes' in algo_name:
-            ms = parameters['mean_skew']
-            r = parameters['radius']
-            algorithm.execute(trial=trialRun,mean_skew=ms, radius=r)
-
-        elif 'get_accident_clusters' in algo_name:
-            cd = parameters['cluster_divisor']
-            algorithm.execute(trial=trialRun,cluster_divisor=cd)
         
-        elif 'get_signal_placements' in algo_name:
-            sc = parameters['sign_count']
-            bs = parameters['buffer_size']
-            algorithm.execute(trial=trialRun,sign_count=sc, buffer_size=bs)
+        #skip algorithms which fetch and have already been called, but check again every 10 requests
+        if 'fetch' in algo_name and \
+        'node' not in algo_name and \
+        requestCount > 2 and \
+        requestCount % 10 != 0:
+            continue
 
-        elif 'get_avg_distance' in algo_name:
-            algorithm.execute(trial=trialRun, web=True)
+        completed = False        
+        while not completed:
+            try:                
+                if 'fetch_nodes' in algo_name:
+                    ms = parameters['mean_skew']
+                    r = parameters['radius']
+                    algorithm.execute(trial=trialRun,mean_skew=ms, radius=r)
 
-        else:
-            algorithm.execute(trial=trialRun)
+                elif 'get_accident_clusters' in algo_name:
+                    cd = parameters['cluster_divisor']
+                    algorithm.execute(trial=trialRun,cluster_divisor=cd)
+                
+                elif 'get_signal_placements' in algo_name:
+                    sc = parameters['sign_count']
+                    bs = parameters['buffer_size']
+                    algorithm.execute(trial=trialRun,sign_count=sc, buffer_size=bs)
 
-        if doProv:
-            provenance = algorithm.provenance(provenance)
+                elif 'get_avg_distance' in algo_name:
+                    algorithm.execute(trial=trialRun, web=True)
+
+                else:
+                    algorithm.execute(trial=trialRun)
+
+                if doProv:
+                    provenance = algorithm.provenance(provenance)
+                
+                completed = True
+            
+            except:
+                print("There was an error in", algo_name, "\nAttempting again...")
 
 
     if doProv:
@@ -120,4 +135,4 @@ if __name__ == '__main__':
               'sign_count': 30, #get_signal_placements 
               'buffer_size': .5, #get_signal_placements 
              }
-    algo(params)
+    algo(params, 1)

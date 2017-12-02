@@ -3,41 +3,69 @@
 
 <head>
     <title>Home - Signs</title>
+      
 </head>
 
 <body>
-    <h3>Optimal Placements of Speed FeedBack Signs Throughout Boston</h3>
-    <p>Enter parameters and click submit to see the resulting map</p>
+    <h2>Optimal Placements of Speed Feedback Signs Throughout Boston</h2>
+    <h4>Enter parameters and click submit to see the resulting map</h4>
 
     <form action="{{url_for('getmap')}}" method='post' target="mapFrame">
 
-        <p>Mean Skew</p>
-        <output name="msOutput" id="msOutputID">1</output><br/>
-        <input type="range" name="Mean Skew" id="msInputID" min=".5" max="2" step=".1" value="1.0" oninput="msOutputID.value = msInputID.value"><br/><br/>
+        <table cellpadding='4px'>
+            <tr>
+                <td>Mean Skew</td>
+                <td><input type="range" name="Mean Skew" id="msInputID" min=".5" max="2" step=".1" value="1.0" oninput="msOutputID.value = msInputID.value"></td>
+                <td> <output name="msOutput" id="msOutputID">1</output></td>
+            </tr>
 
-        <p>Radius</p>
-        <output name="rOutput" id="rOutputID">2.0</output><br/>
-        <input type="range" name="Radius" id="rInputID" min=".5" max="4.0" step=".25" value="2.0" oninput="rOutputID.value = rInputID.value"><br/><br/>
+            <tr>
+                <td>Radius</td>
+                <td><input type="range" name="Radius" id="rInputID" min=".5" max="4.0" step=".25" value="2.0" oninput="rOutputID.value = rInputID.value"></td>
+                <td><output name="rOutput" id="rOutputID">2.0</output></td>
+            </tr>
 
-        <p>Cluster Divisors</p>
-        <output name="cdOutput" id="cdOutputID">15</output><br/>
-        <input type="range" name="Cluster Divisors" id="cdInputID" min="10" max="20" step="1" value="15" oninput="cdOutputID.value = cdInputID.value"><br/><br/>
+            <tr>
+                <td>Cluster Divisors</td>                
+                <td><input type="range" name="Cluster Divisors" id="cdInputID" min="10" max="20" step="1" value="15" oninput="cdOutputID.value = cdInputID.value"></td>
+                <td><output name="cdOutput" id="cdOutputID">15</output></td>
+            </tr>
 
-        <p>Sign Count</p>
-        <output name="scOutput" id="scOutputID">30</output><br/>
-        <input type="range" name="Sign Count" id=scInputID min="5" max="50" step="5" value="30" oninput="scOutputID.value = scInputID.value"><br/><br/>
+            <tr>
+                <td>Sign Count</td>
+                <td><input type="range" name="Sign Count" id=scInputID min="5" max="50" step="5" value="30" oninput="scOutputID.value = scInputID.value"></td>
+                <td><output name="scOutput" id="scOutputID">30</output></td>
+            </tr>
 
-        <p>Buffer Size</p>
-        <output name="bsOutput" id="bsOutputID">.5</output><br/>
-        <input type="range" name="Buffer Size" id="bsInputID" min=".1" max="1" step=".1" value=".5" oninput="bsOutputID.value = bsInputID.value"><br/><br/>
+            <tr>
+                <td>Buffer Size</td>                    
+                <td><input type="range" name="Buffer Size" id="bsInputID" min=".1" max="1" step=".1" value=".5" oninput="bsOutputID.value = bsInputID.value"></td>
+                <td><output name="bsOutput" id="bsOutputID">.5</output></td>
+            </tr>
 
-        <input type="submit">
-        <input type="reset">
+            <tr>
+                <td><input type="submit"></td>
+                <td><input type="reset"></td>
+            </tr>
+
+    </table>   
     </form>
+   
     <p>Requests will take about 60 seconds on average, but invalid responses from our datasets may 
-        require our algorithm to repeat. </p>
+        require individual scripts to repeat, taking additional time. </p>
 
-    <iframe name="mapFrame"></iframe>
+    <iframe name="mapFrame" id="mapFrame" style="border:2px solid grey;" src="{{url_for('placeholder')}}" height='500px' width='100%'></iframe>
+
+    <br/><br/>    
+    <table>
+        <th>Authors</th>        
+        <tr><td>Adriana D'Souza</td></tr>
+        <tr><td>Brian Roach</td></tr>
+        <tr><td>Jessica McAloon</td></tr>
+        <tr><td>Monica Chiu</td></tr>
+    </table>
+    <p>Boston University CS591 - Data Mechanics for Pervasive Systems and Urban Applications</p>
+    <a href="https://github.com/jmcaloon/course-2017-fal-proj/tree/master/adsouza_bmroach_mcaloonj_mcsmocha">Source</a>
 
 </body>
 

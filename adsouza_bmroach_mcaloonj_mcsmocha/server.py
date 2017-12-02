@@ -4,7 +4,7 @@ Filename: server.py
 A flask web server to call our algorithm with user-defined parameters and return
 resulting metrics and graphs
 
-Last edited by: BMR 11/28/17
+Last edited by: BMR 12/2/17
 
 Boston University CS591 Data Mechanics Fall 2017 - Project 3
 Team Members:
@@ -22,13 +22,21 @@ from flask import Flask, render_template, request, url_for
 from logic import algo
 app = Flask(__name__)
 
+requestCount = 1
+
 @app.route('/', methods=['GET'])
 def main():
     return render_template('index.html')
 
+@app.route('/placeholder')
+def placeholder():
+    return render_template('placeholder.html')
+
 
 @app.route('/getmap', methods=['POST'])
 def getmap():
+    global requestCount
+    requestCount += 1
     ms = float(request.form['Mean Skew'])
     r = float(request.form['Radius'])
     cd = int(request.form['Cluster Divisors'])
@@ -42,17 +50,13 @@ def getmap():
               'buffer_size': bs, #default .5
             }
 
-    algo(params)
-    return render_template('placements.html')
-
-    # try: 
-    #     algo(params)
-    #     #placements.html is generated from make_graph
-    #     return render_template('placements.html')
-    # except:
-    #     return render_template('error.html')
+    try: 
+        algo(params, requestCount)
+        return render_template('placements.html')
+    except:        
+        return render_template('error.html')
 
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(threaded=True)
