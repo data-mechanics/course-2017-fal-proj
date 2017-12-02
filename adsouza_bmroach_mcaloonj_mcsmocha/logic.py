@@ -20,6 +20,7 @@ web service for project 3
 Development Notes:
 -trialRun not currently operable
 -implement fault tolerance on each algorithm so we don't need to rerun in the case that one fails
+-don't repeat fetch if they're already there
 
 """
 import sys
