@@ -14,5 +14,27 @@ originalLoc = []
 for o in original:
     for i in range(0,len(o['coordinates'])):
         originalLoc.append(o['coordinates'][i])
+        
+publicLoc = {}
+publicXY = []
+publicLoc[0] = public[0]
 
-print(originalLoc)
+for i in range(1, len(public[0])):
+	for o in publicLoc[0][str(i)]:
+		publicXY.append(o)
+
+x_original = [x for (x, y) in originalLoc]
+y_original = [y for (x, y) in originalLoc]
+
+x_public = [x for (x, y) in publicXY]
+y_public = [y for (x, y) in publicXY]
+
+plt.scatter(x_original, y_original, c = "b")
+plt.scatter(x_public, y_public, c = "r")
+plt.grid(True)
+plt.show()
+
+
+
+
+
