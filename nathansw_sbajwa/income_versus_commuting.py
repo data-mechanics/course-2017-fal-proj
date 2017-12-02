@@ -142,12 +142,15 @@ class income_versus_commuting(dml.Algorithm):
 	
 		return {"start":startTime, "end":endTime}
 
+	### WIP ###
 	@staticmethod
 	def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
 		
 		client = dml.pymongo.MongoClient()
 		repo = client.repo
 		repo.authenticate('nathansw_sbajwa','nathansw_sbajwa')
+
+		## Namespaces
 		doc.add_namespace('alg', 'http://datamechanics.io/algorithm/sbajwa_nathansw/') # The scripts in / format.
 		doc.add_namespace('dat', 'http://datamechanics.io/data/sbajwa_nathansw/') # The data sets in / format.
 		doc.add_namespace('ont', 'http://datamechanics.io/ontology#')
@@ -156,32 +159,38 @@ class income_versus_commuting(dml.Algorithm):
 		doc.add_namespace('householdincome', 'dat:nathansw_sbajwa#householdincome')
 		doc.add_namespace('commuting', 'dat:nathansw_sbajwa#commuting')
 
+		## Agents
 		this_script = doc.agent('alg:nathansw_sbajwa#income_versus_commuting', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
-		###########################################################################################
-
+		## Activities
 		get_householdincome = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-		doc.wasAssociatedWith(get_householdincome, this_script)
-		
+		get_commuting = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+
+		## Entitites
 		resource1 = doc.entity('dat:nathansw_sbajwa#householdincome', {'prov:label':'Household Income by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-		doc.usage(get_householdincome, resource1, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
+		resource2 = doc.entity('commuting: dat:nathansw_sbajwa#commuting', {'prov:label':'Means of Commuting by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 
 		householdincome = doc.entity('dat:nathansw_sbajwa#householdincome', {prov.model.PROV_LABEL:'Household Income by Neighborhood', prov.model.PROV_TYPE:'ont:DataSet'})
-		doc.wasAttributedTo(householdincome, this_script)
-		doc.wasGeneratedBy(householdincome, get_householdincome, endTime)
-		doc.wasDerivedFrom(householdincome, resource1, get_householdincome, get_householdincome, get_householdincome)	
+		commuting = doc.entity('dat:nathansw_sbajwa#commuting', {prov.model.PROV_LABEL:'Means of Commuting by Neighborhood', prov.model.PROV_TYPE:'ont:DataSet'})
 
-		###########################################################################################
-		
-		get_commuting = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+		## wasAssociatedWith
+		doc.wasAssociatedWith(get_householdincome, this_script)
 		doc.wasAssociatedWith(get_commuting, this_script)
-		
-		resource2 = doc.entity('commuting: dat:nathansw_sbajwa#commuting', {'prov:label':'Means of Commuting by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+
+		## used
+		doc.usage(get_householdincome, resource1, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
 		doc.usage(get_commuting, resource2, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
 
-		commuting = doc.entity('dat:nathansw_sbajwa#commuting', {prov.model.PROV_LABEL:'Means of Commuting by Neighborhood', prov.model.PROV_TYPE:'ont:DataSet'})
-		doc.wasAttributedTo(commuting, this_script)
+		## wasGeneratedBy
+		doc.wasGeneratedBy(householdincome, get_householdincome, endTime)
 		doc.wasGeneratedBy(commuting, get_commuting, endTime)
+
+		## wasAttributedTo
+		doc.wasAttributedTo(householdincome, this_script)
+		doc.wasAttributedTo(commuting, this_script)
+
+		## wasDerivedFrom
+		doc.wasDerivedFrom(householdincome, resource1, get_householdincome, get_householdincome, get_householdincome)
 		doc.wasDerivedFrom(commuting, resource2, get_commuting, get_commuting, get_commuting)	
 
 		repo.logout()

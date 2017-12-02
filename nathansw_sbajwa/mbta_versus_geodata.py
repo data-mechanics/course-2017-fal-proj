@@ -138,6 +138,8 @@ class mbta_versus_geodata(dml.Algorithm):
 		client = dml.pymongo.MongoClient()
 		repo = client.repo
 		repo.authenticate('nathansw_sbajwa','nathansw_sbajwa')
+
+		## Namespaces
 		doc.add_namespace('alg', 'http://datamechanics.io/algorithm/sbajwa_nathansw/') # The scripts in / format.
 		doc.add_namespace('dat', 'http://datamechanics.io/data/sbajwa_nathansw/') # The data sets in / format.
 		doc.add_namespace('ont', 'http://datamechanics.io/ontology#')
@@ -146,32 +148,38 @@ class mbta_versus_geodata(dml.Algorithm):
 		doc.add_namespace('mbta', 'dat:nathansw_sbajwa#mbta')
 		doc.add_namespace('geodata', 'dat:nathansw_sbajwa#geodata')
 
+		## Agents
 		this_script = doc.agent('alg:nathansw_sbajwa#mbta_versus_geodata', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
-		###############################################################################
-
+		## Activities
 		get_mbta = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-		doc.wasAssociatedWith(get_mbta, this_script)
-
-		resource1 = doc.entity('dat:nathansw_sbajwa#mbta', {'prov:label':'MBTA Stops By Location', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-		doc.usage(get_mbta, resource1, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
-		
-		mbta = doc.entity('dat:nathansw_sbajwa#mbta', {prov.model.PROV_LABEL:'MBTA Stops',prov.model.PROV_TYPE:'ont:DataSet'})
-		doc.wasAttributedTo(mbta, this_script)
-		doc.wasGeneratedBy(mbta, get_mbta, endTime)
-		doc.wasDerivedFrom(mbta, resource1, get_mbta, get_mbta, get_mbta)
-
-		################################################################################
-
 		get_geodata = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+
+		## Entitites
+		resource1 = doc.entity('dat:nathansw_sbajwa#mbta', {'prov:label':'MBTA Stops By Location', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+		resource2 = doc.entity('dat:nathansw_sbajwa#geodata', {'prov:label':'Lifestyle Data By Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+
+		mbta = doc.entity('dat:nathansw_sbajwa#mbta', {prov.model.PROV_LABEL:'MBTA Stops',prov.model.PROV_TYPE:'ont:DataSet'})
+		geodata = doc.entity('dat:nathansw_sbajwa#geodata', {prov.model.PROV_LABEL:'Lifestyle Data by Neighborhood', prov.model.PROV_TYPE:'ont:DataSet'})
+
+       	## wasAssociatedWith
+		doc.wasAssociatedWith(get_mbta, this_script)
 		doc.wasAssociatedWith(get_geodata, this_script)
 
-		resource2 = doc.entity('dat:nathansw_sbajwa#geodata', {'prov:label':'Lifestyle Data By Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-		doc.usage(get_geodata, resource2, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval',})
+		## used
+		doc.usage(get_mbta, resource1, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
+		doc.usage(get_geodata, resource2, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval',})		
 
-		geodata = doc.entity('dat:nathansw_sbajwa#geodata', {prov.model.PROV_LABEL:'Lifestyle Data by Neighborhood', prov.model.PROV_TYPE:'ont:DataSet'})
-		doc.wasAttributedTo(geodata, this_script)
+		## wasGeneratedBy
+		doc.wasGeneratedBy(mbta, get_mbta, endTime)
 		doc.wasGeneratedBy(geodata, get_geodata, endTime)
+
+		## wasAttributedTo
+		doc.wasAttributedTo(mbta, this_script)
+		doc.wasAttributedTo(geodata, this_script)
+
+		## wasDerivedFrom
+		doc.wasDerivedFrom(mbta, resource1, get_mbta, get_mbta, get_mbta)
 		doc.wasDerivedFrom(geodata, resource2, get_geodata, get_geodata, get_geodata)
 
 		repo.logout()
