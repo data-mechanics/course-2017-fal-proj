@@ -12,8 +12,8 @@ repo.authenticate('cyyan_liuzirui_yjunchoi_yzhang71', 'cyyan_liuzirui_yjunchoi_y
 def hello():
     return render_template('index.html')
 
-@app.route('/',methods=['POST'])
-def register_user():
+@app.route('/map',methods=['POST'])
+def map():
 	try:
 		wardname = request.form.get('ward')
 		drop = request.form.get('dropdown')
@@ -53,7 +53,7 @@ def register_user():
 				Loc.append(o)
 	else:
 		print("Error")
-		return render_template('index.html', location = Loc)
+		return render_template('index2.html', location = Loc)
 
 
 
