@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>
+    Polling Location Optimization with Mass Transit
+  </title>
+  <!-- Leaflet -->
+  <link rel = "stylesheet" href="lib/leaflet/leaflet.css" />
+  <script src = "lib/leaflet/leaflet.js"></script>
+</head>
+
+<!DOCTYPE html>	
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<body>
+
+<!-- Navbar (sit on top) -->
+<div class="w3-top">
+  <div class="w3-bar w3-white w3-wide w3-padding w3-card">
+    <a href="#home" class="w3-bar-item w3-button"><b>CS</b> 591</a>
+  </div>
+</div>
+
+
+  <!-- Contact Section -->
+  <div class="w3-container w3-padding-32" id="contact">
+    <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16">User input</h3>
+    <form action="/action_page.php" target="_blank">
+    	<select id=dropdown>
+      	<option value="MBTA">Optimized by MBTA</option>
+      	<option value="BUS">Optimized by bus</option>
+      	<option value="Transit">Optimized by transportation</option>
+      	<option value="Original">Original</option>
+      </select>
+
+      <input class="w3-input w3-section" type="text" placeholder="Ward name" required name="ward">
+      <p><strong>Note:</strong> Please enter: numbers seperated by comma or ALL.</p>
+<!--       <font size="2" color="blue">e.g. 1, 2, 3 or All</font> -->
+      <button class="w3-button w3-black w3-section" type="submit">
+        <i class="fa fa-paper-plane"></i> SEND MESSAGE
+      </button>
+    </form>
+  </div>
+  
+
+  <!-- Header -->
+<header class="w3-display-container w3-content w3-wide" style="max-width:1500px;" id="home">
+  <img class="w3-image" src="/w3images/architect.jpg" alt="Map" width="1500" height="800">
+  <div class="w3-display-middle w3-margin-top w3-center">
+    <h1 class="w3-xxlarge w3-text-white"><span class="w3-padding w3-black w3-opacity-min"></span></h1>
+  </div>
+</header>
+<!-- End page content -->
+</div>
+
+<!-- Google Map -->
+<div id="googleMap" class="w3-grayscale" style="width:100%;height:450px;"></div>
+
+<!-- Footer -->
+<footer class="w3-center w3-black w3-padding-16">
+  <p>CS591 Project </p>
+</footer>
+
+</body>
+
+
+</html>
