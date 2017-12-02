@@ -86,9 +86,22 @@ class fetch_nodes(dml.Algorithm):
             #Get average distance to closest cluster
             mean = (sum([x[0] for x in distances])/len(distances)) * mean_skew
 
-            #Filter out nodes that have distance to nearest cluster that is less than the mean
-            filtered_nodes = [nodes[x[1]] for x in distances if x[0] >= mean]
 
+            #Filter out nodes that have distance to nearest cluster that is less than the mean            
+            # filtered_nodes = [nodes[x[1]] for x in distances if x[0] >= mean]
+
+            #alt method for error trapping during development
+            filtered_nodes = []
+            for x in distances:
+                try:
+                    if x[0] >= mean:
+                        filtered_nodes.append(nodes[x[1]])            
+                except:
+                    print("exception caught")
+                    print(x[1])
+                    print(len(nodes))
+                    raise ValueError("fetch nodes issue")
+                    
 
             #Insert into repo {"nodes": [[lat,long], [lat,long]..............]}
             tmp = dict()

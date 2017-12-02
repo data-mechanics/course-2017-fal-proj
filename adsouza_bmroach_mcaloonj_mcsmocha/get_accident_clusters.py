@@ -13,8 +13,7 @@ Monica Chiu         mcsmocha@bu.edu
 Original skeleton files provided by Andrei Lapets (lapets@bu.edu)
 
 Development Notes:
-- Number of means being used drastically effects runtime, so we tried different numbers (line 56)
-- From testing, we have decided to collapse each group of 10 accident spots into a single cluster
+
 
 """
 
