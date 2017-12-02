@@ -6,9 +6,9 @@ import datetime
 import uuid
 
 class income_percentages(dml.Algorithm):
-    contributor = 'gaudiosi_raykatz'
-    reads = ["gaudiosi_raykatz.income"]
-    writes = ['gaudiosi_raykatz.income_percentages']
+    contributor = 'raykatz_nedg_gaudiosi'
+    reads = ["raykatz_nedg_gaudiosi.income"]
+    writes = ['raykatz_nedg_gaudiosi.income_percentages']
 
     @staticmethod
     def execute(trial = False):
@@ -18,13 +18,13 @@ class income_percentages(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('gaudiosi_raykatz', 'gaudiosi_raykatz')
+        repo.authenticate('raykatz_nedg_gaudiosi', 'raykatz_nedg_gaudiosi')
        
         
         repo.dropCollection("income_percentages")
         repo.createCollection("income_percentages")
         
-        repo.gaudiosi_raykatz.income.aggregate( [ {"$project":{
+        repo.raykatz_nedg_gaudiosi.income.aggregate( [ {"$project":{
                                                 "zipcode":1,
                                                 "median_income":1,
                                                 "median_rent":1,
@@ -32,14 +32,14 @@ class income_percentages(dml.Algorithm):
                                                 "percent_poverty":{"$divide": ["$people_in_poverty", "$total_people"]},
                                                 }},
                                                 
-                                                {"$out": "gaudiosi_raykatz.income_percentages"}
+                                                {"$out": "raykatz_nedg_gaudiosi.income_percentages"}
 
                                                 
         ])
  
          
-        repo['gaudiosi_raykatz.income_percentages'].metadata({'complete':True})
-        print(repo['gaudiosi_raykatz.income_percentages'].metadata())
+        repo['raykatz_nedg_gaudiosi.income_percentages'].metadata({'complete':True})
+        print(repo['raykatz_nedg_gaudiosi.income_percentages'].metadata())
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -57,25 +57,23 @@ class income_percentages(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('gaudiosi_raykatz', 'gaudiosi_raykatz')
+        repo.authenticate('raykatz_nedg_gaudiosi', 'raykatz_nedg_gaudiosi')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
-        this_script = doc.agent('alg:gaudiosi_raykatz#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        this_script = doc.agent('alg:raykatz_nedg_gaudiosi#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource = doc.entity('dat:raykatz_nedg_gaudiosi#income', {'prov:label':'Income', prov.model.PROV_TYPE:'ont:DataSet'})
         get_demos = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_demos, this_script)
         
         doc.usage(get_demos, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Income Percentages&$select=median_income,median_rent,percent_spending_50_rent,percent_poverty'
-                  }
+                  {prov.model.PROV_TYPE:'ont:Computation'}
                   )
         
-        demos = doc.entity('dat:gaudiosi_raykatz#income_percentages', {prov.model.PROV_LABEL:'Income Percentages', prov.model.PROV_TYPE:'ont:DataSet'})
+        demos = doc.entity('dat:raykatz_nedg_gaudiosi#income_percentages', {prov.model.PROV_LABEL:'Income Percentages', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(demos, this_script)
         doc.wasGeneratedBy(demos, get_demos, endTime)
         doc.wasDerivedFrom(demos, resource, get_demos, get_demos, get_demos)

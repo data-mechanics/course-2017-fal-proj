@@ -6,9 +6,9 @@ import datetime
 import uuid
 
 class demographic_percentages(dml.Algorithm):
-    contributor = 'gaudiosi_raykatz'
-    reads = ["gaudiosi_raykatz.demographics"]
-    writes = ['gaudiosi_raykatz.demographic_percentages']
+    contributor = 'raykatz_nedg_gaudiosi'
+    reads = ["raykatz_nedg_gaudiosi.demographics"]
+    writes = ['raykatz_nedg_gaudiosi.demographic_percentages']
 
     @staticmethod
     def execute(trial = False):
@@ -18,7 +18,7 @@ class demographic_percentages(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('gaudiosi_raykatz', 'gaudiosi_raykatz')
+        repo.authenticate('raykatz_nedg_gaudiosi', 'raykatz_nedg_gaudiosi')
        
         
         
@@ -26,7 +26,7 @@ class demographic_percentages(dml.Algorithm):
         repo.createCollection("demographic_percentages")
         
         
-        repo.gaudiosi_raykatz.demographics.aggregate( [ {"$project":{
+        repo.raykatz_nedg_gaudiosi.demographics.aggregate( [ {"$project":{
             "zipcode":1, 
             "percent_white":{"$divide": ["$white", "$total"]},
             "percent_black":{"$divide": ["$black", "$total"]},
@@ -34,15 +34,19 @@ class demographic_percentages(dml.Algorithm):
             "percent_asian":{"$divide": ["$asian", "$total"]},
             "percent_pacific":{"$divide": ["$pacific", "$total"]},
             "percent_hispanic":{"$divide": ["$hispanic", "$total"]},
+            "percent_married_households":{"$divide": ["$married_households", "$total_households"]},
+            "percent_unemployed":{"$divide": ["$unemployed","$labor_force"]},
+            "percent_in_labor_force":{"$divide": ["$labor_force","$employment_count"]},
+            "percent_public_transit":{"$divide": ["$public_transit", "$total_transit"]},
             }},
                                                 
-            {"$out": "gaudiosi_raykatz.demographic_percentages"}
+            {"$out": "raykatz_nedg_gaudiosi.demographic_percentages"}
 
                                                 
         ])
         
-        repo['gaudiosi_raykatz.demographic_percentages'].metadata({'complete':True})
-        print(repo['gaudiosi_raykatz.demographic_percentages'].metadata())
+        repo['raykatz_nedg_gaudiosi.demographic_percentages'].metadata({'complete':True})
+        print(repo['raykatz_nedg_gaudiosi.demographic_percentages'].metadata())
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -60,25 +64,22 @@ class demographic_percentages(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('gaudiosi_raykatz', 'gaudiosi_raykatz')
+        repo.authenticate('raykatz_nedg_gaudiosi', 'raykatz_nedg_gaudiosi')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
-        this_script = doc.agent('alg:gaudiosi_raykatz#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        this_script = doc.agent('alg:raykatz_nedg_gaudiosi#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource = doc.entity('dat:raykatz_nedg_gaudiosi#demographics', {'prov:label':'Demographics', prov.model.PROV_TYPE:'ont:DataSet'})
         get_demos = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_demos, this_script)
         
         doc.usage(get_demos, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Demographic Percentages&$select=percent_white,percent_black,percent_native,percent_asian,percent_pacific,percent_hispanic'
-                  }
+                  {prov.model.PROV_TYPE:'ont:Computation'}
                   )
         
-        demos = doc.entity('dat:gaudiosi_raykatz#demographic_percentages', {prov.model.PROV_LABEL:'Demographic Percentages', prov.model.PROV_TYPE:'ont:DataSet'})
+        demos = doc.entity('dat:raykatz_nedg_gaudiosi#demographic_percentages', {prov.model.PROV_LABEL:'Demographic Percentages', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(demos, this_script)
         doc.wasGeneratedBy(demos, get_demos, endTime)
         doc.wasDerivedFrom(demos, resource, get_demos, get_demos, get_demos)

@@ -6,9 +6,9 @@ import datetime
 import uuid
 
 class crime(dml.Algorithm):
-    contributor = 'gaudiosi_raykatz'
+    contributor = 'raykatz_nedg_gaudiosi'
     reads = []
-    writes = ['gaudiosi_raykatz.crime']
+    writes = ['raykatz_nedg_gaudiosi.crime']
     @staticmethod
     def execute(trial = False):
         '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
@@ -17,7 +17,7 @@ class crime(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('gaudiosi_raykatz', 'gaudiosi_raykatz')
+        repo.authenticate('raykatz_nedg_gaudiosi', 'raykatz_nedg_gaudiosi')
 
         url = 'https://data.cityofboston.gov/resource/crime.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -51,15 +51,14 @@ class crime(dml.Algorithm):
 
             r.append(d)
 
-        print(r)
 
 
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("crime")
         repo.createCollection("crime")
-        repo['gaudiosi_raykatz.crime'].insert_many(r)
-        repo['gaudiosi_raykatz.crime'].metadata({'complete':True})
-        print(repo['gaudiosi_raykatz.crime'].metadata())
+        repo['raykatz_nedg_gaudiosi.crime'].insert_many(r)
+        repo['raykatz_nedg_gaudiosi.crime'].metadata({'complete':True})
+        print(repo['raykatz_nedg_gaudiosi.crime'].metadata())
 
         repo.logout()
 
@@ -78,7 +77,7 @@ class crime(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('gaudiosi_raykatz', 'gaudiosi_raykatz')
+        repo.authenticate('raykatz_nedg_gaudiosi', 'raykatz_nedg_gaudiosi')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
@@ -86,19 +85,19 @@ class crime(dml.Algorithm):
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
       
-        this_script = doc.agent('alg:gaudiosi_raykatz#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        this_script = doc.agent('alg:raykatz_nedg_gaudiosi#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource = doc.entity('bdp:crime.json', {'prov:label':'Crime Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 
         get_crime = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_crime, this_script)
         doc.usage(get_crime, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'
+                  'ont:Query':''
                   }
                   )
 
 
-        crime = doc.entity('dat:gaudiosi_raykatz#crime', {prov.model.PROV_LABEL:'crime', prov.model.PROV_TYPE:'ont:DataSet'})
+        crime = doc.entity('dat:raykatz_nedg_gaudiosi#crime', {prov.model.PROV_LABEL:'Crime', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(crime, this_script)
         doc.wasGeneratedBy(crime, get_crime, endTime)
         doc.wasDerivedFrom(crime, resource, get_crime, get_crime, get_crime)
@@ -106,10 +105,10 @@ class crime(dml.Algorithm):
         repo.logout()
                   
         return doc
-
+'''
 crime.execute()
 doc = crime.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
-
+'''
 ## eof

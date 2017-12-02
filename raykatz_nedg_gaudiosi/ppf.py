@@ -6,9 +6,9 @@ import datetime
 import uuid
 
 class ppf(dml.Algorithm):
-    contributor = 'gaudiosi_raykatz'
+    contributor = 'raykatz_nedg_gaudiosi'
     reads = []
-    writes = ['gaudiosi_raykatz.ppf']
+    writes = ['raykatz_nedg_gaudiosi.ppf']
 
     @staticmethod
     def execute(trial = False):
@@ -18,7 +18,7 @@ class ppf(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('gaudiosi_raykatz','gaudiosi_raykatz')
+        repo.authenticate('raykatz_nedg_gaudiosi','raykatz_nedg_gaudiosi')
 
         url = 'http://datamechanics.io/data/neighborhoodcrime.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
@@ -1440,13 +1440,12 @@ class ppf(dml.Algorithm):
                 
 
 
-        print(r)
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("ppf")
         repo.createCollection("ppf")
-        repo['gaudiosi_raykatz.ppf'].insert_many(r)
-        repo['gaudiosi_raykatz.ppf'].metadata({'complete':True})
-        print(repo['gaudiosi_raykatz.ppf'].metadata())
+        repo['raykatz_nedg_gaudiosi.ppf'].insert_many(r)
+        repo['raykatz_nedg_gaudiosi.ppf'].metadata({'complete':True})
+        print(repo['raykatz_nedg_gaudiosi.ppf'].metadata())
 
 
         repo.logout()
@@ -1466,27 +1465,26 @@ class ppf(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('gaudiosi_raykatz', 'gaudiosi_raykatz')
+        repo.authenticate('raykatz_nedg_gaudiosi', 'raykatz_nedg_gaudiosi')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
       
-        this_script = doc.agent('alg:gaudiosi_raykatz#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        this_script = doc.agent('alg:raykatz_nedg_gaudiosi#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource = doc.entity('dat:raykatz_nedg_gaudiosi#neighborhoodcrime.json', {'prov:label':'Neighborhood Crime', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 
         get_ppf = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_ppf, this_script)
         doc.usage(get_ppf, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Animal+Found&$select=type,latitude,longitude,OPEN_DT'
+                  'ont:Query':''
                   }
                   )
 
 
-        ppf = doc.entity('dat:gaudiosi_raykatz#ppf', {prov.model.PROV_LABEL:'ppf', prov.model.PROV_TYPE:'ont:DataSet'})
+        ppf = doc.entity('dat:raykatz_nedg_gaudiosi#ppf', {prov.model.PROV_LABEL:'PPF', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(ppf, this_script)
         doc.wasGeneratedBy(ppf, get_ppf, endTime)
         doc.wasDerivedFrom(ppf, resource, get_ppf, get_ppf, get_ppf)
@@ -1494,10 +1492,10 @@ class ppf(dml.Algorithm):
         repo.logout()
                   
         return doc
-
+'''
 ppf.execute()
 doc = ppf.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
-
+'''
 ## eof

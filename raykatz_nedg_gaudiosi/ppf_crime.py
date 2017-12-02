@@ -6,9 +6,9 @@ import datetime
 import uuid
 
 class ppf_crime(dml.Algorithm):
-    contributor = 'gaudiosi_raykatz'
-    reads = ["gaudiosi_katz.ppf2", "gaudiosi_katz.crimes"]
-    writes = ['gaudiosi_katz. ppf_crime']
+    contributor = 'raykatz_nedg_gaudiosi'
+    reads = ["raykatz_nedg_gaudiosi.ppf", "raykatz_nedg_gaudiosi.crime"]
+    writes = ['raykatz_nedg_gaudiosi.ppf_crime']
 
     @staticmethod
     def execute(trial = False):
@@ -18,12 +18,12 @@ class ppf_crime(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('gaudiosi_raykatz', 'gaudiosi_raykatz')
+        repo.authenticate('raykatz_nedg_gaudiosi', 'raykatz_nedg_gaudiosi')
    
         r = []
         pprasdasd=[]
         ppfdict={}
-        ppf_data = list(repo.gaudiosi_raykatz.ppf.find({}))
+        ppf_data = list(repo.raykatz_nedg_gaudiosi.ppf.find({}))
         for region in ppf_data:
             for i in range(5):
                 year_sum = 0
@@ -32,9 +32,8 @@ class ppf_crime(dml.Algorithm):
                 ppfdict["average_priceperfoot_" + str(2012+i)]=(year_sum / 12)
                 pprasdasd.append(year_sum / 12)
 
-        print(ppfdict)
         fcrime_dict={}
-        crime1 = list(repo.gaudiosi_raykatz.crime.find({}))
+        crime1 = list(repo.raykatz_nedg_gaudiosi.crime.find({}))
         crime_dict0=[x for x in crime1 if x['district'] == 'Downtown&Charlestown']
         crime_dict1=[x for x in crime1 if x['district'] == 'East_Boston']
         crime_dict2=[x for x in crime1 if x['district'] == 'Roxbury']
@@ -79,7 +78,7 @@ class ppf_crime(dml.Algorithm):
         r.append(pprasdasd[8])
         r.append(crime_dict9)
         r.append(pprasdasd[39])
-        print(finaldict)
+        #print(finaldict)
 
 
 
@@ -94,9 +93,9 @@ class ppf_crime(dml.Algorithm):
         s = json.dumps(finaldict, sort_keys=True, indent=2)
         repo.dropCollection("ppf_crime")
         repo.createCollection("ppf_crime")
-        repo['gaudiosi_raykatz.ppf_crime'].insert(finaldict)
-        repo['gaudiosi_raykatz.ppf_crime'].metadata({'complete':True})
-        print(repo['gaudiosi_raykatz.ppf_crime'].metadata())
+        repo['raykatz_nedg_gaudiosi.ppf_crime'].insert(finaldict)
+        repo['raykatz_nedg_gaudiosi.ppf_crime'].metadata({'complete':True})
+        print(repo['raykatz_nedg_gaudiosi.ppf_crime'].metadata())
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -114,36 +113,41 @@ class ppf_crime(dml.Algorithm):
         # Set up the database connection.
         client = dml.pymongo.MongoClient()
         repo = client.repo
-        repo.authenticate('gaudiosi_raykatz', 'gaudiosi_raykatz')
+        repo.authenticate('raykatz_nedg_gaudiosi', 'raykatz_nedg_gaudiosi')
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
 
-        this_script = doc.agent('alg:gaudiosi_raykatz#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bdp:wc8w-nujj', {'prov:label':'311, Service Requests', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        this_script = doc.agent('alg:raykatz_nedg_gaudiosi#proj1', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource = doc.entity('dat:raykatz_nedg_gaudiosi#ppf', {'prov:label':'PPF', prov.model.PROV_TYPE:'ont:DataSet'})
+        resource2 = doc.entity('dat:raykatz_nedg_gaudiosi#crime', {'prov:label':'Crime', prov.model.PROV_TYPE:'ont:DataSet'})
         get_demos = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(get_demos, this_script)
         
         doc.usage(get_demos, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval',
-                  'ont:Query':'?type=Demographics&$select=white,black,native_american,asian,pacific_islander,hispanic,total,zipcode'
-                  }
+                  {prov.model.PROV_TYPE:'ont:Computation'}
                   )
-        
-        demos = doc.entity('dat:gaudiosi_raykatz#zipcode_info', {prov.model.PROV_LABEL:'Demographics', prov.model.PROV_TYPE:'ont:DataSet'})
+       
+        doc.usage(get_demos, resource2, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Computation'}
+                  )
+
+        demos = doc.entity('dat:raykatz_nedg_gaudiosi#ppf_crime', {prov.model.PROV_LABEL:'PPF Crime', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(demos, this_script)
         doc.wasGeneratedBy(demos, get_demos, endTime)
         doc.wasDerivedFrom(demos, resource, get_demos, get_demos, get_demos)
+        doc.wasDerivedFrom(demos, resource2, get_demos, get_demos, get_demos)
 
         repo.logout()
                   
         return doc
 
+'''
 ppf_crime.execute()
 doc = ppf_crime.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
-
+'''
 ## eof
