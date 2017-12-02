@@ -1,35 +1,37 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>
     Polling Location Optimization with Mass Transit
   </title>
   <!-- Leaflet -->
-   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ==" crossorigin="" />
-   <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js" integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log==" crossorigin=""></script>
-   <style type="text/css">
-     #map {
-       height: 450px;
-       width: 100%;
-     }
-   </style>
-  <link rel = "stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ==" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js" integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log==" crossorigin=""></script>
+  <style type="text/css">
+    #map {
+      height: 450px;
+      width: 100%;
+    }
+  </style>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
 <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
+
 <body>
-<!-- Navbar (sit on top) -->
-<div class="w3-top">
-  <div class="w3-bar w3-white w3-wide w3-padding w3-card">
-    <a href="#home" class="w3-bar-item w3-button"><b>CS</b>591</a>
+  <!-- Navbar (sit on top) -->
+  <div class="w3-top">
+    <div class="w3-bar w3-white w3-wide w3-padding w3-card">
+      <a href="#home" class="w3-bar-item w3-button"><b>CS</b>591</a>
+    </div>
   </div>
-</div>
   <!-- Contact Section -->
   <div class="w3-container w3-padding-32" id="contact">
     <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16">User input</h3>
     <form action="/action_page.php" target="_blank">
-    	<select id=dropdown>
+      <select id=dropdown>
         <option value="Original">Original</option>
       	<option value="MBTA">Optimized by MBTA</option>
       	<option value="BUS">Optimized by bus stop</option>
@@ -38,41 +40,47 @@
 
       <input class="w3-input w3-section" type="text" placeholder="Ward name" required name="ward">
       <p><strong>Note:</strong> Please enter: numbers seperated by comma or ALL.</p>
-<!--       <font size="2" color="blue">e.g. 1, 2, 3 or All</font> -->
+      <!--       <font size="2" color="blue">e.g. 1, 2, 3 or All</font> -->
       <button class="w3-button w3-black w3-section" type="submit">
         <i class="fa fa-paper-plane"></i> SEND MESSAGE
       </button>
     </form>
   </div>
-<!-- Header -->
-<!-- <header class="w3-display-container w3-content w3-wide" style="max-width:1500px;" id="home">
+  <!-- Header -->
+  <!-- <header class="w3-display-container w3-content w3-wide" style="max-width:1500px;" id="home">
   <img class="w3-image" src="/w3images/architect.jpg" alt="Map" width="1500" height="800">
   <div class="w3-display-middle w3-margin-top w3-center">
     <h1 class="w3-xxlarge w3-text-white"><span class="w3-padding w3-black w3-opacity-min"></span></h1>
   </div>
 </header> -->
-<!-- End page content -->
-</div>
-<!-- leaflet map -->
-<div id="map" class="w3-grayscale" style="width:100%;height:450px;"></div>
- <script>
- var map = L.map('map', {
-   center: [42.3250, -71.0800],
-   zoom: 12
-     });
-   // var map = L.map('map').setView([42.3601, -71.0589], 13);
-   L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-     maxZoom: 18,
-     id: 'mapbox.streets',
-     accessToken: 'pk.eyJ1Ijoid2h5anVuIiwiYSI6ImNqYXBwNXQwNTQycDEzM25xczkwMWpxa3cifQ.fJvofVFlpAWF_uPQtmygFQ'
-     //accessToken: 'your.mapbox.access.token'
-   }).addTo(map);
- </script>
-<!-- Footer -->
-<footer class="w3-center w3-black w3-padding-16">
-  <p>CS591 Project </p>
-</footer>
+  <!-- End page content -->
+  </div>
+  <!-- leaflet map -->
+  <div id="map" class="w3-grayscale" style="width:100%;height:450px;"></div>
+  <script>
+    var map = L.map('map', {
+      center: [42.3250, -71.0800],
+      zoom: 12
+    });
+    // var map = L.map('map').setView([42.3601, -71.0589], 13);
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+      attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+      maxZoom: 18,
+      id: 'mapbox.streets',
+      accessToken: 'pk.eyJ1Ijoid2h5anVuIiwiYSI6ImNqYXBwNXQwNTQycDEzM25xczkwMWpxa3cifQ.fJvofVFlpAWF_uPQtmygFQ'
+      //accessToken: 'your.mapbox.access.token'
+    }).addTo(map);
+
+    var location = {{location}}
+    for(i=0;i<255;i++){
+        var marker = L.marker(location[i]).addTo(map);
+    }
+
+  </script>
+  <!-- Footer -->
+  <footer class="w3-center w3-black w3-padding-16">
+    <p>CS591 Project </p>
+  </footer>
 
 </body>
 
