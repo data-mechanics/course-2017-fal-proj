@@ -21,7 +21,7 @@ class crimerate(dml.Algorithm):
         s = json.dumps(r, sort_keys= True, indent = 2)
         repo.dropCollection("crimerate")
         repo.createCollection("crimerate")
-        
+
         repo["lc546_jofranco.crimerate"].insert_many(r)
         repo["lc546_jofranco.crimerate"].metadata({'complete':True})
         print(repo["lc546_jofranco.crimerate"].metadata())
@@ -56,4 +56,3 @@ crimerate.execute()
 doc = crimerate.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))
-

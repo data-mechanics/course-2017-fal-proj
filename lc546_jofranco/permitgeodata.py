@@ -5,10 +5,10 @@ import prov.model
 import datetime
 import uuid
 
-class permit(dml.Algorithm):
+class permitgeodata(dml.Algorithm):
     contributor = 'lc546_jofranco'
     reads = []
-    writes = ['lc546_jofranco.permit']
+    writes = ['lc546_jofranco.permitgeodata']
     @staticmethod
     def execute(trial = False):
         startTime = datetime.datetime.now()
@@ -20,12 +20,19 @@ class permit(dml.Algorithm):
         response = urllib.request.urlopen(url).read().decode("utf-8")
         #print("this", response)
         r = json.loads(response)
+        foodlocale = list()
+        for locations in r:
+            coor = {
+            'location': locations['location']
+            }
+            foodlocale.append(coor)
         s = json.dumps(r, sort_keys = True, indent = 2)
-        repo.dropCollection("permit")
-        repo.createCollection("permit")
-        repo["lc546_jofranco.permit"].insert_many(r)
-        repo["lc546_jofranco.permit"].metadata({'complete':True})
-        print(repo["lc546_jofranco.permit"].metadata())
+        repo.dropCollection("permitgeodata")
+        repo.createCollection("permitgeodata")
+    #    repo["permitgeo"].ensure_index([("location", dml.pymongo.GEOSPHERE)])
+        repo["lc546_jofranco.permitgeodata"].insert_many(foodlocale)
+        repo["lc546_jofranco.permitgeodata"].metadata({'complete':True})
+        print(repo["lc546_jofranco.permitgeodata"].metadata())
         repo.logout()
         endTime = datetime.datetime.now()
         return {"start":startTime, "end":endTime}
@@ -39,20 +46,20 @@ class permit(dml.Algorithm):
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
         doc.add_namespace('bdp', 'https://data.cityofboston.gov/resource/')
-        this_script = doc.agent('alg:lc546_jofranco#retrievedata', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('bdp:xgbq-327x', {'prov:label':'permit', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        get_permitinfo = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime, {prov.model.PROV_LABEL:'permit', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAssociatedWith(get_permitinfo, this_script)
-        doc.usage(get_permitinfo, resource, startTime)
-        permit = doc.entity('dat:lc546_jofranco#permit', {prov.model.PROV_LABEL:'restaurant permit', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(permit, this_script)
-        doc.wasGeneratedBy(permit, get_permitinfo, endTime)
-        doc.wasDerivedFrom(permit, resource, get_permitinfo, get_permitinfo, get_permitinfo)
+        this_script = doc.agent('alg:lc546_jofranco#retrievedatageo', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource = doc.entity('bdp:xgbq-327x', {'prov:label':'permitgeo', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        get_permitinfogeo = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime, {prov.model.PROV_LABEL:'permitgeo', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAssociatedWith(get_permitinfogeo, this_script)
+        doc.usage(get_permitinfogeo, resource, startTime)
+        PermitinfoGeo = doc.entity('dat:lc546_jofranco#permitinfogeo', {prov.model.PROV_LABEL:'restaurant near hubway', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(PermitinfoGeo, this_script)
+        doc.wasGeneratedBy(PermitinfoGeo, get_permitinfogeo, endTime)
+        doc.wasDerivedFrom(PermitinfoGeo, resource, get_permitinfogeo, get_permitinfogeo, get_permitinfogeo)
         return doc
 
 
 
-permit.execute()
-doc = permit.provenance()
+permitgeodata.execute()
+doc = permitgeodata.provenance()
 print(doc.get_provn())
 print(json.dumps(json.loads(doc.serialize()), indent=4))

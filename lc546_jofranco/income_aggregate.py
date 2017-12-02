@@ -25,14 +25,12 @@ class income_aggregate(dml.Algorithm):
         repo.authenticate('lc546_jofranco', 'lc546_jofranco')
 
         income = repo.lc546_jofranco.employee_earnings
-        
+
         zipcode = []
         for zips in income.find():
             zipcode.append((zips['postal'], float(zips['total_earnings'])))
-        #print(zipcode)
+
         #Take the zipcodes and income out
-    
-    	
         #aggregate it. Find the medium of income of each zipcode
         agg_income = income_aggregate.aggregate(zipcode, numpy.mean)
        # print("INCOME MEAN",dict(agg_income))
