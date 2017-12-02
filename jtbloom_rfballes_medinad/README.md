@@ -1,3 +1,27 @@
+# CS 591 Fall 2017 Project #2: Modeling, Optimization, and Statistical Analysis
+Jake Bloomfeld (jtbloom@bu.edu), Ricardo Ballesteros (rfballes@bu.edu), Daniel Medina (medinad@bu.edu)
+
+### Narrative
+Hubway is a public bike-share system serving the people of Boston, Brookline, Cambridge, and Somerville. With roughly 1800 bikes in practically 200 stations, the Hubway serves as a fun, affordable, and convenient transportation option for quick trips around Boston and its surrounding municipalities. The objective of our project stemmed from this question: is there a correlation between income per capita in Boston's neighbrohoods with the number of Hubway trips taken in that neighborhood? What about neighborhood population with Hubway trips? To solve this problem and perform the necessary analysis, we use and manipulate several datasets. In the Hubway Trip History dataset, given the coordinate points of the station, we check if the station is within a certain Boston neighborhood, given by the Boston Neighborhood Geoshape dataset. Then, once the Hubway stations are mapped to a certain neighborhood, using the Per Capita Income and Population by Neighborhood dataset, we see if there is a correlation between these three dimensions: incoming/outgoing Hubway trips per neighborhood, average per capita income by neighborhood, and population by neighborghood. Seeing if such a correlatation exists can pose further questions for discussion, such as, are there more trips being taken to/from wealthier neighborhoods than poorer neighborhoods? Are wealthier/poorer neighborhoods or higher/lower population neighborhoods over/underutilizing available Hubway bikes? Our project tries to solve this problem.
+
+### Datasets
+* Hubway Station Locations: 'https://boston.opendatasoft.com/explore/dataset/hubway-station-locations/download/?format=geojson&timezone=America/New_York'
+* Hubway Trip History: 'http://datamechanics.io/data/jb_rfb_dm_proj2data/201708_hubway_tripdata2.json'
+* Per Capita Income by Neighborhood: 'http://datamechanics.io/data/jb_rfb_dm_proj2data/incomeByNeighborhood.json'
+* Boston Neighborhood Geoshapes: 'http://datamechanics.io/data/jb_rfb_dm_proj2data/bos_neighborhoods_shapes.json'
+
+### Scripts
+* stationsByneighborhood.py: this script was used to find out what Hubway stations fall in what neighborhood in the boston area. 
+* neighborhood_station_income_out.py: was used to aggregate the number of trips that come out of each neighbprhood in order to execute the statistical analyses on (trips, income)
+* trips_income_correlation.py: executes a correation between the neighbprhood income and trips. Our findings give us a positive correlations between the vectors. 
+* trips_population_correlation.py: 
+* neighborhood_income.py: was used to transform the data from out income per capita by neighborhood data set. Was used to aggregate trips and to again execute a correlation. This time between the population and trips. Our findings suggest a negative correlation. This might be intersting to further investogate in project 3 and see what is it that affects this number. 
+
+### note
+Be sure to run get_datasets.py before anything else.
+In order to run the two correlation files newbosneighborhoods.py, outgoing_trips.py, neighborhood_income.py, neighborhood_station_income_out.py must be run beforehand. 
+
+
 # CS 591 Fall 2017 Project #1: Data Retrieval, Storage, Provenance, and Transformations 
 Jake Bloomfeld (jtbloom@bu.edu) and Ricardo Ballesteros (rfballes@bu.edu)
 ## Project Idea: Sustainability and Transportation in Boston
