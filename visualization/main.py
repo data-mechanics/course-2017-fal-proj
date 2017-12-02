@@ -16,12 +16,15 @@ def hello():
 def register_user():
 	try:
 		wardname = request.form.get('ward')
-		drop =request.form.get('dropdown')
-		print("ok")
-		return render_template('index.html')
+		drop = request.form.get('dropdown')
 	except:
 		print("couldn't find all tokens")
 		return render_template('index.html')
+		
+	if drop == "Original":
+		
+
+
 
 @app.route('/score')
 def score():
