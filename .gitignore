@@ -1,5 +1,6 @@
 # Directories.
 data/
+bohorqux_rocksdan/
 
 # Common operating system files.
 .DS_Store
@@ -10,6 +11,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+*.json
 # C extensions.
 *.so
 
