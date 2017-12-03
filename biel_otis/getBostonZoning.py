@@ -8,10 +8,11 @@ import time
 import ssl
 
 
-class getHealthInspection(dml.Algorithm):
+class getBostonZoning(dml.Algorithm):
+    print('getBostonZoning')
     contributor = 'biel_otis'
     reads = []
-    writes = ['biel_otis.HealthInspection']
+    writes = ['biel_otis.BostonZoning']
     ssl._create_default_https_context = ssl._create_unverified_context
 
     @staticmethod
@@ -23,19 +24,26 @@ class getHealthInspection(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client['biel_otis']
         repo.authenticate('biel_otis', 'biel_otis')
-        url = 'https://data.boston.gov/export/458/2be/4582bec6-2b4f-4f9e-bc55-cbaa73117f4c.json'
+        url = 'http://bostonopendata-boston.opendata.arcgis.com/datasets/eebd3daed05a45678894db30d9bf0cfb_0.geojson'
         response = urlopen(url).read().decode("utf-8")
-        response = response.replace(']', '')
-        response = response.replace('[', '')
-        response = '[' + response + ']'
 
         r = json.loads(response)
 
-        repo.dropCollection("HealthInspection")
-        repo.createCollection("HealthInspection")
-        repo['biel_otis.HealthInspection'].insert_many(r)
-        repo['biel_otis.HealthInspection'].metadata({'complete':True})
-        print(repo['biel_otis.HealthInspection'].metadata())
+        dontInclude=['Harborpark: North End Waterfront', 'Harborpark: Charlestown Waterfront', 'Harborpark: Dorchester Bay/Neponset River Waterfront', 'Harborpark: Fort Point Waterfront','Boston Harbor']
+        goodData = {}
+        for i in range(len(r['features']) - 1):
+            if r['features'][i]['properties']['DISTRICT'] in dontInclude:
+                continue
+            else:
+                goodData[r['features'][i]['properties']['DISTRICT']] = r['features'][i]['geometry']
+
+        repo.dropCollection("BostonZoning")
+        repo.createCollection("BostonZoning")
+        repo['biel_otis.BostonZoning'].insert_many([goodData])
+        repo['biel_otis.BostonZoning'].metadata({'complete':True})
+        print(repo['biel_otis.BostonZoning'].metadata())
+        
+
 
         repo.logout()
 
@@ -59,12 +67,11 @@ class getHealthInspection(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('health', 'https://data.boston.gov/export/') # Health Inspection dataset from data.boston.gov
+        doc.add_namespace('zones', 'http://bostonopendata-boston.opendata.arcgis.com/datasets/')
 
-        this_script = doc.agent('alg:biel_otis#getHealthInspectionData', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('health:458/2be/4582bec6-2b4f-4f9e-bc55-cbaa73117f4c', {'prov:label':'Health Inspections in City of Boston', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        output_resource = doc.entity('dat:biel_otis#HealthInpsection', {prov.model.PROV_LABEL: 'Health Inspections in City of Boston', prov.model.PROV_TYPE:'ont:DataSet'})
-
+        this_script = doc.agent('alg:biel_otis#getBostonZoning', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        resource = doc.entity('zones:eebd3daed05a45678894db30d9bf0cfb_0', {'prov:label':'Multipolygon Shape of Boston', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
+        output_resource = doc.entity('dat:biel_otis#BostonZoning', {prov.model.PROV_LABEL: 'Dataset containing geojson for shapefiles of Boston Neighborhoods.', prov.model.PROV_TYPE:'ont:DataSet'})
 
         this_run = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
     
@@ -89,6 +96,5 @@ class getHealthInspection(dml.Algorithm):
           
         return doc
 
-print("finished getHealthInspections")
 
 ## eof

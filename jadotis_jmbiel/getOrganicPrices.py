@@ -58,16 +58,28 @@ class getOrganicPrices(dml.Algorithm):
 
         this_script = doc.agent('alg:biel_otis#getOrganicPrices', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('op:food_prices', {'prov:label':'Organic Food Prices dataset in the United States', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        get_op = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_op, this_script)
+        output_resource = doc.entity('dat:biel_otis#OrganicPrices', {prov.model.PROV_LABEL: 'Organic Food Prices dataset in the United States', prov.model.PROV_TYPE:'ont:DataSet'})
+
+
+        this_run = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
+    
         
-        doc.usage(get_op, resource, startTime, None,
+        #Associations
+        doc.wasAssociatedWith(this_run, this_script)
+     
+        #Usages
+        doc.usage(this_run, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval'})
 
-        op = doc.entity('dat:biel_otis#op', {prov.model.PROV_LABEL:'Organic Food Prices dataset in the United States', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(op, this_script)
-        doc.wasGeneratedBy(op, get_op, endTime)
-        doc.wasDerivedFrom(op, resource, get_op, get_op, get_op)
+        #Generated
+        doc.wasGeneratedBy(output_resource, this_run, endTime)
+
+
+        #Attributions
+        doc.wasAttributedTo(output_resource, this_script)
+
+        #Derivations
+        doc.wasDerivedFrom(output_resource, resource, this_run, this_run, this_run)
         repo.logout()
         
         return doc

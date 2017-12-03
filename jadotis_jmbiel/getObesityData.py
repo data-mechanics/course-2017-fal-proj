@@ -60,16 +60,28 @@ class getObesityData(dml.Algorithm):
 
         this_script = doc.agent('alg:biel_otis#getObesityData', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('obe:4ahrt-wk9b.json?$offset=13908&$limit=5000', {'prov:label':'Obesity Data for inhabitants of Boston', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        get_obesity = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_obesity, this_script)
+        output_resource = doc.entity('dat:biel_otis#ObesityData', {prov.model.PROV_LABEL: 'Obesity Data for inhabitants of Boston', prov.model.PROV_TYPE:'ont:DataSet'})
+
+
+        this_run = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
+    
         
-        doc.usage(get_obesity, resource, startTime, None,
+        #Associations
+        doc.wasAssociatedWith(this_run, this_script)
+     
+        #Usages
+        doc.usage(this_run, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval'})
 
-        obesity = doc.entity('dat:biel_otis#obesity', {prov.model.PROV_LABEL:'Obesity Data for inhabitants of Boston', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(obesity, this_script)
-        doc.wasGeneratedBy(obesity, get_obesity, endTime)
-        doc.wasDerivedFrom(obesity, resource, get_obesity, get_obesity, get_obesity)
+        #Generated
+        doc.wasGeneratedBy(output_resource, this_run, endTime)
+
+
+        #Attributions
+        doc.wasAttributedTo(output_resource, this_script)
+
+        #Derivations
+        doc.wasDerivedFrom(output_resource, resource, this_run, this_run, this_run)
         repo.logout()
         
         return doc

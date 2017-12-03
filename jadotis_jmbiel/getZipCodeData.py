@@ -154,20 +154,29 @@ class getZipCodeData(dml.Algorithm):
 
         this_script = doc.agent('alg:biel_otis#getZipCodeData', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('zip:zipcodes', {'prov:label':'Dataset containing zipcode information from ZipCodes in Boston', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        get_zips = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_zips, this_script)
-        
-        doc.usage(get_zips, resource, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval'})
+        output_resource = doc.entity('dat:biel_otis#ZipCodes', {prov.model.PROV_LABEL: 'Dataset containing zipcode information from ZipCodes in Boston.', prov.model.PROV_TYPE:'ont:DataSet'})
 
-        zips = doc.entity('dat:biel_otis#zipcodes', {prov.model.PROV_LABEL:'Dataset containing zipcode information from ZipCodes in Boston', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(zips, this_script)
-        doc.wasGeneratedBy(zips, get_zips, endTime)
-        doc.wasDerivedFrom(zips, resource, get_zips, get_zips, get_zips)
+        this_run = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
+    
+        
+        #Associations
+        doc.wasAssociatedWith(this_run, this_script)
+     
+        #Usages
+        doc.usage(this_run, resource, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Retrieval'})
+                  
+        #Generated
+        doc.wasGeneratedBy(output_resource, this_run, endTime)
+
+
+        #Attributions
+        doc.wasAttributedTo(output_resource, this_script)
+
+        #Derivations
+        doc.wasDerivedFrom(output_resource, resource, this_run, this_run, this_run)
         repo.logout()
         
         return doc
-
-print("Finished getZipCodeData")
 
 ## eof

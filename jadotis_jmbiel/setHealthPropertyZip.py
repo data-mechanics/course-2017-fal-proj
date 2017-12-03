@@ -100,6 +100,9 @@ class setHealthPropertyZip(dml.Algorithm):
         PropertyValues = list(repo['biel_otis.PropertyValues'].find())
         ZipCodes = repo['biel_otis.ZipCodes'].find()
         Zips = ZipCodes.distinct('1')
+        if (trial == True):
+            HealthInspections = HealthInspections[0:100]
+            PropertyValues = PropertyValues[0:100]
         print("finished getting data...")
         props = [x for x in PropertyValues if x['owner_mail_zipcode'] in Zips] # Join operation on ZipCodes (had to append leading 0 to zipcode)
         
@@ -148,31 +151,40 @@ class setHealthPropertyZip(dml.Algorithm):
 
         this_script = doc.agent('alg:biel_otis#setHealthPropertyZip', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         #resource = doc.entity('health:458/2be/4582bec6-2b4f-4f9e-bc55-cbaa73117f4c', {'prov:label':'Health Inspections in City of Boston', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        health = doc.entity('dat:biel_otis#health', {prov.model.PROV_LABEL:'Health Inspections in City of Boston', prov.model.PROV_TYPE:'ont:DataSet'})
-        props = doc.entity('dat:biel_otis#propertys', {prov.model.PROV_LABEL:'Dataset of property values in the city of Boston', prov.model.PROV_TYPE:'ont:Dataset'})
-        zips = doc.entity('dat:biel_otis#zipcodes', {prov.model.PROV_LABEL:'Dataset containing zipcode information in the city of Boston', prov.model.PROV_TYPE:'ont:DataSet'})
-        props_failed_HI = doc.entity('dat:biel_otis#prop_vals_and_failed_health_inspects', {prov.model.PROV_LABEL:'Dataset containing key value pairs where the key is the value of some property, and the value is the number of restaurants that failed health inspections within 1 square mile.', prov.model.PROV_TYPE:'ont:DataSet'})
+        health_resource = doc.entity('dat:biel_otis#HealthInspection', {prov.model.PROV_LABEL:'Health Inspections in City of Boston', prov.model.PROV_TYPE:'ont:DataSet'})
+        props_resource = doc.entity('dat:biel_otis#PropertyValues', {prov.model.PROV_LABEL:'Dataset of property values in the city of Boston', prov.model.PROV_TYPE:'ont:Dataset'})
+        zip_resource = doc.entity('dat:biel_otis#ZipCodes', {prov.model.PROV_LABEL:'Dataset containing zipcode information in the city of Boston', prov.model.PROV_TYPE:'ont:DataSet'})
+        output_resource = doc.entity('dat:biel_otis#HealthPropertyZips', {prov.model.PROV_LABEL:'Dataset containing key value pairs where the key is the value of some property, and the value is the number of restaurants that failed health inspections within 1 square mile.', prov.model.PROV_TYPE:'ont:DataSet'})
 
 
-        gen_HealthPropZip = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(gen_HealthPropZip, this_script)
+        this_run = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
+    
         
-        doc.usage(gen_HealthPropZip, health, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Transformation'})
-        doc.usage(gen_HealthPropZip, props, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Transformation'})
-        doc.usage(gen_HealthPropZip, zips, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Transformation'})
-        doc.usage(gen_HealthPropZip, props_failed_HI, startTime, None,
-                  {prov.model.PROV_TYPE:'ont:Transformation'})
+        #Associations
+        doc.wasAssociatedWith(this_run, this_script)
+     
+        #Usages
+        doc.usage(this_run, health_resource, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Retrieval'})
+        doc.usage(this_run, props_resource, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Retrieval'})
+        doc.usage(this_run, zip_resource, startTime, None,
+                  {prov.model.PROV_TYPE:'ont:Retrieval'})
 
-        doc.wasAttributedTo(props_failed_HI, this_script)
-        doc.wasGeneratedBy(props_failed_HI, gen_HealthPropZip, endTime)
-        doc.wasDerivedFrom(health, props, zips, gen_HealthPropZip, gen_HealthPropZip, gen_HealthPropZip)
+        #Generated
+        doc.wasGeneratedBy(output_resource, this_run, endTime)
+
+
+        #Attributions
+        doc.wasAttributedTo(output_resource, this_script)
+
+        #Derivations
+        doc.wasDerivedFrom(output_resource, health_resource, this_run, this_run, this_run)
+        doc.wasDerivedFrom(output_resource, props_resource, this_run, this_run, this_run)
+        doc.wasDerivedFrom(output_resource, zip_resource, this_run, this_run, this_run)
         repo.logout()
         
         return doc
 
-print("Finished SetHealthPropertyZip")
-
 ## eof
+
