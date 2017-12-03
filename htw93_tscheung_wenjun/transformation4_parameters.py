@@ -105,9 +105,10 @@ class transformation4_parameters(dml.Algorithm):
         #print(kmeans_arr_mbta[max_index_mbta])
         #print(scores)
 
-        '''
-        fig = plt.figure(figsize=(16,12))
-        colors = ['red','blue','green','pink','yellow','cyan','black','orange','lightblue','lightgreen']
+        
+        #fig = plt.figure(figsize=(16,12))
+        #colors = ['red','blue','green','pink','yellow','cyan','black','orange','lightblue','lightgreen']
+        cluster=[]
         for i in range(len(kmeans.cluster_centers_)):
             label = scores[i]
             x = kmeans.cluster_centers_[i][0]
@@ -115,20 +116,28 @@ class transformation4_parameters(dml.Algorithm):
             plt.annotate(label, xy=(x,y), xytext=(x, y))
         for i in range(10):
             indexs = Clusts(i,kmeans.labels_)
-            x = []
-            y = []
-            for j in range(len(indexs)):
+            #x = []
+            #y = []
+            #print(indexs)
+            tmp = []
+            for entry in indexs:
+                tmp.append(coordinate[entry])
+            cluster.append(tmp)
+            
+            #print (res)
+            #for j in range(len(indexs)):
                 #if i == 5:
                     #print(hotel_lists[indexs[j]])
                 #print(res[indexs[j]][0],res[indexs[j]][1])
-                x.append(res[indexs[j]][0])
-                y.append(res[indexs[j]][1])
-            plt.scatter(x, y, color=colors[i],s = 50,label=scores[i])
-        plt.legend(loc = 'upper left', fontsize = 'medium')
-        plt.title("K-means Plot")
+                #x.append(res[indexs[j]][0])
+                #y.append(res[indexs[j]][1])
+                #print(x)
+            #plt.scatter(x, y, color=colors[i],s = 50,label=scores[i])
+        #plt.legend(loc = 'upper left', fontsize = 'medium')
+        #plt.title("K-means Plot")
 
-        fig.savefig('temp.png', dpi=fig.dpi)
-        '''
+        #fig.savefig('temp.png', dpi=fig.dpi)
+        
         coorx_sum = 0
         coory_sum = 0
         for idx in ids[5]:
@@ -138,12 +147,12 @@ class transformation4_parameters(dml.Algorithm):
         print(coorx_sum/len(ids[5]),coory_sum/len(ids[5]))
         print("***********")
         
-
+        #print(cluster)
         key  = str(origin)+str(garden)+str(food)+str(mbta)
         #repo.dropCollection("BostonHotelPotential")
         #repo.createCollection("BostonHotelPotential")
 
-        repo['htw93_tscheung_wenjun.BostonHotelPotentialPermutation'].insert({'id':key,'lat':coorx_sum/len(ids[5]),'long':coory_sum/len(ids[5])})
+        repo['htw93_tscheung_wenjun.BostonHotelPotentialPermutation'].insert({'id':key,'lat':coorx_sum/len(ids[5]),'long':coory_sum/len(ids[5]),'cluster': cluster})
 
         
 
