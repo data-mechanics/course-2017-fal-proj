@@ -57,16 +57,27 @@ class getPropertyValues(dml.Algorithm):
 
         this_script = doc.agent('alg:biel_otis#getPropertyValues', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
         resource = doc.entity('property:n7za-nsjh', {'prov:label':'Property values in city of Boston', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        get_property = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-        doc.wasAssociatedWith(get_property, this_script)
+        output_resource = doc.entity('dat:biel_otis#PropertyValues', {prov.model.PROV_LABEL: 'Dataset containing property values around the city of Boston.', prov.model.PROV_TYPE:'ont:DataSet'})
+
+        this_run = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
+    
         
-        doc.usage(get_property, resource, startTime, None,
+        #Associations
+        doc.wasAssociatedWith(this_run, this_script)
+     
+        #Usages
+        doc.usage(this_run, resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval'})
 
-        prop = doc.entity('dat:biel_otis#prop', {prov.model.PROV_LABEL:'Property Values for the City of Boston', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(prop, this_script)
-        doc.wasGeneratedBy(prop, get_property, endTime)
-        doc.wasDerivedFrom(prop, resource, get_property, get_property, get_property)
+        #Generated
+        doc.wasGeneratedBy(output_resource, this_run, endTime)
+
+
+        #Attributions
+        doc.wasAttributedTo(output_resource, this_script)
+
+        #Derivations
+        doc.wasDerivedFrom(output_resource, resource, this_run, this_run, this_run)
         repo.logout()
           
         return doc
