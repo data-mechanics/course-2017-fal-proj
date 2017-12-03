@@ -16,6 +16,9 @@ class geodata(dml.Algorithm):
 	@staticmethod
 	def execute(trial = False):
 
+		#######################################################################################
+		###
+
 		# directory navigation
 		curr_dir = os.getcwd()
 		new_dir = curr_dir + "\\nathansw_sbajwa\\"
@@ -23,6 +26,8 @@ class geodata(dml.Algorithm):
 		temp_f = open(new_dir + 'geo_coords.txt', 'r')
 		loc_coords = temp_f.readlines()
 
+		###
+		#######################################################################################
 
 		startTime = datetime.datetime.now()
 
@@ -35,6 +40,13 @@ class geodata(dml.Algorithm):
 		base_url = "https://azure.geodataservice.net/GeoDataService.svc/GetUSDemographics?"
 		form = "&$format=json"
 		data = {}
+
+		######################################################################################
+		###
+
+		# Draw's coordinate data from text file; would like it to be drawn from mbta db.
+		# I believe if we take the key's from the mbta db and change the '+' chars to ','
+		# this could be done
 
 		for entry in loc_coords:
 			coords = entry.strip('\n')
@@ -56,6 +68,9 @@ class geodata(dml.Algorithm):
 
 			data[key_name] = temp.pop('d'[0])
 
+		###
+		########################################################################################
+
 		s = json.dumps(data, indent=4)
 		repo.dropCollection("geodata")
 		repo.createCollection("geodata")
@@ -72,6 +87,8 @@ class geodata(dml.Algorithm):
 
 		client = dml.pymongo.MongoClient()
 		repo = client.repo
+
+		## Namespaces
 		repo.authenticate("nathansw_sbajwa","nathansw_sbajwa")
 		doc.add_namespace('alg', 'http://datamechanics.io/algorithm/nathansw_sbajwa/') # The scripts in / format.
 		doc.add_namespace('dat', 'http://datamechanics.io/data/nathansw_sbajwa/') # The data sets in / format.
@@ -80,17 +97,31 @@ class geodata(dml.Algorithm):
 	
 		doc.add_namespace('geodata', 'http://azure.geodataservice.net/GeoDataService.svc/')
 
+		## Agents
 		this_script = doc.agent('alg:nathansw_sbajwa#geodata', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
+		## Activities
 		get_geodata = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+		
+		## Entities
+		# Data Source
+		resource = doc.entity('geodata:GetUSDemographics', {'prov:label':'Lifestyle Data By Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+		# Data Generated
+		geodata = doc.entity('dat:nathansw_sbajwa#geodata', {prov.model.PROV_LABEL:'Lifestyle Data by Neighborhood', prov.model.PROV_TYPE:'ont:DataSet'})
+
+		## wasAssociatedWith
 		doc.wasAssociatedWith(get_geodata, this_script)
 
-		resource = doc.entity('geodata:GetUSDemographics', {'prov:label':'Lifestyle Data By Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+		## used
 		doc.usage(get_geodata, resource, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval',})
 
-		geodata = doc.entity('dat:nathansw_sbajwa#geodata', {prov.model.PROV_LABEL:'Lifestyle Data by Neighborhood', prov.model.PROV_TYPE:'ont:DataSet'})
-		doc.wasAttributedTo(geodata, this_script)
+		## wasGeneratedBy
 		doc.wasGeneratedBy(geodata, get_geodata, endTime)
+
+		## wasAttributedTo
+		doc.wasAttributedTo(geodata, this_script)
+
+		## wasDerivedFrom		
 		doc.wasDerivedFrom(geodata, resource, get_geodata, get_geodata, get_geodata)			
 
 		repo.logout()

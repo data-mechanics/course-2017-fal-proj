@@ -8,7 +8,7 @@ import uuid
 class example(dml.Algorithm):
     contributor = 'lmy1031_zhuoshu'
     reads = []
-    writes = ['lmy1031_zhuoshu_hospital']
+    writes = ['lmy1031_zhuoshu.hospital']
 
     @staticmethod
     def execute(trial = False):
@@ -26,7 +26,7 @@ class example(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("hospital")
         repo.createCollection("hospital")
-        repo['lmy1031_zhuoshu_hospital'].insert_many(r)
+        repo['lmy1031_zhuoshu.hospital'].insert_many(r)
         #repo['alice_bob.lost'].metadata({'complete':True})
         #print(repo['alice_bob.lost'].metadata())
 

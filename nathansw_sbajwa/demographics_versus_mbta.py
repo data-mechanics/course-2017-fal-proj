@@ -141,6 +141,8 @@ class demographics_versus_mbta(dml.Algorithm):
 		client = dml.pymongo.MongoClient()
 		repo = client.repo
 		repo.authenticate('nathansw_sbajwa','nathansw_sbajwa')
+
+		## Namespaces
 		doc.add_namespace('alg', 'http://datamechanics.io/algorithm/sbajwa_nathansw/') # The scripts in / format.
 		doc.add_namespace('dat', 'http://datamechanics.io/data/sbajwa_nathansw/') # The data sets in / format.
 		doc.add_namespace('ont', 'http://datamechanics.io/ontology#')
@@ -150,45 +152,46 @@ class demographics_versus_mbta(dml.Algorithm):
 		doc.add_namespace('povertyrates', 'dat:nathansw_sbajwa#povertyrates')
 		doc.add_namespace('commuting', 'dat:nathansw_sbajwa#commuting')
 
+		## Agents
 		this_script = doc.agent('alg:nathansw_sbajwa#demographics_versus_mbta', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
-	    ####################################################################################
-
+		## Activities
 		get_race = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-		doc.wasAssociatedWith(get_race, this_script)
+		get_commuting = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+		get_povertyrates = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 
+		## Entitites
 		resource1 = doc.entity('race: dat:nathansw_sbajwa#race', {'prov:label':'Race by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-		doc.usage(get_race, resource1, startTime, None,{prov.model.PROV_TYPE:'ont:Retrieval'})
+		resource2 = doc.entity('commuting: dat:nathansw_sbajwa#commuting', {'prov:label':'Means of Commuting by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+		resource3 = doc.entity('dat:nathansw_sbajwa#povertyrates', {'prov:label':'Poverty Rates by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
 
 		race = doc.entity('dat:nathansw_sbajwa#race', {prov.model.PROV_LABEL:'Race by Neighborhood', prov.model.PROV_TYPE:'ont:DataSet'})
-		doc.wasAttributedTo(race, this_script)
-		doc.wasGeneratedBy(race, get_race, endTime)
-		doc.wasDerivedFrom(race, resource1, get_race, get_race, get_race)	
-
-		####################################################################################
-
-		get_commuting = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
-		doc.wasAssociatedWith(get_commuting, this_script)
-		
-		resource2 = doc.entity('commuting: dat:nathansw_sbajwa#commuting', {'prov:label':'Means of Commuting by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-		doc.usage(get_commuting, resource2, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
-
 		commuting = doc.entity('dat:nathansw_sbajwa#commuting', {prov.model.PROV_LABEL:'Means of Commuting by Neighborhood', prov.model.PROV_TYPE:'ont:DataSet'})
-		doc.wasAttributedTo(commuting, this_script)
-		doc.wasGeneratedBy(commuting, get_commuting, endTime)
-		doc.wasDerivedFrom(commuting, resource2, get_commuting, get_commuting, get_commuting)	
+		povertyrates = doc.entity('dat:nathansw_sbajwa#povertyrates', {prov.model.PROV_LABEL:'Poverty by Neighborhood', prov.model.PROV_TYPE:'ont:DataSet'})
 
-		####################################################################################
-
-		get_povertyrates = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+		## wasAssociatedWith
+		doc.wasAssociatedWith(get_race, this_script)
+		doc.wasAssociatedWith(get_commuting, this_script)
 		doc.wasAssociatedWith(get_povertyrates, this_script)
 
-		resource3 = doc.entity('dat:nathansw_sbajwa#povertyrates', {'prov:label':'Poverty Rates by Neighborhood', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+		## used
+		doc.usage(get_race, resource1, startTime, None,{prov.model.PROV_TYPE:'ont:Retrieval'})
+		doc.usage(get_commuting, resource2, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
 		doc.usage(get_povertyrates, resource3, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
 
-		povertyrates = doc.entity('dat:nathansw_sbajwa#povertyrates', {prov.model.PROV_LABEL:'Poverty by Neighborhood', prov.model.PROV_TYPE:'ont:DataSet'})
-		doc.wasAttributedTo(povertyrates, this_script)
+		## wasGeneratedBy
+		doc.wasGeneratedBy(race, get_race, endTime)
+		doc.wasGeneratedBy(commuting, get_commuting, endTime)
 		doc.wasGeneratedBy(povertyrates, get_povertyrates, endTime)
+
+		## wasAttributedTo
+		doc.wasAttributedTo(race, this_script)
+		doc.wasAttributedTo(commuting, this_script)
+		doc.wasAttributedTo(povertyrates, this_script)
+
+		## wasDerivedFrom
+		doc.wasDerivedFrom(race, resource1, get_race, get_race, get_race)	
+		doc.wasDerivedFrom(commuting, resource2, get_commuting, get_commuting, get_commuting)
 		doc.wasDerivedFrom(povertyrates, resource3, get_povertyrates, get_povertyrates, get_povertyrates)
 
 		repo.logout()

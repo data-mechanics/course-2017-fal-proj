@@ -27,7 +27,7 @@ class getemployeeearnings(dml.Algorithm):
         repo.logout()
         endTime = datetime.datetime.now()
         return {"start":startTime, "end":endTime}
-    
+
     @staticmethod
     def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
         client = dml.pymongo.MongoClient()

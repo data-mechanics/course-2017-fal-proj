@@ -8,7 +8,7 @@ import uuid
 class example(dml.Algorithm):
     contributor = 'lmy1031_zhuoshu'
     reads = []
-    writes = ['lmy1031_zhuoshu_healthy_corner_store']
+    writes = ['lmy1031_zhuoshu_corner_store']
 
     @staticmethod
     def execute(trial = False):
@@ -20,13 +20,13 @@ class example(dml.Algorithm):
         repo = client.repo
         repo.authenticate('lmy1031_zhuoshu', 'lmy1031_zhuoshu')
 
-        url = 'https://data.cityofboston.gov/resource/ybm6-m5qd.json'
+        url = 'https://data.cityofboston.gov/resource/427a-3cn5.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("corner_store")
         repo.createCollection("corner_store")
-        repo['lmy1031_zhuoshu_healthy_corner_store'].insert_many(r)
+        repo['lmy1031_zhuoshu_corner_store'].insert_many(r)
         #repo['alice_bob.lost'].metadata({'complete':True})
         #print(repo['alice_bob.lost'].metadata())
 
@@ -63,7 +63,7 @@ class example(dml.Algorithm):
         doc.add_namespace('corner_store', 'https://data.cityofboston.gov/resource/')
 
         this_script = doc.agent('alg:#corner_store', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('corner_store:ybm6-m5qd', {'prov:label':'Corner stores', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource = doc.entity('corner_store:427a-3cn5', {'prov:label':'Corner stores', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         licence = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         #get_lost = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(licence, this_script)
