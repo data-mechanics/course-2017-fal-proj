@@ -62,7 +62,8 @@ class emergency_traffic_aggregate(dml.Algorithm):
                         #If it's not yet in the array
                         #if(traffic_intersecs[j][k] not in modifiedDictionary['route_name'][route_name]):
                         #traffic_dicts[i][key_name].append(traffic_intersecs[j][k])
-                        intersection_list.append(traffic_intersecs[j][k])
+                        if (traffic_intersecs[j][k] not in intersection_list):
+                            intersection_list.append(traffic_intersecs[j][k])
             
             modifiedPiece = {'RT_NAME': route_name, 'INTERSECTIONS': intersection_list}
 
