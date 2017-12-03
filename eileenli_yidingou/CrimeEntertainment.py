@@ -122,6 +122,7 @@ class mergeCrimeEntertainment(dml.Algorithm):
                         
                     except:
                         pass
+        print(crime_cord)
         all_cord = cro(en_cord,crime_cord)
         all_cord = comb(all_cord)
         re_cord = counter(all_cord)

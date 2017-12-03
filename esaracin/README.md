@@ -9,9 +9,10 @@ This would give some insight into how effective Boston policing is, and where it
 datasets pertaining to this idea. These data are described in slightly more detail below. 
 
 As will be detailed below, a huge driving force behind these scripts is Python's Pandas library, which is the main tool used to 
-both convery .csv files to .json files and to perform all of the data transformations throughout.
+both convert .csv files to .json files and to perform all of the data transformations throughout.
 
-Data Extraction:
+
+Data Extraction (Project #1):
 	There are three main DML scripts that work to extract data-- one for each data portal used. The services used
 	are specified in each script's name, those being the following:
 
@@ -27,7 +28,8 @@ Data Extraction:
 	As an intermediary step, Python's pandas library was used to parse any .csv files read from the web into .json files
 	usable by Mongodb.
 
-Data Transformation:
+
+Data Transformation (Project #1):
 	There are three DML scripts that work to transform my collected data in meaningful ways. As mentioned above, these
 	transformations are almost entirely handled through the use of the Pandas library, which allowed the data to be stored
 	in useful, DataFrame, objects for easy manipulation. A brief description of the scripts and their transformations are 
@@ -49,6 +51,27 @@ Data Transformation:
 	in Boston, and sum the types of shooting for that district. These totals are divided by the total crime count for that district, 
 	to provide a percentage, for each district, of the number of shootings out of the total number of crimes. 
 	To complete this projection, I effectively append this new column to the dataset, create the final, district_info, dataset.
+
+
+Early Problem Solving (Project #2):
+	In thinking of useful ways to consider the data collected and transformed in Project #1, some questions come to mind. Namely, how could I apply optimization problems and statistical analysis
+	to these datasets in ways that are both variable and still meaningful?
+
+	kmeans_crime_incidents.py: The first answer that came to mind was to apply K-means. Not only does it have a tunable input (that being the number of clusters you're looking for), but it applies
+	an optimization function on the squared distance from each point to its cluster center. Whats more, it has real world applications here: in clustering the crime incident
+	dataset collected in the previous project by the latitude and longitude each incident took place, I could find "crime centers" where crime was much more likely to happen around Boston.
+	Currently, the algorithm searches for 5 clusters, because this is the number obtained from applying the elbow method to the chart included in this directory: 5 is the number of 
+	clusters after which the error stops markedly decreasing. The beauty, though, is that whoever uses the algorithm could tune this parameter as they see fit; potentially, the City of Boston
+	can only afford some number of patrol cars out and circulating at a given time. Using these crime centers, they could optimize the location of their patrols in a way to perfectly fits however
+	many cars they are able to expend. Note that roughly 6.29% of the crime incidents did NOT include a location for the specified incident, and these data were dropped before clustering.
+
+        race_linear_analysis.py: To get a closer look at how the BPD is dealing with crime in Boston, I also aquired a new dataset that documents FIOs, which required an update to the 
+	boston_gov_extraction.py script. These Field Interrogation and Observations (essentially, stop and frisks) conducted by the BPD will give some insight into how the BPD is choosing
+	who they target for stop and frisk. In this script, I perform linear regression on an input dataset containing the racial consistency of Boston's policing districts, and consider 
+	any potential correlations between the targets chosen by the BPD for stop and frisk and the racial composition of a given policing neighborhood. The output attribute of this regression
+	is the number of FIOs for a given Policing District, though this could also be changed to consider the number of crimes in a given neighborhood as well. This has some interesting implications,
+	such as whether or not the BPD is biased in who it targets for stop and frisks, and how they might improve their current system.
+
 
 
 Note that all files pertaining to this submission are included in this directory (/esaracin/). auth.json, along with all other top-level files and directories,

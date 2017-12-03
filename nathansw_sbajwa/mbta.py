@@ -21,9 +21,15 @@ class mbta(dml.Algorithm):
 		curr_dir = os.getcwd()
 		new_dir = curr_dir + "\\nathansw_sbajwa\\"
 
+		####################################################
+		###
+
 		# text file to hold all longitude and latitude coordinates that are collected
 		# would like to eventually elimate in favor of direct db draws from mbta -> geodata
 		f = open(new_dir + 'geo_coords.txt', 'w')
+
+		###
+		####################################################
 
 		startTime = datetime.datetime.now()
 
@@ -85,9 +91,15 @@ class mbta(dml.Algorithm):
 
 		for loc in coords:
 
+			#################################################################################
+			###
+
 			# write all coordinates collected to a text file separated by a newline
 			# would like to eventually elimate in favor of direct db draws from mbta -> geodata
 			f.write(str(loc) + "\n")
+
+			###
+			##################################################################################
 
 			# create url to make API call to MBTA portal
 			lat = "&lat=" + str(loc[0])
@@ -103,7 +115,13 @@ class mbta(dml.Algorithm):
 			key_name = "(" + loc0 + "," + loc1 + ")"
 			data[key_name] = temp.pop('stop')
 
+		##########
+		###
+
 		f.close()
+
+		###
+		##########
 
 		s = json.dumps(data, indent=4)
 		repo.dropCollection("mbta")
@@ -122,6 +140,8 @@ class mbta(dml.Algorithm):
 		client = dml.pymongo.MongoClient()
 		repo = client.repo
 		repo.authenticate("nathansw_sbajwa","nathansw_sbajwa")
+		
+		## Namespaces
 		doc.add_namespace('alg', 'http://datamechanics.io/algorithm/nathansw_sbajwa/') # The scripts in / format.
 		doc.add_namespace('dat', 'http://datamechanics.io/data/nathansw_sbajwa/') # The data sets in / format.
 		doc.add_namespace('ont', 'http://datamechanics.io/ontology#')
@@ -129,18 +149,32 @@ class mbta(dml.Algorithm):
 	
 		doc.add_namespace('mbta', 'http://realtime.mbta.com/developer/api/v2/')
 
+		## Agents
 		this_script = doc.agent('alg:nathansw_sbajwa#mbta', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
+		## Activities
 		get_mbta = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
+		
+		## Entitites
+		# Data Source
+		resource = doc.entity('mbta:stopsbylocation', {'prov:label':'MBTA Stops By Location', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+		# Data Generated
+		mbta = doc.entity('dat:nathansw_sbajwa#mbta', {prov.model.PROV_LABEL:'MBTA Stops',prov.model.PROV_TYPE:'ont:DataSet'})
+
+		## wasAssociatedWith
 		doc.wasAssociatedWith(get_mbta, this_script)
 
-		resource = doc.entity('mbta:stopsbylocation', {'prov:label':'MBTA Stops By Location', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+		## used
 		doc.usage(get_mbta, resource, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
-		
-		mbta = doc.entity('dat:nathansw_sbajwa#mbta', {prov.model.PROV_LABEL:'MBTA Stops',prov.model.PROV_TYPE:'ont:DataSet'})
-		doc.wasAttributedTo(mbta, this_script)
+
+		## wasGeneratedBy
 		doc.wasGeneratedBy(mbta, get_mbta, endTime)
-		doc.wasDerivedFrom(mbta, resource, get_mbta, get_mbta, get_mbta)			
+
+		## wasAttributedTo
+		doc.wasAttributedTo(mbta, this_script)
+
+		## wasDerivedFrom
+		doc.wasDerivedFrom(mbta, resource, get_mbta, get_mbta, get_mbta)		
 
 		repo.logout()
 

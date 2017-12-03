@@ -1,0 +1,33 @@
+CS411
+Case 2: Using Free and Open Source Software Tools to Manage Software Quality
+Please read the paper, taken from the July 2015 issue of Communications of the ACM, and
+answer the questions below. Submit you response on Blackboard by the due date. We’ll also
+discuss the paper for a bit in class.
+
+1. Do you think that the complexity of the project environment is typical of a software
+development group, or is it less or more complex?
+
+I think that it is typical, as there are numerous parts to a project environment in building software, ranging from testing, to quality control, to building, etc. In order to efficiently automate these areas and minimize manual labor, there need to be respective software to take over instead. The different stages of writing, building, testing, pushing, version controlling, and etc are essential in producing quality software. 
+
+2. What’s a specific problem that the group ran into that required workarounds?
+
+Using and incorporating commercial products / software into a project environment is costly, and can push a team into financial walls. In order to work around this, there are plenty of open-source software that can get the same job done, but require more thorough check-ups to ensure quality.
+
+3. Why do you think that such an emphasis was placed on the requirements tracking toolset?
+
+Requirements tracking is an essential part in an agile work environment, as it allows for tracking of user stories. The user stories provide for a more organized and concise work agenda.
+
+4. Describe how you would feel working in this development group, in terms of your everyday
+work load.
+
+I would enjoy working in this development group, as it would expose me to essential technologies and aspects of an agile methodology. In terms of everyday work load, it provides for a clear understanding of tasks that need to be done, each a small part of a larger project. I prefer this in comparison to being given a larger, more general, and less clear project that needs to be completed.
+
+5. Do you think that the TSSG project environment is sustainable, or will it fall in under the
+weight of maintaining the tool set?
+
+I feel that it runs the risk of maintaining the tool set, but due to users maintaining the open source software, it takes a considerable amount of that burden off of the TSSG project environment, allowing for there to be more focus on self-sustaining. 
+
+6. What is the most obvious problem that TSSG will face in the next two to three years with
+their solution?
+
+As there are more and more updates to the general softwares that help maintain the agile methodology, the parts of the project that are contigent to smaller plugins that don't keep up with persistent updates will run the risk of becoming legacy. 

@@ -5,10 +5,11 @@ import prov.model
 import datetime
 import uuid
 
+
 class example(dml.Algorithm):
     contributor = 'lmy1031_zhuoshu'
     reads = []
-    writes = ['lmy1031_zhuoshu_garden']
+    writes = ['lmy1031_zhuoshu.garden']
 
     @staticmethod
     def execute(trial = False):
@@ -26,7 +27,7 @@ class example(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("garden")
         repo.createCollection("garden")
-        repo['lmy1031_zhuoshu_garden'].insert_many(r)
+        repo['lmy1031_zhuoshu.garden'].insert_many(r)
         #repo['alice_bob.lost'].metadata({'complete':True})
         #print(repo['alice_bob.lost'].metadata())
 
