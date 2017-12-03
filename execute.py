@@ -27,11 +27,7 @@ path = args.contributor_folder
 algorithms = []
 for r,d,f in os.walk(path):
     for file in f:
-<<<<<<< HEAD
         if r.find(os.sep) == -1 and file.split(".")[-1] == "py":
-=======
-        if file.split(".")[-1] == "py" and file != "setObesityPropertyCorrelation.py":
->>>>>>> f9982a75367ce987a47d26f6510dadf659656741
             name_module = ".".join(file.split(".")[0:-1])
             module = importlib.import_module(path + "." + name_module)
             algorithms.append(module.__dict__[name_module])
@@ -51,7 +47,6 @@ while len(algorithms) > 0:
 # Execute the algorithms in order.
 provenance = prov.model.ProvDocument()
 for algorithm in ordered:
-    print(algorithm)
     algorithm.execute(trial=args.trial)
     provenance = algorithm.provenance(provenance)
 
