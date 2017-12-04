@@ -16,9 +16,11 @@ class permit(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate("lc546_jofranco", "lc546_jofranco")
-        url = 'https://data.cityofboston.gov/resource/fdxy-gydq.json'
-        response = urllib.request.urlopen(url).read().decode("utf-8")
-        #print("this", response)
+    #    url = 'https://data.cityofboston.gov/resource/fdxy-gydq.json'
+    #    url = 'https://data.boston.gov/export/f1e/137/f1e13724-284d-478c-b8bc-ef042aa5b70b.json'
+    #    response = urllib.request.urlopen(url).read().decode("utf-8")
+        response = open('/Users/Jesus/Desktop/project1/course-2017-fal-proj/lc546_jofranco/fixedpermits.txt').read()
+        print("this", response)
         r = json.loads(response)
         s = json.dumps(r, sort_keys = True, indent = 2)
         repo.dropCollection("permit")
