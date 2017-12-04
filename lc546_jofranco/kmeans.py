@@ -69,9 +69,12 @@ class kmeans(dml.Algorithm):
         centers = [x[:2] for x in kmeans.cluster_centers_]
         print(centers)
         try:
-            plt.scatter(x,y)
+            t = np.random.rand(20)
+            plt.scatter(x,y, c=t)
             plt.xlabel('Latitude')
             plt.ylabel('Longitude')
+
+
             plt.savefig("kmeans.png")
             print("plot has been created. please look for it within the directory")
         #    plt.show()
