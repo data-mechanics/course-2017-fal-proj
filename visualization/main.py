@@ -66,11 +66,12 @@ def score_board():
             drop2 = NewDrop2
 
         scoring = repo['cyyan_liuzirui_yjunchoi_yzhang71.scoringLocation'].find()
-        s = {}
-        s[drop1] = scoring[0][drop1]
-        s[drop2] = scoring[0][drop2]
-        print(s)
-        return render_template('score.html') 
+        s = [[], []]
+        s[0] = dict_to_list(scoring[0][drop1], drop1)
+        s[1] = dict_to_list(scoring[0][drop2], drop2)
+        # print(type(scoring[0][drop1]))
+        print(s[0])
+        return render_template('score.html', message = s) 
 
     else:
         return render_template('score.html')
@@ -86,6 +87,16 @@ def score_drop(drop):
         return "optByBusstop"
     else:
         return "error"
+
+
+def dict_to_list(dic, id):
+    l = []
+    l.append(id)
+    l.append(dic['avg'])
+    l.append(dic['stddev'])
+    l.append(dic['lowCI95'])
+    l.append(dic['highCI95'])
+    return l
 
 
 
