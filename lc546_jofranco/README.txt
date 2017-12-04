@@ -8,22 +8,26 @@ Factors:
 Data source: http://developer.mbta.com/Data/Red.json
 
 2. Economics: The medium income in the neighborhood, which is sorted by zip code, ideally higher than $40,000 per year. Many local restaurants are mainly supported by people whom live in the neighborhood. If on average people are richer in the neighborhood, the chances they eat out will be higher, and the revenue per person will be higher since they are more willing to pay more for good food.
-Data source: https://data.cityofboston.gov/resource/rba9-vd7t.json
+Data source: https://data.boston.gov/export/836/8bd/8368bd3d-3633-4927-8355-2a2f9811ab4f.json
+Employee Earnings Report 2016
 
 3. Traffic: The number of Hubway Bike station within 0.5 mi. The Hubway station, the bike renting station, can increase the accessibility of the restaurant, bringing more customers.
 Data source: https://secure.thehubway.com/data/stations.json
 
 4. Permit: The number of restaurant permit within 1 mi. If there are many restaurants nearby, the traffic will be increased, which potentially could bring more business.
 Data source: https://data.cityofboston.gov/resource/fdxy-gydq.json
+-can't find
 
 5. Safety: The number of crime happened in the neighborhood from 2012-2015. If it is a safer neighborhood, more customers are willing to return, and the risk of restaurant being stolen is lower.
 Data source: https://data.boston.gov/export/ba5/ed0/ba5ed0e2-e901-438c-b2e0-4acfc3c452b9.json
 
 6. Vendor: The number of vendors nearby. A higher number of vendors implies a good traffic and more business.
 Data source: https://data.cityofboston.gov/resource/xgbq-327x.json
+Format Changed: https://data.boston.gov/export/3a6/4e3/3a64e3d2-dde5-424e-ba8c-ebaf86a8b8d9.json
 
 7. Property: The accurate address, street name, zip code etc. of all the property in Boston area by City of Boston.
-Data source: https://data.cityofboston.gov/resource/g5b5-xrwi.json
+Data source: https://data.cityofboston.gov/resource/g5b5-xrwi.json - can't find
+New relevant data: https://data.boston.gov/export/062/fc6/062fc6fa-b5ff-4270-86cf-202225e40858.json
 
 Datasets are from MBTA, City of Boston, and the Subway.
 

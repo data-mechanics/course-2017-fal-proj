@@ -19,7 +19,7 @@ class propetymap(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate("lc546_jofranco", "lc546_jofranco")
-        url = 'https://data.cityofboston.gov/resource/g5b5-xrwi.json'
+        url = 'https://data.boston.gov/export/cec/df0/cecdf003-9348-4ddb-94e1-673b63940bb8.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
 
@@ -27,7 +27,7 @@ class propetymap(dml.Algorithm):
         lalo = []
         street = []
         for i in r:
-            zipcode += i['zipcode']
+            zipcode += i['zipcode'[0:5]]
             lalo += [i['latitude'], i['longitude']]
             street += i['st_name']
 
