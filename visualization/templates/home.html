@@ -10,12 +10,7 @@
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ==" crossorigin="" />
   <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js" integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log==" crossorigin=""></script>
-  <style type="text/css">
-    #map {
-      height: 450px;
-      width: 100%;
-    }
-  </style>
+  <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
 <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
@@ -30,8 +25,8 @@
   <!-- Contact Section -->
   <div class="w3-container w3-padding-32" id="contact">
     <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16">User input</h3>
-    <form action="/action_page.php" target="_blank">
-      <select id=dropdown>
+    <form method="post" action="map">
+      <select name="dropdown">
         <option value="Original">Original</option>
       	<option value="MBTA">Optimized by MBTA</option>
       	<option value="BUS">Optimized by bus stop</option>
@@ -56,7 +51,7 @@
   <!-- End page content -->
 
   <!-- leaflet map -->
-  <div id="map" class="w3-grayscale" style="width:100%;height:450px;"></div>
+  <div id="map" class="w3-grayscale" style="width:50%;height:750px;"></div>
   <script>
     var map = L.map('map', {
       center: [42.3250, -71.0800],
@@ -67,17 +62,14 @@
       attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
       maxZoom: 18,
       id: 'mapbox.streets',
-      accessToken: 'your.mapbox.access.token'
+      accessToken: 'pk.eyJ1Ijoid2h5anVuIiwiYSI6ImNqYXBvZTRkdTB0YjYyeG1pZW0xcmlhdDcifQ.F5gbVrj3AmFcECrGQxnpCg'
+      //accessToken: 'your.mapbox.access.token'
     }).addTo(map);
-
-    var location = {{location}}
-    for(i=0;i<255;i++){
-        var marker = L.marker(location[i]).addTo(map);
-    }
   </script>
+
   <!-- Footer -->
   <footer class="w3-center w3-black w3-padding-16">
-    <p>CS591 Project </p>
+    <p><a href="http://127.0.0.1:5000/score" title="Optimizations comparison" target="_blank" class="w3-hover-text-green">Optimization comparison</a></p>
   </footer>
 
 </body>
