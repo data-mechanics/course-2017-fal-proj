@@ -1,6 +1,3 @@
-# **Important Note**
-This set of scripts is no longer designed to be run via execute in the parent directory. To enable this functionality, one would need to remove the logic.py and server.py files. Instead, we modified execute and made it functional in logic.py so that our web server, server.py, can run our entire algorithm with variable inputs. Additionally, Mongo must still be running, as it would be for the previous part. 
-
 # Optimal Placement of Speed Feedback Signs in the City of Boston
 <img src='https://www.boston.gov/sites/default/files/speed-limit-3.jpg' height='200' width='auto'><br>
 *source: City of Boston*
@@ -66,12 +63,16 @@ There were 23,200 total accidents in our accident dataset. According to the grap
 * *make_graph.py* - Plots the determined locations for speed feedback sign placements.
 
 $$ - denotes a script with variable parameters for experimental outputs
-## Notes
+## Usage
+* To run the project, run server.py and head to localhost:5000.
+<br/><br/>
+* This set of scripts is no longer designed to be run via execute in the parent directory. To enable this functionality, one would need to remove the logic.py and server.py files. Instead, we modified execute and made it functional in logic.py so that our web server, server.py, can run our entire algorithm with variable inputs. Additionally, Mongo must still be running, as it would be for the Part II of the project. 
 * No authentication necessary for accessing datasets or executing transformations.
 * The resource libspacialindex is required to run this set of scripts. On macOS, it can be installed with Homebrew: brew install spatialindex. 
 
 ### Python modules in use not typically included in standard Python distributions 
 * dml
+* flask
 * geojson
 * geoql
 * numpy
