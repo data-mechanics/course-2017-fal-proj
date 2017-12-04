@@ -25,17 +25,35 @@ class formatRouteCoords(dml.Algorithm):
 
         modifiedDictionary = []
 
+        f = open('coords.txt','w')
+
+        
         for route_info in db['bkin18_cjoe_klovett_sbrz.route_coord_list'].find():
-            street_key = route_info['properties']['FULL_NAME']
-            coordinatesList = []
-            for check in db['bkin18_cjoe_klovett_sbrz.route_coord_list'].find():
-                if (check['properties']['FULL_NAME'] == street_key):
-                    coordinatesList.append(check['geometry']['coordinates'])
+            modifiedPiece = []
+            #print(route_info['geometry']['coordinates'][0][1])
 
-            modifiedPiece = {'FULL_NAME': street_key, 'COORDINATES': coordinatesList}
+            coordinates = route_info['geometry']['coordinates']
+            coordinateList = []
+            f.write("[")
+            print("[")
+            for i in range(len(coordinates)):
+                newCoordinate =  {'lat': coordinates[i][1], 'lng': coordinates[i][0]}
+                if (i < (len(coordinates) - 1)):
+                    f.write(str(newCoordinate) + ",")
+                    print(str(newCoordinate) + ",")
+                else:
+                    f.write(str(newCoordinate))
+                    print(str(newCoordinate))
+                #coordinateList.append(newCoordinate)
+                #print(coordinateList)
+                #modifiedDictionary.append(modifiedPiece)
 
-            if (modifiedPiece not in modifiedDictionary):
-                modifiedDictionary.append(modifiedPiece)
+            print("],")
+            f.write("],")
+
+            # + ', lng: ' + str(route_info['geometry']['coordinates'][0][0]) + 
+
+        f.close()
 
         repo.dropCollection('bkin18_cjoe_klovett_sbrz.formatted_coords')
         repo.createCollection('bkin18_cjoe_klovett_sbrz.formatted_coords')

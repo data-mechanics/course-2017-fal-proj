@@ -40,17 +40,34 @@ class route_to_coords(dml.Algorithm):
         for val in routes:
             routeURL = baseURL + val.replace(" ", "+") + '+Boston+Massachusetts&key=' + key
             routeURLs.append(routeURL)
+            print(routeURL)
         
         modifiedDictionary = []
 
+        '''
+        Uncomment Later
+
+
+        
         for i in range(len(routeURLs)):
             url = routeURLs[i]
             response = urllib.request.urlopen(url).read().decode("utf-8")
             r = json.loads(response)
             s = json.dumps(r, sort_keys=True, indent=2)
-            #modifiedPiece = {'formatted_address': r['results'][0]['formatted_address'], 'geometry': r['results'][0]['geometry']}
-            print(r)
-            #modifiedDictionary.append(modifiedPiece)
+            modifiedDictionary.append(r)
+
+
+        for i in range(len(modifiedDictionary)):
+            #print(modifiedDictionary[i])
+            if (modifiedDictionary[i]["status"] != 'ZERO_RESULTS'):
+                toPrint = modifiedDictionary[i]["results"][0]["geometry"]["location"]
+                if (i < (len(modifiedDictionary) - 1)):
+                    print(str(toPrint) + ",")
+                else:
+                    print(str(toPrint))
+            #toPrint = "{lat:" + piece["results"][0]["geometry"]["location"]["lat"] + ", lng:" + piece["results"][0]["geometry"]["location"]["lat"] + "}"
+
+        '''
 
 
 
