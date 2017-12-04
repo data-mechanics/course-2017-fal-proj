@@ -34,7 +34,7 @@ class kmeans(dml.Algorithm):
         repo = client.repo
         repo.authenticate("lc546_jofranco", "lc546_jofranco")
         startTime = datetime.datetime.now()
-        url = 'https://data.cityofboston.gov/resource/g5b5-xrwi.json'
+        url = 'https://data.boston.gov/export/cec/df0/cecdf003-9348-4ddb-94e1-673b63940bb8.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
 
