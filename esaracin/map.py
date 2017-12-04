@@ -2,25 +2,31 @@
 import folium
 from folium.plugins import time_slider_choropleth
 import pandas as pd
+import geopandas as gpd
 import numpy as np
 import dml
 import sys
 import json
 import os
+from collections import OrderedDict
 
 
 map_obj = folium.Map(location=[42.3601, -71.0589], zoom_start=12, tiles='Stamen Terrain')
 
+
 styledict = {str(elem): {} for elem in range(1, 21)}
+#styledict = OrderedDict((str(elem), OrderedDict()) for elem in range(1, 21))
 for key in styledict:
     for tag in range(1, 21):
         if tag <= int(key):
             styledict[key][str(tag)] = {'color': 'ffffff', 'opacity': 1}
         else:
-            styledict[key][str(tag)] = {'color':'ffffff', 'opacity': 0}
+            styledict[key][str(tag)] = {'color': 'ffffff', 'opacity': 0}
 
 
-geoJson = json.dumps([{"coordinates": [42.3224598923, -71.0827607325], "type": "Point", "id": "1"}, 
+
+#geoJson = pd.read_json(json.dumps(
+geoJson =  [{"coordinates": [42.3224598923, -71.0827607325], "type": "Point", "id": "1"}, 
            {"coordinates": [42.31978474, -71.0997123034], "type": "Point", "id": "2"}, 
            {"coordinates": [42.3115315764, -71.0747026509], "type": "Point", "id": "3"},
            {"coordinates": [42.2775818651, -71.1551150717], "type": "Point", "id": "4"}, 
@@ -39,10 +45,26 @@ geoJson = json.dumps([{"coordinates": [42.3224598923, -71.0827607325], "type": "
            {"coordinates": [42.3717397741, -71.0461999197], "type": "Point", "id": "17"},
            {"coordinates": [42.3049946436, -71.0668733176], "type": "Point", "id": "18"},
            {"coordinates": [42.3526188719, -71.0580945445], "type": "Point", "id": "19"},
-           {"coordinates": [42.3776105431, -71.0305478316], "type": "Point", "id": "20"}])
+           {"coordinates": [42.3776105431, -71.0305478316], "type": "Point",
+            "id": "20"}]
 
 
-g = time_slider_choropleth.TimeSliderChoropleth(geoJson, styledict=styledict,).add_to(map_obj)
+real_geo = {"type": "FeatureCollection", "features":[{} for i in range(20)]}
+for dictionary, ind in zip(real_geo["features"], range(1, 21)):
+    dictionary["type"] = "Feature"
+    dictionary["geometry"] = {"type": "Point", "coordinates": []}
+    dictionary["properties"] = {"prop" + str(ind): "Cluster " + str(ind)}
+    dictionary["id"] = ind
+
+
+for dictionary, loc in zip(real_geo["features"], geoJson):
+    dictionary["geometry"]["coordinates"] = [loc["coordinates"][1], loc['coordinates'][0]]
+
+
+
+
+
+g = time_slider_choropleth.TimeSliderChoropleth(real_geo, styledict=styledict).add_to(map_obj)
 
 print('here')
 
