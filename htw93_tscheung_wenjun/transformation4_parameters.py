@@ -113,7 +113,7 @@ class transformation4_parameters(dml.Algorithm):
             label = scores[i]
             x = kmeans.cluster_centers_[i][0]
             y = kmeans.cluster_centers_[i][1]
-            plt.annotate(label, xy=(x,y), xytext=(x, y))
+            #plt.annotate(label, xy=(x,y), xytext=(x, y))
         for i in range(10):
             indexs = Clusts(i,kmeans.labels_)
             #x = []
@@ -121,7 +121,12 @@ class transformation4_parameters(dml.Algorithm):
             #print(indexs)
             tmp = []
             for entry in indexs:
-                tmp.append(coordinate[entry])
+                x = []
+                x.append([hotel_lists[entry]])
+                #print(x)
+                y = coordinate[entry]
+                x.append(y)
+                tmp.append(x)
             cluster.append(tmp)
             
             #print (res)
