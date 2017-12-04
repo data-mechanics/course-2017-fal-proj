@@ -26,9 +26,8 @@ Data source: https://data.cityofboston.gov/resource/xgbq-327x.json
 Format Changed: https://data.boston.gov/export/3a6/4e3/3a64e3d2-dde5-424e-ba8c-ebaf86a8b8d9.json
 
 7. Property: The accurate address, street name, zip code etc. of all the property in Boston area by City of Boston.
-Data source: https://data.cityofboston.gov/resource/g5b5-xrwi.json
--can't find
-New relevant data: https://data.boston.gov/dataset/property-assessment/resource/062fc6fa-b5ff-4270-86cf-202225e40858
+Data source: https://data.cityofboston.gov/resource/g5b5-xrwi.json - can't find
+New relevant data: https://data.boston.gov/export/062/fc6/062fc6fa-b5ff-4270-86cf-202225e40858.json
 
 Datasets are from MBTA, City of Boston, and the Subway.
 
