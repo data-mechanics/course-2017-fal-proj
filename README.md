@@ -1,16 +1,25 @@
-# Objective:
- Since Boston is a quite densely populated are in US, the quality of life is very important to everyone. We are exploring the rating of living around the schools in Boston by calculating the safety rate, the comfort rate, and the convenience rate. Our objective is to use k-mean to find the area that needs a hospital the most. Our safety rate will include data from crime, crash and hospitals. Our comfort rate will include data from entertainment and restaurants. Our convenience rate will include data from crash, hubway, traffic signals and MBTA. 
+# Find the best college location in Boston and other related analysis
 
-# Databases:
-1. Crash: http://datamechanics.io/data/eileenli_xtq_yidingou/crash.json
-2. MBTA: http://datamechanics.io/data/cyung20_kwleung/mbta-t-stops.json
-3. Hubway: http://datamechanics.io/data/eileenli_xtq_yidingou/Hubway_Stations.geojson
-4. Schools: http://datamechanics.io/data/eileenli_xtq_yidingou/Colleges_and_Universities.geojson
-5. Restaurants: http://datamechanics.io/data/eileenli_xtq_yidingou/Restaurant.json
-6. Crime: http://datamechanics.io/data/eileenli_xtq_yidingou/crime.json
-7. Hospitals: http://datamechanics.io/data/eileenli_xtq_yidingou/hospital.json
-8. Entertainment: http://datamechanics.io/data/eileenli_xtq_yidingou/new.json
-9. Traffic signals: http://datamechanics.io/data/eileenli_xtq_yidingou/Traffic_Signals.geojson
+*by Lin Li, Yiding Ou, Tianqi Xu*
+
+## 1. Introduction
+we are focusing on building a website to help people find the best college location in Boston and provide corresponding analysis to their choices.
+
+It's really complicated to define which area of Boston is the most suitable for universities, we simplify it by three main factors: `Safety`, `Convinience` and `Comfort` and map them to ratings in 1~5. Through our API, users could customize the ratings of these four aspects based on their personal requirements so that they could find the ideal place of living.
+
+We are exploring the rating of living around the schools in Boston by calculating the safety rate, the comfort rate, and the convenience rate. Another objective of us is to use k-mean to find the area that needs a hospital the most. Our safety rate will include data from crime, crash and hospitals. Our comfort rate will include data from entertainment and restaurants. Our convenience rate will include data from crash, hubway, traffic signals and MBTA.
+
+## 2. Datasets
+
+- [Crash](http://datamechanics.io/data/eileenli_xtq_yidingou/crash.json)
+- [MBTA](http://datamechanics.io/data/cyung20_kwleung/mbta-t-stops.json)
+- [Hubway](http://datamechanics.io/data/eileenli_xtq_yidingou/Hubway_Stations.geojson)
+- [Schools](http://datamechanics.io/data/eileenli_xtq_yidingou/Colleges_and_Universities.geojson)
+- [Restaurant](http://datamechanics.io/data/eileenli_xtq_yidingou/Restaurant.json)
+- [Crime](http://datamechanics.io/data/eileenli_xtq_yidingou/crime.json)
+- [Hospitals](http://datamechanics.io/data/eileenli_xtq_yidingou/hospital.json)
+- [Entertaiment](http://datamechanics.io/data/eileenli_xtq_yidingou/new.json)
+- [Traffic Signals](http://datamechanics.io/data/eileenli_xtq_yidingou/Traffic_Signals.geojson)
 
 # Process:
 1. Extracting data from databases:
