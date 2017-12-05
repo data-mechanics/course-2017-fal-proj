@@ -1,4 +1,4 @@
-# Authors: Ben Gaudiosi, Ray Katz, Ned Gleesin
+	# Authors: Ben Gaudiosi, Ray Katz, Ned Gleesin
 import flask
 from flask import Flask, Response, request, render_template, redirect, url_for
 from flask_pymongo import PyMongo
@@ -12,6 +12,9 @@ app.secret_key = 'isok'
 @app.route("/", methods=['GET'])
 def welcome():
     return render_template('index.html')
+@app.route('/corrfinder', methods=['GET'])
+def corrfinder():
+    return render_template('corrfinder.html')    
 
 if __name__ == "__main__":
     # this is invoked when in the shell  you run
