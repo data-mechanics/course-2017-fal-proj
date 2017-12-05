@@ -6,7 +6,7 @@ import sys
 
 class formatRouteCoords(dml.Algorithm):
     contributor = 'bkin18_cjoe_klovett_sbrz'
-    reads = ['bkin18_cjoe_klovett_sbrz.route_coord_list']
+    reads = ['bkin18_cjoe_klovett_sbrz.emergency_routes']
     writes = ['bkin18_cjoe_klovett_sbrz.formatted_coords']
 
     @staticmethod
@@ -27,7 +27,6 @@ class formatRouteCoords(dml.Algorithm):
         fullCoordinateList = []
         
         for route_info in db['bkin18_cjoe_klovett_sbrz.route_coord_list'].find():
-
             coordinates = route_info['geometry']['coordinates']
             coordinateList = []
 
