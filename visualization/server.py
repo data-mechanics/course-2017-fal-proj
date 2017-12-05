@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 from pymongo import MongoClient # Database connector
 import urllib.parse
 import json
+import z3_routes_interactive
 
 app = Flask(__name__)
 username = urllib.parse.quote_plus('bkin18_cjoe_klovett_sbrz')
@@ -36,7 +37,8 @@ def routes():
     # here we want to get the value of user (i.e. ?means=some-value)
     routes = int(request.args.get('routes'))
     if routes > 0:
-        return "You selected {} routes".format(routes)
+        streets = z3_routes_interactive.find_streets(200)
+        return "You selected {}".format(streets)
     else:
         return "Please enter a valid number of routes"
 
