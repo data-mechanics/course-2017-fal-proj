@@ -37,7 +37,7 @@ def routes():
     # here we want to get the value of user (i.e. ?means=some-value)
     routes = int(request.args.get('routes'))
     if routes > 0:
-        streets = z3_routes_interactive.find_streets(200)
+        streets = z3_routes_interactive.find_streets(routes)
         return "You selected {}".format(streets)
     else:
         return "Please enter a valid number of routes"
