@@ -1,8 +1,20 @@
 from flask import Flask, render_template, request
+from pymongo import MongoClient # Database connector
+import urllib.parse
+import json
 
 app = Flask(__name__)
+username = urllib.parse.quote_plus('bkin18_cjoe_klovett_sbrz')
+password = urllib.parse.quote_plus('bkin18_cjoe_klovett_sbrz')
+client = MongoClient('localhost', 27017, username=username, password=password, authSource="repo")    #Configure the connection to the database
+db = client['repo'] #Select the database
+# print(db.collection_names())
 
+cursor = db.bkin18_cjoe_klovett_sbrz.traffic_signals.find()
 
+for traffic_signal in cursor:
+    print(traffic_signal['properties']['Location'])
+    
 @app.route("/")
 def index():
     return render_template('index.html')
