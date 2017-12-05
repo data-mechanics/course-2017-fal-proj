@@ -13,7 +13,8 @@ def means():
     # here we want to get the value of user (i.e. ?means=some-value)
     means = int(request.args.get('means'))
     if means > 0:
-        return "You selected {} means".format(means)
+        # return "You selected {} means".format(means)
+        return render_template('heatmap.html')
     else:
         return "Please enter a valid number of means"
 
