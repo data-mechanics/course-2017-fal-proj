@@ -72,7 +72,8 @@ class transformation4_parameters(dml.Algorithm):
             norm_food.append([h['norm_food']])
 
             combine_rate_crime.append((h['norm_rate']+h['norm_mbta']+h['norm_garden']+h['norm_food'])/4)
-            res.append([coordinates[count][0],coordinates[count][1],(h['norm_rate']*origin +h['norm_mbta']*mbta +h['norm_garden']*garden +h['norm_food']*food)])
+            res.append([coordinates[count][0],coordinates[count][1],(h['norm_rate']*(origin+1)*5 +h['norm_mbta']*(mbta+1)*2 +h['norm_garden']*(garden+1) +h['norm_food']*(food+1)*.4)])
+            # res.append([coordinates[count][0],coordinates[count][1],(h['norm_rate'] +h['norm_mbta'] +h['norm_garden'] +h['norm_food'])/4])
             count+=1
         hotel_score.rewind()
         
@@ -106,42 +107,46 @@ class transformation4_parameters(dml.Algorithm):
         #print(scores)
 
         
-        #fig = plt.figure(figsize=(16,12))
-        #colors = ['red','blue','green','pink','yellow','cyan','black','orange','lightblue','lightgreen']
+        # fig = plt.figure(figsize=(16,12))
+        # colors = ['red','blue','green','pink','yellow','cyan','black','orange','lightblue','lightgreen']
+        max_ids = ids[scores.index(max(scores))]
         cluster=[]
-        for i in range(len(kmeans.cluster_centers_)):
-            label = scores[i]
-            x = kmeans.cluster_centers_[i][0]
-            y = kmeans.cluster_centers_[i][1]
-            #plt.annotate(label, xy=(x,y), xytext=(x, y))
-        for i in range(10):
-            indexs = Clusts(i,kmeans.labels_)
-            #x = []
-            #y = []
-            #print(indexs)
-            tmp = []
-            for entry in indexs:
-                x = []
-                x.append([hotel_lists[entry]])
-                #print(x)
-                y = coordinate[entry]
-                x.append(y)
-                tmp.append(x)
-            cluster.append(tmp)
-            
-            #print (res)
-            #for j in range(len(indexs)):
-                #if i == 5:
-                    #print(hotel_lists[indexs[j]])
-                #print(res[indexs[j]][0],res[indexs[j]][1])
-                #x.append(res[indexs[j]][0])
-                #y.append(res[indexs[j]][1])
-                #print(x)
-            #plt.scatter(x, y, color=colors[i],s = 50,label=scores[i])
-        #plt.legend(loc = 'upper left', fontsize = 'medium')
-        #plt.title("K-means Plot")
+        for i in range(len(max_ids)):
+            cluster.append({'hotel':hotel_lists[max_ids[i]],'lat':coordinate[max_ids[i]][0],'long':coordinate[max_ids[i]][1]})
 
-        #fig.savefig('temp.png', dpi=fig.dpi)
+        # for i in range(len(kmeans.cluster_centers_)):
+        #     label = scores[i]
+        #     x = kmeans.cluster_centers_[i][0]
+        #     y = kmeans.cluster_centers_[i][1]
+        #     plt.annotate(label, xy=(x,y), xytext=(x, y))
+        # for i in range(10):
+        #     indexs = Clusts(i,kmeans.labels_)
+        #     x = []
+        #     y = []
+        #     #print(indexs)
+        #     # tmp = []
+        #     # for entry in indexs:
+        #     #     x = []
+        #     #     x.append([hotel_lists[entry]])
+        #     #     #print(x)
+        #     #     y = coordinate[entry]
+        #     #     x.append(y)
+        #     #     tmp.append(x)
+        #     # cluster.append(tmp)
+            
+        #     print (res)
+        #     for j in range(len(indexs)):
+        #         if i == 5:
+        #             print(hotel_lists[indexs[j]])
+        #         print(res[indexs[j]][0],res[indexs[j]][1])
+        #         x.append(res[indexs[j]][0])
+        #         y.append(res[indexs[j]][1])
+        #         print(x)
+        #     plt.scatter(x, y, color=colors[i],s = 50,label=scores[i])
+        # plt.legend(loc = 'upper left', fontsize = 'medium')
+        # plt.title("K-means Plot")
+
+        # fig.savefig('temp.png', dpi=fig.dpi)
         
         coorx_sum = 0
         coory_sum = 0

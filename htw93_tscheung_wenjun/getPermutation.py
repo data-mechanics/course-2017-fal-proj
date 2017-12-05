@@ -26,7 +26,7 @@ repo.createCollection("BostonHotelPotentialPermutation")
 
 
 
-permutation_list = list(itertools.permutations([1, 2, 3, 4]))
+permutation_list = list(itertools.permutations([0, 1, 2, 3]))
 
 for entry in permutation_list:
     origin = entry[0]
@@ -35,6 +35,6 @@ for entry in permutation_list:
     mbta = entry[3]
     print(origin,garden,food,mbta)
     transformation4_parameters.execute(origin,garden,food, mbta)
-    doc = transformation4_parameters.provenance()
+    # doc = transformation4_parameters.provenance()
     #print(doc.get_provn())
 #print(json.dumps(json.loads(doc.serialize()), indent=4))
