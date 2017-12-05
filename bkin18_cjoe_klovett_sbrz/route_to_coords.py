@@ -16,6 +16,10 @@ class route_to_coords(dml.Algorithm):
     @staticmethod
     def execute(trial=False):
 
+        '''
+        Returns the center of each road to be used in the visualization for markers. Uses Google's geocoder API.
+        '''
+
         startTime = datetime.datetime.now()
 
         # Set up the database connection.
