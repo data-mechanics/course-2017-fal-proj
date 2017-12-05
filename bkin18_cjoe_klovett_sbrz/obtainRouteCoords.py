@@ -11,7 +11,8 @@ class obtainRouteCoords(dml.Algorithm):
 
     @staticmethod
     def execute(trial=False):
-        '''Select the addresses of important buildings from the Property Assessment data set'''
+
+        '''Obtains high priority route coordinates for road highlights.'''
         startTime = datetime.datetime.now()
         
         print("Retrieving emergency route coordinates...            \n", end='\r')
