@@ -84,16 +84,23 @@ def score_board():
 
         if NewDrop1 == "error" or NewDrop2 == "error":
             print('Something wrong with dropdown')
-        else:
-            drop1 = NewDrop1
-            drop2 = NewDrop2
 
-        scoring = repo['cyyan_liuzirui_yjunchoi_yzhang71.scoringLocation'].find()
+
+        #scoring = repo['cyyan_liuzirui_yjunchoi_yzhang71.scoringLocation'].find()
+        #Converted latlng to miles
+        scoring = []
+        scoring.append({"Mean":1.035, "STDDEV":0.828, "lowCI95":0.069, "upperCI95":2.967})
+        scoring.append({"Mean":0.828, "STDDEV":0.690, "lowCI95":0.069, "upperCI95":2.553})
+        scoring.append({"Mean":0.966, "STDDEV":0.828, "lowCI95":0.069, "upperCI95":2.829})
+        scoring.append({"Mean":0.828, "STDDEV":0.690, "lowCI95":0.069, "upperCI95":2.484})
+
         s = [[], []]
-        s[0] = dict_to_list(scoring[0][drop1], drop1)
-        s[1] = dict_to_list(scoring[0][drop2], drop2)
+        s[0] = dict_to_list(scoring[NewDrop1], drop1)
+        s[1] = dict_to_list(scoring[NewDrop2], drop2)
+        #s[0] = dict_to_list(scoring[drop1], drop1)
+        #s[1] = dict_to_list(scoring[drop2], drop2)
         # print(type(scoring[0][drop1]))
-        print(s[0])
+        #print(s[0])
         return render_template('score.html', message = s)
 
     else:
@@ -101,24 +108,23 @@ def score_board():
 
 def score_drop(drop):
     if drop == "Original":
-        return "pollingLocation"
+        return 0
     elif drop == "Transit":
-        return "optByPublicT"
+        return 1
     elif drop == "MBTA":
-        return "optByMBTA"
+        return 2
     elif drop == "BUS":
-        return "optByBusstop"
+        return 3
     else:
         return "error"
-
 
 def dict_to_list(dic, id):
     l = []
     l.append(id)
-    l.append(dic['avg'])
-    l.append(dic['stddev'])
+    l.append(dic['Mean'])
+    l.append(dic['STDDEV'])
     l.append(dic['lowCI95'])
-    l.append(dic['highCI95'])
+    l.append(dic['upperCI95'])
     return l
 
 
