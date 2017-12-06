@@ -37,13 +37,7 @@
                 <div id="lavalamp"></div>
             </ul>
                  <table>
-                                 <tr>
-              <td>Hi, I'm your first cell.</td>
-              <td>I'm your second cell.</td>
-              <td>I'm your third cell.</td>
-              <td>I'm your fourth cell.</td>
-            </tr>
-                {% for key, value in info.items%}
+                    {% for key, value in info.items%}
                    <tr>
                         <th> {{ key }} </th>
                         <td> {{ value }} </td>

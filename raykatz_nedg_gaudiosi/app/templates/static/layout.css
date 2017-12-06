@@ -46,3 +46,6 @@ header .stuts span {
     margin: 30px auto;
     width: 957px;
 }
+table, th, td {
+   border: 1px solid aliceblue
+}

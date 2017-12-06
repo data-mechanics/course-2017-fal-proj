@@ -25,7 +25,7 @@ def welcome():
 def corrfinder():
     return render_template('corrfinder.html')    
 
-@app.route("/stattrack/<int:zip>", methods=['GET'])
+@app.route("/stattrack <int:zip>", methods=['GET'])
 def stattrack(zip):
     zipinfo=get_zipinfo(zip)
     return render_template('stattrack.html',info=zipinfo)
