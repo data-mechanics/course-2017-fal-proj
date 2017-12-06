@@ -3,7 +3,7 @@ import flask
 from flask import Flask, Response, request, render_template, redirect, url_for
 from flask_pymongo import PyMongo
 import flask.ext.login as flask_login
-
+from flask_table import Table, Col
 import json
 
 app = Flask(__name__)
@@ -14,12 +14,16 @@ app.secret_key = 'isok'
 
 def get_zipinfo(zipcode):
     info = mongo.db.raykatz_nedg_gaudiosi.zipcode_info.find({'zipcode':zipcode})
-    Table = []
-    for key, value in info:
-        temp = []
-        temp.extend([key,value])  #Note that this will change depending on the structure of your dictionary
-        Table.append(temp)
-    return Table
+    class ItemTable(Table):
+        name = Col('key')
+        description = Col('value')
+# Populate the table
+    table = ItemTable(info)
+
+# Print the html
+    print(table.__html__())
+# or just {{ table }} from within a Jinja template
+    return table
 
 # index page
 @app.route("/", methods=['GET'])
