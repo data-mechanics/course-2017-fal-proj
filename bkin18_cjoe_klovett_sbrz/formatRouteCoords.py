@@ -6,12 +6,12 @@ import sys
 
 class formatRouteCoords(dml.Algorithm):
     contributor = 'bkin18_cjoe_klovett_sbrz'
-    reads = ['bkin18_cjoe_klovett_sbrz.route_coord_list']
+    reads = ['bkin18_cjoe_klovett_sbrz.emergency_routes']
     writes = ['bkin18_cjoe_klovett_sbrz.formatted_coords']
 
     @staticmethod
     def execute(trial=False):
-        '''Select the addresses of important buildings from the Property Assessment data set'''
+        '''Formats coordinates to be used on the heatmap.'''
         startTime = datetime.datetime.now()
         
         print("Formatting route coordinates...            \n", end='\r')
@@ -24,36 +24,21 @@ class formatRouteCoords(dml.Algorithm):
         db = client.repo
 
         modifiedDictionary = []
-
-        f = open('coords.txt','w')
-
+        fullCoordinateList = []
         
         for route_info in db['bkin18_cjoe_klovett_sbrz.route_coord_list'].find():
-            modifiedPiece = []
-            #print(route_info['geometry']['coordinates'][0][1])
-
             coordinates = route_info['geometry']['coordinates']
             coordinateList = []
-            f.write("[")
-            print("[")
+
             for i in range(len(coordinates)):
-                newCoordinate =  {'lat': coordinates[i][1], 'lng': coordinates[i][0]}
-                if (i < (len(coordinates) - 1)):
-                    f.write(str(newCoordinate) + ",")
-                    print(str(newCoordinate) + ",")
-                else:
-                    f.write(str(newCoordinate))
-                    print(str(newCoordinate))
-                #coordinateList.append(newCoordinate)
-                #print(coordinateList)
-                #modifiedDictionary.append(modifiedPiece)
+                newCoordinate = {'lat': coordinates[i][1], 'lng': coordinates[i][0]}
+                coordinateList.append(newCoordinate)
 
-            print("],")
-            f.write("],")
+            fullCoordinateList.append(coordinateList)
 
-            # + ', lng: ' + str(route_info['geometry']['coordinates'][0][0]) + 
+        modifiedPiece = {'coordinates': fullCoordinateList}
 
-        f.close()
+        modifiedDictionary.append(modifiedPiece)
 
         repo.dropCollection('bkin18_cjoe_klovett_sbrz.formatted_coords')
         repo.createCollection('bkin18_cjoe_klovett_sbrz.formatted_coords')
