@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link href="static/map.css" rel="stylesheet" type="text/css" />
+        <link href="static/layout.css" rel="stylesheet" type="text/css" />
+        <link href="static/menu.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+        <header>
+            <h2>CS591 Gentrification Ben G, Ray K, Ned G</h2>
+            <a href="https://github.com/rekfish/course-2017-fal-proj/tree/master/raykatz_nedg_gaudiosi" class="stuts">Link to the repo on<span>Github</span></a>
+        </header>
+       <div class="container">
+
+            <ul id="nav">
+                <li><a href="/page">Home</a></li>
+                <li><a class="hsubs" href="#">StatTrack</a>
+                    <ul class="subs">
+                        <li><a href="#">Downtown&Charlestown</a></li>
+                        <li><a href="#">East Boston</a></li>
+                        <li><a href="#">Roxbury</a></li>
+                        <li><a href="#">Mattapan</a></li>
+                        <li><a href="#">South Boston</a></li>
+                        <li><a href="#">Dorchester</a></li>
+                        <li><a href="#">South End</a></li>
+                        <li><a href="#">Brighton/Allston</a></li>
+                        <li><a href="#">West Roxbury</a></li>
+                        <li><a href="#">Jamaica Plain</a></li>
+                        <li><a href="#">Hyde Park</a></li>
+                    </ul>
+                </li>
+                <li><a href="{{ url_for('map') }}">LiveMap</a></li>
+                <li><a href="/corrfinder">Correlation Finder</a></li>
+                <li><a href="/">Back</a></li>
+                <div id="lavalamp"></div>
+            </ul>
+                <style>
+                p {
+                        color: aliceblue
+                }
+                </style>
+                    <p class="lead">Using our interactive Gentrification tracker, users can explore various regions in Boston and examine a live map of the data! </p>
+            <center><svg></svg></center> 
+        </div>
+        
+
+        <script src="https://d3js.org/d3.v3.min.js"></script>
+        <script src="static/map.js"></script>
+
+    </body>
+</html>
