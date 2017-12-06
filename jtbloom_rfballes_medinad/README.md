@@ -3,7 +3,7 @@
 Jake Bloomfeld (jtbloom@bu.edu), Ricardo Ballesteros (rfballes@bu.edu), Daniel Medina (medinad@bu.edu)
 
 #### Introduction
-Hubway is a public bike-share system serving the people of Boston, Brookline, Cambridge, and Somerville. With roughly 1800 bikes in practically 200 stations, the Hubway serves as a fun, affordable, and convenient transportation option for quick trips around Boston and its surrounding municipalities. In 2016 alone, over 100,000 people took roughly 1.2 million trips totaling just over 2.8 million miles. As sustainable transportation methods are becoming more popular in cities, we had questions of whether or not a relationship exists with the frequency of trips within neighborhoods and that neighborhood's average income. With some further thought, we proposed our final questions: is there a correlation between income per capita in Boston's neighbrohoods with the number of Hubway trips taken in that neighborhood? Also, is there a correlation between neighborhood population with Hubway trips taken in that neighborhood? Seeing if such relationships exists can pose further, more interesting points for discussion and analysis. We would be able to examine whether more trips are being taken to and from wealthier neighborhoods than poorer neighborhoods. This could be useful in seeing if socioeconomic conditions of a nerighborhood has any effect on the frequency of trips to and from that neighborhood. Also, we would be able to examine whether neighborhoods with a higher population density have a high or low frequency of trips, potentially raising the concern of over/underutilizing bikes in that specific neighborhood. These are the questions that we plan to tackle in our project.
+Hubway is a public bike-share system serving the people of Boston, Brookline, Cambridge, and Somerville. With roughly 1800 bikes in practically 200 stations, the Hubway serves as a fun, affordable, and convenient transportation option for quick trips around Boston and its surrounding municipalities. In 2016 alone, over 100,000 people took roughly 1.2 million trips totaling just over 2.8 million miles. As sustainable transportation methods are becoming more popular in cities, we had questions of whether or not a relationship exists with the frequency of trips within neighborhoods and that neighborhood's average income. With some further thought, we proposed our final questions: is there a correlation between income per capita in Boston's neighborhoods with the number of Hubway trips taken in that neighborhood? Also, is there a correlation between neighborhood population with Hubway trips taken in that neighborhood? Seeing if such relationships exists can pose further, more interesting points for discussion and analysis. We would be able to examine whether more trips are being taken to and from wealthier neighborhoods than poorer neighborhoods. This could be useful in seeing if socioeconomic conditions of a nerighborhood has any effect on the frequency of trips to and from that neighborhood. Also, we would be able to examine whether neighborhoods with a higher population density have a high or low frequency of trips, potentially raising the concern of over/underutilizing bikes in that specific neighborhood. These are the questions that we plan to tackle in our project.
 
 #### Data Sets
 To solve this problem and perform the necessary analysis, we use and manipulate several datasets as described below:
@@ -29,8 +29,32 @@ To solve this problem and perform the necessary analysis, we use and manipulate 
 * Source: Boston OpenDataSoft
 <br><br>
 
-#### Data Manipulation
+#### Methods
 Once we gathered the datasets, we had to perform some transformations on them in order to get them into the state that would be easiest for us to work with. Due to the fact that we only had average per capita income and population by Boston neighborhood, we had to filter out all of the Hubway stations in the Hubway Station Locations dataset that were within the Boston municipality (i.e. Cambridge, Somerville, etc.). For the Hubway Trip History dataset, we filtered out trip durations, start/stop times and dates, bike IDs, user type and zip code. Our main use for this dataset was to calculate the frequency of trips in each station, so we didn't have any need for extraneous information. For the remaining three datasets, we did not have to manipulate much as the original data was already in good shape to use.
+<br><br>
+The first step we had to take was to figure out which Hubway stations fall in which neighborhood in Boston. In the Hubway Station Locations dataset, we were given station names and geographical coordinates, so we had to map the coordinates to a specific Boston neighborhood. Given the coordinate points of the station, we checked if the station is in certain Boston neighborhood, given by the Boston Neighborhood Geoshape dataset, and added a neighborhood attribute to each Hubway statio. Once all Hubway stations were mapped to a certain Boston neighborhood, we were then able to use the Average Per Capita Income and Average Population by Neighborhood datasets.
+
+#### Results
+In order to perform statistical analysis, we used the Pearson product-moment correlation coefficient to determine the strength and direction of the linear relationship between the number of Hubway trips per neighborhood with its average income and population. Using a sample of trips taken in one month, we were able to obtain the following results: <br><br>
+
+Correlation between # of Hubway Trips and Average Per-Capita Income by Neighborhood: <br>
+Correlation Coefficient: -0.376  
+P-value: 0.133
+<br>
+<br>
+Correlation between # of Hubway Trips and Average Population by Neighborhood: <br>
+Correlation Coefficient: 0.377
+P-value: 1
+<br>
+<br>
+
+#### Conclusion
+Based on our calculations there is a moderate negative correlation between the number of Hubway trips per neighborhood and average neighborhood income. There is also a moderate positive correlation with the average neighborhood population with a high p-value, meaning that this observation is a non-significant result. Based on these results, we can learn that neighborhoods with higher frequencies of trips tend to have a lower average per-capita income. 
+
+#### Future Work
+For expanding on this project in the future, there are several aspects to consider:
+Combining Hubway trip history data sets from past several years to get an even more accurate correlation data
+Using datasets of income per capita and population in municipalities outside of Boston to get a bigger picture
 
 
 
@@ -38,7 +62,6 @@ Once we gathered the datasets, we had to perform some transformations on them in
 
 
 
-In the Hubway Trip History dataset, given the coordinate points of the station, we check if the station is within a certain Boston neighborhood, given by the Boston Neighborhood Geoshape dataset. Then, once the Hubway stations are mapped to a certain neighborhood, using the Per Capita Income and Population by Neighborhood dataset, we see if there is a correlation between these three dimensions: incoming/outgoing Hubway trips per neighborhood, average per capita income by neighborhood, and population by neighborghood. Seeing if such a correlatation exists can pose further questions for discussion, such as, are there more trips being taken to/from wealthier neighborhoods than poorer neighborhoods? Are wealthier/poorer neighborhoods or higher/lower population neighborhoods over/underutilizing available Hubway bikes? Our project tries to solve this problem.
 
 
 
