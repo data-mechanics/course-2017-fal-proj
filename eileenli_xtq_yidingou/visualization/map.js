@@ -83,7 +83,7 @@ function drawHist(data,special){
       .attr("y", 0)
       .attr("text-anchor", "middle")
       .style("font-size", "20px")
-      .text("Tope 50 Schools");
+      .text("Top 60 Colleges");
 
   svg.selectAll("rect")
       .on("mouseover", function(d){
@@ -145,37 +145,36 @@ function drawHist(data,special){
       scaledSize: new google.maps.Size(32, 32)
     };
 
+
     $.ajax({
-        url: "http://datamechanics.io/data/rengx_ztwu_lwj/map.json",
+        url: "http://datamechanics.io/data/eileenli_xtq_yidingou/schoolscore.json",
         success: function (data) {
             var obj = JSON.parse(data);
             data = [];
             obj.forEach(function(s) {
-              var x = s.x/(1.0*1000000);
-              var y = s.y/(-1.0*1000000);
-              var name = s.name;
-              var addr = s.addr;
-              var zipp = s.zipp;
-              var access = s.access;
+              var x = s.coordinates[1].toFixed(6);
+              var y = s.coordinates[0].toFixed(6);
+              var school = s.school;
+              var safety = Math.floor(s.safety);
+              var comfort = Math.floor(s.comfort);
+              var traffic = Math.floor(s.traffic);
 
-              var hos = document.getElementById("hos").value;
-              var gar = document.getElementById("gar").value;
-              var pol = document.getElementById("pol").value;
-              var mar = document.getElementById("mar").value;
+              var saf = document.getElementById("saf").value;
+              var tra = document.getElementById("tra").value;
+              var com = document.getElementById("com").value;
 
-              var gs = s.access["garden"].length * gar;
-              var hs = s.access["hospital"].length * hos;
-              var ps = s.access["police"].length * pol;
-              var ms = s.access["market"].length * mar;
-              var score = gs + hs + ps + ms;
+              var ss = safety * saf;
+              var tt = traffic * tra;
+              var cc = comfort * com;
+              var score = Math.floor(ss + tt + cc);
 
               var item = {
-                label: s.name,
+                label: s.school,
                 value: score
               }
               data.push(item);
 
-              var txt = name + "<br/>" + addr + "<br/>" + zipp + "<br/>Position: " + x + ", " + y +"<br/><b>Accessibility Score:" + score + "</b>";
+              var txt = school + "<br/> safety: " + safety + "<br/> comfort: " + comfort + "<br/> traffic: " + traffic + "<br/>Position: " + x + ", " + y +"<br/><b>Total Score:" + score + "</b>";
 
               var marker = new google.maps.Marker({
                   position: new google.maps.LatLng(x, y),
@@ -184,9 +183,9 @@ function drawHist(data,special){
                 });
               var infowindow = new google.maps.InfoWindow({
                 content: txt,
-                extra: s.name
+                extra: s.school
               });
-              saver[s.name] = {
+              saver[s.school] = {
                 m:marker,
                 i:infowindow
               };

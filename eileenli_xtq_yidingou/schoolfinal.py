@@ -194,12 +194,11 @@ class schoolfinal(dml.Algorithm):
 
             final.append({
                 "school": i["properties"]["Name"],
-                "properties": [
-                {"coordinates": i["geometry"]["coordinates"]},
-                {"safety": safety},
-                {"comfort": comfort},
-                {"traffic": traffic}]
-                })
+                "coordinates": i["geometry"]["coordinates"],
+                "safety": safety,
+                "comfort": comfort,
+                "traffic": traffic
+            })
 
             safetyIndex = (hospital / 2 + (10 - crime / 65) + (10 - crash / 120)) / 3
             comfortIndex = (restaurant / 45 + entertainment / 120) / 2
@@ -207,20 +206,19 @@ class schoolfinal(dml.Algorithm):
 
             score.append({
                 "school": i["properties"]["Name"],
-                "properties": [
-                {"hospital": hospital},
-                {"crime": crime},
-                {"crash": crash},
-                {"restaurant": restaurant},
-                {"entertainment": entertainment},
-                {"hubway": hubway},
-                {"traffic signal": signal},
-                {"MBTA": MBTA},
-                {"safety": safetyIndex},
-                {"comfort": comfortIndex},
-                {"traffic": trafficIndex},
-                {"total": safetyIndex + comfortIndex + trafficIndex}
-                ]
+                "coordinates": i["geometry"]["coordinates"],
+                "hospital": hospital,
+                "crime": crime,
+                "crash": crash,
+                "restaurant": restaurant,
+                "entertainment": entertainment,
+                "hubway": hubway,
+                "traffic signal": signal,
+                "MBTA": MBTA,
+                "safety": safetyIndex,
+                "comfort": comfortIndex,
+                "traffic": trafficIndex,
+                "total": safetyIndex + comfortIndex + trafficIndex
                 })
             list1.append(safetyIndex + comfortIndex + trafficIndex)
 
@@ -230,31 +228,26 @@ class schoolfinal(dml.Algorithm):
         with open ('schoolfinal.json', 'w') as outfile:
             json.dump(final, outfile)
 
-        print(min(list1), max(list1))
-        print(list1)
-        two_school_hospital = schoolfinal.select(schoolfinal.product(school_hospital, school_hospital), lambda t: t[0][0] != t[1][0])
+        # two_school_hospital = schoolfinal.select(schoolfinal.product(school_hospital, school_hospital), lambda t: t[0][0] != t[1][0])
 
-        for i in two_school_hospital:
-            two_school_hospital.remove((i[1], i[0]))
+        # for i in two_school_hospital:
+        #     two_school_hospital.remove((i[1], i[0]))
 
-        sum_num = schoolfinal.project(two_school_hospital, lambda t: ((t[0][0], t[0][1], t[1][0], t[1][1], t[0][2] + t[1][2])))
+        # sum_num = schoolfinal.project(two_school_hospital, lambda t: ((t[0][0], t[0][1], t[1][0], t[1][1], t[0][2] + t[1][2])))
 
-        target = ()
-        sum_num = schoolfinal.select(sum_num, lambda t: t[4] < 10 and schoolfinal.distance(t[1], t[3]) < 4)
+        # target = ()
+        # sum_num = schoolfinal.select(sum_num, lambda t: t[4] < 10 and schoolfinal.distance(t[1], t[3]) < 4)
 
 
-        if len(sum_num) == 0:
-            print("there is no place that can build hospital and benefits 2 or more schools that need hospital")
-        else:   
-            min_num = 10000
-            for i in sum_num:
-                if i[4] < min_num:
-                    min_num = i[4]
-                    target = i
-            location = [(target[1][0] + target[3][0]) / 2, (target[1][1] + target[3][1]) / 2]
-            print("The best place to build a hospital next is between " + target[0] + " and " + target[2] + " at " + str(location))
-            
-
+        # if len(sum_num) == 0:
+        #     print("there is no place that can build hospital and benefits 2 or more schools that need hospital")
+        # else:   
+        #     min_num = 10000
+        #     for i in sum_num:
+        #         if i[4] < min_num:
+        #             min_num = i[4]
+        #             target = i
+        #     location = [(target[1][0] + target[3][0]) / 2, (target[1][1] + target[3][1]) / 2]
 
 
 
