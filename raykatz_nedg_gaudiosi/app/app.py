@@ -14,7 +14,12 @@ app.secret_key = 'isok'
 
 def get_zipinfo(zipcode):
     info = mongo.db.raykatz_nedg_gaudiosi.zipcode_info.find({'zipcode':zipcode})
-    return info
+    Table = []
+    for key, value in info:
+        temp = []
+        temp.extend([key,value])  #Note that this will change depending on the structure of your dictionary
+        Table.append(temp)
+    return Table
 
 # index page
 @app.route("/", methods=['GET'])
@@ -24,6 +29,11 @@ def welcome():
 @app.route('/corrfinder', methods=['GET'])
 def corrfinder():
     return render_template('corrfinder.html')    
+
+@app.route("/map", methods=['GET'])
+def map():
+    return render_template('map.html')
+
 
 @app.route("/stattrack <int:zip>", methods=['GET'])
 def stattrack(zip):
