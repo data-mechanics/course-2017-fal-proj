@@ -1,38 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <style>
-    #bg {
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: -1;
-
-        /* Preserve aspect ratio */
-        min-width: 100%;
-        min-height: 100%;
-       }
-    </style>
-</head>
-
-<body>
-<img src="https://upload.wikimedia.org/wikipedia/commons/c/cd/2005_Boston89009210.jpg" id="bg" alt="">
-<h1>Winter in Boston</h1>
-
-<form action="/means" method="get">
-  Number of Means:<br>
-  <input type="text" name="means" value=""><br>
-  <input type="submit" value="Submit">
-</form>
-
-<div></div>
-
-<form action="/emergency_routes" method="get">
-  Number of Routes:<br>
-  <input type="text" name="routes" value=""><br>
-  <input type="submit" value="Submit">
-</form>
-
-</body>
-
+   <head>
+      <style>
+         #bg {
+         position: fixed;
+         top: 0;
+         left: 0;
+         z-index: -1;
+         /* Preserve aspect ratio */
+         min-width: 100%;
+         min-height: 100%;
+         }
+      </style>
+   </head>
+   <body>
+      <img src="static/boston_winter.jpg" id="bg" alt="">
+      <h1>Winter in Boston</h1>
+      <div align="center">
+         <form action="/visualization" method="get">
+            Visualization Parameters:<br>
+            <input type="text" name="means" placeholder="means"><br>
+            <input type="text" name="routes" placeholder="routes"><br>
+            <input type="submit" value="Submit">
+         </form>
+      </div>
+      <div></div>
+   </body>
 </html>
