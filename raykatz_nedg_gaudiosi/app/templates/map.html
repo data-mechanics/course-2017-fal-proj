@@ -42,12 +42,13 @@
                 }
                 </style>
                     <p class="lead">Using our interactive Gentrification tracker, users can explore various regions in Boston and examine a live map of the data! </p>
-            <center><svg></svg></center> 
-        </div>
+             <center><svg></svg></center> 
+       </div>
         
-
+        
         <script src="https://d3js.org/d3.v3.min.js"></script>
-        <script> var scores = {{ scores|safe }}</script>
+    <script> var scores = {{ scores|safe }}; var zipinfo = {{zipinfo|safe}};</script>
+
         <script src="static/map.js"></script>
 
     </body>

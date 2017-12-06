@@ -71,6 +71,8 @@ def map():
         current["percent_homes_vacant"] = zipcode["percent_homes_vacant"]
         current["percent_homes_built_before_1939"] = zipcode["percent_homes_built_before_1939"]
         current["percent_renting"] = zipcode["percent_renting"]
+        current["median_income"] = zipcode["median_income"]
+        current["median_rent"] = zipcode["median_rent"]
         current["subway_stops"] = zipcode["subway_stops"]
         current["commuter_stops"] = zipcode["commuter_stops"]
         current["bus_stops"] = zipcode["bus_stops"]
