@@ -13,8 +13,7 @@ app.secret_key = 'isok'
 
 def get_zipinfo(zipcode):
     zipcode=str(0)+str(zipcode)
-    info = list(mongo.db.raykatz_nedg_gaudiosi.zipcode_info.find({'zipcode':zipcode}))
-
+    info = list(mongo.db.raykatz_nedg_gaudiosi.zipcode_info.find({'zipcode':zipcode}))[0]
 # Print the htm0l
     print(str(zipcode))
     print(str(info))

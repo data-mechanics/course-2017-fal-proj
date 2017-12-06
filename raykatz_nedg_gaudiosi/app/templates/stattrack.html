@@ -37,8 +37,23 @@
                 <li><a href="/">Back</a></li>
                 <div id="lavalamp"></div>
             </ul>
-                {{info}}
-                
+            <style>
+                p {
+                        color: aliceblue
+                }
+            </style>
+            <table style="width:100%" bgcolor="#336600">
+            {% for key, value in info.items() %}
+               <tr>
+                    <th> {{ key }} </th>
+                    <td> {{ value }} </td>
+
+               </tr>
+            {% endfor %}
+            </table>
+
+                                    
+
         </div>
     </body>
 </html>
