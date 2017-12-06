@@ -301,3 +301,5 @@ function initHeatMap() {
   ]
   heatmap.set('gradient',gradient);
 }
+
+initMap();
