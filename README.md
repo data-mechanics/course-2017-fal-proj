@@ -16,4 +16,4 @@ In hospital_garden_transformation, we merged the number of hospitals and number 
 	Now we generate a new dataset containing the zip code with insufficient hospital with its ratio. Later in addHospital file. We implement the algorithm to find the optimal place to build a new hospital. We just iterate the dataset ratio to add a new hospital to this zip code and then find the total score(sum of ratio). Then the zip code with the highest score is the place to build a new hospital. Then we store the updated data set as addHospital in mongo.
 
 ## Further development:
-	If we wanna build n more hospitals. we can simply run the algorithm n times and replace the original dataset with updateed datasets. 
+If we wanna build n more hospitals. we can simply run the algorithm n times and replace the original dataset with updateed datasets. 
