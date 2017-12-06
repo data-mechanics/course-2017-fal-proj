@@ -2,7 +2,7 @@
 <html lang="en" >
     <head>
         <meta charset="utf-8" />
-        <title>CS591-Gentrification</title>
+        <title>stattrack</title>
         <link href="static/layout.css" rel="stylesheet" type="text/css" />
         <link href="static/menu.css" rel="stylesheet" type="text/css" />
     </head>
@@ -36,13 +36,21 @@
                 <li><a href="/">Back</a></li>
                 <div id="lavalamp"></div>
             </ul>
-                <style>
-                p {
-                        color: aliceblue
-                }
-                </style>
-                    <p class="lead">Using our interactive Gentrification tracker, users can explore various regions in Boston and examine a live map of the data! </p>
-        </div>
+                 <table>
+                                 <tr>
+              <td>Hi, I'm your first cell.</td>
+              <td>I'm your second cell.</td>
+              <td>I'm your third cell.</td>
+              <td>I'm your fourth cell.</td>
+            </tr>
+                {% for key, value in info.items%}
+                   <tr>
+                        <th> {{ key }} </th>
+                        <td> {{ value }} </td>
+                   </tr>
+                {% endfor %}
+                </table>
 
+        </div>
     </body>
 </html>
