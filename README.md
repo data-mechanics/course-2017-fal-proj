@@ -3,11 +3,13 @@
 *by Lin Li, Yiding Ou, Tianqi Xu*
 
 ## 1. Introduction
+
 we are focusing on building a website to help people find the best college location in Boston and provide corresponding analysis to their choices.
 
 It's really complicated to define which area of Boston is the most suitable for universities, we simplify it by three main factors: `Safety`, `Convinience` and `Comfort` and map them to ratings in 1~5. Through our API, users could customize the ratings of these four aspects based on their personal requirements so that they could find the ideal place of living.
 
 We are exploring the rating of living around the schools in Boston by calculating the safety rate, the comfort rate, and the convenience rate. Another objective of us is to use k-mean to find the area that needs a hospital the most. Our safety rate will include data from crime, crash and hospitals. Our comfort rate will include data from entertainment and restaurants. Our convenience rate will include data from crash, hubway, traffic signals and MBTA.
+
 
 ## 2. Datasets
 
@@ -21,35 +23,43 @@ We are exploring the rating of living around the schools in Boston by calculatin
 - [Entertaiment](http://datamechanics.io/data/eileenli_xtq_yidingou/new.json)
 - [Traffic Signals](http://datamechanics.io/data/eileenli_xtq_yidingou/Traffic_Signals.geojson)
 
-# Process:
+
+## 3. Preprocessing
+
 1. Extracting data from databases:
 a). Comfort Section: we extract the coordinates of every entertainment from Entertainment database and coordinates of every restaurant from Restaurant database, and put them into a new dictionary.
+
 b). Safety Section: we extract the coordinates of every crime insident from Crime database, the coordinates of every car crash from Crash database, and the coordinates of hospitals from Hospital database, and put them into a new dictionary.
+
 c). Convenience Section: we extract the coordinates of every car crash from Crash database, the coordinates of every hubway from Hubway database, the coordinates of every traffic signals from Signals database and the coordinates of every MBTA from MBTA database, and put them into a new dictionary.
 
 2.	Data Relation to School:
 We first extracts the coordinates of every school from school database, and to calculate the distance from every coordinate of entertainment, restaurant, crime, crash, hospitals, hubway, traffic signals and MBTA. Then we will find the coordinates of those places that are within 2 miles from each school and put them into a new disctionary called "schoolfinal":
+```json
 		[{  "school": "Boston example School ",
             "properties": [
-                {"coordinates": [-71.000000, 42.000000]},
-                {"safety": [{"hospitals": [[A, B], [C, D]...]},
-               				{"crimes": [[A, B], [C, D]...]},
-               				{"crash": [[A, B], [C, D]...]}
+                {"coordinates": [42.2722, -71.0688]},
+                {"safety": [{"hospitals": [[42.3928, -71.3847], [42.0428, -70.4928]...]},
+               				{"crimes": [[42.3928, -71.3847], [42.0428, -70.4928]...]},
+               				{"crash": [[42.3928, -71.3847], [42.0428, -70.4928]...]}
                				]},
-               	{"comfort": [{"entertainment": [[A, B], [C, D]...]},
-               				{"restaurants": [[A, B], [C, D]...]}
+               	{"comfort": [{"entertainment": [[42.3928, -71.3847], [42.0428, -70.4928]...]},
+               				{"restaurants": [[42.3928, -71.3847], [42.0428, -70.4928]...]}
                				]},
-               	{"traffic": [{"crash": [[A, B], [C, D]...]},
-               				{"hubway": [[A, B], [C, D]...]},
-               				{"signals": [[A, B], [C, D]...]},
-               				{"MBTA": [[A, B], [C, D]...]}
+               	{"traffic": [{"crash": [[42.3928, -71.3847], [42.0428, -70.4928]...]},
+               				{"hubway": [[42.3928, -71.3847], [42.0428, -70.4928]...]},
+               				{"signals": [[42.3928, -71.3847], [42.0428, -70.4928]...]},
+               				{"MBTA": [[42.3928, -71.3847], [42.0428, -70.4928]...]}
                				]}
                ]
         },
-        {...}, ...].
+        {...}, ...]
+```
 
 3.	Statistics Relation to School:
 	Here is an example of our score statistics:
+
+```json
 	{
 	"_id" : ObjectId("5a0b764d1c9de70b8e4f9936"),
 	"school" : "Boston University Trustees",
@@ -66,12 +76,13 @@ We first extracts the coordinates of every school from school database, and to c
 		{"comfort" : 5.07},
 		{"traffic" : -9.71}
 	]}
+```
 	where we calcualted the score of safety, comfort and traffic as follow:
 	            {"safety": (1000 + hospital * 100 - crime - crash) / 100},
                 {"comfort": (restaurant + entertainment) / 100},
                 {"traffic": (1500 + MBTA + hubway - signal - crash * 2) / 100}
    	The higher each score is the better the university it.
-.
+
 4. K-means Analysis for best hospital place:
 We use the k means algorithm to find the new optimal hospital place for any 2 schools, at where needs the hospital the most base on the rates of comfort, safety and convenience. 
 

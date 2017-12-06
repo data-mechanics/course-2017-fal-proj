@@ -8,8 +8,6 @@ import math
 from collections import defaultdict
 
 
-
-
 class schoolfinal(dml.Algorithm):
     contributor = 'eileenli_xtq_yidingou'
     reads = ['eileenli_xtq_yidingou.schools', 'eileenli_xtq_yidingou.comfort', 'eileenli_xtq_yidingou.safety', 'eileenli_xtq_yidingou.traffic']
@@ -115,6 +113,7 @@ class schoolfinal(dml.Algorithm):
         final = []
         score = []
         school_hospital = []
+        list1 = []
 
         for i in SC:
             safety = []
@@ -202,6 +201,10 @@ class schoolfinal(dml.Algorithm):
                 {"traffic": traffic}]
                 })
 
+            safetyIndex = (hospital / 2 + (10 - crime / 65) + (10 - crash / 120)) / 3
+            comfortIndex = (restaurant / 45 + entertainment / 120) / 2
+            trafficIndex = (MBTA / 10 + hubway / 11 + (10 - signal / 56) + (10 - crash / 120)) / 4
+
             score.append({
                 "school": i["properties"]["Name"],
                 "properties": [
@@ -213,12 +216,22 @@ class schoolfinal(dml.Algorithm):
                 {"hubway": hubway},
                 {"traffic signal": signal},
                 {"MBTA": MBTA},
-                {"safety": (1000 + hospital * 100 - crime - crash) / 100},
-                {"comfort": (restaurant + entertainment) / 100},
-                {"traffic": (1500 + MBTA + hubway - signal - crash * 2) / 100}
+                {"safety": safetyIndex},
+                {"comfort": comfortIndex},
+                {"traffic": trafficIndex},
+                {"total": safetyIndex + comfortIndex + trafficIndex}
                 ]
                 })
+            list1.append(safetyIndex + comfortIndex + trafficIndex)
 
+        with open ('schoolscore.json', 'w') as outfile:
+            json.dump(score, outfile)
+
+        with open ('schoolfinal.json', 'w') as outfile:
+            json.dump(final, outfile)
+
+        print(min(list1), max(list1))
+        print(list1)
         two_school_hospital = schoolfinal.select(schoolfinal.product(school_hospital, school_hospital), lambda t: t[0][0] != t[1][0])
 
         for i in two_school_hospital:

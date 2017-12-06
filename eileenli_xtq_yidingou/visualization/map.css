@@ -1,0 +1,198 @@
+/* Always set the map height explicitly to define the size of the div
+ * element that contains the map. */
+
+/* Optional: Makes the sample page fill the window. */
+body {
+  width: 1300px;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+nav{
+  padding-top: 0;
+  margin-top: -18px;
+  height:50px;
+  position:relative;
+  background-color: black;
+}
+nav ul{
+  list-style-type: none;
+  width: 100%;
+}
+nav ul li{
+  float:left;
+  padding-top: 16px;
+  /*border-right: 4px solid white;*/
+  text-align: center;
+  padding-bottom:14px;
+  padding-left: 3%;
+  color:white;
+  font-family: sans-serif;
+}
+
+nav ul li a{
+  text-decoration:none;
+  color:white;
+}
+
+nav ul li a:hover{
+  font-weight: bold;
+}
+nav ul ul{
+  list-style-type: none;
+  display:none;
+  position:absolute;
+  width:12%;
+  top: 100%;
+  left: 11%;
+  background-color:#003366;
+  text-align: center;
+}
+
+nav ul ul li {
+  float:none;
+  color: white;
+  font-family: sans-serif;
+  padding-left: 0;
+  margin-left: -20px;
+  text-align: left;
+  border: none;
+}
+nav ul ul li a{
+  text-decoration:none;
+}
+nav ul ul li a:hover{
+  font-weight: bold;
+}
+nav ul li:hover > ul{
+  display:block;
+}
+nav ul > ul::after{
+  content:"";
+  display:block;
+  clear:both;
+}
+
+h2{
+  font-family: 'Montserrat', sans-serif;
+  text-align: center;
+  color: #003366;
+}
+
+h3{
+  font-family: 'Montserrat', sans-serif;
+  text-align: center;
+}
+
+#panel{
+  padding: 20px 0;
+  width: 500px;
+  margin-left: 40px;
+}
+#panel h3{
+  margin:0;
+}
+#panel select{
+  display: block;
+  font-size: 15px;
+  width: 400px;
+  height: 30px;
+}
+#panel p{
+  display: inline;
+}
+
+#left{
+  float: left;
+}
+
+#map {
+  height: 700px;
+  width: 550px;
+  /*border: 1px solid black;*/
+  margin: 5px;
+  margin-left: 40px;
+  display: inline-block;
+}
+
+svg {
+  float: right;
+  margin-right: 30px;
+  width: 620px;
+  height: 1000px;
+  position: relative;
+  padding: 25px 10px 10px 10px;
+}
+
+.toolTip {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    position: absolute;
+    display: none;
+    width: auto;
+    height: auto;
+    background: none repeat scroll 0 0 white;
+    border: 0 none;
+    border-radius: 8px 8px 8px 8px;
+    box-shadow: -3px 3px 15px #888888;
+    color: black;
+    font: 12px sans-serif;
+    padding: 5px;
+    text-align: center;
+    z-index: 3;
+}
+
+.axisHorizontal path{
+    fill: none;
+}
+
+.axisHorizontal .tick line {
+    stroke-width: 1;
+    stroke: rgba(0, 0, 0, 0.2);
+}
+
+.bar {
+    fill: steelblue;
+    fill-opacity: .9;
+}
+
+
+#sbtn{
+  padding-left: 0;
+  margin-left: 0px;
+  margin-top: 0px;
+  height:40px;
+  width: 350px;
+  color: white;
+  background: #003366;
+  font-size: 16px;
+}
+#sbtn:hover{
+  cursor: pointer;
+}
+
+#sbtn:focus{
+  outline: none;
+}
+
+#back{
+  margin-top: 10px;
+  padding: 15px 250px;
+  border-radius: 5px;
+  color: white;
+  background: #003366;
+  text-decoration: none;
+}
+
+
+
+#last{
+  float: right;
+  position: absolute;
+  top:1150px;
+  right:35px;
+  margin-bottom: 100px;
+}

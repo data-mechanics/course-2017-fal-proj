@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Customized Score System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="map.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  </head>
+  <nav>
+  <ul>
+    <li><a href="homepage.html">Homepage</a></li>
+  </nav>
+  <body>
+    <h2>Find Top Schools based on your preference</h2>
+    <div id="left">
+      <div id="panel">
+        <h3>Control Panel</h3>
+        <p>Choose your weight for Hospital:</p>
+        <select id="hos">
+          <option value="1">1</option>
+          <option value="1.5">1.5</option>
+          <option value="2" selected="selected">2</option>
+          <option value="2.5">2.5</option>
+          <option value="3">3</option>
+        </select>
+        <p>Choose your weight for Police Station:</p>
+        <select id="pol">
+          <option value="1">1</option>
+          <option value="1.5">1.5</option>
+          <option value="2" selected="selected">2</option>
+          <option value="2.5">2.5</option>
+          <option value="3">3</option>
+        </select>
+        <p>Choose your weight for Garden:</p>
+        <select id="gar">
+          <option value="1" selected="selected">1</option>
+          <option value="1.5">1.5</option>
+          <option value="2">2</option>
+          <option value="2.5">2.5</option>
+          <option value="3">3</option>
+        </select>
+        <p>Choose your weight for Market:</p>
+        <select id="mar">
+          <option value="1" selected="selected">1</option>
+          <option value="1.5">1.5</option>
+          <option value="2">2</option>
+          <option value="2.5">2.5</option>
+          <option value="3">3</option>
+        </select>
+        <br>
+        <button type="button" id="sbtn" name="button">Submit</button>
+      </div>
+      <div id="map"></div>
+    </div>
+    <div id="last">
+    <br>
+    <a id="back" href="home.html">Back to Home</a>
+    </div>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="map.js"></script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCyPM0wSuYqcj8KgNZJ6nRyiG4ECnNv3zc&callback=initMap">
+    </script>
+
+
+  </body>
+</html>

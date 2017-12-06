@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Visualization2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="kmeans.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  </head>
+  <nav>
+  <ul>
+    <li><a href="home.html">Home</a></li>
+    <li>Visualization
+    <ul>
+      <li><a href="map.html">Score Mechanism<a></li>
+      <li><a href="kmeans.html">Clustering<a></li>
+  </nav>
+  <body>
+    <h2>Find Top Schools in specific cluster</h2>
+    <div id="left">
+      <div id="panel">
+        <p>Choose how specific you want to cluster the shools:</p>
+        <select id="cluster">
+          <option value="3">General</option>
+          <option value="5" selected="selected">Medium</option>
+          <option value="7">Detailed</option>
+        </select>
+        <br >
+        <button type="button" id="sbtn" name="button">Submit</button>
+        <div id="right">
+          <p id="z0"></p>
+          <p id="z1"></p>
+          <p id="z2"></p>
+          <p id="z3"></p>
+          <p id="z4"></p>
+          <p id="z5"></p>
+          <p id="z6"></p>
+        </div>
+        <div id="last">
+        <a id="back" href="home.html">Back to Home</a>
+        </div>
+      </div>
+
+      <div id="map"></div>
+    </div>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="kmeans.js"></script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCyPM0wSuYqcj8KgNZJ6nRyiG4ECnNv3zc&callback=initMap">
+    </script>
+
+  </body>
+</html>
