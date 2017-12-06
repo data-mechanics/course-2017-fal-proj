@@ -1,0 +1,49 @@
+name: cs591
+channels:
+- conda-forge
+- defaults
+dependencies:
+- libspatialindex=1.8.5=vc14_1
+- rtree=0.8.3=py36_0
+- vc=14=0
+- certifi=2016.2.28=py36_0
+- pip=9.0.1=py36_1
+- python=3.6.2=0
+- setuptools=36.4.0=py36_0
+- vs2015_runtime=14.0.25420=0
+- wheel=0.29.0=py36_0
+- wincertstore=0.2=py36_0
+- pip:
+  - chardet==3.0.4
+  - cycler==0.10.0
+  - decorator==4.1.2
+  - dml==0.0.16.0
+  - geojson==2.3.0
+  - geoleaflet==0.0.1.0
+  - geopy==1.11.0
+  - geoql==0.0.8.0
+  - idna==2.6
+  - isodate==0.5.4
+  - language-check==1.1
+  - lxml==4.0.0
+  - matplotlib==2.1.0
+  - networkx==2.0
+  - numpy==1.13.3
+  - pandas==0.21.0
+  - protoql==0.0.3.0
+  - prov==1.5.1
+  - pymongo==3.5.1
+  - pyparsing==2.2.0
+  - python-dateutil==2.6.1
+  - pytz==2017.3
+  - rdflib==4.2.2
+  - requests==2.18.4
+  - scikit-learn==0.19.1
+  - scipy==1.0.0
+  - shapely==1.6.2
+  - six==1.11.0
+  - sklearn==0.0
+  - tqdm==4.19.4
+  - urllib3==1.22
+prefix: C:\Users\Monica\Anaconda3\envs\cs591
+

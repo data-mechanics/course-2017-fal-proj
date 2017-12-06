@@ -21,29 +21,17 @@ class redline_Selection(dml.Algorithm):
         repo = client.repo
         repo.authenticate('lc546_jofranco', 'lc546_jofranco')
 
-        
-        bos = repo.lc546_jofranco.realtime_MBTA       
+
+        bos = repo.lc546_jofranco.realtime_MBTA
         bos_array = []
         for stop in bos.find():
+            #print(stop)
             for prediction in stop['Predictions']:
                 if prediction['Stop'] == 'Charles/MGH' or prediction['Stop'] == 'Park Street' or prediction['Stop'] == 'Downtown Crossing' or prediction['Stop'] == 'South Station' or prediction['Stop'] == 'Broadway' or prediction['Stop'] == 'Andrew':
                 # or 'Park Street' or 'Downtown Crossing' or 'South Station' or 'Broadway' or'Andrew':
                     bos_array.append((prediction['Stop'], prediction['Seconds']))
-           # if stop['Predictions'] == 'Charles/MGH' or 'Park Street' or 'Downtown Crossing' or 'South Station' or 'Broadway' or'Andrew':
-            #    bos_array.append({"Stop":stop['Stop'], 'info':{"length(seconds)":stop['Seconds']}})
-        # Filter: Check if the stops are in Boston, if yes, take in the array
 
-
-    # def aggregate(R, f):
-    #     keys = {r[0] for r in R}
-    #     return [(key, f([v for (k,v) in R if k == key])) for key in keys]
-        #print()
-        #print(bos_array)
-        
         agg_boston = redline_Selection.aggregate(bos_array, sum)
-        #sum of the time length of each stop
-
-       # print("FINALLLLLL",agg_boston)
         agg_boston1 = dict(agg_boston)
         #print(agg_boston1)
 
@@ -64,7 +52,7 @@ class redline_Selection(dml.Algorithm):
        # print(diclist)
         # for r in R:
         #     for i in r:
-        #        keys.append(i[0]) 
+        #        keys.append(i[0])
         keys = {r[0] for r in R}
         #print(keys)
         return [(key, f([v for (k,v) in R if k == key])) for key in keys]

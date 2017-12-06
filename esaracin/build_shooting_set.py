@@ -91,7 +91,7 @@ class build_shooting_set(dml.Algorithm):
         doc.add_namespace('log', 'http://datamechanics.io/log/')
 
         # Add this script as a provenance agent to our document
-        this_script = doc.agent('alg:esaracin#build_shooting_sets', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
+        this_script = doc.agent('alg:esaracin#build_shooting_set', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
 
         resource_shootings = doc.entity('dat:esaracin#boston_shootings',{'prov:label':'MongoDB Set',prov.model.PROV_TYPE:'ont:DataResource'})
         

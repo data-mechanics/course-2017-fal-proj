@@ -24,7 +24,7 @@ class fzjr_retrievalalgorithm(dml.Algorithm):
         url = 'https://data.boston.gov/datastore/odata3.0/12cb3883-56f5-47de-afa5-3b1cf61b257b?$top=100000&$format=json'
         buf = requests.get(url).text
         r = json.loads(buf)
-        print(r)
+        #print(r)
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("crime")
         repo.createCollection("crime")
