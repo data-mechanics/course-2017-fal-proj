@@ -30,55 +30,46 @@ class emergency_traffic_aggregate(dml.Algorithm):
         repo.authenticate('bkin18_cjoe_klovett_sbrz', 'bkin18_cjoe_klovett_sbrz') # should probably move this to auth
 
         # Build our lists
-        traffic_selection = repo['bkin18_cjoe_klovett_sbrz.emergency_traffic_selection'].find()
+        traffic_selection = [x for x in repo['bkin18_cjoe_klovett_sbrz.emergency_traffic_selection'].find()]
         traffic_keys, traffic_intersecs, traffic_dicts = [], [], []
         route_names = []
+        routes_dict = {}
+
+        for selection in traffic_selection:
+            if(selection['emergency_route'] not in traffic_keys):
+                traffic_keys.append(selection['emergency_route'].replace('.',''))
+
+        for key in traffic_keys:
+            routes_dict.update({key:[]})
 
         for signals in traffic_selection:
             streets = re.split(", & |, | & | @ ", signals['Location'])
 
+            e_street = ''
+
             for i in range(len(streets)):
                 streets[i] = streets[i].replace('.', '')
 
-            traffic_intersecs.append(streets)
-
-            if(streets[0] not in traffic_keys):
-                route_names.append(streets[0])
-
-        modifiedDictionary = []
-
-        #Loop through all the routes.
-        for i in range(len(route_names)):
-
-            route_name = route_names[i]
-            intersection_list = []
-
-            #Loop through all the intersections
-            for j in range(len(traffic_intersecs)):
-                #If the intersection matches the route name
-                if traffic_intersecs[j][0] == route_name:
-                    #Then for each remaining piece
-                    for k in range(1, len(traffic_intersecs[j])):
-                        #If it's not yet in the array
-                        #if(traffic_intersecs[j][k] not in modifiedDictionary['route_name'][route_name]):
-                        #traffic_dicts[i][key_name].append(traffic_intersecs[j][k])
-                        if (traffic_intersecs[j][k] not in intersection_list):
-                            intersection_list.append(traffic_intersecs[j][k])
+            for street in streets:
+                if street in traffic_keys:
+                    e_street = street
             
-            modifiedPiece = {'RT_NAME': route_name, 'INTERSECTIONS': intersection_list}
+            streets.remove(e_street)
+            for street in streets:
+                if street not in routes_dict[e_street]:
+                    routes_dict[e_street].append(street)
 
-            unique = 1
 
-            for uniquePiece in modifiedDictionary:
-                if (uniquePiece['RT_NAME'] == modifiedPiece['RT_NAME']):
-                    unique = 0
+        for key in traffic_keys:
+            if len(routes_dict[key]) != 0:
+                traffic_intersecs.append({'RT_NAME': key, 'INTERSECTIONS': routes_dict[key]})
+            else:
+                print(key)
 
-            if (unique == 1):
-                modifiedDictionary.append(modifiedPiece)
 
         repo.dropCollection("emergency_traffic_aggregate")
         repo.createCollection("emergency_traffic_aggregate")
-        repo['bkin18_cjoe_klovett_sbrz.emergency_traffic_aggregate'].insert_many(modifiedDictionary)
+        repo['bkin18_cjoe_klovett_sbrz.emergency_traffic_aggregate'].insert_many(traffic_intersecs)
 
         endTime = datetime.datetime.now()
 

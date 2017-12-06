@@ -37,11 +37,14 @@ def find_streets(num_roads):
 
     # Constraints for each emergency route within the data set # Must be either 0 or 1
     for i in range(len(e_traffic_aggregate)):
-        eroute_z3.update({e_traffic_aggregate[i]['RT_NAME'] : z3.Int('e'+str(i))})
+        key = e_traffic_aggregate[i]['RT_NAME']
+        key = key.replace('.','')
 
-        z3_eroute.update({'e'+str(i) : e_traffic_aggregate[i]['RT_NAME']})
+        eroute_z3.update({key : z3.Int('e'+str(i))})
 
-        e_route = eroute_z3[e_traffic_aggregate[i]['RT_NAME']]
+        z3_eroute.update({'e'+str(i) : key})
+
+        e_route = eroute_z3[key]
         S.add(e_route >= 0, e_route <=1)
 
 
@@ -50,7 +53,11 @@ def find_streets(num_roads):
     connects = []
     for i in range(len(road_connections)):
         street = z3.Int('s'+str(i))
-        connections = road_connections[i]['ROUTES']
+        p_connections = road_connections[i]['ROUTES']
+        connections = []
+
+        for connection in p_connections:
+            connections.append(connection.replace('.',''))
 
         for j in range(len(connections)):
             connects.append(eroute_z3[connections[j]])

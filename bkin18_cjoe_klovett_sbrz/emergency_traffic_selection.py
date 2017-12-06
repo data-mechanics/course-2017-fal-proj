@@ -6,6 +6,7 @@ import datetime
 import uuid
 import pdb
 import sys
+import re
 
 class emergency_traffic_selection(dml.Algorithm):
     """
@@ -31,16 +32,23 @@ class emergency_traffic_selection(dml.Algorithm):
         emergency_routes = [x for x in repo['bkin18_cjoe_klovett_sbrz.emergency_routes'].find()]
         traffic_signals = [x for x in repo['bkin18_cjoe_klovett_sbrz.traffic_signals'].find()]
 
-        emergency_keys, traffic_selection = [], []
+        emergency_keys, traffic_selection, used_keys = [], [], []
 
         # Get traffic signals that are within the emergency routes
         for routes in emergency_routes:
             if routes['properties']['FULL_NAME'] not in emergency_keys:
                 emergency_keys.append(routes['properties']['FULL_NAME'])        
+
         for key in emergency_keys:
             for signal in traffic_signals:
-                if key in signal['properties']['Location']:
-                    traffic_selection.append({'Location': signal['properties']['Location']})
+
+                streets = re.split(", & |, | & | @ ", signal['properties']['Location'])
+
+                for i in range(len(streets)):
+                    streets[i] = streets[i].replace('.', '')
+
+                if key in streets:
+                    traffic_selection.append({'emergency_route':key, 'Location': signal['properties']['Location']})
 
         repo.dropCollection("emergency_traffic_selection")
         repo.createCollection("emergency_traffic_selection")
@@ -100,7 +108,6 @@ class emergency_traffic_selection(dml.Algorithm):
         repo.logout()
 
         return doc
-
 
 ## eof
 
