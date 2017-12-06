@@ -13,19 +13,36 @@ mongo = PyMongo(app)
 app.secret_key = 'isok'
 
 def get_zipinfo(zipcode):
-    info = mongo.db.raykatz_nedg_gaudiosi.zipcode_info.find({'zipcode':zipcode})
+    info = list(mongo.db.raykatz_nedg_gaudiosi.zipcode_info.find({'zipcode':zipcode}))
     class ItemTable(Table):
         name = Col('key')
         description = Col('value')
 # Populate the table
     table = ItemTable(info)
 
-# Print the html
+# Print the htm0l
+    print(str(zipcode))
+    print(str(info))
     print(table.__html__())
 # or just {{ table }} from within a Jinja template
     return table
+# def get_zipinfo(zipcode):
+#     class ItemTable(Table):
+#         key = Col('key')
+#         value = Col('value')
+# # Populate the table
+#     info = mongo.db.raykatz_nedg_gaudiosi.zipcode_info.find({'zipcode':zipcode})
+#     items= [info(key="key1",value='value1')]
+#     table = ItemTable(items)
 
+# # Print the html
+#     print(table.__html__())
+# # or just {{ table }} from within a Jinja template
+#     return table
 # index page
+
+
+
 @app.route("/", methods=['GET'])
 def welcome():
     return render_template('index.html')
