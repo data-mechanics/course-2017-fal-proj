@@ -7,11 +7,13 @@ import flask.ext.login as flask_login
 import json
 
 app = Flask(__name__)
+app.config['MONGO_DBNAME']='repo'
 mongo = PyMongo(app)
+
 app.secret_key = 'isok'
 
 def get_zipinfo(zipcode):
-    info = mongo.repo.raykatz_nedg_gaudiosi.zipcode_info.find({'zipcode':zipcode})
+    info = mongo.db.raykatz_nedg_gaudiosi.zipcode_info.find({'zipcode':zipcode})
     return info
 
 # index page
@@ -22,6 +24,11 @@ def welcome():
 @app.route('/corrfinder', methods=['GET'])
 def corrfinder():
     return render_template('corrfinder.html')    
+
+@app.route("/stattrack/<int:zip>", methods=['GET'])
+def stattrack(zip):
+    zipinfo=get_zipinfo(zip)
+    return render_template('stattrack.html',info=zipinfo)
 
 if __name__ == "__main__":
     # this is invoked when in the shell  you run

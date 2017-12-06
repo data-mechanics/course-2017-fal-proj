@@ -3,8 +3,8 @@
     <head>
         <meta charset="utf-8" />
         <title>CS591-Gentrification</title>
-        <link href="css/layout.css" rel="stylesheet" type="text/css" />
-        <link href="css/menu.css" rel="stylesheet" type="text/css" />
+        <link href="static/layout.css" rel="stylesheet" type="text/css" />
+        <link href="static/menu.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
         <header>
@@ -13,29 +13,29 @@
         </header>
        <div class="container">
 
+
             <ul id="nav">
-                <li><a href="/page">Home</a></li>
-                <li><a class="hsubs" href="#">StatTrack</a>
+                <li><a href="/">Home</a></li>
+                <li><a class="hsubs" href="/">StatTrack</a>
                     <ul class="subs">
-                        <li><a href="#">Downtown&Charlestown</a></li>
-                        <li><a href="#">East Boston</a></li>
-                        <li><a href="#">Roxbury</a></li>
-                        <li><a href="#">Mattapan</a></li>
-                        <li><a href="#">South Boston</a></li>
-                        <li><a href="#">Dorchester</a></li>
-                        <li><a href="#">South End</a></li>
-                        <li><a href="#">Brighton/Allston</a></li>
-                        <li><a href="#">West Roxbury</a></li>
-                        <li><a href="#">Jamaica Plain</a></li>
-                        <li><a href="#">Hyde Park</a></li>
+                        <li><a href="{{url_for ('stattrack',zip=02129)}}">Downtown&Charlestown</a></li>
+                        <li><a href="{{url_for ('stattrack',zip=02128)}}">East Boston</a></li>
+                        <li><a href="{{url_for ('stattrack',zip=02119)}}">Roxbury</a></li>
+                        <li><a href="{{url_for ('stattrack',zip=02126)}}">Mattapan</a></li>
+                        <li><a href="{{url_for ('stattrack',zip=02127)}}">South Boston</a></li>
+                        <li><a href="{{url_for ('stattrack',zip=02121)}}">Dorchester</a></li>
+                        <li><a href="{{url_for ('stattrack',zip=02118)}}">South End</a></li>
+                        <li><a href="{{url_for ('stattrack',zip=02134)}}">Brighton/Allston</a></li>
+                        <li><a href="{{url_for ('stattrack',zip=02132)}}">West Roxbury</a></li>
+                        <li><a href="{{url_for ('stattrack',zip=02130)}}">Jamaica Plain</a></li>
+                        <li><a href="{{url_for ('stattrack',zip=02136)}}">Hyde Park</a></li>
                     </ul>
                 </li>
                 <li><a href="#">LiveMap</a></li>
-                <li><a href="#">Correlation Finder</a></li>
-                <li><a href="/page">Back</a></li>
+                <li><a href="/corrfinder">Correlation Finder</a></li>
+                <li><a href="/">Back</a></li>
                 <div id="lavalamp"></div>
             </ul>
-
 
         <form action="/action_page.php">
         <style>
