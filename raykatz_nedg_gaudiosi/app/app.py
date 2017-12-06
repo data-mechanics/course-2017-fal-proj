@@ -2,7 +2,6 @@
 import flask
 from flask import Flask, Response, request, render_template, redirect, url_for
 from flask_pymongo import PyMongo
-import flask.ext.login as flask_login
 from flask_table import Table, Col
 import json
 
@@ -17,13 +16,21 @@ def get_zipinfo(zipcode):
     class ItemTable(Table):
         name = Col('key')
         description = Col('value')
-# Populate the table
+    # Populate the table
     table = ItemTable(info)
 
-# Print the html
+    # Print the html
     print(table.__html__())
-# or just {{ table }} from within a Jinja template
+    # or just {{ table }} from within a Jinja template
     return table
+
+
+def get_map_data():
+    return list(mongo.db.raykatz_nedg_gaudiosi.zipcode_info.find({}))
+
+def get_gent_scores():
+    return list(mongo.db.raykatz_nedg_gaudiosi.gentrification_score.find({}))
+
 
 # index page
 @app.route("/", methods=['GET'])
@@ -36,7 +43,22 @@ def corrfinder():
 
 @app.route("/map", methods=['GET'])
 def map():
-    return render_template('map.html')
+    gent_scores = get_gent_scores()
+    scores = {}
+    max_score = -100
+    min_score = 100
+    for z in gent_scores:
+        if z['score'] > max_score:
+            max_score = z['score']
+        if z['score'] < min_score:
+            min_score = z['score']
+
+    for z in gent_scores:
+        scores[z['zipcode']] = (z['score'] - min_score) /(max_score - min_score)
+
+    zipinfo = get_map_data()
+    return render_template('map.html', scores=scores, zipinfo=zipinfo)
+ 
 
 
 @app.route("/stattrack <int:zip>", methods=['GET'])
@@ -45,6 +67,4 @@ def stattrack(zip):
     return render_template('stattrack.html',info=zipinfo)
 
 if __name__ == "__main__":
-    # this is invoked when in the shell  you run
-    # $ python app.py
     app.run(port=5000, debug=True)
