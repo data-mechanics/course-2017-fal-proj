@@ -10,23 +10,23 @@ To solve this problem and perform the necessary analysis, we use and manipulate 
 *Hubway Station Locations* <br>
 * Description: This dataset consists of the name of each Hubway station, its longitude and latitude coordinates, number of bike docks, and the municipality it resides in.
 * Source: Analyze Boston.
-<br>
+<br><br>
 *Hubway Trip History* <br>
 * Description: This dataset consists of trip histories of a given month, including the trip duration (in seconds), start time and date, stop time and date, start station name & ID, end station name & ID, bike ID, user type (Casual = 24-Hour or 72-Hour Pass user; Member = Annual or Monthly Member), and zip code (if member). 
 * Source: Hubway System Data.
-<br>
+<br><br>
 *Per Capita Income by Boston Neighborhood* <br>
 * Description: This dataset consists of each Boston neighborhood with its average income per capita. 
 * Source: Census Bureau
-<br>
+<br><br>
 *Population by Boston Neighborhood* <br>
 * Description: This dataset consists of populations by Boston neighborhoods.
 * Source: Census Bureau
-<br>
+<br><br>
 *Boston Neighborhoods* <br>
 * Description: This dataset GeoJSON polygons, which are enclosed areas within certain geographical coordinates that represents the different neighborhoods in Boston.
 * Source: Boston OpenDataSoft
-<br>
+<br><br>
 
 
 
