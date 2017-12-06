@@ -1,6 +1,11 @@
-author Mengyao li, Zhuoshu Yang
-Project 2:
-    In project one, we find the number of hospitals and gardens in Boston area represented by zip code. In this project, we will find which area do not have plenty of hospitals and a optimized place a build a new hospital. 
+# BU CS591 Fall 2017 Project
+
+**Team Members:**
++ Mengyao li
++ Zhuoshu Yang
+
+## Introduction
+    In this project, we want to figure out the relationship between hospital and garden. Nowadays, people like sports outside in Boston. Many people run or ride bikes in the park or garden; however, people are easily to get hurt from sporting. It would be necessary and convenient for them if there are hospital close to the garden and park. On the other hand, patients in hospital can talk a walk or relax if there are gardens or parks near the hospitals. We sperate the map of Boston in terms of the zip code and examine the if the area has enough hospitals for people when they do sports in garden and park. We find data about the number of hospitals and gardens in Boston area represented by zip code from data.boston.gov. Through our algorithm, we will find which area do not have plenty of hospitals and a optimized place a build a new hospital. By displaying this infomation, we can come up more practical solution in building hospital for the people in Boston.
 
 Edited file: hospital_garden_transformation(edit), neighborzipcode(new implement), insufficient(new implement), addHospital(new implement)
 
