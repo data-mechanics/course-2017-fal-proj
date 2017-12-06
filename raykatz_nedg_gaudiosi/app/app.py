@@ -55,8 +55,27 @@ def map():
 
     for z in gent_scores:
         scores[z['zipcode']] = (z['score'] - min_score) /(max_score - min_score)
+    
+    zipinfo = {}
+    zipcodes = get_map_data()
+    for zipcode in zipcodes:
+        current ={}
+        current["percent_white"] = zipcode["percent_white"]
+        current["percent_black"] = zipcode["percent_black"]
+        current["percent_asian"] = zipcode["percent_asian"]
+        current["percent_hispanic"] = zipcode["percent_hispanic"]
+        current["percent_married_households"] = zipcode["percent_married_households"]
+        current["percent_unemployed"] = zipcode["percent_unemployed"]
+        current["percent_poverty"] = zipcode["percent_poverty"]
+        current["percent_homes_occupied"] = zipcode["percent_homes_occupied"]
+        current["percent_homes_vacant"] = zipcode["percent_homes_vacant"]
+        current["percent_homes_built_before_1939"] = zipcode["percent_homes_built_before_1939"]
+        current["percent_renting"] = zipcode["percent_renting"]
+        current["subway_stops"] = zipcode["subway_stops"]
+        current["commuter_stops"] = zipcode["commuter_stops"]
+        current["bus_stops"] = zipcode["bus_stops"]
+        zipinfo[zipcode["zipcode"]] = current
 
-    zipinfo = get_map_data()
     return render_template('map.html', scores=scores, zipinfo=zipinfo)
  
 
