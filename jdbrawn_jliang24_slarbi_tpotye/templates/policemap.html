@@ -29,7 +29,6 @@
 <script>
     var mymap = L.map('mapContainer').setView([42.3301, -71.0989], 12);
 
-//    var locations = {{ result|tojson }};
     var locations = JSON.parse("[" + {{result}} + "]")
 
     var CartoDB_Positron = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
@@ -38,11 +37,7 @@
             maxZoom: 19
         }).addTo(mymap);
 
-    console.log(locations)
-    console.log(locations[0])
-    console.log(locations[1])
-    console.log(locations.length)
-    console.log(typeof locations)
+   
     var k = "{{ clusters }}"
     var allstations = new Array(k)
     console.log(k)

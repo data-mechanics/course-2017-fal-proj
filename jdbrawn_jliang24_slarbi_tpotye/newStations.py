@@ -65,7 +65,6 @@ class newStations(dml.Algorithm):
         endTime = datetime.datetime.now()
 
         return M.tolist()
-        #return {"start": startTime, "end": endTime}
 
     @staticmethod
     def provenance(doc=prov.model.ProvDocument(), startTime=None, endTime=None):

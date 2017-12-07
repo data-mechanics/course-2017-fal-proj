@@ -33,7 +33,6 @@ def processinput():
         return redirect(url_for('index'))
 
 
-#create an app route for rendering the policemap with the specified locations as a variable
 
 
 if __name__ == '__main__':
