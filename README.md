@@ -28,7 +28,7 @@ In hospital_garden_transformation, we merged the number of hospitals and number 
 ## Further development and conclusion:
 Basically, we add a constraint to analyze the dataset, using the threshold to classify whether the place need to build new hospital or not. If the value is smaller than 0.5, we will export the zip code of this area. If the value is bigger than 0.5, we will continue the searching.
 
-Threshold = 𝑛𝑢𝑚𝑏𝑒𝑟 𝑜𝑓ℎ𝑜𝑠𝑝𝑖𝑡𝑎𝑙s near gaderns/ 𝑛𝑢𝑚𝑏𝑒𝑟 𝑜𝑓 𝑔𝑎𝑟𝑑𝑒𝑛𝑠
+Threshold = 𝑛𝑢𝑚𝑏𝑒𝑟 𝑜𝑓ℎ𝑜𝑠𝑝𝑖𝑡𝑎𝑙s near gardens/ 𝑛𝑢𝑚𝑏𝑒𝑟 𝑜𝑓 𝑔𝑎𝑟𝑑𝑒𝑛𝑠
 
 Base on the dataset and analysis, we have about 16 places that we could build new hospital. If we wanna build n more hospitals. we can simply run the algorithm n times and replace the original dataset with updateed datasets. In the future, we will extend our search on more cities and areas, providing convenience to people.  
 
