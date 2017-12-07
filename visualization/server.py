@@ -11,13 +11,20 @@ username = urllib.parse.quote_plus('bkin18_cjoe_klovett_sbrz')
 password = urllib.parse.quote_plus('bkin18_cjoe_klovett_sbrz')
 client = MongoClient('localhost', 27017, username=username, password=password, authSource="repo")    #Configure the connection to the database
 db = client['repo'] #Select the database
-# print(db.collection_names())
+print(db.collection_names())
 
-cursor = db.bkin18_cjoe_klovett_sbrz.traffic_signals.find()
+cursor = db['bkin18_cjoe_klovett_sbrz.formatted_coords'].find()
+
+
+'''
+for formatted_coord in cursor:
+    print(formatted_coord)
+'''
 
 @app.route("/")
 def index():
     return render_template('index.html')
+
 
 @app.route('/visualization')
 def visualization():
@@ -30,7 +37,8 @@ def visualization():
     if routes > 0 and means > 0:
         print("You selected {} means and {} routes".format(means, routes))
         #streets = z3_routes_interactive.find_streets(routes) z3 is stupid
-        return render_template('heatmap.html')
+        passTest = list(db['bkin18_cjoe_klovett_sbrz.formatted_coords'].find())
+        return render_template('heatmap.html', passTest=passTest)
     else:
         return "Please enter a valid number of means"
 

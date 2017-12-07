@@ -17,7 +17,11 @@
   			<button onclick="removeCentroid()">Remove Centroid</button>
 		</div>
 		<!--Runs script necessary to generate heatmap.-->
-		<div id="map">	
+		<div id="map">
+			<script>
+			    var testing = '{{passTest}}';
+    			alert(testing);
+    		</script>
 	    	<script src="{{ url_for('static', filename='heatscript.js') }}"></script>
 			<!-- <script src="heatmap.js"></script> -->
 		</div>
