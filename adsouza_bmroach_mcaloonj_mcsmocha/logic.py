@@ -32,7 +32,7 @@ import protoql
 import datetime
 
 
-def algo(parameters, requestCount, trialRun=False, doProv=False):
+def algo(parameters, requestCount, threadID, trialRun=False, doProv=False):
 
     # Extract the algorithm classes from the modules in the
     # current directory.
@@ -93,6 +93,9 @@ def algo(parameters, requestCount, trialRun=False, doProv=False):
 
                 elif 'get_avg_distance' in algo_name:
                     algorithm.execute(trial=trialRun, web=True)
+                    
+                elif 'make_graph' in algo_name:
+                    algorithm.execute(trial=trialRun, threadID=threadID)
 
                 else:
                     algorithm.execute(trial=trialRun)

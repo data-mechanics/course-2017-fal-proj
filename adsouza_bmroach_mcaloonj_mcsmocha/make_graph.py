@@ -31,7 +31,7 @@ class make_graph(dml.Algorithm):
         writes = []
 
         @staticmethod
-        def execute(trial=False, logging=True):
+        def execute(trial=False, logging=True, threadID=0):
             startTime = datetime.datetime.now()
 
             if logging:
@@ -62,7 +62,7 @@ class make_graph(dml.Algorithm):
                 return geo_json
 
             placements_geojson = df_to_geojson(df_geo, properties="")
-            with open('./templates/placements.html', 'w') as output:
+            with open('./templates/placements'+threadID+'.html', 'w') as output:
                 output.write(our_geoleaflet.html(placements_geojson)) # Create visualization.
 
 

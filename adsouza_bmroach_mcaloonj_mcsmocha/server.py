@@ -23,9 +23,11 @@ from logic import algo
 app = Flask(__name__)
 th = Thread()
 
-finished = False
+finished = {}
+
 params = {}
 requestCount = 1
+call_id = 0
 
 @app.route('/', methods=['GET'])
 def main():
@@ -38,8 +40,12 @@ def placeholder():
 
 @app.route('/getmap', methods=['POST'])
 def getmap():
+
     global finished
-    finished = False
+    global call_id
+    finished[call_id] = False
+    this_call = call_id
+    call_id += 1
     global requestCount
     requestCount += 1
     ms = float(request.form['Mean Skew'])
@@ -58,25 +64,27 @@ def getmap():
         
     try: 
         global th
-        th = Thread(target=worker, args=())
+        th = Thread(target=worker, args=(this_call))
         th.start()                        
-        return render_template('loading.html')
+        return render_template('loading.html', tID=this_call)
     except:        
         return render_template('error.html')
 
-def worker():
-    algo(params, requestCount)
+def worker(this_call):
+    algo(params, requestCount, this_call)
     global finished
-    finished = True
+    finished[this_call] = True
     return
 
-@app.route('/thread_status')
-def thread_status():
-    return jsonify(dict(status=('finished' if finished else 'running')))
+@app.route('/thread_status/<int:a>')
+def thread_status(a):
+    thread_id = a
+    return jsonify(dict(status=('finished' if finished[thread_id] else 'running')))
 
-@app.route('/result')
-def result():
-    return render_template('placements.html')
+@app.route('/result/<int:a>')
+def result(a):
+    thread_id = a
+    return render_template('placements'+thread_id+'.html')
 
 
 if __name__ == '__main__':
