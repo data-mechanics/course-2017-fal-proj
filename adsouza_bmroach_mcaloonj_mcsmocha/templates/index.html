@@ -4,8 +4,8 @@
 <head>
     <title>Home - Signs</title>
     <style>
-        table#authors{
-            display:inline-block
+        table#authors {
+            display: inline-block
         }
     </style>
 </head>
@@ -17,13 +17,13 @@
 
     <form action="{{url_for('getmap')}}" method='post' target="mapFrame">
 
-        <table cellpadding='4px'>
+        <table cellpadding='4px' style="max-width:1000px">
             <tr>
                 <td>Mean Skew</td>
                 <td><input type="range" name="Mean Skew" id="msInputID" min=".5" max="2" step=".1" value="1.0" oninput="msOutputID.value = msInputID.value"></td>
                 <td> <output name="msOutput" id="msOutputID">1</output></td>
-                <td bgcolor="#6699ff">We filter intersections by being below the mean distance to closest accident cluster or not, so skewing this value allows a greater or smaller 
-                    number of intersections to be considered as candidates. Above 1 equates to fewer candidates, below 1 equates to more candidates.</td>
+                <td bgcolor="#6699ff">We filter intersections by being below the mean distance to closest accident cluster or not, so skewing this value allows a greater or smaller number of intersections to be considered as candidates. Above 1 equates to fewer candidates,
+                    below 1 equates to more candidates.</td>
             </tr>
 
             <tr>
@@ -34,7 +34,7 @@
             </tr>
 
             <tr>
-                <td>Cluster Divisors</td>                
+                <td>Cluster Divisors</td>
                 <td><input type="range" name="Cluster Divisors" id="cdInputID" min="10" max="20" step="1" value="15" oninput="cdOutputID.value = cdInputID.value"></td>
                 <td><output name="cdOutput" id="cdOutputID">15</output></td>
                 <td bgcolor="#6699ff">When clustering accidents, the cluster count is determined by dividing the total number of accidents by this value.</td>
@@ -44,12 +44,11 @@
                 <td>Sign Count</td>
                 <td><input type="range" name="Sign Count" id=scInputID min="5" max="50" step="5" value="30" oninput="scOutputID.value = scInputID.value"></td>
                 <td><output name="scOutput" id="scOutputID">30</output></td>
-                <td>The number of speed feedback signs to be placed by the algorith. Note: not all centroids will be able to be mapped to candidate intersections, 
-                    resulting in a sign placement, if the buffer size is too large.</td>
+                <td>The number of speed feedback signs to be placed by the algorith. Note: not all centroids will be able to be mapped to candidate intersections, resulting in a sign placement, if the buffer size is too large.</td>
             </tr>
 
             <tr>
-                <td>Buffer Size</td>                    
+                <td>Buffer Size</td>
                 <td><input type="range" name="Buffer Size" id="bsInputID" min=".1" max="1" step=".1" value=".5" oninput="bsOutputID.value = bsInputID.value"></td>
                 <td><output name="bsOutput" id="bsOutputID">.5</output></td>
                 <td bgcolor="#6699ff">The radius around a placed speed feedback sign in which another speed feedback sign cannot be placed.</td>
@@ -58,23 +57,30 @@
 
         <input type="submit">
         <input type="reset">
-        
+
 
     </form>
-   
-    <p>Requests will take about 60 seconds on average, but invalid responses from our datasets may 
-        require individual scripts to repeat, taking additional time. </p>
+
+    <p>Requests will take about 60 seconds on average, but invalid responses from our datasets may require individual scripts to repeat, taking additional time. </p>
 
     <iframe name="mapFrame" id="mapFrame" style="border:2px light-blue;" src="{{url_for('placeholder')}}" height='500px' width='100%'></iframe>
 
     <img src='https://www.boston.gov/sites/default/files/speed-limit-3.jpg' height='178' width='auto'>
     <img src="http://www.cs.bu.edu/lib/logo/csdeptlogo0.gif">
     <table id="authors">
-            <th>Authors</th>        
-            <tr><td>Adriana D'Souza</td></tr>
-            <tr><td>Brian Roach</td></tr>
-            <tr><td>Jessica McAloon</td></tr>
-            <tr><td>Monica Chiu</td></tr>
+        <th>Authors</th>
+        <tr>
+            <td>Adriana D'Souza</td>
+        </tr>
+        <tr>
+            <td>Brian Roach</td>
+        </tr>
+        <tr>
+            <td>Jessica McAloon</td>
+        </tr>
+        <tr>
+            <td>Monica Chiu</td>
+        </tr>
     </table>
 
     <p>Boston University CS591 - Data Mechanics for Pervasive Systems and Urban Applications</p>

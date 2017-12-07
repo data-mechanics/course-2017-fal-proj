@@ -74,9 +74,12 @@ $$ - denotes a script with variable parameters for experimental outputs
 * dml
 * flask
 * geojson
+* geoleaflet
 * geoql
+* matplotlib
 * numpy
 * pandas
+* protoql
 * prov
 * scipy
 * sklearn 
