@@ -21,7 +21,7 @@ class example(dml.Algorithm):
         repo = client.repo
         repo.authenticate('lmy1031_zhuoshu', 'lmy1031_zhuoshu')
 
-        url = 'https://data.cityofboston.gov/resource/rdqf-ter7.json'
+        url = 'http://datamechanics.io/data/lmy1031_zhuoshuo591/garden1.json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)

@@ -4,12 +4,13 @@ import dml
 import prov.model
 import datetime
 import uuid
+import requests
 
 
 class example(dml.Algorithm):
     contributor = 'lmy1031_zhuoshu'
     reads = []
-    writes = ['lmy1031_zhuoshu_garden']
+    writes = ['lmy1031_zhuoshu.location']
 
     @staticmethod
     def execute(trial = False):
@@ -21,24 +22,15 @@ class example(dml.Algorithm):
         repo = client.repo
         repo.authenticate('lmy1031_zhuoshu', 'lmy1031_zhuoshu')
 
-        url = 'https://data.cityofboston.gov/resource/rdqf-ter7.json'
-        response = urllib.request.urlopen(url).read().decode("utf-8")
-        r = json.loads(response)
-        s = json.dumps(r, sort_keys=True, indent=2)
-        repo.dropCollection("garden")
-        repo.createCollection("garden")
-        repo['lmy1031_zhuoshu_garden'].insert_many(r)
-        #repo['alice_bob.lost'].metadata({'complete':True})
-        #print(repo['alice_bob.lost'].metadata())
-
-        #url = 'http://cs-people.bu.edu/lapets/591/examples/found.json'
-        #response = urllib.request.urlopen(url).read().decode("utf-8")
-        #r = json.loads(response)
-        #s = json.dumps(r, sort_keys=True, indent=2)
-        #repo.dropCollection("found")
-        #repo.createCollection("found")
-        #repo['alice_bob.found'].insert_many(r)
-
+        url = 'http://datamechanics.io/data/lmy1031_zhuoshuo591/bostonzipcoordinates.json'
+#        response = urllib.request.urlopen(url).read().decode("utf-8")
+#        print(response)
+#        r = json.loads(response)
+#        s = json.dumps(r, sort_keys=True, indent=2)
+        r=requests.get(url).json()
+        repo.dropCollection("location")
+        repo.createCollection("location")
+        repo['lmy1031_zhuoshu.location'].insert(r)
         repo.logout()
 
         endTime = datetime.datetime.now()
@@ -61,10 +53,10 @@ class example(dml.Algorithm):
         doc.add_namespace('dat', 'http://datamechanics.io/data/lmy1031_zhuoshu') # The data sets are in <user>#<collection> format.
         doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
-        doc.add_namespace('garden', 'https://data.cityofboston.gov/')
+        doc.add_namespace('location', 'http://datamechanics.io/data/')
 
         this_script = doc.agent('alg:#garden', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource = doc.entity('garden:rdqf-ter7', {'prov:label':'garden', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource = doc.entity('location:rdqf-ter7', {'prov:label':'location', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         licence = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         #get_lost = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         doc.wasAssociatedWith(licence, this_script)
@@ -80,7 +72,7 @@ class example(dml.Algorithm):
         #          }
         #          )
 
-        public = doc.entity('dat:#garden', {prov.model.PROV_LABEL:'garden', prov.model.PROV_TYPE:'ont:DataSet'})
+        public = doc.entity('dat:#location', {prov.model.PROV_LABEL:'location', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(public, this_script)
         doc.wasGeneratedBy(public, licence, endTime)
         doc.wasDerivedFrom(public, resource, licence, licence, licence)

@@ -27,7 +27,7 @@ class neighbor(dml.Algorithm):
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("neighbor")
         repo.createCollection("neighbor")
-        repo['lmy1031_zhuoshu.neighbor'].insert([r])
+        repo['lmy1031_zhuoshu.neighbor'].insert(r)
         
         repo.logout()
 
