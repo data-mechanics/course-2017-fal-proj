@@ -36,7 +36,8 @@ function initMap() {
         map_objects[i].setMap(map);
     }
 
-    alert(testing);
+    //alert(rawKMeansData);
+    centroidData = kMeansStuff();
 
     initHeatMap();
     generateMarkers();
@@ -287,6 +288,21 @@ function kMeansData() {
 		new google.maps.LatLng(42.3346188381,
 		-71.10290921076667)
 	];
+}
+
+function kMeansStuff() {
+	centroidData = []
+	alert(JSON.stringify(rawKMeansData[0]));
+	console.log(rawKMeansData);
+	//alert(rawKeansData[0]);
+	/*
+	var i = 0;
+	for (i = 0; i < rawKMeansData.length; i++) {
+		//alert(rawKMeansData[i])
+		centroidData.push(new google.maps.LatLng(rawKMeansData[0][i][0], rawKMeansData[0][i][1]));
+	}*/
+
+	return centroidData;
 }
 
 function initHeatMap() {

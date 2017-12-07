@@ -19,7 +19,8 @@
     		<script src="https://maps.googleapis.com/maps/api/js?key=&libraries=visualization"></script>
 
     		<script type="text/javascript">
-    			var testing = {{ kMeansData.coordinates|tojson }}
+    			//var rawKMeansData = {{ kMeansData|tojson }}
+    			var rawKMeansData = JSON.parse('{{ kMeansData|safe }}' );
     		</script>
 
 	    	<script type="text/javascript" {{ url_for('static', filename='heatscript.js') }} src="{{ url_for('static', filename='heatscript.js') }}"></script>

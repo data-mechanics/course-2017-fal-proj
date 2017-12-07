@@ -43,7 +43,7 @@ def visualization():
             coordinate_list.append(nearest_building_coordinates)
             kMeansCoordinateList.append(coordinate_list)
 
-        kMeansData = {'coordinates': str(kMeansCoordinateList)}
+        kMeansData = [{'coordinates': kMeansCoordinateList}]
 
 
 
@@ -54,7 +54,8 @@ def visualization():
         #print(we)
         passTest = {'test': str(kMeansCoordinateList)}
         #passTest = kMeansDictionary
-        return render_template('heatmap.html', kMeansData=kMeansData)
+        #return render_template('heatmap.html', kMeansData=kMeansData)
+        return render_template('heatmap.html', kMeansData=json.dumps(kMeansData))
     else:
         return "Please enter a valid number of means"
 
