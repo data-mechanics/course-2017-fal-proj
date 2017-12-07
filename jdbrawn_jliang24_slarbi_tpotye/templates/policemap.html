@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>K-Means Police Stations Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
+    <style>
+        #mapContainer{
+            position: absolute;
+            top:50px;
+            right:0;
+            bottom:0;
+            left:0;
+        }
+        #header{
+            font-family: Verdana;
+            font-size: 30px;
+            color: Teal;
+        }
+    </style>
+
+</head>
+<body>
+<div id = "header"><center><b>K = {{clusters}}</b></center></div>
+
+<div id = "mapContainer"></div>
+<script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
+
+<script>
+    var mymap = L.map('mapContainer').setView([42.3301, -71.0989], 12);
+
+//    var locations = {{ result|tojson }};
+    var locations = JSON.parse("[" + {{result}} + "]")
+
+    var CartoDB_Positron = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(mymap);
+
+    console.log(locations)
+    console.log(locations[0])
+    console.log(locations[1])
+    console.log(locations.length)
+    console.log(typeof locations)
+    var k = "{{ clusters }}"
+    var allstations = new Array(k)
+    console.log(k)
+    for (i = 0; i <= (k*2)-1; i+=2) {
+
+        var astation = L.marker([locations[i], locations[i+1]]).bindPopup("(" + String(locations[i]) +", " + String(locations[i+1]) + ")").addTo(mymap);
+
+
+    }
+
+</script>
+
+</body>
+</html>
