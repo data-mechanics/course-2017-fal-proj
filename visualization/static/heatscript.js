@@ -36,6 +36,8 @@ function initMap() {
         map_objects[i].setMap(map);
     }
 
+    alert(testing);
+
     initHeatMap();
     generateMarkers();
 }

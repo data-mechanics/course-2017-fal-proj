@@ -35,10 +35,33 @@ def visualization():
     except ValueError:
         return "Please enter a valid integer input"
     if routes > 0 and means > 0:
+
+        '''
+        Formats kmeans data to be used in visualization
+        '''
+        kMeansCoordinateList = []
+
+        for kmeans_info in db['bkin18_cjoe_klovett_sbrz.closest_buildings_to_centroids'].find():
+            coordinate_list = []
+            centroid_coordinates = kmeans_info['NEARBY_CENTROID']
+            nearest_building_info = kmeans_info['_id']
+            nearest_building_coordinates = [{'lat': nearest_building_info['LATITUDE'], 'lng': nearest_building_info['LONGITUDE']}]
+            coordinate_list.append(centroid_coordinates)
+            coordinate_list.append(nearest_building_coordinates)
+            kMeansCoordinateList.append(coordinate_list)
+
+        kMeansData = {'coordinates': str(kMeansCoordinateList)}
+
+
+
+
         print("You selected {} means and {} routes".format(means, routes))
         #streets = z3_routes_interactive.find_streets(routes) z3 is stupid
-        passTest = list(db['bkin18_cjoe_klovett_sbrz.formatted_coords'].find())
-        return render_template('heatmap.html', passTest=passTest)
+        #we = list(db['bkin18_cjoe_klovett_sbrz.formatted_coords'].find())
+        #print(we)
+        passTest = {'test': str(kMeansCoordinateList)}
+        #passTest = kMeansDictionary
+        return render_template('heatmap.html', kMeansData=kMeansData)
     else:
         return "Please enter a valid number of means"
 

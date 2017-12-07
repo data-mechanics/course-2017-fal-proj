@@ -4,10 +4,8 @@
 		<!-- <link rel="stylesheet" type="text/css" href="heatmap.css"> -->
 		<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
 			<!--Imports library necessary to generate heat map. May want to include key eventually.-->
-		<script async defer src="https://maps.googleapis.com/maps/api/js?key=&libraries=visualization"></script>
 	</head>
 	<body>
-
 	    	<script>console.log("{{ url_for('static', filename='heatscript.js') }}")
 	    			console.log("{{ url_for('static', filename='style.css') }}")
 	    	</script>
@@ -18,12 +16,14 @@
 		</div>
 		<!--Runs script necessary to generate heatmap.-->
 		<div id="map">
-			<script>
-			    var testing = '{{passTest}}';
-    			alert(testing);
+    		<script src="https://maps.googleapis.com/maps/api/js?key=&libraries=visualization"></script>
+
+    		<script type="text/javascript">
+    			var testing = {{ kMeansData.coordinates|tojson }}
     		</script>
-	    	<script src="{{ url_for('static', filename='heatscript.js') }}"></script>
-			<!-- <script src="heatmap.js"></script> -->
+
+	    	<script type="text/javascript" {{ url_for('static', filename='heatscript.js') }} src="{{ url_for('static', filename='heatscript.js') }}"></script>
+	    	</script>
 		</div>
 	</body>
 </html>
