@@ -14,7 +14,7 @@ In this project, we want to figure out the relationship between hospital and gar
   <li>Corner Store: https://data.cityofboston.gov/resource/427a-3cn5.json </li>
   <li>Trash Can: https://data.boston.gov/export/15e/7fa/15e7fa44-b9a8-42da-82e1-304e43460095.json </li>
 </ol> 
-* hospital_garden_transformation.py
+*hospital_garden_transformation.py
 * corner_trashcan_transformation.py
 * addHospital.py
 * neighborzipcode.py
