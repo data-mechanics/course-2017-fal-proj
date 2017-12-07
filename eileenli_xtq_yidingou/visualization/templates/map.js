@@ -82,12 +82,12 @@ function drawHist(data,special){
       .attr("x", (width / 2))
       .attr("y", 0)
       .attr("text-anchor", "middle")
-      .style("font-size", "20px")
-      .text("Top 60 Colleges");
+      .style("font-size", "16px")
+      .text("Top 50 Colleges");
 
   svg.selectAll("rect")
       .on("mouseover", function(d){
-        d3.select(this).attr("fill","red");
+        d3.select(this).attr("fill","#b2d9e7");
       })
       .on("mouseout", function(d){
         d3.select(this).attr("fill","#fddd9b");
@@ -97,9 +97,9 @@ function drawHist(data,special){
       div.style("top", d3.event.pageY-25+"px");
       div.style("display", "inline-block");
       div.html((d.label)+"<br>Score: "+(d.value));
-      var iconUrl = 'http://maps.google.com/mapfiles/kml/pushpin/';
+      var iconUrl = 'https://maps.google.com/mapfiles/kml/pal2/';
       saver[d.label].m.setIcon({
-        url: iconUrl + 'red-pushpin.png',
+        url: iconUrl + 'icon2.png',
         size: new google.maps.Size(32, 32),
         scaledSize: new google.maps.Size(32, 32)
       });
@@ -108,9 +108,9 @@ function drawHist(data,special){
 
   bar.on("mouseout", function(d){
     div.style("display", "none");
-    var iconUrl = 'http://maps.google.com/mapfiles/kml/pushpin/';
+    var iconUrl = 'https://maps.google.com/mapfiles/kml/pal2/';
     saver[d.label].m.setIcon({
-      url: iconUrl + 'blue-pushpin.png',
+      url: iconUrl + 'icon10.png',
       size: new google.maps.Size(32, 32),
       scaledSize: new google.maps.Size(32, 32)
     });
@@ -133,14 +133,14 @@ function drawHist(data,special){
       mapTypeId: 'roadmap'
     });
 
-    var iconUrl = 'http://maps.google.com/mapfiles/kml/pushpin/';
+    var iconUrl = 'https://maps.google.com/mapfiles/kml/pal2/';
     var image = {
-      url: iconUrl + 'blue-pushpin.png',
+      url: iconUrl + 'icon10.png',
       size: new google.maps.Size(32, 32),
       scaledSize: new google.maps.Size(32, 32)
     };
     var imageH = {
-      url: iconUrl + 'red-pushpin.png',
+      url: iconUrl + 'icon2.png',
       size: new google.maps.Size(32, 32),
       scaledSize: new google.maps.Size(32, 32)
     };

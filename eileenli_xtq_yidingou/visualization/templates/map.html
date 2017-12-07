@@ -6,47 +6,80 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="map.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
   </head>
-  <nav>
-  <ul>
-    <li><a href="homepage.html">Homepage</a></li>
-  </nav>
+
+  <a href="homepage.html" class="w3-bar-item w3-button" style="color:white">Home</a>
   <body>
-    <h2>Find Top Colleges based on your preference</h2>
-    <div id="left">
+    <h2>Top Preferred Colleges</h2>
       <div id="panel">
-        <h3>Control Panel</h3>
-        <p>Choose your weight for Safety:</p>
+        <fieldset id="step_1">
+      
+        <legend>Step 1</legend>
+      
+        <p>
+        How do you weigh your desired rate for Safety?
+        </p>
+
         <select id="saf">
           <option value="1">1</option>
           <option value="2" selected="selected">2</option>
           <option value="3">3</option>
         </select>
-        <p>Choose your weight for Traffic Station:</p>
+      </fieldset>
+      <fieldset id="step_2">
+      
+        <legend>Step 2</legend>
+      
+        <p>
+        How do you weigh your desired rate for Comfort?
+        </p>
+        
+        
         <select id="tra">
           <option value="1">1</option>
           <option value="2" selected="selected">2</option>
           <option value="3">3</option>
         </select>
-        <p>Choose your weight for Comfort:</p>
+      
+      </fieldset>
+    
+      <fieldset id="step_3">
+        <legend>Step 3</legend>
+      
+        <p>
+        How do you weigh your desired rate for Convenience?
+        </p>
+
         <select id="com">
-          <option value="1" selected="selected">1</option>
-          <option value="2">2</option>
+          <option value="1">1</option>
+          <option value="2" selected="selected">2</option>
           <option value="3">3</option>
         </select>
+      </fieldset>
+      <br>
+
+    <input type="button" id="sbtn" name="button" value="Submit">
         <br>
-        <button type="button" id="sbtn" name="button">Submit</button>
-      </div>
+        <br>
       <div id="map"></div>
     </div>
+
     <div id="last">
     <br>
     </div>
+
+
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="map.js"></script>
+    
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCyPM0wSuYqcj8KgNZJ6nRyiG4ECnNv3zc&callback=initMap">
     </script>
+
+
+
 
 
   </body>
