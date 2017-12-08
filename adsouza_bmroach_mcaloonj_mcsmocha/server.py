@@ -62,7 +62,7 @@ def getmap():
     completed_requests = [(key, val) for (key, val) in finished.items() if val[0]==True]
     cache_hit = False
     for call in completed_requests:
-        if call[1] == params:
+        if call[1][1] == params:
             this_call = call[0]
             cache_hit = True
             break
@@ -72,7 +72,6 @@ def getmap():
         this_call = call_id
         call_id += 1
 
-        global finished    
         finished[this_call] = [False, params]    
 
 
