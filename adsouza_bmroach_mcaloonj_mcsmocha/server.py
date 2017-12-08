@@ -87,7 +87,7 @@ def worker(*args):
     this_call = args[0]
     algo(params, requestCount, this_call)
     global finished
-    finished[this_call] = True
+    finished[this_call][0] = True
     return
 
 @app.route('/thread_status/<int:a>')
