@@ -78,7 +78,7 @@ def getmap():
 
         
     try:
-        if not cache hit: 
+        if not cache_hit: 
             global th
             worker_params = params
             th = Thread(target=worker, args=[this_call, worker_params])
