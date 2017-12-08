@@ -56,6 +56,9 @@ def getmap():
               'buffer_size': bs, #default .5
             }
 
+    global requestCount
+    requestCount += 1
+
     #keeps track of calls with identical parameters and returns them from the cached responses
     completed_requests = [val for (key, val) in finished.items() if val[0]==True]
     cache_hit = False
@@ -73,21 +76,22 @@ def getmap():
         global finished    
         finished[this_call] = [False, params]    
 
-        global requestCount
-        requestCount += 1
-    
         
-    # try: 
-    global th
-    th = Thread(target=worker, args=[this_call])
-    th.start()                        
-    return render_template('loading.html', tID=str(this_call))
-    # except:        
-    #     return render_template('error.html')
+    try:
+        if not cache hit: 
+            global th
+            worker_params = params
+            th = Thread(target=worker, args=[this_call, worker_params])
+            th.start()                        
+        return render_template('loading.html', tID=str(this_call))        
+
+    except:        
+        return render_template('error.html')
 
 def worker(*args):
     this_call = args[0]
-    algo(params, requestCount, this_call)
+    worker_params = args[1]
+    algo(worker_params, requestCount, this_call)
     global finished
     finished[this_call][0] = True
     return
