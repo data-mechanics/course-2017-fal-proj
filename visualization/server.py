@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from pymongo import MongoClient # Database connector
+from pymongo import MongoClient  # Database connector
 import urllib.parse
 import json
 import z3_routes_interactive
@@ -11,14 +11,22 @@ app = Flask(__name__)
 
 username = urllib.parse.quote_plus('bkin18_cjoe_klovett_sbrz')
 password = urllib.parse.quote_plus('bkin18_cjoe_klovett_sbrz')
-client = MongoClient('localhost', 27017, username=username, password=password, authSource="repo")    #Configure the connection to the database
-db = client['repo'] #Select the database
+client = MongoClient('localhost', 27017, username=username, password=password,
+                     authSource="repo")  # Configure the connection to the database
+db = client['repo']  # Select the database
 
 routes = [x for x in db['bkin18_cjoe_klovett_sbrz.emergency_routes_dict'].find()][0]
+
 
 @app.route("/")
 def index():
     return render_template('index.html')
+
+
+@app.route("/snow")
+def index_snow():
+    return render_template('index-snow.html')
+
 
 @app.route('/visualization')
 def visualization():
@@ -57,6 +65,7 @@ def visualization():
     dataMapper = dataMapper.replace('{{kMeansData}}', kMeansCoordList)
 
     return dataMapper
+
 
 if __name__ == "__main__":
     app.run()
