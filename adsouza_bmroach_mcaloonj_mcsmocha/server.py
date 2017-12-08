@@ -99,7 +99,7 @@ def getmap():
 
 
 def worker(*args):
-    this_call = args[0][]
+    this_call = args[0]
     worker_params = args[1]
     algo(worker_params, requestCount, this_call)
     global finished
