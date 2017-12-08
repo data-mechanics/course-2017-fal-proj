@@ -76,17 +76,27 @@ def getmap():
         global finished    
         finished[this_call] = [False, params]    
 
-        
-    try:
-        if not cache_hit: 
-            global th
-            worker_params = params
-            th = Thread(target=worker, args=[this_call, worker_params])
-            th.start()                        
-        return render_template('loading.html', tID=str(this_call))        
 
-    except:        
-        return render_template('error.html')
+    if not cache_hit: 
+        global th
+        worker_params = params
+        th = Thread(target=worker, args=[this_call, worker_params])
+        th.start()                        
+    return render_template('loading.html', tID=str(this_call))        
+
+
+    # try:
+    #     if not cache_hit: 
+    #         global th
+    #         worker_params = params
+    #         th = Thread(target=worker, args=[this_call, worker_params])
+    #         th.start()                        
+    #     return render_template('loading.html', tID=str(this_call))        
+
+    # except:        
+    #     return render_template('error.html')
+
+
 
 def worker(*args):
     this_call = args[0]
