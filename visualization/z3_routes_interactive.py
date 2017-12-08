@@ -75,7 +75,7 @@ def find_streets(num_roads):
 
     S.add(total == Sum(street_vars))
 
-    S.add(total <= num_roads)
+    S.add(total == num_roads)
 
     S.check()
     m = S.model()
@@ -86,5 +86,7 @@ def find_streets(num_roads):
     for d in m:
         if str(d)[0] == 'e' and m[d] == 1:
             streets = streets + z3_eroute[str(d)] + ", "
+
+    repo.logout()
 
     return streets[:-2]
