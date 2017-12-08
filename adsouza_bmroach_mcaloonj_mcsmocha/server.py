@@ -29,7 +29,7 @@ finished = {}
 
 params = {}
 requestCount = 1
-call_id = 0
+call_id = 1
 
 @app.route('/', methods=['GET'])
 def main():
@@ -42,12 +42,13 @@ def placeholder():
 
 @app.route('/getmap', methods=['POST'])
 def getmap():
-
-    global finished
     global call_id
-    finished[call_id] = False
     this_call = call_id
     call_id += 1
+
+    global finished    
+    finished[this_call] = False    
+
     global requestCount
     requestCount += 1
     ms = float(request.form['Mean Skew'])
