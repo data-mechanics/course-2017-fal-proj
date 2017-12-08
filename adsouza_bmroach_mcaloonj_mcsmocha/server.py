@@ -94,11 +94,6 @@ def result(a):
 
 if __name__ == '__main__':
     if remote_server:
-        pass
-        # # app.run(threaded=True, host='0.0.0.0', port='80')
-        
-        # from gevent.wsgi import WSGIServer
-        # http_server = WSGIServer(('0.0.0.0',80),app)
-        # http_server.serve_forever()
+        app.run(threaded=True, host='0.0.0.0', port='80')
     else:
         app.run()
