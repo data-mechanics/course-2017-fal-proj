@@ -21,13 +21,12 @@ from flask import Flask, render_template, request, url_for, jsonify
 from threading import Thread
 from logic import algo
 
-app = Flask(__name__)
-th = Thread()
-
 remote_server = True
 finished = {}
 
-params = {}
+app = Flask(__name__)
+th = Thread()
+
 requestCount = 1
 call_id = 1
 
@@ -48,7 +47,6 @@ def getmap():
     sc = int(request.form['Sign Count'])
     bs = float(request.form['Buffer Size'])
 
-    global params
     params = {'mean_skew': ms, #default 1.0
               'radius': r, #default 2
               'cluster_divisor': cd, #default 15
