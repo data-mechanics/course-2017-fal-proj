@@ -20,9 +20,9 @@ Development Notes:
 from flask import Flask, render_template, request, url_for, jsonify
 from threading import Thread
 from logic import algo
+
 app = Flask(__name__)
 th = Thread()
-
 
 remote_server = True
 finished = {}
@@ -30,6 +30,8 @@ finished = {}
 params = {}
 requestCount = 5
 call_id = 0
+
+algo(params,5,0,just_fetch=True)
 
 @app.route('/', methods=['GET'])
 def main():
@@ -93,7 +95,7 @@ def result(a):
 if __name__ == '__main__':
     if remote_server:
         # app.run(threaded=True, host='0.0.0.0', port='80')
-        algo(params,5,0,just_fetch=True)
+        
         from gevent.wsgi import WSGIServer
         http_server = WSGIServer(('0.0.0.0',80),app)
         http_server.serve_forever()
