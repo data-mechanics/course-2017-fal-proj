@@ -23,8 +23,8 @@ from logic import algo
 app = Flask(__name__)
 th = Thread()
 
-server = False
 
+remote_server = False
 finished = {}
 
 params = {}
@@ -68,7 +68,7 @@ def getmap():
         global th
         th = Thread(target=worker, args=[this_call])
         th.start()                        
-        return render_template('loading.html', tID=this_call)
+        return render_template('loading.html', tID=str(this_call))
     except:        
         return render_template('error.html')
 
@@ -81,17 +81,17 @@ def worker(*args):
 
 @app.route('/thread_status/<int:a>')
 def thread_status(a):
-    thread_id = a
+    thread_id = int(a)
     return jsonify(dict(status=('finished' if finished[thread_id] else 'running')))
 
 @app.route('/result/<int:a>')
 def result(a):
-    thread_id = a
+    thread_id = str(a)
     return render_template('placements'+thread_id+'.html')
 
 
 if __name__ == '__main__':
-    if server:
+    if remote_server:
         app.run(threaded=True, host='0.0.0.0', port='80')
     else:
         app.run()
