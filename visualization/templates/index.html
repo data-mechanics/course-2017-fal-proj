@@ -1,73 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
    <head>
-      <style>
-         #bg {
-         position: fixed;
-         top: 0;
-         left: 0;
-         z-index: -1;
-         min-width: 100%;
-         min-height: 100%;
-         }
-         .field {
-         	background-color: #4682B4;
-         	max-width: 30%;
-         	max-height: 30%;
-         	border-color: #484848;
-         	border-width: 5px;
-         	border-style: solid;
-         	margin: 0 auto;
-         	padding: 15px;
-         	padding-bottom: 30px;
-         }
-         .sources {
-         	position: fixed;
-         	bottom: 30px;
-         	right: 80px;
-         	background-color: #4682B4;
-         	max-width: 20%;
-         	max-height: 20%;
-         	border-color: #484848;
-         	border-width: 5px;
-         	border-style: solid;
-         	padding: 10px;
-         	margin: 0 auto;
-         }
-         h1 {
-         	font-family: Verdana;
-         	flood-color: #484848;
-         	font-size: 40px;
-         	padding: 10px;
-         	padding-left: 40px;
-         }
-         h2 {
-         	font-family: Verdana;
-         	text-align: center;
-         	padding: 10px;
-         	color: lightgrey;
-         	text-shadow: 1px 1px 10px black;
-         	font-size: 25px;
-         }
-         h3 {
-         	font-family: Verdana;
-         	text-align: center;
-         	color: lightgrey;
-         	text-shadow: 1px 1px 10px black;
-         }
-         input, textarea {
-         	display: block;
-         	margin: 0 auto;
-         	width: 60%;
-         	border: 2px solid;
-         	padding: 5px;
-         	text-align: center;
-         }
-      </style>
+      <link rel=stylesheet type=text/css href="{{ url_for('static',
+        filename='homepage.css') }}">
    </head>
    <body>
       <img src="static/boston_winter.jpg" id="bg" alt="">
-      <h1>Winter in Boston</h1>
+      <div class="container">
+            <div id="overlay2">     
+      <a href="https://github.com/cjoeml/course-2017-fal-proj" target="_blank">[ Github ]</a>
+   </div>
+   <div class="top-menu">
+   <div class="menu-tab" id="mt">
+   <a href="{{ url_for('index') }}" id="headlink">Winter in Boston</a>
+
+   </div>
+   </div>
+</div>
+
       <div class="field">
       	<h2> Visualization Parameters </h2>
          <form action="/visualization" method="get">
@@ -76,10 +26,11 @@
             <input type="submit" value="Submit">
          </form>
       </div>
-      <a href="https://github.com/cjoeml/course-2017-fal-proj">
-      <div class="sources">
+      <!-- Moved to overlay link -->
+      <!-- <a href="https://github.com/cjoeml/course-2017-fal-proj"> -->
+ <!--      <div class="sources">
       	<h3> GitHub </h1>
-      </div>
-  </a>
+      </div> -->
+  <!-- </a> -->
    </body>
 </html>
