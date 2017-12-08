@@ -62,6 +62,7 @@ def getmap():
     for call in completed_requests:
         if call[1] == params:
             this_call = call[0]
+            cache_hit = True
 
     if not cache_hit:
         global call_id
