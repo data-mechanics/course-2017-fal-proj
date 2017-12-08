@@ -42,15 +42,6 @@ def placeholder():
 
 @app.route('/getmap', methods=['POST'])
 def getmap():
-    global call_id
-    this_call = call_id
-    call_id += 1
-
-    global finished    
-    finished[this_call] = False    
-
-    global requestCount
-    requestCount += 1
     ms = float(request.form['Mean Skew'])
     r = float(request.form['Radius'])
     cd = int(request.form['Cluster Divisors'])
@@ -64,6 +55,25 @@ def getmap():
               'sign_count': sc, #default 30
               'buffer_size': bs, #default .5
             }
+
+    #keeps track of calls with identical parameters and returns them from the cached responses
+    completed_requests = [val for (key, val) in finished.items() if val[0]=True]
+    cache_hit = False
+    for call in completed_requests:
+        if call[1] == params:
+            this_call = call[0]
+
+    if not cache_hit:
+        global call_id
+        this_call = call_id
+        call_id += 1
+
+        global finished    
+        finished[this_call] = [False, params]    
+
+        global requestCount
+        requestCount += 1
+    
         
     try: 
         global th
@@ -83,7 +93,7 @@ def worker(*args):
 @app.route('/thread_status/<int:a>')
 def thread_status(a):
     thread_id = int(a)
-    return jsonify(dict(status=('finished' if finished[thread_id] else 'running')))
+    return jsonify(dict(status=('finished' if finished[thread_id][0] else 'running')))
 
 @app.route('/result/<int:a>')
 def result(a):
