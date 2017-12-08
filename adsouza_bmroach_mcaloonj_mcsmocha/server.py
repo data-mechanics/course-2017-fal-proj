@@ -28,7 +28,7 @@ remote_server = True
 finished = {}
 
 params = {}
-requestCount = 5
+requestCount = 1
 call_id = 0
 
 @app.route('/', methods=['GET'])
