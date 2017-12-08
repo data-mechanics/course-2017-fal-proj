@@ -7,16 +7,31 @@
          top: 0;
          left: 0;
          z-index: -1;
-         /* Preserve aspect ratio */
          min-width: 100%;
          min-height: 100%;
+         }
+         .field {
+         	background-color: #4682B4;
+         	max-width: 10%;
+         	border-color: #484848;
+         	border-width: 10px;
+         	border-style: solid;
+         	margin: 0 auto;
+         }
+         h1 {
+         	font-family: Verdana;
+         	flood-color: #484848;
+         }
+         form {
+         	box-sizing: border-box;
+         	width: 10%;
          }
       </style>
    </head>
    <body>
       <img src="static/boston_winter.jpg" id="bg" alt="">
       <h1>Winter in Boston</h1>
-      <div align="center">
+      <div class="field">
          <form action="/visualization" method="get">
             Visualization Parameters:<br>
             <input type="text" name="means" placeholder="means"><br>
