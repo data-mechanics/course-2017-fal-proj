@@ -73,7 +73,7 @@ class get_signal_placements(dml.Algorithm):
 
             kmeans_output = KMeans(sign_count, random_state=0).fit(X)
             centroids = kmeans_output.cluster_centers_.tolist()
-            del(centroids[1])
+            # del(centroids[1])
 
             #Now need to find the closest node to each centroid
             signal_placements = []
