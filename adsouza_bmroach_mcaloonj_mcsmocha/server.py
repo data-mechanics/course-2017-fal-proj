@@ -63,6 +63,7 @@ def getmap():
         if call[1] == params:
             this_call = call[0]
             cache_hit = True
+            break
 
     if not cache_hit:
         global call_id
@@ -76,13 +77,13 @@ def getmap():
         requestCount += 1
     
         
-    try: 
-        global th
-        th = Thread(target=worker, args=[this_call])
-        th.start()                        
-        return render_template('loading.html', tID=str(this_call))
-    except:        
-        return render_template('error.html')
+    # try: 
+    global th
+    th = Thread(target=worker, args=[this_call])
+    th.start()                        
+    return render_template('loading.html', tID=str(this_call))
+    # except:        
+    #     return render_template('error.html')
 
 def worker(*args):
     this_call = args[0]
