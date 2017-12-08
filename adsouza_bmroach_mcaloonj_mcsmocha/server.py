@@ -24,7 +24,7 @@ from logic import algo
 app = Flask(__name__)
 th = Thread()
 
-remote_server = True
+remote_server = False
 finished = {}
 
 params = {}
@@ -94,10 +94,11 @@ def result(a):
 
 if __name__ == '__main__':
     if remote_server:
-        # app.run(threaded=True, host='0.0.0.0', port='80')
+        pass
+        # # app.run(threaded=True, host='0.0.0.0', port='80')
         
-        from gevent.wsgi import WSGIServer
-        http_server = WSGIServer(('0.0.0.0',80),app)
-        http_server.serve_forever()
+        # from gevent.wsgi import WSGIServer
+        # http_server = WSGIServer(('0.0.0.0',80),app)
+        # http_server.serve_forever()
     else:
         app.run()

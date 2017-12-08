@@ -68,7 +68,7 @@ def algo(parameters, requestCount, threadID, trialRun=False, doProv=False,just_f
         algo_name = str(algorithm)
 
         if just_fetch:
-            if 'fetch' not in algo_name or 'fetch_accident' in algo_name:
+            if 'fetch' not in algo_name or 'fetch_nodes' in algo_name:
                 continue
         else:
             #skip algorithms which fetch and have already been called, but check again every 10 requests
@@ -80,38 +80,38 @@ def algo(parameters, requestCount, threadID, trialRun=False, doProv=False,just_f
             
 
         completed = False
-        while not completed:
-            try:                
-                if 'fetch_nodes' in algo_name:
-                    ms = parameters['mean_skew']
-                    r = parameters['radius']
-                    algorithm.execute(trial=trialRun,mean_skew=ms, radius=r)
+        # while not completed:
+        try:                
+            if 'fetch_nodes' in algo_name:
+                ms = parameters['mean_skew']
+                r = parameters['radius']
+                algorithm.execute(trial=trialRun,mean_skew=ms, radius=r)
 
-                elif 'get_accident_clusters' in algo_name:
-                    cd = parameters['cluster_divisor']
-                    algorithm.execute(trial=trialRun,cluster_divisor=cd)
-                
-                elif 'get_signal_placements' in algo_name:
-                    sc = parameters['sign_count']
-                    bs = parameters['buffer_size']
-                    algorithm.execute(trial=trialRun,sign_count=sc, buffer_size=bs)
-
-                elif 'get_avg_distance' in algo_name:
-                    algorithm.execute(trial=trialRun, web=True)
-                    
-                elif 'make_graph' in algo_name:
-                    algorithm.execute(trial=trialRun, threadID=threadID)
-
-                else:
-                    algorithm.execute(trial=trialRun)
-
-                if doProv:
-                    provenance = algorithm.provenance(provenance)
-                
-                completed = True
+            elif 'get_accident_clusters' in algo_name:
+                cd = parameters['cluster_divisor']
+                algorithm.execute(trial=trialRun,cluster_divisor=cd)
             
-            except:
-                print("There was an error in", algo_name, "\nAttempting again...")
+            elif 'get_signal_placements' in algo_name:
+                sc = parameters['sign_count']
+                bs = parameters['buffer_size']
+                algorithm.execute(trial=trialRun,sign_count=sc, buffer_size=bs)
+
+            elif 'get_avg_distance' in algo_name:
+                algorithm.execute(trial=trialRun, web=True)
+                
+            elif 'make_graph' in algo_name:
+                algorithm.execute(trial=trialRun, threadID=threadID)
+
+            else:
+                algorithm.execute(trial=trialRun)
+
+            if doProv:
+                provenance = algorithm.provenance(provenance)
+            
+            completed = True
+            
+            # except:
+            print("There was an error in", algo_name, "\nAttempting again...")
 
 
     if doProv:
