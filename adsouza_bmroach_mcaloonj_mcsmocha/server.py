@@ -57,7 +57,7 @@ def getmap():
             }
 
     #keeps track of calls with identical parameters and returns them from the cached responses
-    completed_requests = [val for (key, val) in finished.items() if val[0]=True]
+    completed_requests = [val for (key, val) in finished.items() if val[0]==True]
     cache_hit = False
     for call in completed_requests:
         if call[1] == params:
