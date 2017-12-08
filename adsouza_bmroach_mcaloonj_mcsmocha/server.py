@@ -24,14 +24,12 @@ from logic import algo
 app = Flask(__name__)
 th = Thread()
 
-remote_server = False
+remote_server = True
 finished = {}
 
 params = {}
 requestCount = 5
 call_id = 0
-
-algo(params,5,0,just_fetch=True)
 
 @app.route('/', methods=['GET'])
 def main():

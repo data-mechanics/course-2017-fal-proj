@@ -106,7 +106,7 @@ def algo(parameters, requestCount, threadID, trialRun=False, doProv=False):
                 completed = True
                 
             except:
-            print("There was an error in", algo_name, "\nAttempting again...")
+                print("There was an error in", algo_name, "\nAttempting again...")
 
 
     if doProv:
