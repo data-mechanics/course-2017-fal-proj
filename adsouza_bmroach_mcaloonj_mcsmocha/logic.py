@@ -32,7 +32,7 @@ import protoql
 import datetime
 
 
-def algo(parameters, requestCount, threadID, trialRun=False, doProv=False):
+def algo(parameters, requestCount, threadID, trialRun=False, doProv=False,just_fetch=False):
 
     # Extract the algorithm classes from the modules in the
     # current directory.
@@ -66,15 +66,20 @@ def algo(parameters, requestCount, threadID, trialRun=False, doProv=False):
 
     for algorithm in ordered:
         algo_name = str(algorithm)
-        
-        #skip algorithms which fetch and have already been called, but check again every 10 requests
-        if 'fetch' in algo_name and \
-        'node' not in algo_name and \
-        requestCount > 2 and \
-        requestCount % 10 != 0:
-            continue
 
-        completed = False        
+        if just_fetch:
+            if 'fetch' not in algo_name or 'fetch_accident' in algo_name:
+                continue
+        else:
+            #skip algorithms which fetch and have already been called, but check again every 10 requests
+            if 'fetch' in algo_name and \
+            'node' not in algo_name and \
+            requestCount > 2 and \
+            requestCount % 10 != 0:
+                continue
+            
+
+        completed = False
         while not completed:
             try:                
                 if 'fetch_nodes' in algo_name:
