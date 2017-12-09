@@ -76,8 +76,7 @@ Early Problem Solving (Project #2):
 Web Visualizations (Project #3):
 	As the final component to the project, I had to develop two web-based visualizations of the data and the results to the problems I had tried to tackle. The first of these steps was to provide
 	a more intuitive way to visualize the scope of Boston's crime problem, and its derivative FIO problem, through interactive web maps. This was approached in build_heatmap.py, which, reading in the 
-	crime incident report data and FIO data obtained in Project #1, creates two interactive .html files (heatmap_crimes.html and heatmap_FIOs.html) that allow the user to see how both crimes and FIOs
-	in Boston have changed over time. 
+	crime incident report data and FIO data obtained in Project #1, create an interactive .html file (heatmap_crimes.html) that allow the user to see how both crimes in Boston have changed over time. 
 
 	With this more comprehensive view of the problem, I thought it best to at least attempt to devise a solution. The answer I came up with was simple, but elegant: simply cluster Boston into 
 	it's respective crime centers, and provide a tool that would let any would-be user analyze exactly where they need to devote resources in order to effectively combat crime in Boston. In this way,

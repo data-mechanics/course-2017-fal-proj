@@ -11,9 +11,9 @@ from collections import OrderedDict
 
 def parse_data():
     '''Sets up the connect to MongoDB to read in our
-    crime statistics. Builds and returns a dataset of the crimes each month in
-    Boston.'''
-
+    crime statistics. Builds and returns adataset of the crimes each month
+    in Boston.'''
+    
     # Set up the database connection.
     client = dml.pymongo.MongoClient()
     repo = client.repo
@@ -44,14 +44,16 @@ def parse_data():
     return crimes_by_month
 
 
-def build_map(data, timeseries):
+def build_map(data, timeseries, name):
     '''Uses folium to build the make using the passes in data. Saves the map to
     a local .html file.'''
 
     m = folium.Map([42.3601, -71.0589], tiles='stamentoner', zoom_start=12)
-    hm = plg.HeatMapWithTime(data, index=timeseries)
+    hm = plg.HeatMapWithTime(data, index=timeseries, auto_play=True)
     hm.add_to(m)
-    m.save('heatmap.html')
+    
+    folium.LatLngPopup().add_to(m)
+    m.save(name)
 
 
 def main():
@@ -80,7 +82,7 @@ def main():
         timeseries.append(to_append)
 
 
-    build_map(data, timeseries)
+    build_map(data, timeseries, 'heatmap_crime.html')
 
 
 
