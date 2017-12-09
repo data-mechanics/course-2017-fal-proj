@@ -1,31 +1,29 @@
                             OLS Regression Results                            
 ==============================================================================
-Dep. Variable:              FIO Count   R-squared:                         nan
-Model:                            OLS   Adj. R-squared:                    nan
-Method:                 Least Squares   F-statistic:                       nan
-Date:                Mon, 13 Nov 2017   Prob (F-statistic):                nan
-Time:                        12:11:19   Log-Likelihood:                    inf
-No. Observations:                  11   AIC:                              -inf
-Df Residuals:                       5   BIC:                              -inf
+Dep. Variable:              FIO Count   R-squared:                       0.987
+Model:                            OLS   Adj. R-squared:                  0.968
+Method:                 Least Squares   F-statistic:                     51.65
+Date:                Tue, 05 Dec 2017   Prob (F-statistic):           0.000958
+Time:                        22:39:03   Log-Likelihood:                 17.573
+No. Observations:                  10   AIC:                            -23.15
+Df Residuals:                       4   BIC:                            -21.33
 Df Model:                           6                                         
 Covariance Type:            nonrobust                                         
 ===============================================================================
                   coef    std err          t      P>|t|      [95.0% Conf. Int.]
 -------------------------------------------------------------------------------
-white                0          0        nan        nan             0         0
-black                0          0        nan        nan             0         0
-hispanic             0          0        nan        nan             0         0
-asian                0          0        nan        nan             0         0
-other                0          0        nan        nan             0         0
-Crime Count          0          0        nan        nan             0         0
+white          -0.1581      0.119     -1.324      0.256        -0.490     0.173
+black           0.1972      0.214      0.923      0.408        -0.396     0.791
+hispanic        0.0823      0.175      0.470      0.663        -0.404     0.569
+asian          -0.2212      0.633     -0.350      0.744        -1.979     1.536
+other          -1.0342      2.723     -0.380      0.723        -8.595     6.526
+Crime Count     0.8074      0.183      4.405      0.012         0.298     1.316
 ==============================================================================
-Omnibus:                        1.057   Durbin-Watson:                     nan
-Prob(Omnibus):                  0.589   Jarque-Bera (JB):                4.125
-Skew:                           0.000   Prob(JB):                        0.127
-Kurtosis:                       0.000   Cond. No.                     4.71e+04
+Omnibus:                        3.534   Durbin-Watson:                   1.773
+Prob(Omnibus):                  0.171   Jarque-Bera (JB):                1.194
+Skew:                           0.830   Prob(JB):                        0.550
+Kurtosis:                       3.328   Cond. No.                         97.3
 ==============================================================================
 
 Warnings:
 [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
-[2] The condition number is large, 4.71e+04. This might indicate that there are
-strong multicollinearity or other numerical problems.

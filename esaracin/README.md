@@ -73,6 +73,20 @@ Early Problem Solving (Project #2):
 	such as whether or not the BPD is biased in who it targets for stop and frisks, and how they might improve their current system.
 
 
+Web Visualizations (Project #3):
+	As the final component to the project, I had to develop two web-based visualizations of the data and the results to the problems I had tried to tackle. The first of these steps was to provide
+	a more intuitive way to visualize the scope of Boston's crime problem, and its derivative FIO problem, through interactive web maps. This was approached in build_heatmap.py, which, reading in the 
+	crime incident report data and FIO data obtained in Project #1, creates two interactive .html files (heatmap_crimes.html and heatmap_FIOs.html) that allow the user to see how both crimes and FIOs
+	in Boston have changed over time. 
+
+	With this more comprehensive view of the problem, I thought it best to at least attempt to devise a solution. The answer I came up with was simple, but elegant: simply cluster Boston into 
+	it's respective crime centers, and provide a tool that would let any would-be user analyze exactly where they need to devote resources in order to effectively combat crime in Boston. In this way,
+	the BPD could approach the problem of Boston's crime with as little bias as possible. This interactive tool is built in cluster_map.py and written to an .html file that can displayed in any 
+	standard browser.
+
+	Both Python scripts require the use of Python's Folium package, and a stable connection to MongoDB, from which the datasets to construct the .html files (which are already written and located in
+	this directory) are loaded.
+
 
 Note that all files pertaining to this submission are included in this directory (/esaracin/). auth.json, along with all other top-level files and directories,
 were are not needed or modified in any way by the DML algorithms contained within this directory.

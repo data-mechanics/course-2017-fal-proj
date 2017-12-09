@@ -88,17 +88,3 @@ if __name__ == '__main__':
     main()
 
 
-
-
-
-#list_lens = []
-#for key in crimes_by_month:
-#    list_lens.append(len(crimes_by_month[key]))
-
-#min_len = min(list_lens)
-
-#for key in crimes_by_month:
-#    crimes_by_month[key] = crimes_by_month[key][:min_len]
-
-
-
