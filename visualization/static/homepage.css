@@ -77,6 +77,12 @@ text-align: center;
 color: lightgrey;
 text-shadow: 1px 1px 10px black;
 }
+h4 {
+font-size: 12px;
+font-family: Verdana;
+text-align: center;
+color: black;
+}
 input, textarea {
 display: block;
 margin: 0 auto;
