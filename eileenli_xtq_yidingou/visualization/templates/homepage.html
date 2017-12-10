@@ -6,9 +6,12 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
 <style>
+body{background: #2c2c2c url(../images/bg.jpg) top center no-repeat;}
 body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+b {color:white;}
+b1 {color:black;}
 </style>
-<body class="w3-light-grey">
+<body class="background">
 
 <!-- w3-content defines a container for fixed size centered content, 
 and is wrapped around the whole page content, except for the footer in this example -->
@@ -16,8 +19,9 @@ and is wrapped around the whole page content, except for the footer in this exam
 
 <!-- Header -->
 <header class="w3-container w3-center w3-padding-32"> 
-  <h1><b>Boston University Location Analysis</b></h1>
-  <p>Lin Li, Yiding Ou, Tianqi Xu</p>
+  <h1><b>Boston Colleges Location Rating and Analysis
+</b></h1>
+  <p><b>Lin Li, Yiding Ou, Tianqi Xu</b></p>
 </header>
 
 <!-- Grid -->
@@ -26,10 +30,10 @@ and is wrapped around the whole page content, except for the footer in this exam
 <!-- Blog entries -->
 <div class="w3-col l8 s12">
   <!-- Blog entry -->
-  <div class="w3-card-4 w3-margin w3-white">
+  <div class="w3-card-4 w3-margin" style="background:#b2e7ca">
     <img src="/w3images/woods.jpg" style="width:100%">
     <div class="w3-container">
-      <h3><b>Custom Ranking of Unversities</b></h3>
+      <h3><b1>Custom Ranking of Unversities</b1></h3>
 
     </div>
 
@@ -37,7 +41,7 @@ and is wrapped around the whole page content, except for the footer in this exam
       <p>You can custimize your preferene by changing the score mechanism : choose weights from 1 to 3 for each component. Then you will see the top 50 universities on map on the left side and also in the list on the right side. </p>
       <div class="w3-row">
         <div class="w3-col m8 s12">
-          <p><button onclick = "location.href = 'map.html';" class = "w3-button w3-padding-large w3-white w3-border"><b>Custom Ranking »</b></button></p>
+          <p><button onclick = "location.href = 'map.html';" class = "w3-button w3-padding-large w3-white w3-border"><b1>Custom Ranking »</b1></button></p>
         </div>
         <div class="w3-col m4 w3-hide-small">
         </div>
@@ -47,17 +51,17 @@ and is wrapped around the whole page content, except for the footer in this exam
   <hr>
 
   <!-- Blog entry -->
-  <div class="w3-card-4 w3-margin w3-white">
+  <div class="w3-card-4 w3-margin" style="background:#b2d9e7">
   <img src="/w3images/bridge.jpg" style="width:100%">
     <div class="w3-container">
-      <h3><b>Best hospital location by K-means</b></h3>
+      <h3><b1>Best hospital location by K-means</b1></h3>
     </div>
 
     <div class="w3-container">
       <p>We use the k means algorithm to find the new optimal hospital place for any 2 schools, at where needs the hospital the most base on the rates of comfort, safety and convenience. </p>
       <div class="w3-row">
         <div class="w3-col m8 s12">
-          <p><button onclick = "location.href = 'kmeans.html';" class="w3-button w3-padding-large w3-white w3-border"><b>K-mean Hospital »</b></button></p>
+          <p><button onclick = "location.href = 'kmeans.html';" class="w3-button w3-padding-large w3-white w3-border"><b1>K-mean Hospital »</b1></button></p>
         </div>
         <div class="w3-col m4 w3-hide-small">
         </div>
@@ -71,19 +75,19 @@ and is wrapped around the whole page content, except for the footer in this exam
 <div class="w3-col l4">
   <!-- About Card -->
   <div class="w3-card w3-margin w3-margin-top">
-  <img src="/w3images/avatar_g.jpg" style="width:100%">
-    <div class="w3-container w3-white">
-      <h4><b>Introduction</b></h4>
+  <!-- <img src="/w3images/avatar_g.jpg" style="width:100%"> -->
+    <div class="w3-container" style="background:#e7c7b2">
+      <h4><b1>Introduction</b1></h4>
       <p>We are exploring the rating of living around the schools in Boston by calculating the safety rate, the comfort rate, and the convenience rate. Another objective of us is to use k-mean to find the area that needs a hospital the most. Our safety rate will include data from crime, crash and hospitals. Our comfort rate will include data from entertainment and restaurants. Our convenience rate will include data from crash, hubway, traffic signals and MBTA.</p>
     </div>
   </div><hr>
   
   <!-- Posts -->
   <div class="w3-card w3-margin">
-    <div class="w3-container w3-padding">
-      <h4>Factor included</h4>
+    <div class="w3-container w3-padding" style="background:#edb1df">
+      <h4>Factors included</h4>
     </div>
-    <ul class="w3-ul w3-hoverable w3-white">
+    <ul class="w3-ul w3-hoverable" style="background:#edbde2">
       <li class="w3-padding-16">
         <span class="w3-large">Convinience Rating Factor</span><br>
         <span>MBTA, Crash, Jam, Hubway</span>
