@@ -1,5 +1,6 @@
 ## Justification
-Boston is a city notorious for extreme winter weather. With snowstorms potentially causing problems ranging from minor inconveniences like traffic backup to more serious concerns like roads to hospitals being blocked, it's important to clear snow from roads as efficiently as possible. To assist in efficient snow removal efforts, we classify the effectiveness of plowing a particular road in two ways: "road priority" and "connections". Road priority gauges how much plowing a particular road would benefit traversal throughout the city. At this stage of the project we are gauging this based on emergency snow routes. We will define a "high priority set" as a subset of Boston's emergency snow routes in which all other streets have access to at least one emergency route. We optimize this by finding the high priority set with the fewest emergency routes possible. "Connections" gauges how plowing a particular road would benefit access to nearby buildings of importance, and is optimized via a run of the K-means algorithm, wherein clusters to be closed in on by K-means are defined by the coordinates of these buildings of importance. We then perform analysis of the K-means result to return the distance to the nearest centroid for each point of importance. The results of this optimization can be viewed in the "closest_buildings_to_centroids" collection.
+Boston is a city notorious for extreme winter weather. With snowstorms potentially causing problems ranging from minor inconveniences like traffic backup to more serious concerns like roads to hospitals being blocked, it's important to clear snow from roads as efficiently as possible. To assist in efficient snow removal efforts, we classify the effectiveness of plowing a particular road in two ways: "road priority" and "connections". Road priority gauges how much plowing a particular road would benefit traversal throughout the city. At this stage of the project we are gauging this based on emergency snow routes. We will define a "high priority set" as a subset of Boston's emergency snow routes in which all other streets have access to at least one emergency route. We optimize this by finding the high priority set with the fewest emergency routes possible. "Connections" gauges how plowing a particular road would benefit access to nearby buildings of importance, and is optimized via a run of the K-means algorithm, wherein clusters to be closed in on by K-means are defined by the coordinates of these buildings of importance. We then perform analysis of the K-means result to return the distance to the nearest centroid for each point of importance.
+In our visualization, the K-means result is displayed alongside the constraint satisfaction result. Roads to be prioritized by the city to plow first, are those with the smallest distance between them, and the nearest centroid.
 
 ## Requirements
 * Our code was designed and tested to run with Python 3.6
@@ -17,8 +18,9 @@ https://github.com/Z3Prover/z3
 
 ## Notes and Running
 * Within the repository there is a folder entitled "extra_files". The files in this directory do not, and should not, run upon execution. They are files which are not used in the context of the current project, but may prove useful in project 3.
-* No API keys or login credentials are required.
-To run:
+* A Google Maps API key is required. One call will be made to generate a map. If generation of markers is enabled, one API call per marker will also be made to Google Maps' geocoordinate API, allowing us to find the geographic center of each route selected by the constraint satisfaction problem. See below for more details on the generation of markers. This key is pulled from an auth.json file into server.py using the indexes ```['services']['googleportal']['key']```. Google Maps' free API keys allow for 2,500 calls per day.
+
+* To run:
 
 ```
 mongod --dbpath "<DATABASE PATH HERE>"
@@ -28,6 +30,7 @@ mongod --dbpath "<DATABASE PATH HERE>"
 mongo repo -u bkin18_cjoe_klovett_sbrz -p bkin18_cjoe_klovett_sbrz --authenticationDatabase repo
 ```
 
+* In the base directory "course-2017-fal-proj",
 For trial mode:
 ```
 python3 execute.py bkin18_cjoe_klovett_sbrz --trial
@@ -36,6 +39,16 @@ Else:
 ```
 python3 execute.py bkin18_cjoe_klovett_sbrz
 ```
+
+* cd into the "visualization/" directory.
+'''
+python server.py
+'''
+
+Enter in a number of means to be used as a value for k in the k-means algorithm. Our implementation allows for 1-21 means.
+Enter in a number of routes to be used as the number of routes returned by the z3-solver.
+Toggle whether markers should be generated. If enabled, the map will take roughly 0.5 to 2.0 seconds per marker to generate, with a marker existing for each route returned by the z-3 solver. This runtime increase appears to be due to limitations on the standard usage limits of Google Maps' geocoder API, which allows for a limited number of queries per second. For more information, [see here](https://developers.google.com/maps/documentation/geocoding/usage-limits). To monitor the current progress, check the terminal window running python server.py once "submit" has been clicked. In some cases the server might time out in the generation of markers, especially for high number of routes.
+Click "submit."
 
 # course-2017-fal-proj
 Joint repository for the collection of student course projects in the Fall 2017 iteration of the Data Mechanics course at Boston University.
