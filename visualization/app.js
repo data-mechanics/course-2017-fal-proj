@@ -87,7 +87,14 @@ app.post("/newMeans", function (req, res) {
 
 app.post("/getAddressData", function(req, res){
     console.log(req.body);
-
+    var query = req.body[0].replace(new RegExp(' ','g'), '+');
+    var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + query + '&' + mapsKey;
+    console.log(url);
+    request.get(url, function (error, response, body) {
+        console.log(error);
+        console.log(response);
+        console.log(body)
+    });
 
 });
 
