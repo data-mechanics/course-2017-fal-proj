@@ -73,7 +73,6 @@ fieldset {
 
 
 
-
 legend { 
   font-weight: bold; 
   font-size: 20px; 
@@ -87,55 +86,63 @@ option {
   padding: 0 5px; 
 }
 
-
-#map {
-  height: 700px;
-  width: 550px;
-  /*border: 1px solid black;*/
-  margin: 5px;
-  margin-left: 40px;
-  display: inline-block;
-}
-
 svg {
-  float: right;
-  margin-right: 30px;
-  width: 620px;
-  height: 1000px;
-  position: relative;
-  padding: 25px 10px 10px 10px;
-}
+        width: 50%;
+        height: 50%;
+        float:left;
+        margin-left: 80px;
+        padding: 25px 10px 10px 10px;
+    }
 
 .toolTip {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    position: absolute;
-    display: none;
-    width: auto;
-    height: auto;
-    background: none repeat scroll 0 0 white;
-    border: 0 none;
-    border-radius: 8px 8px 8px 8px;
-    box-shadow: -3px 3px 15px #888888;
-    color: black;
-    font: 12px sans-serif;
-    padding: 5px;
-    text-align: center;
-    z-index: 3;
-}
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        position: absolute;
+        display: none;
+        width: auto;
+        height: auto;
+        background: none repeat scroll 0 0 white;
+        border: 0 none;
+        border-radius: 8px 8px 8px 8px;
+        box-shadow: -3px 3px 15px #888888;
+        color: black;
+        font: 12px sans-serif;
+        padding: 5px;
+        text-align: center;
+    }
+
+text {
+        font: 10px sans-serif;
+        color: white;
+    }
+
+text.value {
+        font-size: 120%;
+        fill: white;
+    }
 
 .axisHorizontal path{
-    fill: none;
-}
+        fill: none;
+    }
 
 .axisHorizontal .tick line {
-    stroke-width: 1;
-    stroke: rgba(0, 0, 0, 0.2);
-}
+        stroke-width: 1;
+        stroke: rgba(0, 0, 0, 0.2);
+    }
 
 .bar {
-    fill: steelblue;
-    fill-opacity: .9;
+        fill: steelblue;
+        fill-opacity: .9;
+    }
+
+#map {
+  height: 650px;
+  width: 550px;
+  display: inline-block;
+  position: relative;
+  margin-right: 80px;
 }
+
+
 
 
 #sbtn{

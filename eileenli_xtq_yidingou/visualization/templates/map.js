@@ -1,7 +1,7 @@
 var saver = {};
 var whomap;
 
-function drawHist(data,special){
+function histogram(data,special){
   var div = d3.select("body")
               .append("div")
               .attr("class", "toolTip")
@@ -12,8 +12,8 @@ function drawHist(data,special){
       valueMargin = 4,
       width = 620,
       height = 1000,
-      barHeight = (height-axisMargin-margin*2)* 0.6/data.length,
-      barPadding = (height-axisMargin-margin*2)*0.4/data.length,
+      barHeight = 450/data.length,
+      barPadding = 450/data.length,
       data, bar, svg, scale, xAxis, labelWidth = 0;
 
   max = d3.max(data, function(d) { return d.value; });
@@ -38,8 +38,8 @@ function drawHist(data,special){
   bar.append("text")
      .attr("class", "label")
      .attr("y", barHeight / 2)
-     .attr("dy", ".35em") //vertical align middle
-     .attr('fill', 'black')
+     .attr("dy", ".35em") 
+     .attr('fill', 'white')
      .text(function(d){
        return d.label;
      }).each(function() {
@@ -61,14 +61,14 @@ function drawHist(data,special){
       .attr("height", barHeight)
       .attr("fill", function(d) {
         if(special == ""){
-          return "#fddd9b";
+          return "#e5b6ed";
         }
         else{
           if (d.label == special) {
-            return "#ff9f77";
+            return "#bfefc9";
           }
           else {
-            return "#fddd9b";
+            return "#e5b6ed";
           }
         }
       })
@@ -82,16 +82,19 @@ function drawHist(data,special){
       .attr("x", (width / 2))
       .attr("y", 0)
       .attr("text-anchor", "middle")
-      .style("font-size", "16px")
-      .text("Top 50 Colleges");
+      .style("font-size", "24px")
+      .attr('fill', 'white')
+      .text("Top 60 Colleges");
 
   svg.selectAll("rect")
       .on("mouseover", function(d){
-        d3.select(this).attr("fill","#b2d9e7");
+        d3.select(this).attr("fill","#bfefc9");
       })
       .on("mouseout", function(d){
-        d3.select(this).attr("fill","#fddd9b");
+        d3.select(this).attr("fill","#e5b6ed");
       })
+
+  
   bar.on("mouseover", function(d){
       div.style("left", d3.event.pageX+10+"px");
       div.style("top", d3.event.pageY-25+"px");
@@ -125,11 +128,11 @@ function drawHist(data,special){
 
   var map;
 
-  /*42.2820028,-71.0871498*/
+  /* Center at Fenway Park 42.3467,-71.0972*/
   function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
       zoom: 12,
-      center: new google.maps.LatLng(42.3223948,-71.0943483),
+      center: new google.maps.LatLng(42.3467,-71.0972),
       mapTypeId: 'roadmap'
     });
 
@@ -195,22 +198,22 @@ function drawHist(data,special){
                 infowindow.open(map, marker);
                 d3.selectAll('svg').remove();
                 d3.select("#histo").remove();
-                drawHist(data, infowindow.extra);
+                histogram(data, infowindow.extra);
               }));
               google.maps.event.addListener(marker, 'mouseout', (function () {
                 infowindow.close();
                 marker.setIcon(image);
                 d3.selectAll('svg').remove();
                 d3.select("#histo").remove();
-                drawHist(data, "");
+                histogram(data, "");
               }));
 
-            }); /*end of for each*/
+            }); 
             data.sort(function(a, b) {
               return parseFloat(b.value) - parseFloat(a.value);
             });
-            data = data.slice(0,50);
-            drawHist(data, "");
+            data = data.slice(0,60);
+            histogram(data, "");
             whomap = map;
         }
     });
