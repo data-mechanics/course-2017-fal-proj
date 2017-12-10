@@ -102,6 +102,7 @@ app.controller('mainController', function ($scope, $element, $timeout, $http, $d
             return;
         }
         else{
+            $scope.loader = true;
             $scope.errorText = "";
             $scope.err =  false;
             $http({
@@ -110,6 +111,7 @@ app.controller('mainController', function ($scope, $element, $timeout, $http, $d
                 data: [$scope.address],
                 headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
             }).then(function (success) {
+                $scope.loader = false;
 
                 //success
             }, function (error) {

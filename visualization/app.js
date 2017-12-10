@@ -91,9 +91,26 @@ app.post("/getAddressData", function(req, res){
     var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + query + '&' + mapsKey;
     console.log(url);
     request.get(url, function (error, response, body) {
-        console.log(error);
-        console.log(response);
-        console.log(body)
+        console.log(body);
+        body = JSON.parse(body);
+        var zip = "";
+        var addresses = body["results"][0]["address_components"];//[7]["long_name"];
+        for(var name in addresses){
+            if(addresses[name][0].hasAttribute("types") && addresses[name][0]["types"] == "postal_code"){
+                zip = addresses[name]["long_name"];
+            }
+        }
+        if(zip == ""){
+            res.send("");
+            return;
+        }
+
+
+
+        var lat = body["results"][0]["geometry"]["bounds"]["northeast"]["lat"];
+        var lng = body["results"][0]["geometry"]["bounds"]["northeast"]["lng"];
+        console.log("lat: " + lat + "\n" + "lng: " + lng);
+        res.send("");
     });
 
 });
