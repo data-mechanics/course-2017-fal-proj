@@ -115,6 +115,14 @@ app.post("/getAddressData", function(req, res){
 
 });
 
+<<<<<<< HEAD
+app.get("/userAddress", function(req, res) {
+    console.log(stringify(req.body));
+})
+
+
+=======
+>>>>>>> 648d8a41e68736e42059c12b4ee39c1771f61419
 app.use(express.static(__dirname + '/public'))
     .use(cookieParser());
 
