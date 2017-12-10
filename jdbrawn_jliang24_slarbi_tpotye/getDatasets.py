@@ -57,31 +57,31 @@ class getDatasets(dml.Algorithm):
         repo['jdbrawn_jliang24_slarbi_tpotye.mbta'].insert_many(r)
 
         #ENTERTAINMENT DATA
-        url = 'https://data.cityofboston.gov/resource/cz6t-w69j.json'
+        url = 'https://data.boston.gov/api/3/action/datastore_search?resource_id=7920c501-b410-4a9c-85ab-51338c9b34af&limit=6000'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("entertain")
         repo.createCollection("entertain")
-        repo['jdbrawn_jliang24_slarbi_tpotye.entertain'].insert_many(r)
+        repo['jdbrawn_jliang24_slarbi_tpotye.entertain'].insert_many(r['result']['records'])
 
         #FOOD LICENSE DATA
-        url = 'https://data.cityofboston.gov/resource/fdxy-gydq.json'
+        url = 'https://data.boston.gov/api/3/action/datastore_search?resource_id=f1e13724-284d-478c-b8bc-ef042aa5b70b&limit=3100'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         a = json.loads(response)
         b = json.dumps(a, sort_keys=True, indent=2)
         repo.dropCollection("food")
         repo.createCollection("food")
-        repo['jdbrawn_jliang24_slarbi_tpotye.food'].insert_many(a)
+        repo['jdbrawn_jliang24_slarbi_tpotye.food'].insert_many(a['result']['records'])
 
         #Get police data
-        url = 'https://data.cityofboston.gov/resource/pyxn-r3i2.json'
+        url = 'https://data.boston.gov/api/3/action/datastore_search?resource_id=0b2be5cb-89c6-4328-93be-c54ba723f8db&limit=50'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("police")
         repo.createCollection("police")
-        repo['jdbrawn_jliang24_slarbi_tpotye.police'].insert_many(r)
+        repo['jdbrawn_jliang24_slarbi_tpotye.police'].insert_many(r['result']['records'])
 
         repo.logout()
 
@@ -116,9 +116,9 @@ class getDatasets(dml.Algorithm):
         resource_crime = doc.entity('bdp:12cb3883-56f5-47de-afa5-3b1cf61b257b', {'prov:label':'Boston Crime', prov.model.PROV_TYPE:'ont:DataResource'})
         resource_crashes = doc.entity('591:CarCrashData', {'prov:label':'Boston Crashes', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         resource_mbta = doc.entity('591:MBTA_Bus_Stops', {'prov:label':'MBTA Bus Stops', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'geojson'})
-        resource_entertain = doc.entity('bdp1:cz6t-w69j', {'prov:label':'Entertainment Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        resource_food = doc.entity('bdp1:fdxy-gydq', {'prov:label':'Food License Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
-        resource_police= doc.entity('bdp1:pyxn-r3i2' , {'prov:label':'Police Stations', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_entertain = doc.entity('bdp:7920c501-b410-4a9c-85ab-51338c9b34af', {'prov:label':'Entertainment Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_food = doc.entity('bdp:f1e13724-284d-478c-b8bc-ef042aa5b70b', {'prov:label':'Food License Data', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
+        resource_police= doc.entity('bdp:0b2be5cb-89c6-4328-93be-c54ba723f8db' , {'prov:label':'Police Stations', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'json'})
         
         get_colleges = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
         get_crime = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
@@ -142,9 +142,9 @@ class getDatasets(dml.Algorithm):
         doc.usage(get_crime, resource_crime, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval', 'ont:Query':'&limit=50000'})
         doc.usage(get_crashes, resource_crashes, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval'})
         doc.usage(get_mbta, resource_mbta, startTime, None, {prov.model.PROV_TYPE: 'ont:Retrieval'})
-        doc.usage(get_entertainment_data, resource_entertain, startTime, None,{prov.model.PROV_TYPE:'ont:Retrieval',})
-        doc.usage(get_food_license, resource_food, startTime, None,{prov.model.PROV_TYPE:'ont:Retrieval',})
-        doc.usage(get_police, resource_police, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval',})
+        doc.usage(get_entertainment_data, resource_entertain, startTime, None,{prov.model.PROV_TYPE:'ont:Retrieval', 'ont:Query':'&limit=6000'})
+        doc.usage(get_food_license, resource_food, startTime, None,{prov.model.PROV_TYPE:'ont:Retrieval', 'ont:Query':'&limit=3100'})
+        doc.usage(get_police, resource_police, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval', 'ont:Query':'&limit=50'})
 
         colleges = doc.entity('dat:jdbrawn_jliang24_slarbi_tpotye#colleges', {prov.model.PROV_LABEL: 'Boston Universities and Colleges', prov.model.PROV_TYPE: 'ont:DataSet'})
         doc.wasAttributedTo(colleges, this_script)
