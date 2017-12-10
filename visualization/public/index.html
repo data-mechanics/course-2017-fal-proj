@@ -18,17 +18,16 @@
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <a class="navbar-brand" href="/">Home</a>
+    <a class="navbar-brand" href="/">Refresh This Page</a>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
-            <a class="nav-item nav-link " href="#v1">Visualization I</a>
-            <a class="nav-item nav-link" href="#v2">Visualization II</a>
+            <a class="nav-item nav-link " href="http://cs-people.bu.edu/lapets/591/">Cs591 Lapets</a>
             <a class="nav-item nav-link" href="https://github.com/jmbiel/course-2017-fal-proj/tree/master/biel_otis">This Repo</a>
         </div>
     </div>
 </nav>
 <div class="visual" id="v1">
-    <div id="mapid"></div>
+    <div id="mapid"><div class="loader" ng-show="loader"></div></div>
     <div class="legend">
         <h3>About This Visualization</h3>
         <p>Each red dot indicates the location of an individual who qualifies as "obese" due to the Massachusetts standards.
@@ -38,13 +37,16 @@
             click of the button. Have fun!
         </p>
         <button ng-click="calcKMeans()" class="btn btn-primary">Click me to Calculate K-means</button>
-
+        <div>
+        <input class="input_style" ng-model="address" placeholder="Enter your address">
+        <button class="btn btn-primary" ng-click="plot()">Submit!</button>
+        </div>
+    </div>
+    <div id="content">
+        <p ng-show="stats">Hello this asdljasdkfjlkadsfaklsdjfkljasldkjfklsajdklfjksajdklfjklasdjflkjsdakljfkljadsklfjklsdjklf</p>
+        <p ng-show="err">{{errorText}}</p>
     </div>
 </div>
-<div class="visual light" id="v2">
-
-</div>
-
 </body>
         <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"
         integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log=="

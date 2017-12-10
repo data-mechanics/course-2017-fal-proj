@@ -31,11 +31,11 @@ app.controller('mainController', function ($scope, $element, $timeout, $http, $d
     }).addTo(mymap);
 
     var redDot = L.icon({
-        iconUrl: '../images/Reddot-small.svg',
-        iconSize:     [200, 200], // size of the icon
+        iconUrl: '../images/Red_dot.svg',
+        iconSize:     [15, 15], // size of the icon
     });
     var blueDot = L.icon({
-        iconUrl: '../images/bluedot.png',
+        iconUrl: '../images/Bluedot.svg',
         iconSize:     [20, 20], // size of the icon
     });
 
@@ -66,6 +66,7 @@ app.controller('mainController', function ($scope, $element, $timeout, $http, $d
             $scope.errorText = "there are no points to plot!";
         }
         else{
+            $scope.loader = true;
             $http({
                 url: baseUrl + '/newMeans',
                 method: 'Post',
@@ -81,19 +82,42 @@ app.controller('mainController', function ($scope, $element, $timeout, $http, $d
                 }
                 for(var individual in success.data[0]["optimalMarketLocation"]) {
                     var marker = new L.marker([success.data[0]["optimalMarketLocation"][individual][0], success.data[0]["optimalMarketLocation"][individual][1]], {
-                        draggable: true,
+                        draggable: false,
                         icon: blueDot
                     }).addTo(mymap);
                     $scope.meansArray.push(marker);
                 }
-
-
-
-
+                $scope.loader = false;
             }, function (error) {
                 console.log(error);
             });
         }
     }
+
+    $scope.plot = function () {
+        console.log($scope.address)
+        if($scope.address == null || $scope.address == ""){
+            $scope.errorText = "Please enter an address for a calculation...";
+            $scope.err =  true;
+            return;
+        }
+        else{
+            $scope.errorText = "";
+            $scope.err =  false;
+            $http({
+                url: baseUrl + '/getAddressData',
+                method: 'Post',
+                data: [$scope.address],
+                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
+            }).then(function (success) {
+
+                //success
+            }, function (error) {
+                //Error
+            });
+
+        }
+
+    } //End plot
 
 });

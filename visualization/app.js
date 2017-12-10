@@ -19,7 +19,8 @@ app.use(body_parser({limit: '50mb'}));
 app.use(body_parser.json());
 var url = "mongodb://localhost:27017/biel_otis";
 var apiKey = "AIzaSyBfjPoXnpYVcUh0ZnZmh_hIyKSmwicbKl8";
-
+var mapsKey = "AIzaSyBDpdTtSILyhJFnFwTDm2RnPPPoH3W9j_8"
+//https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=
 /*
 MongoClient.connect(url, function(err, db){
     db.collection("biel_otis.BostonZoning").find({}).toArray(function(err, res ){
@@ -84,31 +85,20 @@ app.post("/newMeans", function (req, res) {
         });
 });
 
-app.post("/search", function (req, res) {
-    //When we get an insert call we send store the data in the database
-    console.log("Searching in the database");
-    //console.log(req.body);
-    //console.log(req.body.type);
-    //Initialize an instal of mongodb
-    //Make sure to use sudo
-    console.log(req.body.query);
-    MongoClient.connect("mongodb://localhost:27017/dashboard", function (err, db) {
-        db.collection("album").find({id: req.body.query}).toArray(function (err, results) {
-            db.close();
-            //returns the cursor and the objects to the front end
-            //console.log(results);
-            res.send(results);
+app.post("/getAddressData", function(req, res){
+    console.log(req.body);
 
-        });
-    });
 
 });
 
+<<<<<<< HEAD
 app.get("/userAddress", function(req, res) {
     console.log(stringify(req.body));
 })
 
 
+=======
+>>>>>>> 648d8a41e68736e42059c12b4ee39c1771f61419
 app.use(express.static(__dirname + '/public'))
     .use(cookieParser());
 

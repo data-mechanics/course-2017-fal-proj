@@ -65,7 +65,11 @@ class setObesityPropertyCorrelation(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client['biel_otis']
         repo.authenticate('biel_otis', 'biel_otis')
+<<<<<<< HEAD
         obesityValues = list(repo['biel_otis.ObesityData'].find({"cityname": "Boston"}))
+=======
+        obesityValues = list(repo['biel_otis.ObesityData'].find({"cityname" : "Boston"}))
+>>>>>>> 648d8a41e68736e42059c12b4ee39c1771f61419
         propertyValues = list(repo['biel_otis.PropertyValues'].find())
         mapValues = list(repo['biel_otis.BostonZoning'].find())
 
@@ -73,11 +77,25 @@ class setObesityPropertyCorrelation(dml.Algorithm):
         if (trial==True):
             obesityValues = obesityValues[0:100]
             propertyValues = propertyValues[0:100]
+<<<<<<< HEAD
 
         propLoc = project(propertyValues, lambda x: (tuple(x['Location'].replace("(", "").replace(")", "").replace("|",",").split(",")), x['AV_TOTAL']))
         obesityLoc = project(obesityValues, lambda x: (float(x['geolocation']['latitude']), float(x['geolocation']['longitude'])))
         distances = [((float(x[0][0]),float(x[0][1])),(float(x[1]), 1)) for x in propLoc for y in obesityLoc if calculateDist((float(x[0][0]),float(x[0][1])),y) < 0.3 and x[1] != '0' and x[0][0] != '']
         
+=======
+        propLoc = project(propertyValues, lambda x: (tuple(x['Location'].replace("(", "").replace(")", "").replace("|",",").split(",")), x['AV_TOTAL']))
+        obesityLoc = project(obesityValues, lambda x: (float(x['geolocation']['latitude']), float(x['geolocation']['longitude'])))
+        print(propLoc[0])
+        distances = [((float(x[0][0]),float(x[0][1])),(float(x[1]), 1)) for x in propLoc for y in obesityLoc if x[1] != '0' and x[0][0] != '' and x[0][0] != '0' and calculateDist((float(x[0][0]),float(x[0][1])),y) < 0.3]
+        #for x in propLoc:
+            #print(x)
+        #    if(x[0][0] == '' or x[0][0] == '0'):
+        #        print(x)
+        #        print("gotOne")
+        #        continue
+        #    z = ((float(x[0][0]),float(x[0][1])),(float(x[1]), 1))
+>>>>>>> 648d8a41e68736e42059c12b4ee39c1771f61419
         for f in mapValues[0]:
             if (f == '_id'):
                 continue
@@ -215,6 +233,9 @@ class setObesityPropertyCorrelation(dml.Algorithm):
         repo.logout()
         
         return doc
+<<<<<<< HEAD
 
+=======
+>>>>>>> 648d8a41e68736e42059c12b4ee39c1771f61419
 setObesityPropertyCorrelation.execute()
 ## eof
