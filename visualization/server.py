@@ -32,16 +32,17 @@ def index_snow():
 def visualization():
     # here we want to get the value of user (i.e. ?means=some-value)
     try:
+        api_key = str(request.args.get('api_key'))
         num_routes = int(request.args.get('num_routes'))
         means = int(request.args.get('means'))
     except ValueError:
-        return "Please enter a valid integer input"
+        return "Please enter a valid input"
 
     if (num_routes <= 112 or num_routes >= 144):
-        num_routes = 112
+        return "Please enter a valid route input"
 
-    if means <= 0:
-        means = 1
+    if (means <= 0 or means > 21):
+        return "Please enter a valid means input"
 
     '''
     Formats kmeans data to be used in visualization
@@ -61,6 +62,7 @@ def visualization():
 
     dataMapper = open('templates/heatmap.html', 'r').read()
 
+    dataMapper = dataMapper.replace('{{apiKeyData}}', api_key)
     dataMapper = dataMapper.replace('{{routesData}}', routeCoordList)
     dataMapper = dataMapper.replace('{{kMeansData}}', kMeansCoordList)
 
