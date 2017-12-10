@@ -104,6 +104,10 @@ app.post("/search", function (req, res) {
 
 });
 
+app.get("/userAddress", function(req, res) {
+    console.log(stringify(req.body));
+})
+
 
 app.use(express.static(__dirname + '/public'))
     .use(cookieParser());
