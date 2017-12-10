@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Customized Score System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="map.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  </head>
+  <nav>
+  <ul>
+    <li><a href="homepage.html">Homepage</a></li>
+  </nav>
+  <body>
+    <h2>Find Top Colleges based on your preference</h2>
+    <div id="left">
+    <br>
+    </div>
+    <div id="last">
+      <div id="map"></div>
+      <div id="panel">
+        <h3>Feature Input</h3>
+        <p>Choose your weight for Safety:</p>
+        <select id="saf">
+          <option value="1">1</option>
+          <option value="2" selected="selected">2</option>
+          <option value="3">3</option>
+        </select>
+        <p>Choose your weight for Traffic Station:</p>
+        <select id="tra">
+          <option value="1">1</option>
+          <option value="2" selected="selected">2</option>
+          <option value="3">3</option>
+        </select>
+        <p>Choose your weight for Comfort:</p>
+        <select id="com">
+          <option value="1" selected="selected">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+        </select>
+        <br>
+        <button type="button" id="sbtn" name="button">Submit</button>
+      </div>
+    </div>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="map.js"></script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCyPM0wSuYqcj8KgNZJ6nRyiG4ECnNv3zc&callback=initMap">
+    </script>
+
+
+  </body>
+</html>
