@@ -40,7 +40,7 @@
 
                     map = new google.maps.Map(document.getElementById('map'), {
                         zoom: 15,
-                        center: {lat: 42.3601, lng: -71.0589},
+                        center: {lat: 42.34, lng: -71.0989},
                         mapTypeId: 'roadmap'
                     });
 
@@ -56,7 +56,7 @@
                     }
 
                     initHeatMap();
-                    
+
                     if (markers != []){
                         createMarkers();
                     }
@@ -90,18 +90,30 @@
                     return centroidObjects;
                 }
 
-                /*
-                */
-
                 function createMarkers() {
                     if (markers != []){
                         for (i = 0; i < markers.length; i++) {
                             var result = findClosestCentroid(markers[i]['lat'], markers[i]['lng']);
-                            var marker = new google.maps.Marker({
-                                position: markers[i],
-                                map: map,
-                                label: "(" + String(result) + ")"
-                            });
+                            if (result < 0.01) {
+                                var marker = new google.maps.Marker({
+                                    position: markers[i],
+                                    map: map,
+                                    label: {
+                                        text:  "(" + String(result) + ")",
+                                        color: "navy",
+                                        fontSize: "22px"
+                                    }
+                                });
+                            } else {
+                                var marker = new google.maps.Marker({
+                                    position: markers[i],
+                                    map: map,
+                                    label: {
+                                        text:  "(" + String(result) + ")",
+                                        fontSize: "15px"
+                                    }
+                                });
+                            }
                         }
                     }
                 }
@@ -126,9 +138,6 @@
 
                     return min;
                 }
-
-                /*
-                */
 
                 function initHeatMap() {
                     heatmap.set('radius', 200);
