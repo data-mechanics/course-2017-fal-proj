@@ -34,6 +34,7 @@
 
                 routes = {{routesData}}
                 kMeansData = {{kMeansData}}
+                markers = {{markerData}}
 
                 function initMap() {
 
@@ -55,6 +56,10 @@
                     }
 
                     initHeatMap();
+                    
+                    if (markers != []){
+                        createMarkers();
+                    }
                 }
 
                 function createRoads() {
@@ -84,6 +89,46 @@
                     console.log(centroidObjects)
                     return centroidObjects;
                 }
+
+                /*
+                */
+
+                function createMarkers() {
+                    if (markers != []){
+                        for (i = 0; i < markers.length; i++) {
+                            var result = findClosestCentroid(markers[i]['lat'], markers[i]['lng']);
+                            var marker = new google.maps.Marker({
+                                position: markers[i],
+                                map: map,
+                                label: "(" + String(result) + ")"
+                            });
+                        }
+                    }
+                }
+
+                function findDistance(lat1, lon1, lat2, lon2) {
+
+                    var distance = Math.sqrt(Math.pow((lat1 - lat2), 2) + Math.pow((lon1 - lon2), 2))
+                    return distance
+
+                }
+
+                function findClosestCentroid(lat1, lon1) {
+                    var min = Number.MAX_SAFE_INTEGER;
+                    var centroids = kMeansData;
+    
+                    for (var i = 0; i < centroids.length; i++) {
+                        var nextDist = findDistance(lat1, lon1, centroids[i][0], centroids[i][1]);
+                        if (nextDist < min) {
+                            min = nextDist;
+                        }
+                    }
+
+                    return min;
+                }
+
+                /*
+                */
 
                 function initHeatMap() {
                     heatmap.set('radius', 200);

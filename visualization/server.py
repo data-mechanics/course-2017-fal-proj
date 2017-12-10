@@ -35,6 +35,7 @@ def visualization():
         api_key = str(request.args.get('api_key'))
         num_routes = int(request.args.get('num_routes'))
         means = int(request.args.get('means'))
+        markers = str(request.args.get('markers'))
     except ValueError:
         return "Please enter a valid input"
 
@@ -65,6 +66,29 @@ def visualization():
     dataMapper = dataMapper.replace('{{apiKeyData}}', api_key)
     dataMapper = dataMapper.replace('{{routesData}}', routeCoordList)
     dataMapper = dataMapper.replace('{{kMeansData}}', kMeansCoordList)
+
+    if (markers == "draw"):
+        markerURLs = []
+        baseURL = 'https://maps.googleapis.com/maps/api/geocode/json?address='
+        for street in streets:
+            url = baseURL + street.replace(" ", "+") + '+Boston+Massachusetts&key=' + api_key
+            markerURLs.append(url)
+        print(markerURLs)
+        
+        markerCoordList = []
+        for i in range(len(markerURLs)):
+            url = markerURLs[i]
+            response = urllib.request.urlopen(url).read().decode("utf-8")
+            r = json.loads(response)
+            s = json.dumps(r, sort_keys=True, indent=2)
+            markerCoord = r['results'][0]['geometry']['location']
+            print(i, "out of", len(markerURLs), "markers generated.")
+            markerCoordList.append(markerCoord)
+
+        dataMapper = dataMapper.replace('{{markerData}}', str(markerCoordList))
+    else:
+        dataMapper = dataMapper.replace('{{markerData}}', str([]))
+        
 
     return dataMapper
 

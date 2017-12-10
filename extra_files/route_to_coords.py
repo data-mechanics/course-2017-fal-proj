@@ -48,9 +48,9 @@ class route_to_coords(dml.Algorithm):
             response = urllib.request.urlopen(url).read().decode("utf-8")
             r = json.loads(response)
             s = json.dumps(r, sort_keys=True, indent=2)
-            #modifiedPiece = {'formatted_address': r['results'][0]['formatted_address'], 'geometry': r['results'][0]['geometry']}
+            modifiedPiece = {'formatted_address': r['results'][0]['formatted_address'], 'geometry': r['results'][0]['geometry']}
             print(r)
-            #modifiedDictionary.append(modifiedPiece)
+            modifiedDictionary.append(modifiedPiece)
 
 
 
