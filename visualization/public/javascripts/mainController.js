@@ -66,6 +66,7 @@ app.controller('mainController', function ($scope, $element, $timeout, $http, $d
             $scope.errorText = "there are no points to plot!";
         }
         else{
+            $scope.loader = true;
             $http({
                 url: baseUrl + '/newMeans',
                 method: 'Post',
@@ -86,6 +87,7 @@ app.controller('mainController', function ($scope, $element, $timeout, $http, $d
                     }).addTo(mymap);
                     $scope.meansArray.push(marker);
                 }
+                $scope.loader = false;
 
 
 
