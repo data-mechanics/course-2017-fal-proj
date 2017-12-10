@@ -109,11 +109,10 @@ class schoolfinal(dml.Algorithm):
         SF = repo['eileenli_xtq_yidingou.safety'].find()
         TR = repo['eileenli_xtq_yidingou.traffic'].find()
 
-
         final = []
         score = []
+        ukubuka = []
         school_hospital = []
-        list1 = []
 
         for i in SC:
             safety = []
@@ -220,13 +219,31 @@ class schoolfinal(dml.Algorithm):
                 "traffic": trafficIndex,
                 "total": safetyIndex + comfortIndex + trafficIndex
                 })
-            list1.append(safetyIndex + comfortIndex + trafficIndex)
 
-        with open ('schoolscore.json', 'w') as outfile:
-            json.dump(score, outfile)
+            # ukubuka.append({
+            #     "school": i["properties"]["Name"],
+            #     "safety": [
+            #         {"hospital": hospital / 2},
+            #         {"crime": 10 - crime / 65,},
+            #         {"crash": 10 - crash / 120}],
+            #     "comfort": [
+            #         {"restaurant": restaurant / 45},
+            #         {"entertainment": entertainment / 120}],
+            #     "traffic": [
+            #         {"MBTA": MBTA / 10},
+            #         {"hubway": hubway / 11},
+            #         {"signal": 10 - signal / 56},
+            #         {"crash": 10 - crash / 120}]
+            #     })
 
-        with open ('schoolfinal.json', 'w') as outfile:
-            json.dump(final, outfile)
+        # with open ('schoolscore.json', 'w') as outfile:
+        #     json.dump(score, outfile)
+
+        # with open ('schoolfinal.json', 'w') as outfile:
+        #     json.dump(final, outfile)
+
+        # with open ('ukubuka.json', 'w') as outfile:
+        #     json.dump(ukubuka, outfile)
 
         # two_school_hospital = schoolfinal.select(schoolfinal.product(school_hospital, school_hospital), lambda t: t[0][0] != t[1][0])
 
