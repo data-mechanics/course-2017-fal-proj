@@ -28,9 +28,7 @@
 
 	    	<script>
 
-                key = "{{apiKeyData}}"
-
-                $.getScript("https://maps.googleapis.com/maps/api/js?key=&" + key + "&libraries=visualization&callback=MapApiLoaded", function () {});
+                $.getScript("https://maps.googleapis.com/maps/api/js?key={{apiKeyData}}&libraries=visualization&callback=MapApiLoaded", function () {});
 
                 function MapApiLoaded() {
 
