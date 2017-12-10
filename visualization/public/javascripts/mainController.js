@@ -88,14 +88,36 @@ app.controller('mainController', function ($scope, $element, $timeout, $http, $d
                     $scope.meansArray.push(marker);
                 }
                 $scope.loader = false;
-
-
-
-
             }, function (error) {
                 console.log(error);
             });
         }
     }
+
+    $scope.plot = function () {
+        console.log($scope.address)
+        if($scope.address == null || $scope.address == ""){
+            $scope.errorText = "Please enter an address for a calculation...";
+            $scope.err =  true;
+            return;
+        }
+        else{
+            $scope.errorText = "";
+            $scope.err =  false;
+            $http({
+                url: baseUrl + '/getAddressData',
+                method: 'Post',
+                data: [$scope.address],
+                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
+            }).then(function (success) {
+
+                //success
+            }, function (error) {
+                //Error
+            });
+
+        }
+
+    } //End plot
 
 });
