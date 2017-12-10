@@ -35,15 +35,15 @@ For trial mode:
 ```
 python3 execute.py bkin18_cjoe_klovett_sbrz --trial
 ```
-Else:
+* Else:
 ```
 python3 execute.py bkin18_cjoe_klovett_sbrz
 ```
 
 * cd into the "visualization/" directory.
-'''
+```
 python server.py
-'''
+```
 
 Enter in a number of means to be used as a value for k in the k-means algorithm. Our implementation allows for 1-21 means.
 Enter in a number of routes to be used as the number of routes returned by the z3-solver.
