@@ -64,17 +64,22 @@ app.post("/newMeans", function (req, res) {
     });
 
         const pyProg = spawn('python3', ['./visualizationMeans.py']);
-        MongoClient.connect(url, function (err, db) {
-            console.log("here");
-            db.collection("biel_otis.UserOptimalMarkets").find().toArray(function (error, result) {
-                if(result == null){
-                    setTimeout(function(){
-                        db.collection("biel_otis.UserOptimalMarkets").find().toArray(function(error,result){
-                            res.send(JSON.stringify(result));
-                        })
-                    }, 2000)
-                }
-                res.send(JSON.stringify(result));
+        //var pythonProg = execSync('python ./visualizationMeans.py');
+
+        pyProg.on('exit', function(code, signal){
+            console.log("In the exit function")
+            MongoClient.connect(url, function (err, db) {
+                console.log("here");
+                db.collection("biel_otis.UserOptimalMarkets").find().toArray(function (error, result) {
+                    if(result == null){
+                        setTimeout(function(){
+                            db.collection("biel_otis.UserOptimalMarkets").find().toArray(function(error,result){
+                                res.send(JSON.stringify(result));
+                            })
+                        }, 5000)
+                    }
+                    res.send(JSON.stringify(result));
+                });
             });
         });
 });
