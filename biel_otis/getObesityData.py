@@ -86,6 +86,5 @@ class getObesityData(dml.Algorithm):
         
         return doc
 
-print("Finished getObesityData")
 
 ## eof

@@ -70,12 +70,9 @@ class setObesityPropertyCorrelation(dml.Algorithm):
         mapValues = list(repo['biel_otis.BostonZoning'].find())
 
         if (trial==True):
-            print("were here")
             obesityValues = obesityValues[0:100]
             propertyValues = propertyValues[0:100]
 
-        #print(propertyValues)
-        #print(obesityValues)
         propLoc = project(propertyValues, lambda x: (tuple(x['location'].replace("(", "").replace(")", "").split(",")), x['av_total']))
         obesityLoc = project(obesityValues, lambda x: (float(x['geolocation']['latitude']), float(x['geolocation']['longitude'])))
         distances = [((float(x[0][0]),float(x[0][1])),(float(x[1]), 1)) for x in propLoc for y in obesityLoc if calculateDist((float(x[0][0]),float(x[0][1])),y) < 0.3 and x[1] != '0']
@@ -106,7 +103,6 @@ class setObesityPropertyCorrelation(dml.Algorithm):
         
         inputs = {}
         for hood in neighborDict:
-            #print('IN NEIGHBORHOOD: ', hood)
             obeseCount = aggregate(neighborDict[hood], sum)
             bucketDict = {}
             bucket = 100000

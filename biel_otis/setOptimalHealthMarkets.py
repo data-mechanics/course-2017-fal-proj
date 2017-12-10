@@ -57,7 +57,6 @@ class setOptimalHealthMarkets(dml.Algorithm):
         if (trial==True):
             obesityValues = obesityValues[0:100]
         else:
-            print("WERE NOT IN TRIAL")
             sys.stdout.flush()
         mapValues = list(repo['biel_otis.BostonZoning'].find())
         obesityValues = [x for x in obesityValues if x['cityname'] == 'Boston']
@@ -77,19 +76,16 @@ class setOptimalHealthMarkets(dml.Algorithm):
             for x in pd:
                 dist_sum += x[1]
             avg_dist = dist_sum / len(pd)
-            print(avg_dist)
             num_means += 1             
 
         correctedMeans = []
         means = means.tolist()
-        #print("Number of Means:", len(means))
         inputs = {}
         inputs['means'] = means
         adjustedMeans = [Point(m) for m in means]
         for m in adjustedMeans:
             flag = False
             for f in mapValues[0]:
-                #print(f)
                 if (f == '_id'):
                     continue
                 else:
@@ -100,7 +96,6 @@ class setOptimalHealthMarkets(dml.Algorithm):
                 poly = shape(mapValues[0][f])
                 if poly.contains(m):
                     flag = True
-                    print(str(m), "is in ", f)
                     break
             correctedMeans.append((str(m), flag))
 

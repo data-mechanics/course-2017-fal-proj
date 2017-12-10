@@ -22,10 +22,12 @@ class getPropertyValues(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client['biel_otis']
         repo.authenticate('biel_otis', 'biel_otis')
-        url = 'https://data.cityofboston.gov/resource/n7za-nsjh.json'
+        url = 'https://data.boston.gov/export/bdb/17c/bdb17c2b-e9ab-44e4-a070-bf804a0e1a7f.json'
         response = urlopen(url).read().decode("utf-8")
-
+        response = response.replace("]", "") + "]"  
         r = json.loads(response)
+
+            
         repo.dropCollection("PropertyValues")
         repo.createCollection("PropertyValues")
         repo['biel_otis.PropertyValues'].insert_many(r)
@@ -83,5 +85,5 @@ class getPropertyValues(dml.Algorithm):
         return doc
 
 print("Finished getPropertyValues")
-
+#getPropertyValues.execute()
 ## eof
