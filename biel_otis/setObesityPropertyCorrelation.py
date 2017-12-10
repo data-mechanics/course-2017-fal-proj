@@ -74,7 +74,6 @@ class setObesityPropertyCorrelation(dml.Algorithm):
             propertyValues = propertyValues[0:100]
         propLoc = project(propertyValues, lambda x: (tuple(x['Location'].replace("(", "").replace(")", "").replace("|",",").split(",")), x['AV_TOTAL']))
         obesityLoc = project(obesityValues, lambda x: (float(x['geolocation']['latitude']), float(x['geolocation']['longitude'])))
-        print(propLoc[0])
         distances = [((float(x[0][0]),float(x[0][1])),(float(x[1]), 1)) for x in propLoc for y in obesityLoc if x[1] != '0' and x[0][0] != '' and x[0][0] != '0' and calculateDist((float(x[0][0]),float(x[0][1])),y) < 0.3]
         #for x in propLoc:
             #print(x)
@@ -202,7 +201,7 @@ class setObesityPropertyCorrelation(dml.Algorithm):
                   {prov.model.PROV_TYPE:'ont:Retrieval'})
         doc.usage(this_run, property_resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval'})
-        doc.usage(this_run, zoning_resource, starTime, None,
+        doc.usage(this_run, zoning_resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval'})
 
         #Generated
@@ -220,5 +219,5 @@ class setObesityPropertyCorrelation(dml.Algorithm):
         repo.logout()
         
         return doc
-setObesityPropertyCorrelation.execute()
+
 ## eof

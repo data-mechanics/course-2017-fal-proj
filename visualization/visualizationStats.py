@@ -49,7 +49,7 @@ retDict = {}
 obesityValues = list(repo['biel_otis.ObesityData'].find({"cityname": "Boston"}))
 propertyValues = list(repo['biel_otis.PropertyValues'].find({"OWNER_MAIL_ZIPCODE": userZip + "_"}))
 mapValues = list(repo['biel_otis.BostonZoning'].find())
-corrleations = list(repo['biel_otis.ObesityPropertyCorrelation'].find())
+correlations = list(repo['biel_otis.ObesityPropertyCorrelation'].find())
 
 total_propVal = 0
 count = 0
@@ -83,7 +83,9 @@ for f in mapValues[0]:
         if (poly.contains(p)):
             neighborhood = f
 
-print(neighborhood)
+if (neighborhood != ""):
+    retDict['CorrelationCoefficient'] = correlations[0][neighborhood]
+
 print(str(retDict))
 
 
