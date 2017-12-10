@@ -21,16 +21,29 @@
     <a class="navbar-brand" href="/">Home</a>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
-            <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
-            <a class="nav-item nav-link" href="#">Features</a>
-            <a class="nav-item nav-link" href="#">Pricing</a>
-            <a class="nav-item nav-link disabled" href="#">Disabled</a>
+            <a class="nav-item nav-link " href="#v1">Visualization I</a>
+            <a class="nav-item nav-link" href="#v2">Visualization II</a>
+            <a class="nav-item nav-link" href="https://github.com/jmbiel/course-2017-fal-proj/tree/master/biel_otis">This Repo</a>
         </div>
     </div>
 </nav>
+<div class="visual" id="v1">
+    <div id="mapid"></div>
+    <div class="legend">
+        <h3>About This Visualization</h3>
+        <p>Each red dot indicates the location of an individual who qualifies as "obese" due to the Massachusetts standards.
+            This data is pulled daily from data.cityofboston.gov and is rendered on the map to the left. The button below when clicked
+            runs the K-Means algorithm under constraints to place the optimal locations for healthy food stores (Represented by blue points).
+            Feel free to drag the individuals around and run the simulation again! The data will be cleared and reset per each
+            click of the button. Have fun!
+        </p>
+        <button ng-click="calcKMeans()" class="btn btn-primary">Click me to Calculate K-means</button>
 
-<div id="mapid"></div>
-<button ng-click="calcKMeans()">Click me to Calculate K-means</button>
+    </div>
+</div>
+<div class="visual light" id="v2">
+
+</div>
 
 </body>
         <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"
