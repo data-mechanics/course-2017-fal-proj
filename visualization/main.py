@@ -2,6 +2,7 @@ import flask
 import json
 from flask import Flask, render_template, jsonify, request
 import pymongo
+import time
 
 
 # To run the program: FLASK_APP=main.py flask run
@@ -31,29 +32,51 @@ def map():
 
     if drop == 'Original':
         pLocation = repo['cyyan_liuzirui_yjunchoi_yzhang71.pollingLocation'].find()
-        for p in pLocation:
-            for i in range(len(p['coordinates'])):
-                l = [p['coordinates'][i][1],  p['coordinates'][i][0]]
-                loc.append(l)
+        if wardname == "All":
+            for p in pLocation:
+                for i in range(len(p['coordinates'])):
+                    l = [p['coordinates'][i][1],  p['coordinates'][i][0]]
+                    loc.append(l)
+        else:
+            for p in pLocation:
+                if p['Ward'] == int(wardname):
+                    for i in range(len(p['coordinates'])):
+                        l = [p['coordinates'][i][1],  p['coordinates'][i][0]]
+                        loc.append(l)
     elif drop == 'Transit':
         public = repo['cyyan_liuzirui_yjunchoi_yzhang71.optByPublicT'].find()
         dLoc[0] = public[0]
-        for i in range(1, len(public[0])):
-            for o in dLoc[0][str(i)]:
+        if wardname == "All":
+            for i in range(1, len(public[0])):
+                for o in dLoc[0][str(i)]:
+                    l = [o[1], o[0]]
+                    loc.append(l)
+        else:
+            for o in dLoc[0][wardname]:
                 l = [o[1], o[0]]
                 loc.append(l)
     elif drop == "MBTA":
         public = repo['cyyan_liuzirui_yjunchoi_yzhang71.optByMBTA'].find()
         dLoc[0] = public[0]
-        for i in range(1, len(public[0])):
-            for o in dLoc[0][str(i)]:
+        if wardname == "All":
+            for i in range(1, len(public[0])):
+                for o in dLoc[0][str(i)]:
+                    l = [o[1], o[0]]
+                    loc.append(l)
+        else:
+            for o in dLoc[0][wardname]:
                 l = [o[1], o[0]]
                 loc.append(l)
     elif drop == "BUS":
         public = repo['cyyan_liuzirui_yjunchoi_yzhang71.optByBusstop'].find()
         dLoc[0] = public[0]
-        for i in range(1, len(public[0])):
-            for o in dLoc[0][str(i)]:
+        if wardname == "All":
+            for i in range(1, len(public[0])):
+                for o in dLoc[0][str(i)]:
+                    l = [o[1], o[0]]
+                    loc.append(l)
+        else:
+            for o in dLoc[0][wardname]:
                 l = [o[1], o[0]]
                 loc.append(l)
     else:
@@ -61,13 +84,14 @@ def map():
 
     result = {}
 
-    for i in range(255):
+    for i in range(len(loc)):
         result[str(i)] = loc[i]
 
     with open('latlng.json', 'w') as makeFile:
         json.dump(result, makeFile)
 
     marker = getMarker()
+    time.sleep(0.1)
     return render_template('map.html')
 
 
@@ -85,8 +109,6 @@ def score_board():
         if NewDrop1 == "error" or NewDrop2 == "error":
             print('Something wrong with dropdown')
 
-
-        #scoring = repo['cyyan_liuzirui_yjunchoi_yzhang71.scoringLocation'].find()
         #Converted latlng to miles
         scoring = []
         scoring.append({"Mean":1.035, "STDDEV":0.828, "lowCI95":0.069, "upperCI95":2.967})
@@ -97,10 +119,6 @@ def score_board():
         s = [[], []]
         s[0] = dict_to_list(scoring[NewDrop1], drop1)
         s[1] = dict_to_list(scoring[NewDrop2], drop2)
-        #s[0] = dict_to_list(scoring[drop1], drop1)
-        #s[1] = dict_to_list(scoring[drop2], drop2)
-        # print(type(scoring[0][drop1]))
-        #print(s[0])
         return render_template('score.html', message = s)
 
     else:
