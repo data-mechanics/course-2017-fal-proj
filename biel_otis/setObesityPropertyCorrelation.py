@@ -65,18 +65,24 @@ class setObesityPropertyCorrelation(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client['biel_otis']
         repo.authenticate('biel_otis', 'biel_otis')
-        obesityValues = list(repo['biel_otis.ObesityData'].find())
+        obesityValues = list(repo['biel_otis.ObesityData'].find({"cityname" : "Boston"}))
         propertyValues = list(repo['biel_otis.PropertyValues'].find())
         mapValues = list(repo['biel_otis.BostonZoning'].find())
 
         if (trial==True):
             obesityValues = obesityValues[0:100]
             propertyValues = propertyValues[0:100]
-
-        propLoc = project(propertyValues, lambda x: (tuple(x['location'].replace("(", "").replace(")", "").split(",")), x['av_total']))
+        propLoc = project(propertyValues, lambda x: (tuple(x['Location'].replace("(", "").replace(")", "").replace("|",",").split(",")), x['AV_TOTAL']))
         obesityLoc = project(obesityValues, lambda x: (float(x['geolocation']['latitude']), float(x['geolocation']['longitude'])))
-        distances = [((float(x[0][0]),float(x[0][1])),(float(x[1]), 1)) for x in propLoc for y in obesityLoc if calculateDist((float(x[0][0]),float(x[0][1])),y) < 0.3 and x[1] != '0']
-        
+        print(propLoc[0])
+        distances = [((float(x[0][0]),float(x[0][1])),(float(x[1]), 1)) for x in propLoc for y in obesityLoc if x[1] != '0' and x[0][0] != '' and x[0][0] != '0' and calculateDist((float(x[0][0]),float(x[0][1])),y) < 0.3]
+        #for x in propLoc:
+            #print(x)
+        #    if(x[0][0] == '' or x[0][0] == '0'):
+        #        print(x)
+        #        print("gotOne")
+        #        continue
+        #    z = ((float(x[0][0]),float(x[0][1])),(float(x[1]), 1))
         for f in mapValues[0]:
             if (f == '_id'):
                 continue
@@ -197,7 +203,7 @@ class setObesityPropertyCorrelation(dml.Algorithm):
         doc.usage(this_run, property_resource, startTime, None,
                   {prov.model.PROV_TYPE:'ont:Retrieval'})
         doc.usage(this_run, zoning_resource, starTime, None,
-                  {prov.model.PROV_TYPE:'ont:Retrieval'}
+                  {prov.model.PROV_TYPE:'ont:Retrieval'})
 
         #Generated
         doc.wasGeneratedBy(correlation_resource, this_run, endTime)
@@ -214,5 +220,5 @@ class setObesityPropertyCorrelation(dml.Algorithm):
         repo.logout()
         
         return doc
-
+setObesityPropertyCorrelation.execute()
 ## eof
