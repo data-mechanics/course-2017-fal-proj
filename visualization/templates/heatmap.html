@@ -1,30 +1,164 @@
 <html>
 	<head>
 		<title>Heat Map</title>
-		<!-- <link rel="stylesheet" type="text/css" href="heatmap.css"> -->
-		<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
-			<!--Imports library necessary to generate heat map. May want to include key eventually.-->
+        <style>
+            #map {
+                height: 100%;
+            }
+
+            html, body {
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            #buttons {
+                position: absolute;
+                text-align: center;
+                z-index: 5;
+                top: 45px;
+                left: 1%;
+                background-color: #fff;
+            }
+        </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	</head>
 	<body>
-	    	<script>console.log("{{ url_for('static', filename='heatscript.js') }}")
-	    			console.log("{{ url_for('static', filename='style.css') }}")
-	    	</script>
-		<!--Generates buttons for interaction.-->
-		<div id="buttons">
-  			<button onclick="addCentroid()">Add Centroid</button>
-  			<button onclick="removeCentroid()">Remove Centroid</button>
-		</div>
-		<!--Runs script necessary to generate heatmap.-->
 		<div id="map">
-    		<script src="https://maps.googleapis.com/maps/api/js?key=&libraries=visualization"></script>
 
-    		<script type="text/javascript">
-    			//var rawKMeansData = {{ kMeansData|tojson }}
-    			var rawKMeansData = JSON.parse('{{ kMeansData|safe }}' );
-    		</script>
+	    	<script>
 
-	    	<script type="text/javascript" {{ url_for('static', filename='heatscript.js') }} src="{{ url_for('static', filename='heatscript.js') }}"></script>
-	    	</script>
+                $.getScript("https://maps.googleapis.com/maps/api/js?key={{apiKeyData}}&libraries=visualization&callback=MapApiLoaded", function () {});
+
+                function MapApiLoaded() {
+
+                routes = {{routesData}}
+                kMeansData = {{kMeansData}}
+                markers = {{markerData}}
+
+                function initMap() {
+
+                    map = new google.maps.Map(document.getElementById('map'), {
+                        zoom: 15,
+                        center: {lat: 42.34, lng: -71.0989},
+                        mapTypeId: 'roadmap'
+                    });
+
+                    heatmap = new google.maps.visualization.HeatmapLayer({
+                        data: createKMeans(),
+                        map: map
+                    });
+
+                    var road_objects = createRoads();
+
+                    for (var i = 0; i < road_objects.length; i++) {
+                        road_objects[i].setMap(map);
+                    }
+
+                    initHeatMap();
+
+                    if (markers != []){
+                        createMarkers();
+                    }
+                }
+
+                function createRoads() {
+                    roads = []
+
+                    for (var i = 0; i < routes.length; i++) {
+                        for (var j = 0; j < routes[i].length; j++) {
+                        roads.push(new google.maps.Polyline({
+                          path: routes[i][j],
+                          strokeColor: '#FF0000',
+                          strokeOpacity: 25.0,
+                          strokeWeight: 5}));
+                        }
+                    }
+
+                    return roads;
+
+                }
+
+                function createKMeans(){
+                    var centroidObjects = []
+
+                    for (var i = 0; i < kMeansData.length; i++){
+                        centroidObjects.push(new google.maps.LatLng(kMeansData[i][0],kMeansData[i][1]));
+                    }
+
+                    console.log(centroidObjects)
+                    return centroidObjects;
+                }
+
+                function createMarkers() {
+                    if (markers != []){
+                        for (i = 0; i < markers.length; i++) {
+                            var result = findClosestCentroid(markers[i]['lat'], markers[i]['lng']);
+                            if (result < 0.01) {
+                                var marker = new google.maps.Marker({
+                                    position: markers[i],
+                                    map: map,
+                                    label: {
+                                        text:  "(" + String(result) + ")",
+                                        color: "navy",
+                                        fontSize: "22px"
+                                    }
+                                });
+                            } else {
+                                var marker = new google.maps.Marker({
+                                    position: markers[i],
+                                    map: map,
+                                    label: {
+                                        text:  "(" + String(result) + ")",
+                                        fontSize: "15px"
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
+
+                function findDistance(lat1, lon1, lat2, lon2) {
+
+                    var distance = Math.sqrt(Math.pow((lat1 - lat2), 2) + Math.pow((lon1 - lon2), 2))
+                    return distance
+
+                }
+
+                function findClosestCentroid(lat1, lon1) {
+                    var min = Number.MAX_SAFE_INTEGER;
+                    var centroids = kMeansData;
+    
+                    for (var i = 0; i < centroids.length; i++) {
+                        var nextDist = findDistance(lat1, lon1, centroids[i][0], centroids[i][1]);
+                        if (nextDist < min) {
+                            min = nextDist;
+                        }
+                    }
+
+                    return min;
+                }
+
+                function initHeatMap() {
+                    heatmap.set('radius', 200);
+                    var gradient = [
+                        'rgba(0, 255, 255, 0)',
+                        'rgba(15, 235, 235, 1)',
+                        'rgba(55, 205, 205, 1)',
+                        'rgba(95, 185, 205, 1)',
+                        'rgba(215, 215, 235, 1)',
+                        'rgba(195, 195, 215, 1)',
+                        'rgba(185, 185, 205, 1)',
+                        'rgba(125, 125, 135, 1)'
+                    ]
+
+                    heatmap.set('gradient',gradient);
+                }
+
+                initMap();
+                }
+
+            </script>
 		</div>
 	</body>
 </html>

@@ -1,36 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-   <head>
-      <link rel=stylesheet type=text/css href="{{ url_for('static',
+<head>
+    <link rel=stylesheet type=text/css href="{{ url_for('static',
         filename='homepage.css') }}">
-   </head>
-   <body>
-      <img src="static/boston_winter.jpg" id="bg" alt="">
-      <div class="container">
-            <div id="overlay2">     
-      <a href="https://github.com/cjoeml/course-2017-fal-proj" target="_blank">[ Github ]</a>
-   </div>
-   <div class="top-menu">
-   <div class="menu-tab" id="mt">
-   <a href="{{ url_for('index') }}" id="headlink">Winter in Boston</a>
+</head>
+<body>
+<img src="static/boston_winter.jpg" id="bg" alt="">
+<div class="container">
+    <div id="overlay2">
+        <a href="https://github.com/cjoeml/course-2017-fal-proj" target="_blank">[ Github ]</a>
+    </div>
+    <div class="top-menu">
+        <div class="menu-tab" id="mt">
+            <a href="{{ url_for('index') }}" id="headlink">Winter in Boston</a>
 
-   </div>
-   </div>
+        </div>
+    </div>
 </div>
 
-      <div class="field">
-      	<h2> Visualization Parameters </h2>
-         <form action="/visualization" method="get">
-            <input type="text" name="means" placeholder="number of means (> 0)"><br>
-            <input type="text" name="num_routes" placeholder="number of routes (112 < 144)"><br>
-            <input type="submit" value="Submit">
-         </form>
-      </div>
-      <!-- Moved to overlay link -->
-      <!-- <a href="https://github.com/cjoeml/course-2017-fal-proj"> -->
- <!--      <div class="sources">
-      	<h3> GitHub </h1>
-      </div> -->
-  <!-- </a> -->
-   </body>
+<div class="field">
+    <h2> Visualization Parameters </h2>
+    <form action="/visualization" method="get">
+        <input type="text" name="api_key" placeholder="Google API key"><br>
+        <input type="text" name="means" placeholder="means (0-21)"><br>
+        <input type="text" name="num_routes" placeholder="routes (113-144)"><br>
+        <h4>Generate markers? (Increases runtime. Please see README.)</h4>
+        <input type="checkbox" id="markers" name="markers" value="draw"><br>
+        <input type="submit" value="Submit">
+    </form>
+</div>
+<!-- Moved to overlay link -->
+<!-- <a href="https://github.com/cjoeml/course-2017-fal-proj"> -->
+<!--      <div class="sources">
+         <h3> GitHub </h1>
+     </div> -->
+<!-- </a> -->
+</body>
 </html>
