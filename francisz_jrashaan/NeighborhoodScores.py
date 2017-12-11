@@ -15,7 +15,7 @@ class NeighborhoodScores(dml.Algorithm):
     contributor = 'francisz_jrashaan'
     reads = []
     writes = ['francisz_jrashaan.hubways', 'francisz_jrashaan.ChargingStation', 'francisz_jrashaan.bikeNetwork',
-              'francisz_jrashaan.openspace', 'francisz_jrashaan.neighborhood', 'francisz_jrashaan.neighborhoodScores']
+              'francisz_jrashaan.openspace', 'francisz_jrashaan.neighborhood', 'francisz_jrashaan.presetneighborhoodScores', 'francisz_jrashaan.neighborhoodScores']
     
     @staticmethod
     def execute(trial=True):
@@ -276,6 +276,11 @@ class NeighborhoodScores(dml.Algorithm):
              y = lambda t: ({"Neighborhood":t[0],'Charging Station':t[1][0],'Hubway Stations':t[1][1],'Bike Networks':t[1][2],'Open Space':t[1][3]})
              z = y(x)
              agg.append(z)
+        repo.dropCollection("presetneighborhoodScores")
+        repo.createCollection("presetneighborhoodScores")
+        repo['francisz_jrashaan.neighborhoodScores'].insert_many(agg)
+        repo['francisz_jrashaan.neighborhoodScores'].metadata({'complete':True})
+
         '''
         agg = []
         #print(aggregate)
@@ -287,10 +292,10 @@ class NeighborhoodScores(dml.Algorithm):
                 z= {"Neighborhood":name,'Charging Station':lst[0],'Hubway Stations':lst[1],'Bike Networks':lst[2],'Open Space':lst[3]}
                 agg.append(z)
         
-        repo.dropCollection("neighborhoodScores")
-        repo.createCollection("neighborhoodScores")
-        repo['francisz_jrashaan.neighborhoodScores'].insert_many(agg)
-        repo['francisz_jrashaan.neighborhoodScores'].metadata({'complete':True})
+        repo.dropCollection("presetneighborhoodScores")
+        repo.createCollection("presetneighborhoodScores")
+        repo['francisz_jrashaan.presetneighborhoodScores'].insert_many(agg)
+        repo['francisz_jrashaan.presetneighborhoodScores'].metadata({'complete':True})
 
 
        

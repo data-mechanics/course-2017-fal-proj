@@ -32,6 +32,20 @@ def get_correlation():
         scoreArray.append(score)
     return jsonify({'results': scoreArray})
 
+@app.route('/budgets', methods=["GET"])
+def get_correlation():
+    client = dml.pymongo.MongoClient()
+    repo = client.repo
+    repo.authenticate('francisz_jrashaan', 'francisz_jrashaan')
+    
+    scores = repo['francisz_jrashaan.budgets'].find()
+    
+    scoreArray = []
+    for score in scores:
+        score.pop("_id")
+        scoreArray.append(score)
+    return jsonify({'results': scoreArray})
+
 if __name__ == '__main__':
     app.run(port=5000)
 

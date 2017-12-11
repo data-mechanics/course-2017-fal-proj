@@ -20,9 +20,9 @@ from math import ceil
 class Budgets(dml.Algorithm):
     contributor = 'francisz_jrashaan'
     
-    reads = ['francisz_jrashaan.neighborhoodScores']
+    reads = ['francisz_jrashaan.presetneighborhoodScores']
     
-    writes = ['francisz_jrashaan.optimalScore']
+    writes = ['francisz_jrashaan.optimalScore', 'francisz_jrashaan.budgets']
     
     
     @staticmethod
@@ -31,7 +31,7 @@ class Budgets(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate('francisz_jrashaan','francisz_jrashaan')
-        scores =  repo.francisz_jrashaan.neighborhoodScores.find()
+        scores =  repo.francisz_jrashaan.preneighborhoodScores.find()
         for i in scores:
             print(i)
         scoreArray = []
@@ -178,6 +178,10 @@ class Budgets(dml.Algorithm):
             #Averageitems = (averages[0] + averages[1] + averages[2] + averages[3])/4
             #print(Averageitems)
         print(results)
+        repo.dropCollection("budgets")
+        repo.createCollection("budgets")
+        repo['francisz_jrashaan.budgets'].insert_many(results)
+        repo['francisz_jrashaan.budgets'].metadata({'complete':True})
         #print(flag)
 
     @staticmethod
