@@ -6,6 +6,8 @@ import z3_routes_interactive
 import centroids_interactive
 import pdb
 import dml
+import os
+import ast
 
 app = Flask(__name__)
 
@@ -32,63 +34,51 @@ def index_snow():
 def visualization():
     # here we want to get the value of user (i.e. ?means=some-value)
     try:
-        api_key = str(request.args.get('api_key'))
         num_routes = int(request.args.get('num_routes'))
         means = int(request.args.get('means'))
-        markers = str(request.args.get('markers'))
     except ValueError:
-        return "Please enter a valid input"
+        return "Please enter a valid integer input"
 
     if (num_routes <= 112 or num_routes >= 144):
-        return "Please enter a valid route input"
+        num_routes = 112
 
-    if (means <= 0 or means > 21):
-        return "Please enter a valid means input"
+    if means <= 0:
+        means = 1
 
-    '''
-    Formats kmeans data to be used in visualization
-    '''
-    kMeansCoordList, routeCoordList = [], []
+    kMeansCoordList, routeCoordList, placeId = [], [], []
 
+    # retrieve centroids for specified number of means
     kMeansCoordList = str(centroids_interactive.find_centroids(means))
 
+    # retrieve streets for requested input
     streets = z3_routes_interactive.find_streets(num_routes).split(', ')
 
+    # retrieve google maps api key
+    key = os.getenv("GOOGLE_MAPS_KEY")
+
+    # append coordinates for given streets
+    # append requests for google maps place id
     for street in streets:
         routeCoordList.append(routes[street])
 
+    # Retrieve geometric points and google maps placeIds for each emergency route 
+    lines = open("route_locations.txt", "r")
+    placeIdCoords = [x for x in lines.readlines()]
+
+    for coordinate in placeIdCoords:
+        placeId.append(ast.literal_eval(coordinate[:-1]))
+
+    # format to make javascript readable
     routeCoordList = str(routeCoordList)
     routeCoordList = routeCoordList.replace("'lat'", "lat")
     routeCoordList = routeCoordList.replace("'lng'", "lng")
 
+    # render html with necessary data inputs
     dataMapper = open('templates/heatmap.html', 'r').read()
-
-    dataMapper = dataMapper.replace('{{apiKeyData}}', api_key)
     dataMapper = dataMapper.replace('{{routesData}}', routeCoordList)
     dataMapper = dataMapper.replace('{{kMeansData}}', kMeansCoordList)
-
-    if (markers == "draw"):
-        markerURLs = []
-        baseURL = 'https://maps.googleapis.com/maps/api/geocode/json?address='
-        for street in streets:
-            url = baseURL + street.replace(" ", "+") + '+Boston+Massachusetts&key=' + api_key
-            markerURLs.append(url)
-        print(markerURLs)
-        
-        markerCoordList = []
-        for i in range(len(markerURLs)):
-            url = markerURLs[i]
-            response = urllib.request.urlopen(url).read().decode("utf-8")
-            r = json.loads(response)
-            s = json.dumps(r, sort_keys=True, indent=2)
-            markerCoord = r['results'][0]['geometry']['location']
-            print(i, "out of", len(markerURLs), "markers generated.")
-            markerCoordList.append(markerCoord)
-
-        dataMapper = dataMapper.replace('{{markerData}}', str(markerCoordList))
-    else:
-        dataMapper = dataMapper.replace('{{markerData}}', str([]))
-        
+    dataMapper = dataMapper.replace('{{placeId}}', str(placeId))
+    dataMapper = dataMapper.replace('{{key}}', key)
 
     return dataMapper
 
