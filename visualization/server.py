@@ -6,7 +6,6 @@ import z3_routes_interactive
 import centroids_interactive
 import pdb
 import dml
-import os
 import ast
 
 app = Flask(__name__)
@@ -32,6 +31,7 @@ def index_snow():
 
 @app.route('/visualization')
 def visualization():
+    authData = dml.auth;
     # here we want to get the value of user (i.e. ?means=some-value)
     try:
         num_routes = int(request.args.get('num_routes'))
@@ -54,7 +54,8 @@ def visualization():
     streets = z3_routes_interactive.find_streets(num_routes).split(', ')
 
     # retrieve google maps api key
-    key = os.getenv("GOOGLE_MAPS_KEY")
+    key = authData['services']['googleportal']['key']
+    print("Key retrieved from auth.json:", key)
 
     # append coordinates for given streets
     # append requests for google maps place id
