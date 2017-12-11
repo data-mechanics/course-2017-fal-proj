@@ -31,9 +31,9 @@ class Budgets(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate('francisz_jrashaan','francisz_jrashaan')
-        scores =  repo.francisz_jrashaan.preneighborhoodScores.find()
-        for i in scores:
-            print(i)
+        scores =  repo.francisz_jrashaan.presetneighborhoodScores.find()
+        
+      
         scoreArray = []
         average = [0, 0, 0, 0]
         count = 0
@@ -138,36 +138,37 @@ class Budgets(dml.Algorithm):
                     bikeNetworks.append(X[x3])
                     openspace.append(X[x4])
                     new_score = 0
-                    tuple = (Neighborhoods[i], chargingStations[i], hubwayStations[i], bikeNetworks[i], openspace[i])
+                    tuple = ( str(chargingStations[i]), str(hubwayStations[i]), str(bikeNetworks[i]), str(openspace[i]))
                         #averages[0] += int(str(tuple[1])) + scoreArray[j][0]
                         #averages[1] += int(str(tuple[2])) + scoreArray[j][1]
                         #averages[2] += int(str(tuple[3])) + scoreArray[j][2]
                         #averages[3] += int(str(tuple[4])) + scoreArray[j][3]
-                    if(int(str(tuple[1])) + scoreArray[i][0] > averages[z]):
-                        temp = int(str(tuple[1]))
-                        diff = int(str(tuple[1])) - averages[z]
+                    if(int(str(tuple[0])) + scoreArray[i][0] > averages[z]):
+                        temp = int(str(tuple[0]))
+                        diff = int(str(tuple[0])) - averages[z]
                         new_score += averages[z] + diff*(.2) + scoreArray[i][0]
                     else:
-                        new_score += int(str(tuple[1])) * 1 + scoreArray[i][0]
+                        new_score += int(str(tuple[0])) * 1 + scoreArray[i][0]
                     if(int(str(tuple[2])) + scoreArray[i][1]> averages[z]):
-                        temp = int(str(tuple[2]))
-                        diff = int(str(tuple[2])) - averages[z]
+                        temp = int(str(tuple[1]))
+                        diff = int(str(tuple[1])) - averages[z]
                         new_score += averages[z] + diff*(.2) + scoreArray[i][1]
                     else:
-                        new_score += int(str(tuple[2])) * 1 + scoreArray[i][1]
-                    if(int(str(tuple[3])) + scoreArray[i][2]> averages[z]):
-                        temp = int(str(tuple[3]))
-                        diff = int(str(tuple[3])) - averages[z]
+                        new_score += int(str(tuple[1])) * 1 + scoreArray[i][1]
+                    if(int(str(tuple[2])) + scoreArray[i][2]> averages[z]):
+                        temp = int(str(tuple[2]))
+                        diff = int(str(tuple[2])) - averages[z]
                         new_score += averages[z] + diff*(.2) + scoreArray[i][2]
                     else:
-                        new_score += int(str(tuple[3])) * 1 + scoreArray[i][2]
-                    if(int(str(tuple[4])) + scoreArray[i][3]> averages[z]):
-                        temp = int(str(tuple[4]))
-                        diff = int(str(tuple[4])) - averages[z]
+                        new_score += int(str(tuple[2])) * 1 + scoreArray[i][2]
+                    if(int(str(tuple[3])) + scoreArray[i][3]> averages[z]):
+                        temp = int(str(tuple[3]))
+                        diff = int(str(tuple[3])) - averages[z]
                         new_score += averages[z] + diff*(.2) + scoreArray[i][3]
                     else:
-                        new_score += int(str(tuple[4])) * 1 + scoreArray[i][3]
-                    results.append(("Budget: " + str(budget), "New Score: " + str(new_score/10), scoreArray[i][5], tuple))
+                        new_score += int(str(tuple[3])) * 1 + scoreArray[i][3]
+                    results.append({"Neighborhood":tuple[0],"Budget": budget, "New Score": (new_score/10) , "Originial Score":scoreArray[i][5], "Green Facilities": tuple})
+                    
                             #if(score/10 > 100):
                             #flag += 1
             #The below lines defines the contents of the averages array
