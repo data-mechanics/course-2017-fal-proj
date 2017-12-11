@@ -57,12 +57,17 @@ for x in propertyValues:
     total_propVal += float(x['AV_TOTAL'])
     count += 1
 
-retDict['AveragePropVal'] = total_propVal / count
+if count != 0:
+    retDict["AveragePropVal"] = total_propVal / count
+else:
+    retDict["AveragePropVal"] = 0
+
 
 obeseAgg = [('*', 1) for x in obesityValues if Distance((float(x["geolocation"]["latitude"]), float(x["geolocation"]["longitude"])), (userLat, userLng)).miles < 1.0]
 total = aggregate(obeseAgg, sum)
 
-retDict['TotalObese'] = total[0][1]
+if (total != []):
+    retDict["TotalObese"] = total[0][1]
 
 for f in mapValues[0]:
     if (f == '_id'):
@@ -85,6 +90,9 @@ for f in mapValues[0]:
 
 if (neighborhood != ""):
     retDict['CorrelationCoefficient'] = correlations[0][neighborhood]
+
+retDict["lat"] = userLat
+retDict["lng"] = userLng
 
 print(str(retDict))
 

@@ -21,6 +21,7 @@ app.controller('mainController', function ($scope, $element, $timeout, $http, $d
     //"use strict";
     $scope.markerArray = [];
     $scope.meansArray = [];
+    $scope.userPoint = []
 
     var mymap = L.map('mapid').setView([42.350484, -71.069760], 13);
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
@@ -37,6 +38,10 @@ app.controller('mainController', function ($scope, $element, $timeout, $http, $d
     var blueDot = L.icon({
         iconUrl: '../images/Bluedot.svg',
         iconSize:     [20, 20], // size of the icon
+    });
+    var green = L.icon({
+        iconUrl: '../images/person.svg',
+        iconSize:     [40, 40], // size of the icon
     });
 
     $http({
@@ -99,6 +104,7 @@ app.controller('mainController', function ($scope, $element, $timeout, $http, $d
         if($scope.address == null || $scope.address == ""){
             $scope.errorText = "Please enter an address for a calculation...";
             $scope.err =  true;
+            $scope.content = "";
             return;
         }
         else{
@@ -111,7 +117,44 @@ app.controller('mainController', function ($scope, $element, $timeout, $http, $d
                 data: [$scope.address],
                 headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
             }).then(function (success) {
+                if(success.data == "error"){
+                    $scope.err = true;
+                    $scope.errorText = "Invalid Address";
+                    $scope.loader = false;
+                    return;
+                }
+
                 $scope.loader = false;
+                console.log(success.data);
+                if($scope.userPoint.length > 0){
+                    mymap.removeLayer($scope.userPoint[0])
+                    $scope.userPoint = [];
+                }
+                debugger;
+                var data = JSON.parse(success.data);
+                var marker = new L.marker([data['lat'], data['lng']], {
+                    draggable: false,
+                    icon: green
+                }).addTo(mymap);
+                marker.bindPopup("<b>" + $scope.address + "</b>").openPopup();
+                $scope.userPoint.push(marker);
+                $scope.stats = true;
+                $scope.property = "Average Property Value: " + data["AveragePropVal"];
+                if(data["TotalObese"] != undefined){
+                    $scope.individuals = "Obese Individuals: " + data["TotalObese"];
+                }
+                else{
+                    $scope.individuals = "";
+                }
+                if(data["CorrelationCoefficient"] != undefined){
+                    $scope.correlation = "Correlation: " + data["CorrelationCoefficient"];
+                }
+                else{
+                    $scope.correlation = "";
+                }
+                $scope.content = resultSet;
+                return;
+
 
                 //success
             }, function (error) {

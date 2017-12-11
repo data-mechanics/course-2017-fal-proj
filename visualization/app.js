@@ -65,7 +65,6 @@ app.post("/newMeans", function (req, res) {
     });
 
         const pyProg = spawn('python3', ['./visualizationMeans.py']);
-        //var pythonProg = execSync('python ./visualizationMeans.py');
 
         pyProg.on('exit', function(code, signal){
             console.log("In the exit function")
@@ -86,36 +85,46 @@ app.post("/newMeans", function (req, res) {
 });
 
 app.post("/getAddressData", function(req, res){
-    console.log(req.body);
     var query = req.body[0].replace(new RegExp(' ','g'), '+');
     var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + query + '&' + mapsKey;
     console.log(url);
     request.get(url, function (error, response, body) {
-        console.log(body);
         body = JSON.parse(body);
-        var zip = "";
-        var addresses = body["results"][0]["address_components"];//[7]["long_name"];
-        for(var name in addresses){
-            if(addresses[name][0].hasAttribute("types") && addresses[name][0]["types"] == "postal_code"){
-                zip = addresses[name]["long_name"];
+        try {
+            var zip = body["results"][0]["address_components"][7]["long_name"];
+            var lat = body["results"][0]["geometry"]["bounds"]["northeast"]["lat"];
+            var lng = body["results"][0]["geometry"]["bounds"]["northeast"]["lng"];
+        }
+        catch(e){
+            try{
+                lat = body["results"][0]["geometry"]["location"]["lat"];
+                lng = body["results"][0]["geometry"]["location"]["lng"];
+            }
+            catch(e){
+                res.err("error");
+                return;
             }
         }
-        if(zip == ""){
-            res.send("");
-            return;
-        }
-
-
-
-        var lat = body["results"][0]["geometry"]["bounds"]["northeast"]["lat"];
-        var lng = body["results"][0]["geometry"]["bounds"]["northeast"]["lng"];
         console.log("lat: " + lat + "\n" + "lng: " + lng);
-        res.send("");
+        var process =  spawn('python3', ['./visualizationStats.py', zip, lat, lng]);
+        process.stdout.setEncoding('utf8');
+        process.stderr.setEncoding('utf8');
+        process.on('exit', function(code, signal){
+           process.stdout.on('data', function (data) {
+
+               var final = data.replace(/'/g, '"');
+               console.log(final);
+               res.json(final);
+               return;
+           });
+           process.stderr.on('data', function(data){
+                console.log(data);
+                res.send("error");
+           });
+        });
     });
 
 });
-
-
 
 app.use(express.static(__dirname + '/public'))
     .use(cookieParser());
