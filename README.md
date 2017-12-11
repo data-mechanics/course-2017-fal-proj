@@ -24,7 +24,7 @@ Everything else should be included with python's standard libraries.
 
 ## Notes and Running
 * Within the repository there is a folder entitled "extra_files". The files in this directory do not, and should not, run upon execution. They are files which are not used in the context of the current project, but may prove useful in project 3.
-* A Google Maps API key is required. One call will be made to generate a map. This key is pulled from an auth.json file into server.py using the indexes ```['services']['googleportal']['key']```. Google Maps' free API keys allow for 2,500 calls per day.
+* A Google Maps API key is required. One call will be made to generate a map. This key is pulled from an auth.json file into server.py using the indices ```['services']['googleportal']['key']```. Please generate a free key from the link below, and create an auth.json file in the appropriate format described above. Google Maps' free API keys allow for 2,500 calls per day.
 
 Google Maps api keys can be generated here:
 
