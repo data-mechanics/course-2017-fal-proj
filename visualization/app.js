@@ -101,7 +101,7 @@ app.post("/getAddressData", function(req, res){
                 lng = body["results"][0]["geometry"]["location"]["lng"];
             }
             catch(e){
-                res.err("error");
+                res.send("error");
                 return;
             }
         }

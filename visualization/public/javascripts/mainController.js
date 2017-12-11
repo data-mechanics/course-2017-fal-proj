@@ -152,7 +152,6 @@ app.controller('mainController', function ($scope, $element, $timeout, $http, $d
                 else{
                     $scope.correlation = "";
                 }
-                $scope.content = resultSet;
                 return;
 
 
