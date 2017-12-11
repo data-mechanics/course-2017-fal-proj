@@ -32,6 +32,8 @@ class Budgets(dml.Algorithm):
         repo = client.repo
         repo.authenticate('francisz_jrashaan','francisz_jrashaan')
         scores =  repo.francisz_jrashaan.neighborhoodScores.find()
+        for i in scores:
+            print(i)
         scoreArray = []
         average = [0, 0, 0, 0]
         count = 0

@@ -5,7 +5,7 @@ from flask_pymongo import PyMongo
 import dml
 
 app = Flask(__name__)
-'''
+
 app.config['MONGO_DBNAME'] = 'repo'
 app.config['MONGO_USERNAME'] = 'francisz_jrashaan'
 app.config['MONGO_PASSWORD'] = 'francisz_jrashaan'
@@ -13,25 +13,25 @@ app.config['MONGO_PASSWORD'] = 'francisz_jrashaan'
 mongo = PyMongo(app, config_prefix='MONGO')
 
 auth = HTTPBasicAuth()
-'''
+
 @app.route('/')
 def index():
     return render_template('index.html')
-'''
+
 @app.route('/score', methods=["GET"])
-def get_big_belly():
+def get_correlation():
     client = dml.pymongo.MongoClient()
     repo = client.repo
     repo.authenticate('francisz_jrashaan', 'francisz_jrashaan')
     
-    scores = repo['francisz_jrashaan.scores'].find()
+    scores = repo['francisz_jrashaan.correlationScore'].find()
     
     scoreArray = []
     for score in scores:
-        scoreArray.append({ 'location': data['location'], 'count': data['count'], 'percentage': data['percentage']})
-    
-    return jsonify({'results': bigbelly_entries})
-'''
+        score.pop("_id")
+        scoreArray.append(score)
+    return jsonify({'results': scoreArray})
+
 if __name__ == '__main__':
-    app.run(port=3000)
+    app.run(port=5000)
 

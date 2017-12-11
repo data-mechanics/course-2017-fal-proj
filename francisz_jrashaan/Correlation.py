@@ -103,6 +103,8 @@ class Correlation(dml.Algorithm):
             y = lambda t: ({t[0]: t[1]})
             z = y(x)
             fixedScore.append(z)
+        
+        
              
     
 #print(fixedScore)
