@@ -9,6 +9,7 @@ In our visualization, the K-means result is displayed alongside the constraint s
     * scipy
     * sklearn
     * z3-solver
+    * Flask
 
 To install the z3 library properly please visit the github page and follow the instructions for python installation.
 
@@ -54,7 +55,7 @@ python server.py
 
 Enter in a number of means to be used as a value for k in the k-means algorithm. Our implementation allows for 1-21 means.
 Enter in a number of routes to be used as the number of routes returned by the z3-solver.
-Toggle whether markers should be generated. If enabled, the map will take roughly 0.5 to 2.0 seconds per marker to generate, with a marker existing for each route returned by the z-3 solver. This runtime increase appears to be due to limitations on the standard usage limits of Google Maps' geocoder API, which allows for a limited number of queries per second. For more information, [see here](https://developers.google.com/maps/documentation/geocoding/usage-limits). To monitor the current progress, check the terminal window running python server.py once "submit" has been clicked. In some cases the server might time out in the generation of markers, especially for high number of routes.
+Toggle whether markers should be generated. If enabled, the map will take roughly 0.5 to 2.0 seconds per marker to generate, with a marker existing for each route returned by the z-3 solver, this is satisfiable between 112 and 144 routes. If either of these parameters arent met they are set to their defaults, 1 mean and 112 routes. This runtime increase appears to be due to limitations on the standard usage limits of Google Maps' geocoder API, which allows for a limited number of queries per second. For more information, [see here](https://developers.google.com/maps/documentation/geocoding/usage-limits). To monitor the current progress, check the terminal window running python server.py once "submit" has been clicked. In some cases the server might time out in the generation of markers, especially for high number of routes.
 Click "submit."
 
 # course-2017-fal-proj
