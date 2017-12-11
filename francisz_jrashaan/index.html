@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Green Score Simulator</title>
+
+
+    <link 
+        rel="stylesheet" 
+        href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css"
+    />
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/style.css">
+
+    <script src="http://cdn.leafletjs.com/leaflet-0.7/leaflet.js">
+    </script>
+</head>
+<body>
+    <script src="http://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/topojson.v2.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <script src="https://d3js.org/d3-geo-projection.v1.min.js"></script>        
+    <script src="functions.js"></script>
+	<div id="map" style="width: 800px; height: 600px; margin:0px;">
+	</div>
+    <!--style for slider -->
+    <style>
+        .slider {
+          position: relative;
+          top: 40px;
+          left: 20px;
+        }
+
+        .slider-tray {
+          position: absolute;
+          width: 700px;
+          height: 10px;
+          border: solid 1px #ccc;
+          border-top-color: #aaa;
+          border-radius: 4px;
+          background-color: #f0f0f0;
+          box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08);
+          margin-bottom: 10px;
+          margin-top: -10px;
+        }
+
+        .slider-handle {
+          position: absolute;
+          top: 3px;
+        }
+
+        .slider-handle-icon {
+          width: 25px;
+          height: 18px;
+          border: solid 1px #aaa;
+          position: absolute;
+          border-radius: 10px;
+          background-color: #fff;
+          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+          top: -17px;
+          left: -7px;
+        }
+
+
+    </style>
+    <!--slider label-->
+    <label for="nbudget" 
+         style="display: inline-block; width: 1000px; text-align: center ; ">
+         Budget: <span id="budget"></span>
+    </label>
+    <!--slider -->
+    <div class="slider"></div>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script>
+    //slider stuff    
+    var width = 500;
+        
+    var x = d3.scale.linear()
+        .domain([1, 100])
+        .range([0, 900])
+        .clamp(true);
+    
+    var dispatch = d3.dispatch("sliderChange");
+
+    var slider = d3.select(".slider")
+        .style("width", width + "px");
+    var sliderTray = slider.append("div")
+        .attr("class", "slider-tray");
+
+    var sliderHandle = slider.append("div")
+        .attr("class", "slider-handle");
+
+    sliderHandle.append("div")
+        .attr("class", "slider-handle-icon")
+
+    slider.call(d3.behavior.drag()
+        .on("dragstart", function() {
+          dispatch.sliderChange(x.invert(d3.mouse(sliderTray.node())[0]));
+          d3.event.sourceEvent.preventDefault();
+        })
+        .on("drag", function() {
+          dispatch.sliderChange(x.invert(d3.mouse(sliderTray.node())[0]));
+        }));
+
+    dispatch.on("sliderChange.slider", function(value) {
+      sliderHandle.style("left", x(value) + "px")
+    });
+        
+    d3.select("#nbudget").on("input", function() {
+        update(+this.value);
+    });   
+    // Initial starting budget 
+    update(100000);    
+
+    </script>
+	<script type="text/javascript">
+		var map = L.map('map').setView([42.333233,  -71.10251], 13);
+			mapLink = '<a href="http://maps.wikimedia.org/</a>';
+		
+        
+
+		var allston = {
+		    "type": "Feature",
+		    "properties": {
+		        "name": "Allston",
+		    
+		    },
+		    "geometry": {
+		        "type": "Point",
+		        "coordinates": [-71.133675, 42.354584]
+		    }
+		};
+
+		L.geoJson(allston).addTo(map);
+
+
+		var backbay = {
+		    "type": "Feature",
+		    "properties": {
+		        "name": "Back Bay ",
+		    },
+		    "geometry": {
+		        "type": "Point",
+		        "coordinates": [-71.080427, 42.350164]
+		    }
+		};
+		L.geoJson(backbay).addTo(map);
+
+		var southend = {
+		    "type": "Feature",
+		    "properties": {
+		        "name": "Back Bay ",
+		    },
+		    "geometry": {
+		        "type": "Point",
+		        "coordinates": [-71.076683, 42.341072,]
+		    }
+		};
+
+	    L.geoJson(southend).addTo(map);
+
+
+	    var westend = {
+		    "type": "Feature",
+		    "properties": {
+		        "name": "Back Bay ",
+		    },
+		    "geometry": {
+		        "type": "Point",
+		        "coordinates": [-71.066469, 42.363986,]
+		    }
+		};
+		L.geoJson(westend).addTo(map);
+
+
+		var northend = {
+		    "type": "Feature",
+		    "properties": {
+		        "name": "Back Bay ",
+		    },
+		    "geometry": {
+		        "type": "Point",
+		        "coordinates": [-71.056599, 42.365152, ]
+		    }
+		};
+
+		L.geoJson(northend).addTo(map);
+
+
+
+		var fenway = {
+		    "type": "Feature",
+		    "properties": {
+		        "name": "Back Bay ",
+		    },
+		    "geometry": {
+		        "type": "Point",
+		        "coordinates": [-71.100733, 42.344822]
+		    }
+		};
+		L.geoJson(fenway).addTo(map);
+
+		var chinatown = {
+		    "type": "Feature",
+		    "properties": {
+		        "name": "Back Bay ",
+		    },
+		    "geometry": {
+		        "type": "Point",
+		        "coordinates": [-71.061400, 42.350996]
+		    }
+		};
+		L.geoJson(chinatown).addTo(map);
+
+		var beaconhill = {
+		    "type": "Feature",
+		    "properties": {
+		        "name": "Back Bay ",
+		    },
+		    "geometry": {
+		        "type": "Point",
+		        "coordinates": [-71.067295, 42.360137]
+		    }
+		};
+		L.geoJson(beaconhill).addTo(map);
+
+
+		var leatherdistrict = {
+		    "type": "Feature",
+		    "properties": {
+		        "name": "Back Bay ",
+		    },
+		    "geometry": {
+		        "type": "Point",
+		        "coordinates": [ -71.057240, 42.351695]
+		    }
+		};
+		L.geoJson(leatherdistrict).addTo(map);
+
+
+		var downtown = {
+		    "type": "Feature",
+		    "properties": {
+		        "name": "Back Bay ",
+		    },
+		    "geometry": {
+		        "type": "Point",
+		        "coordinates": [ -71.056699,  42.357218]
+		    }
+		};
+		L.geoJson(downtown).addTo(map);
+
+		var charlestown = {
+		    "type": "Feature",
+		    "properties": {
+		        "name": "Back Bay ",
+		    },
+		    "geometry": {
+		        "type": "Point",
+		        "coordinates": [-71.061298,  42.380463]
+		    }
+		};
+		L.geoJson(charlestown).addTo(map);
+
+		var eastboston = {
+		    "type": "Feature",
+		    "properties": {
+		        "name": "Back Bay ",
+		    },
+		    "geometry": {
+		        "type": "Point",
+		        "coordinates": [ -71.0358883, 42.374938]
+		    }
+		};
+		L.geoJson(eastboston).addTo(map);
+
+		var seaport = {
+		    "type": "Feature",
+		    "properties": {
+		        "name": "Back Bay ",
+		    },
+		    "geometry": {
+		        "type": "Point",
+		        "coordinates": [-71.041274, 42.348285]
+		    }
+		};
+
+		L.geoJson(seaport).addTo(map);
+
+		var southboston = {
+		    "type": "Feature",
+		    "properties": {
+		        "name": "Back Bay ",
+		    },
+		    "geometry": {
+		        "type": "Point",
+		        "coordinates": [ -71.048999, 42.335978]
+		    }
+		};
+
+		L.geoJson(southboston).addTo(map);
+
+		var dorchester = {
+		    "type": "Feature",
+		    "properties": {
+		        "name": "Back Bay ",
+		    },
+		    "geometry": {
+		        "type": "Point",
+		        "coordinates": [-71.065738, 42.306059]
+
+
+		    }
+		};
+
+		L.geoJson(dorchester).addTo(map);
+
+		var brighton = {
+		    "type": "Feature",
+		    "properties": {
+		        "name": "Back Bay ",
+		    },
+		    "geometry": {
+		        "type": "Point",
+		        "coordinates": [ -71.162057, 42.349966]
+
+
+
+
+		    }
+		};
+
+		L.geoJson(brighton).addTo(map);
+
+		var westroxbury = {
+		    "type": "Feature",
+		    "properties": {
+		        "name": "Back Bay ",
+		    },
+		    "geometry": {
+		        "type": "Point",
+		        "coordinates": [-71.162981, 42.283245]
+
+
+
+
+		    }
+		};
+
+		L.geoJson(westroxbury).addTo(map);
+
+		var hydepark = {
+		    "type": "Feature",
+		    "properties": {
+		        "name": "Back Bay ",
+		    },
+		    "geometry": {
+		        "type": "Point",
+		        "coordinates": [ -71.123670, 42.259365]
+
+
+
+
+		    }
+		};
+
+		L.geoJson(hydepark).addTo(map);
+
+		var rosindale = {
+		    "type": "Feature",
+		    "properties": {
+		        "name": "Back Bay ",
+		    },
+		    "geometry": {
+		        "type": "Point",
+		        "coordinates": [ -71.127619, 42.286293]
+
+
+
+
+		    }
+		};
+
+		L.geoJson(rosindale).addTo(map);
+
+		var roxbury = {
+		    "type": "Feature",
+		    "properties": {
+		        "name": "Back Bay ",
+		    },
+		    "geometry": {
+		        "type": "Point",
+		        "coordinates": [ -71.091435, 42.317771]
+
+
+
+
+		    }
+		};
+
+		L.geoJson(roxbury).addTo(map);
+
+		var missionhill = {
+		    "type": "Feature",
+		    "properties": {
+		        "name": "Back Bay ",
+		    },
+		    "geometry": {
+		        "type": "Point",
+		        "coordinates": [ -71.107154, 42.332361]
+
+
+
+
+		    }
+		};
+
+		L.geoJson(missionhill).addTo(map);
+
+		var mattapan = {
+		    "type": "Feature",
+		    "properties": {
+		        "name": "Back Bay ",
+		    },
+		    "geometry": {
+		        "type": "Point",
+		        "coordinates": [-71.091313, 42.280343]
+
+
+
+
+		    }
+		};
+
+		L.geoJson(mattapan).addTo(map);
+
+		var longwood = {
+		    "type": "Feature",
+		    "properties": {
+		        "name": "Back Bay ",
+		    },
+		    "geometry": {
+		        "type": "Point",
+		        "coordinates": [-71.110424, 42.343783]
+
+
+
+
+		    }
+		};
+
+		L.geoJson(longwood).addTo(map);
+
+		var bayvillage = {
+		    "type": "Feature",
+		    "properties": {
+		        "name": "Back Bay ",
+		    },
+		    "geometry": {
+		        "type": "Point",
+		        "coordinates": [-71.069779, 42.349196]
+
+
+
+
+		    }
+		};
+
+		L.geoJson(bayvillage).addTo(map);
+
+
+
+		var harborislands = {
+		    "type": "Feature",
+		    "properties": {
+		        "name": "Back Bay ",
+		    },
+		    "geometry": {
+		        "type": "Point",
+		        "coordinates": [-71.006198, 42.317269]
+		    }
+		};
+
+		L.geoJson(harborislands).addTo(map);
+
+		var jamaicaislands = {
+		    "type": "Feature",
+		    "properties": {
+		        "name": "Back Bay ",
+		    },
+		    "geometry": {
+		        "type": "Point",
+		        "coordinates": [-71.118910, 42.312894]
+		    }
+		};
+
+		L.geoJson(jamaicaislands).addTo(map);
+
+		
+		L.tileLayer('http://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png	', {
+		    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+		}).addTo(map);
+       
+		map._initPathRoot()    
+			
+	  	function getBudget() {
+	  		var http = new XMLHttpRequest();
+		    var url = "http://localhost:5000/score";
+		    console.log(url);
+		    http.open("GET", url, true);
+		    http.setRequestHeader("Content-type", "application/json");
+		    http.onreadystatechange = function() {
+		      if (http.readyState == 4 && http.status == 200) {
+		      	var data = JSON.parse(http.responseText).results;
+		        var arr = [];
+		        for (i in data) {
+		        	arr.push(L.marker([parseFloat(data[i].location[0]), parseFloat(data[i].location[1])]).bindPopup("Big Belly"));
+			        // var circle = L.marker([parseFloat(data[i].location[0]), parseFloat(data[i].location[1])]).addTo(map);
+			        var circle = L.circleMarker([parseFloat(data[i].location[0]), parseFloat(data[i].location[1])], {color: 'green', radius: 2}).bindPopup("Average Fullness: " + data[i].percentage).addTo(map);
+		        }
+		        return arr;
+		      }
+		    }
+		    http.send();
+	  	}	
+
+	  	getBudget();
+
+	</script>
+
+</body>
+</html>
