@@ -2,6 +2,8 @@
 Boston is a city notorious for extreme winter weather. With snowstorms potentially causing problems ranging from minor inconveniences like traffic backup to more serious concerns like roads to hospitals being blocked, it's important to clear snow from roads as efficiently as possible. To assist in efficient snow removal efforts, we classify the effectiveness of plowing a particular road in two ways: "road priority" and "connections". Road priority gauges how much plowing a particular road would benefit traversal throughout the city. At this stage of the project we are gauging this based on emergency snow routes. We will define a "high priority set" as a subset of Boston's emergency snow routes in which all other streets have access to at least one emergency route. We optimize this by finding the high priority set with the fewest emergency routes possible. "Connections" gauges how plowing a particular road would benefit access to nearby buildings of importance, and is optimized via a run of the K-means algorithm, wherein clusters to be closed in on by K-means are defined by the coordinates of these buildings of importance. We then perform analysis of the K-means result to return the distance to the nearest centroid for each point of importance.
 In our visualization, the K-means result is displayed alongside the constraint satisfaction result. Roads to be prioritized by the city to plow first, are those with the smallest distance between them, and the nearest centroid.
 
+Our report is located within the "presentation" subdirectory.
+
 ## Requirements
 * Our code was designed and tested to run with Python 3.6
 * The following libraries must be installed to run execute.py:
