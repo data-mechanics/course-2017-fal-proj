@@ -91,7 +91,7 @@ def map():
         json.dump(result, makeFile)
 
     marker = getMarker()
-    time.sleep(0.1)
+    time.sleep(0.2)
     return render_template('map.html')
 
 
