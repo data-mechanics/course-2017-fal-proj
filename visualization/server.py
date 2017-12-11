@@ -24,11 +24,6 @@ def index():
     return render_template('index.html')
 
 
-@app.route("/snow")
-def index_snow():
-    return render_template('index-snow.html')
-
-
 @app.route('/visualization')
 def visualization():
     authData = dml.auth;
