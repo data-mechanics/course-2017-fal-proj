@@ -88,8 +88,11 @@
                             lng: roads[i][0][1]
                         }
 
+                        var result = findClosestCentroid(roads[i][0][0], roads[i][0][1]);
+
                         new google.maps.Marker({
                             map: map,
+                            label:  "(" + String(result) + ")",
                             place: {
                                 placeId: roads[i][1][0],
                                 location: coordinate 
@@ -104,6 +107,21 @@
                         + Math.pow((point1[1] - point2[1]), 2))
 
                     return distance
+                }
+
+                // Finds the coordinates of the centroid nearest to the current point.
+                function findClosestCentroid(lat1, lon1) {
+                    var min = Number.MAX_SAFE_INTEGER;
+                    var centroids = kMeansData;
+    
+                    for (var i = 0; i < centroids.length; i++) {
+                        var nextDist = findDistance([lat1, lon1], [centroids[i][0], centroids[i][1]]);
+                        console.log(lat1, lon1, centroids[i][0], centroids[i][1]);
+                        if (nextDist < min) {
+                            min = nextDist;
+                        }
+                    }
+                    return min;
                 }
                 
 
