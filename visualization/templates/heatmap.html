@@ -116,7 +116,6 @@
     
                     for (var i = 0; i < centroids.length; i++) {
                         var nextDist = findDistance([lat1, lon1], [centroids[i][0], centroids[i][1]]);
-                        console.log(lat1, lon1, centroids[i][0], centroids[i][1]);
                         if (nextDist < min) {
                             min = nextDist;
                         }
