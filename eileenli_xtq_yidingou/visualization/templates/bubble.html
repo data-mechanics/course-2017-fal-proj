@@ -3,16 +3,14 @@
 <head>
     <meta charset="utf-8">
     <title>Bubble Chart</title>
-    <!-- 引入 echarts.js -->
     <script src="echarts.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
+
 <body>
-    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
     <div id="main" style="width: 1200px;height:800px;"></div>
     <script type="text/javascript">2
-        //var echarts = require('echarts');
-        // 基于准备好的dom，初始化echarts实例
         var myChart = echarts.init(document.getElementById('main'));
         var statement;
 
@@ -30,7 +28,7 @@
                     var sum = 0;
 
                     for (i = 0; i < Object.keys(json).length; i++) {
-                        list.push([json[i]['traffic'], json[i]['safety'], Math.pow(10, json[i]['total'] / 10) * 10000000, json[i][keys[0]]]);
+                        list.push([json[i]['traffic'], json[i]['safety'], json[i]['total'], json[i][keys[0]]]);
                     }
                     data.push(list);
 
@@ -43,8 +41,9 @@
                             color: '#cdd0d5'
                         }]),
                         title: {
-                            text: 'Bubble Chart'
+                            text: 'Safety Rating vs Convenience Rating'
                         },
+
                         legend: {
                             right: 10,
                             //data: ['']
@@ -70,13 +69,13 @@
                             data: list,
                             type: 'scatter',
                             symbolSize: function (data) {
-                                return Math.sqrt(data[2]) / 5e2;
+                                return Math.sqrt(Math.pow(10,data[2]/10)*10000000) / 5e2;
                             },
                             label: {
                                 emphasis: {
                                     show: true,
                                     formatter: function (param) {
-                                        return param.data[3];
+                                        return param.data[3]+": "+(param.data[2]);
                                     },
                                     position: 'top'
                                 }
@@ -105,4 +104,5 @@
 
     </script>
 </body>
+<a href="homepage.html" class="w3-bar-item w3-button" style="color:black">Home</a>
 </html>

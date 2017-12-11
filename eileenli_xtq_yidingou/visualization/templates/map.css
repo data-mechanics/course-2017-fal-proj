@@ -1,7 +1,3 @@
-/* Always set the map height explicitly to define the size of the div
- * element that contains the map. */
-
-/* Optional: Makes the sample page fill the window. */
 * { 
   margin: 0; padding: 0; 
 }
@@ -10,23 +6,13 @@ body {
   background: #2c2c2c url(../images/bg.jpg) top center no-repeat; 
 }
 
-body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
-
 p, label { 
-  font-family: Georgia, serif;
+  font-family: Helvetica, serif;
   font-style: italic;
   font-size: 18px; 
   margin: 4px 0;
 } 
-h1 { 
-  font-size: 48px;
-  letter-spacing: -1px;
-  color: white;
-  margin: 0 0 15px 0; 
-  }
-  h1 span { 
-    color: #1f8cc5; 
-}
+
 
 h2{
   font-family: 'Montserrat', sans-serif;
@@ -34,11 +20,6 @@ h2{
   color: white;
 }
 
-h3 { 
-  font-size: 18px; 
-  letter-spacing: -1px; 
-  margin: 0 0 5px 0; 
-}
 
 #panel{
   width: 960px;
@@ -163,13 +144,3 @@ text.value {
   outline: none;
 }
 
-
-
-
-#last{
-  float: right;
-  position: absolute;
-  top:1150px;
-  right:35px;
-  margin-bottom: 100px;
-}

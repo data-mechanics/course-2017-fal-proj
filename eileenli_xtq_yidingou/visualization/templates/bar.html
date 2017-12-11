@@ -2,17 +2,18 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>ECharts</title>
-    <!-- 引入 echarts.js -->
+    <title>Bar Chart</title>
     <script src="echarts.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
+
+
 <body>
-    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    
     <div id="main" style="width: 1200px;height:800px;"></div>
     <script type="text/javascript">2
-        //var echarts = require('echarts');
-        // 基于准备好的dom，初始化echarts实例
         var myChart = echarts.init(document.getElementById('main'));
         var statement;
 
@@ -22,12 +23,11 @@
             case "bar":
                 $.getJSON("schoolscore.json", function(data){
 
-                    keys = ["Name", "total", "safety", "comfort", "traffic"];
+                    keys = ["Name", "total", "safety", "comfort", "convenience"];
 
                     var Name = [];
                     var Values = [];
                     var series = [];
-                    //console.log(data[0]['school']);
 
                     for (i = 1; i < keys.length; i++) {
                         Values.push([]);
@@ -50,13 +50,13 @@
                                 data:Values[i],
                                 markPoint : {
                                     data : [
-                                        {type : 'max', name: '最大值'},
-                                        {type : 'min', name: '最小值'}
+                                        {type : 'max', name: 'maximum'},
+                                        {type : 'min', name: 'minimum'}
                                     ]
                                 },
                                 markLine : {
                                     data : [
-                                        {type : 'average', name: '平均值'}
+                                        {type : 'average', name: 'average'}
                                     ]
                                 }
                             });
@@ -70,15 +70,6 @@
                         },
                         legend: {
                             data: keys.slice(1, keys.length)
-                        },
-                        toolbox: {
-                            show : true,
-                            feature : {
-                                dataView : {show: true, readOnly: false},
-                                magicType : {show: true, type: ['line', 'bar']},
-                                restore : {show: true},
-                                saveAsImage : {show: true}
-                            }
                         },
                         calculable : true,
                         xAxis : [
@@ -103,4 +94,5 @@
 
     </script>
 </body>
+ <a href="homepage.html" class="w3-bar-item w3-button" style="color:black">Home</a>
 </html>
