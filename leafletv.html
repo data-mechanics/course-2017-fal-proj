@@ -28,7 +28,7 @@
     <a href="#" class="btn btn-primary  active" role="button" aria-pressed="true" onclick="myToggle3()" style="float:right; margin-right: .5em; width:10em">Population</a>
     <br/>
     <br/>
-    <a href="#" class="btn btn-success  active" role="button" aria-pressed="true" style="float:right; margin-right: .5em; width:10em">Hubway Trips</a>
+    <a href="#" class="btn btn-success  active" role="button" aria-pressed="true" onclick="myToggle4()" style="float:right; margin-right: .5em; width:10em">Hubway Trips</a>
     <br/>
     <br/>
     <a href="#" class="btn btn-info  active" role="button" aria-pressed="true" onclick="myToggle()" style="float:right; margin-right: .5em; width:10em">Neighborhoods</a>
@@ -668,13 +668,55 @@
     request.send();
     request.onload = function() {
         hubTrips = request.response;
-        console.log(hubTrips.length);
+        hTrips(hubTrips);
 
     }
 
+
+    var latlngs = []
+
     function hTrips(hubTrips){
+        console.log(hubTrips);
+        //
+        //var latlng = [[hubTrips[0]['start station latitude'],hubTrips[0]['start station longitude']], [hubTrips[0]['end station latitude'],hubTrips[0]['end station longitude']]];
+        //var polyline = L.polyline(latlng, {color: 'black'});
+        //polyline.addTo(mymap);
+        //console.log(hubTrips[0]['start station latitude'].typeof);
 
 
+
+        for (var i =0; i<hubTrips.length;i++){
+            latlngs.push( L.polyline([[hubTrips[i]['start station latitude'],hubTrips[i]['start station longitude']],
+                [hubTrips[i]['end station latitude'],hubTrips[i]['end station longitude']]], {color: 'black'}));//.addTo(mymap);
+
+        
+
+        }
+
+
+
+
+
+
+
+    }
+
+    var c4=false;
+    function myToggle4(){
+
+        if (c4==true) {
+            for (var i =0; i<latlngs.length;i++) {
+                mymap.removeLayer(latlngs[i]);
+            }
+            c4 = false;
+        }
+        else{
+
+            for (var i =0; i<latlngs.length;i++){
+                latlngs[i].addTo(mymap);
+            }
+            c4 = true;
+        }
     }
 
 
