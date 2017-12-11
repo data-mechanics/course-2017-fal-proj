@@ -22,7 +22,7 @@ Everything else should be included with python's standard libraries.
 
 ## Notes and Running
 * Within the repository there is a folder entitled "extra_files". The files in this directory do not, and should not, run upon execution. They are files which are not used in the context of the current project, but may prove useful in project 3.
-* A Google Maps API key is required. One call will be made to generate a map. If generation of markers is enabled, one API call per marker will also be made to Google Maps' geocoordinate API, allowing us to find the geographic center of each route selected by the constraint satisfaction problem. See below for more details on the generation of markers. This key is pulled from an auth.json file into server.py using the indexes ```['services']['googleportal']['key']```. Google Maps' free API keys allow for 2,500 calls per day.
+* A Google Maps API key is required. One call will be made to generate a map. This key is pulled from an auth.json file into server.py using the indexes ```['services']['googleportal']['key']```. Google Maps' free API keys allow for 2,500 calls per day.
 
 Google Maps api keys can be generated here:
 
@@ -54,8 +54,8 @@ python server.py
 ```
 
 Enter in a number of means to be used as a value for k in the k-means algorithm. Our implementation allows for 1-21 means.
-Enter in a number of routes to be used as the number of routes returned by the z3-solver.
-Toggle whether markers should be generated. If enabled, the map will take roughly 0.5 to 2.0 seconds per marker to generate, with a marker existing for each route returned by the z-3 solver, this is satisfiable between 112 and 144 routes. If either of these parameters arent met they are set to their defaults, 1 mean and 112 routes. This runtime increase appears to be due to limitations on the standard usage limits of Google Maps' geocoder API, which allows for a limited number of queries per second. For more information, [see here](https://developers.google.com/maps/documentation/geocoding/usage-limits). To monitor the current progress, check the terminal window running python server.py once "submit" has been clicked. In some cases the server might time out in the generation of markers, especially for high number of routes.
+Enter in a number of routes to be used as the number of routes returned by the z3-solver. This problem is satisfiable between 112 and 144 routes.
+If either of these parameters are not met, they are set to their defaults, 1 mean and 112 routes.
 Click "submit."
 
 # course-2017-fal-proj
