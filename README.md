@@ -16,6 +16,9 @@ github link:
 
 https://github.com/Z3Prover/z3
 
+Everything else should be included with python's standard libraries.
+
+
 ## Notes and Running
 * Within the repository there is a folder entitled "extra_files". The files in this directory do not, and should not, run upon execution. They are files which are not used in the context of the current project, but may prove useful in project 3.
 * A Google Maps API key is required. One call will be made to generate a map. If generation of markers is enabled, one API call per marker will also be made to Google Maps' geocoordinate API, allowing us to find the geographic center of each route selected by the constraint satisfaction problem. See below for more details on the generation of markers. This key is pulled from an auth.json file into server.py using the indexes ```['services']['googleportal']['key']```. Google Maps' free API keys allow for 2,500 calls per day.
