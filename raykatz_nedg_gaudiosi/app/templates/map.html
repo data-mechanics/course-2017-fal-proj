@@ -42,7 +42,50 @@
                 }
                 </style>
                     <p class="lead">Using our interactive Gentrification tracker, users can explore various regions in Boston and examine a live map of the data! </p>
-             <center><svg></svg></center> 
+             <center><svg></svg></center>
+             <p>Alter the weights of different variables and see how the gentrification score changes!</p>
+            <form method="post" action="{{ url_for('map') }}">
+                <label for="percent_white">Percent White Weight:</label>
+                <input type="number" name="percent_white" value="1" step="0.1" /><br />
+                
+                <label for="percent_married_households">Percent Married Weight:</label>
+                <input type="number" name="percent_married_households" value="1" step="0.1" /><br />
+                
+                <label for="percent_unemployed">Unemployment Weight:</label>
+                <input type="number" name="percent_unemployed"  value="1" step="0.1" /><br />
+                
+                <label for="percent_in_labor_force">Labor Force Participation Weight:</label>
+                <input type="number" name="percent_in_labor_force" value="1" step="0.1" /><br />
+                
+                <label for="percent_public_transit">Percent Taking Public Transit Weight:</label>
+                <input type="number" name="percent_public_transit" value="1" step="0.1" /><br />
+                
+                <label for="median_income">Median Income Weight:</label>
+                <input type="number" name="median_income" value="1" step="0.1" /><br />
+                
+                <label for="median_rent">Median Rent Weight:</label>
+                <input type="number" name="median_rent" value="1" step="0.1" /><br />
+                
+                <label for="percent_spending_50_rent">Percent Spending >50% of their Income on Rent Weight:</label>
+                <input type="number" name="percent_spending_50_rent" value="1" step="0.1" /><br />
+                
+                <label for="percent_poverty">Poverty Rate Weight:</label>
+                <input type="number" name="percent_poverty" value="1" step="0.1" /><br />
+                
+                <label for="percent_homes_built_before_1939">Percent of Homes Built Before 1939 Weight:</label>
+                <input type="number" name="percent_homes_built_before_1939" value="1" step="0.1" /><br />
+                
+                <label for="percent_renting">Percent Renting Weight:</label>
+                <input type="number" name="percent_renting" value="1" step="0.1" /><br />
+                
+                <label for="subway_stops">T Stops Weight:</label>
+                <input type="number" name="subway_stops" value="1" step="0.1" /><br />
+                
+                <label for="bus_stops">Bus Stops Weight:</label>
+                <input type="number" name="bus_stops" value="1" step="0.1" /><br />
+                
+                <input type="submit" />
+            </form>
        </div>
         
         
