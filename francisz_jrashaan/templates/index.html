@@ -61,14 +61,13 @@
     <!--slider label-->
     <label for="nbudget" 
          style="display: inline-block; width: 1000px; text-align: center ; ">
-         Budget: <span id="budget"></span>
     </label>
     <!--slider -->
     <svg width="960" height="100"></svg>
     <script>
     //slider stuff    
         var svg = d3.select("svg"),
-        margin = {right: 50, left: 50},
+        margin = {right: 50, left: 20},
         width = +svg.attr("width") - margin.left - margin.right,
         height = +svg.attr("height");
         
