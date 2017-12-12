@@ -24,7 +24,11 @@ By looking at charging stations, hubway stations, biking networks, and open spac
 
 Finally we took the green scores we computed initially and set up a constraint satisfaction problem where we attempted to optimize the green score for each neighborhood given a budget of $1,000,000. The constraints we added attempted to make the computation realistic, meaning that solutions of 0 or less than 0 were not acceptable, in an effort to deplete the budget.We also randomized the maximum and minimum number of specific entities that could be built in neighborhoods in an effort to create a unique solution for each neighborhood.
 
-Moreover, we have made a web visualization which uses flask to retrieve the data from our mongo db collections, and presents the data using leaflet js , and an interactive slider made using D3.js
+Moreover, we have made a web visualization which uses flask to retrieve the data from our mongo db collections, and presents the data using leaflet js , and an interactive slider made using D3.js which invokes our modified constraint satisfaction algorithm which we tweaked to include a higher range of budgets and more constraints.
+
+There is a supplemental report and presentation as well. 
+
+
 
 ## Setting Up
 Please run neighborhoodscores.py, followed by budgets.py, and then run app.py ** it must be in this order to work. 
