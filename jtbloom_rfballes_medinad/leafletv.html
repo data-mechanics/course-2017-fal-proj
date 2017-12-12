@@ -687,7 +687,7 @@
 
         for (var i =0; i<hubTrips.length;i++){
             latlngs.push( L.polyline([[hubTrips[i]['start station latitude'],hubTrips[i]['start station longitude']],
-                [hubTrips[i]['end station latitude'],hubTrips[i]['end station longitude']]], {color: 'black'}));//.addTo(mymap);
+                [hubTrips[i]['end station latitude'],hubTrips[i]['end station longitude']]], {color: 'black', weight:0.5}));//.addTo(mymap);
 
         
 
