@@ -6,7 +6,9 @@
     to the rise of obesity - many of which point to a root cause, which is inaccessability to healthy and
     nutritious food options.  Our goal throughout the semester was to use publicly available data to make
     healthy options more accessible to those who are considered obese under the Massachusetts medical standards.
-    At a high level, there we're two portions of our project: (1) Analytics, (2) A solution to an optimization problem.
+    At a high level, there we're two portions of our project: 
+    (1) Analytics 
+    (2) A solution to an optimization problem.
     
 ```
 ```
