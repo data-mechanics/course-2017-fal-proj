@@ -36,9 +36,13 @@
     (i.e values ranging from $100,000.00 - $110,000.00), and aggregate the associated number of obese
     people as the value. More specifically, the transformation took the following form:
         (Value Range: Number of obese people associated with range)
-    
-    
+
+    After the above transformation was run for each neighborhood, as well as for the entire Boston
+    area.  At this point, we we're ready to compute the correlation coefficient for each neighborhood
+    in Boston, as well as the entire area.
 ```
+
+###### Expected Results:
 ```
     The purpose of our project was to gather data on overweight persons in the Boston city area,
     and calculate whether or not there exists a correlation between income/property values and 
