@@ -47,7 +47,7 @@ In our new scoring system, we calculate the number of gardens, crimes, MBTA stop
 
 Calculate the correlation coefficient between each factor and custom score of each hotel using the formula above.
 
-     | Coefficient | p_value
+  _  | Coefficient | p_value
 ---- | ---| ---
 Crime | -0.09448652255976357 | 0.3984638884028119
 MBTA Stops | 0.5511472545817303 | 8.065664653031119e-8
