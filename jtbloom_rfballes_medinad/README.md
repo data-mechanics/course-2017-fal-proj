@@ -65,22 +65,21 @@ From our results, we were able to generate two scatterplots to visualize these r
  
 ![alt text](https://github.com/rfballesteros/course-2017-fal-proj/blob/master/jtbloom_rfballes_medinad/trips-population%20correlation.png "Correlation between Hubway Trips and Average Neighborhood Population")
 
-#### Visualization
 
 #### Conclusion
 Based on our calculations there is a moderate negative correlation between the number of Hubway trips per neighborhood and average neighborhood income. There is also a moderate positive correlation with the average neighborhood population with a high p-value, meaning that this observation is a non-significant result. Based on these results, we can learn that neighborhoods with higher frequencies of trips tend to have a lower average per-capita income. 
+
+#### Visualization
+We created a visualization to display our findings using Leaflet, a JavaScript library for interactive maps. This interactive visualization includes four buttons: Income per Capita, Population, Hubway Trips, and Neighborhoods. The Income per Capita feature displays red circles in each neighborhood, with the radius of the circle proportional to the neighborhood's average per capita income. The Population feature displays blue circles in each neighborhood, with the radius of the circle proportional to the neighborhood's population. Next, we added the Hubway Trips feature, which displayslines between the start and end Hubway station locations for all of the Hubway trips we used in our analysis. Note that this takes some time to load, as it loads over 100,000 trips. The final button toggles the neighborhood borders to give a better sense of the area of that neighborhood. See below for screenshots of our visualization:
+
+![alt_text](https://github.com/rfballesteros/course-2017-fal-proj/blob/master/jtbloom_rfballes_medinad/visualization1.PNG)
+
+![alt_text](https://github.com/rfballesteros/course-2017-fal-proj/blob/master/jtbloom_rfballes_medinad/visualization2.PNG)
+
+![alt_text](https://github.com/rfballesteros/course-2017-fal-proj/blob/master/jtbloom_rfballes_medinad/visualization3.PNG)
+
 
 #### Future Work
 For expanding on this project in the future, there are several aspects to consider:
 * Combining Hubway trip history data sets from past several years to get an even more accurate correlation data
 * Using datasets of income per capita and population in municipalities outside of Boston (Brookline, Cambridge, Somerville) to get a bigger picture
-
-
-
-
-
-
-
-
-
-
