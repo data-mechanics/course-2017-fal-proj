@@ -50,8 +50,7 @@
     correlation between lower valued areas and the number of obese people in the area, like the following
     image illustrates:
 ```
-![image of expected results]
-(https://github.com/jmbiel/course-2017-fal-proj/blob/master/BIEL_expected_results.png)
+![image of expected results] (https://github.com/jmbiel/course-2017-fal-proj/blob/master/BIEL_expected_results.png)
 
 ```
     The purpose of our project was to gather data on overweight persons in the Boston city area,
