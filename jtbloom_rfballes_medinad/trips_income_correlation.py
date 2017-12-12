@@ -7,6 +7,8 @@ import uuid
 from random import shuffle
 from math import sqrt
 import decimal
+import matplotlib
+import matplotlib.pyplot as plt
 
 
 class trips_income_correlation(dml.Algorithm):
@@ -90,8 +92,20 @@ class trips_income_correlation(dml.Algorithm):
 		print("avg income = ", avgincome)
 		print("avg hubway = ", avgtrips)
 
+		
 
+		
 
+		fig = plt.figure()
+		fig.suptitle('Neighborhood Income - Trips', fontsize=14, fontweight='bold')
+
+		ax = fig.add_subplot(111)
+		fig.subplots_adjust(top=0.85)
+		
+		ax.set_xlabel('Neighborhood Average Per Capita Income')
+		ax.set_ylabel('# of Trips')
+		ax.scatter(income, trips)
+		plt.show()
 
 	@staticmethod
 	def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):
@@ -128,5 +142,5 @@ class trips_income_correlation(dml.Algorithm):
 
 		return doc
 
-#trips_income_correlation.execute()
+trips_income_correlation.execute()
 
