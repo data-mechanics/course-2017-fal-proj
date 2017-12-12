@@ -2,67 +2,53 @@
 <html>
 <head>
 	<title>Green Score Simulator</title>
-
-
-    <link 
-        rel="stylesheet" 
-        href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css"
-    />
-    <script src="http://d3js.org/d3.v3.min.js"></script>
-
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css"/>
+    <script src="http://d3js.org/d3.v4.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../static/style.css">
-
-    <script src="http://cdn.leafletjs.com/leaflet-0.7/leaflet.js">
-    </script>
+    <script src="http://cdn.leafletjs.com/leaflet-0.7/leaflet.js"></script>
 </head>
 <body>
-    <script src="http://d3js.org/d3.v4.min.js"></script>
     <script src="https://d3js.org/topojson.v2.min.js"></script>
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
     <script src="https://d3js.org/d3-geo-projection.v1.min.js"></script>        
-    <script src="functions.js"></script>
 	<div id="map" style="width: 800px; height: 600px; margin:0px;">
 	</div>
     <!--style for slider -->
     <style>
-        .slider {
-          position: relative;
-          top: 40px;
-          left: 20px;
+        .ticks {
+          font: 10px sans-serif;
         }
 
-        .slider-tray {
-          position: absolute;
-          width: 700px;
-          height: 10px;
-          border: solid 1px #ccc;
-          border-top-color: #aaa;
-          border-radius: 4px;
-          background-color: #f0f0f0;
-          box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08);
-          margin-bottom: 10px;
-          margin-top: -10px;
+        .track,
+        .track-inset,
+        .track-overlay {
+          stroke-linecap: round;
         }
 
-        .slider-handle {
-          position: absolute;
-          top: 3px;
+        .track {
+          stroke: #000;
+          stroke-opacity: 0.3;
+          stroke-width: 10px;
         }
 
-        .slider-handle-icon {
-          width: 25px;
-          height: 18px;
-          border: solid 1px #aaa;
-          position: absolute;
-          border-radius: 10px;
-          background-color: #fff;
-          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-          top: -17px;
-          left: -7px;
+        .track-inset {
+          stroke: #ddd;
+          stroke-width: 8px;
         }
 
+        .track-overlay {
+          pointer-events: stroke;
+          stroke-width: 50px;
+          stroke: transparent;
+          cursor: crosshair;
+        }
 
+        .handle {
+          fill: #fff;
+          stroke: #000;
+          stroke-opacity: 0.5;
+          stroke-width: 1.25px;
+        }
     </style>
     <!--slider label-->
     <label for="nbudget" 
@@ -70,57 +56,70 @@
          Budget: <span id="budget"></span>
     </label>
     <!--slider -->
-    <div class="slider"></div>
-    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <svg width="960" height="100"></svg>
     <script>
     //slider stuff    
-    var width = 500;
-        
-    var x = d3.scale.linear()
-        .domain([1, 100])
-        .range([0, 900])
-        .clamp(true);
-    
-    var dispatch = d3.dispatch("sliderChange");
+        var svg = d3.select("svg"),
+        margin = {right: 50, left: 50},
+        width = +svg.attr("width") - margin.left - margin.right,
+        height = +svg.attr("height");
 
-    var slider = d3.select(".slider")
-        .style("width", width + "px");
-    var sliderTray = slider.append("div")
-        .attr("class", "slider-tray");
+        var x = d3.scaleLinear()
+            .domain([100000, 2500000])
+            .range([0, width])
+            .clamp(true);
 
-    var sliderHandle = slider.append("div")
-        .attr("class", "slider-handle");
+        var slider = svg.append("g")
+            .attr("class", "slider")
+            .attr("transform", "translate(" + margin.left + "," + height / 2 + ")");
 
-    sliderHandle.append("div")
-        .attr("class", "slider-handle-icon")
+        slider.append("line")
+            .attr("class", "track")
+            .attr("x1", x.range()[0])
+            .attr("x2", x.range()[1])
+          .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
+            .attr("class", "track-inset")
+          .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
+            .attr("class", "track-overlay")
+            .call(d3.drag()
+                .on("start.interrupt", function() { slider.interrupt(); })
+                .on("start drag", function() { hue(x.invert(d3.event.x)); }));
 
-    slider.call(d3.behavior.drag()
-        .on("dragstart", function() {
-          dispatch.sliderChange(x.invert(d3.mouse(sliderTray.node())[0]));
-          d3.event.sourceEvent.preventDefault();
-        })
-        .on("drag", function() {
-          dispatch.sliderChange(x.invert(d3.mouse(sliderTray.node())[0]));
-        }));
+        slider.insert("g", ".track-overlay")
+            .attr("class", "ticks")
+            .attr("transform", "translate(0," + 18 + ")")
+          .selectAll("text")
+          .data(x.ticks(25))
+          .enter().append("text")
+            .attr("x", x)
+            .attr("text-anchor", "middle")
+            .text(function(d) { return d/1000000 + "M"; });
 
-    dispatch.on("sliderChange.slider", function(value) {
-      sliderHandle.style("left", x(value) + "px")
-    });
-        
-    d3.select("#nbudget").on("input", function() {
-        update(+this.value);
-    });   
-    // Initial starting budget 
-    update(100000);    
+        var handle = slider.insert("circle", ".track-overlay")
+            .attr("class", "handle")
+            .attr("r", 9);
+        slider.transition() // Gratuitous intro!
+        .duration(750)
+        .tween("hue", function() {
+          var i = d3.interpolate(0, 70);
+          return function(t) { hue(i(t)); };
+        });
 
+        function hue(h) {
+          handle.attr("cx", x(h));
+        }
     </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 	<script type="text/javascript">
 		var map = L.map('map').setView([42.333233,  -71.10251], 13);
 			mapLink = '<a href="http://maps.wikimedia.org/</a>';
 		
-        
-
-		var allston = {
+		L.tileLayer('http://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png	', {
+		    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+		}).addTo(map);
+       
+		map._initPathRoot()    
+        var allston = {
 		    "type": "Feature",
 		    "properties": {
 		        "name": "Allston",
@@ -496,14 +495,6 @@
 		};
 
 		L.geoJson(jamaicaislands).addTo(map);
-
-		
-		L.tileLayer('http://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png	', {
-		    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-		}).addTo(map);
-       
-		map._initPathRoot()    
-			
 	  	function getBudget() {
 	  		var http = new XMLHttpRequest();
 		    var url = "http://localhost:5000/score";
@@ -515,7 +506,7 @@
 		      	var data = JSON.parse(http.responseText).results;
 		        var arr = [];
 		        for (i in data) {
-		        	arr.push(L.marker([parseFloat(data[i].location[0]), parseFloat(data[i].location[1])]).bindPopup("Big Belly"));
+		        	arr.push(L.marker([parseFloat(data[i].location[0]), parseFloat(data[i].location[1])]).bindPopup("metrics"));
 			        // var circle = L.marker([parseFloat(data[i].location[0]), parseFloat(data[i].location[1])]).addTo(map);
 			        var circle = L.circleMarker([parseFloat(data[i].location[0]), parseFloat(data[i].location[1])], {color: 'green', radius: 2}).bindPopup("Average Fullness: " + data[i].percentage).addTo(map);
 		        }
@@ -526,7 +517,6 @@
 	  	}	
 
 	  	getBudget();
-
 	</script>
 
 </body>

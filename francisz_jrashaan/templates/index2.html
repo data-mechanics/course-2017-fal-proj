@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Green Score Simulator</title>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css"/>
+    <script src="http://d3js.org/d3.v4.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="http://cdn.leafletjs.com/leaflet-0.7/leaflet.js"></script>
+    <script src="boston_neighborhoods.json"></script>
+</head>
+<body>
+    <script src="https://d3js.org/topojson.v2.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <script src="https://d3js.org/d3-geo-projection.v1.min.js"></script>        
+	<div id="map" style="width: 800px; height: 600px; margin:0px;">
+	</div>
+    <!--style for slider -->
+    <style>
+        .ticks {
+          font: 10px sans-serif;
+        }
+
+        .track,
+        .track-inset,
+        .track-overlay {
+          stroke-linecap: round;
+        }
+
+        .track {
+          stroke: #000;
+          stroke-opacity: 0.3;
+          stroke-width: 10px;
+        }
+
+        .track-inset {
+          stroke: #ddd;
+          stroke-width: 8px;
+        }
+
+        .track-overlay {
+          pointer-events: stroke;
+          stroke-width: 50px;
+          stroke: transparent;
+          cursor: crosshair;
+        }
+
+        .handle {
+          fill: #fff;
+          stroke: #000;
+          stroke-opacity: 0.5;
+          stroke-width: 1.25px;
+        }
+         body {
+            position: absolute;
+            font-family: "Proxima Nova", "Montserrat", sans-serif;
+        }
+        h1, h2 {
+            position: absolute;
+            left: 10px;
+            font-size: 1.3em;
+            font-weight: 100;
+        }
+        h2 {
+            top: 30px;
+            font-size: 1em;
+        }
+        .hover {
+            fill: yellow;   
+        }
+        #sliderContainer {
+            text-align: center;
+            position: relative;
+            top: 500px;
+        }
+    </style>
+    <!--slider label-->
+    <label for="nbudget" 
+         style="display: inline-block; width: 1000px; text-align: center ; ">
+         Budget: <span id="budget"></span>
+    </label>
+    <!--slider -->
+    <div id="sliderContainer">
+        <input id="timeslide" type="range" min="0" max="11" value="0" step="1"/><br>
+        <span id="range">January</span>
+    </div>
+    <script>
+    //slider stuff    
+        var width = 700;
+    var height = 580;
+
+    var inputValue = null;
+    var month = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+    var svg = d3.select( "body" )
+        .append( "svg" )
+        .attr( "width", width )
+        .attr( "height", height );
+
+    var g = svg.append( "g" );
+
+    var albersProjection = d3.geoAlbers()
+        .scale( 190000 )
+        .rotate( [71.057,0] )
+        .center( [0, 42.313] )
+        .translate( [width/2,height/2] );
+
+    var geoPath = d3.geoPath()
+        .projection( albersProjection );
+
+    g.selectAll( "path" )
+        .data( neighborhoods_json.features )
+        .enter()
+        .append( "path" )
+        .attr( "fill", "#ccc" )
+        .attr( "stroke", "#333")
+        .attr( "d", geoPath );
+
+    var rodents = svg.append( "g" );
+
+    rodents.selectAll( "path" )
+        .data( rodents_json.features )
+        .enter()
+        .append( "path" )
+        .attr("fill", initialDate)
+        .attr( "fill", "#900" )
+        .attr( "stroke", "#999" )
+        .attr( "d", geoPath )
+        .attr( "class", "incident")
+        .on("mouseover", function(d){
+            d3.select("h2").text(d.properties.LOCATION_STREET_NAME);
+            d3.select(this).attr("class","incident hover");
+        })
+        .on("mouseout", function(d){
+            d3.select("h2").text("");
+            d3.select(this).attr("class","incident");
+        });
+
+    // when the input range changes update the value 
+    d3.select("#timeslide").on("input", function() {
+        update(+this.value);
+    });
+
+    // update the fill of each SVG of class "incident" with value
+    function update(value) {
+        document.getElementById("range").innerHTML=month[value];
+        inputValue = month[value];
+        d3.selectAll(".incident")
+            .attr("fill", dateMatch);
+    }
+
+    function dateMatch(data, value) {
+        var d = new Date(data.properties.OPEN_DT);
+        var m = month[d.getMonth()];
+        if (inputValue == m) {
+            this.parentElement.appendChild(this);
+            return "red";
+        } else {
+            return "#999";
+        };
+    }
+
+    function initialDate(d,i){
+        var d = new Date(d.properties.OPEN_DT);
+        var m = month[d.getMonth()];
+        if (m == "January") {
+            this.parentElement.appendChild(this);
+            return "red";
+        } else {
+            return "#999";
+        };
+    }
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+	<script type="text/javascript">
+		//var map = L.map('map').setView([42.333233,  -71.10251], 13);
+		//	mapLink = '<a href="http://maps.wikimedia.org/</a>';
+		
+		//L.tileLayer('http://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png	', {
+		//    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+		//}).addTo(map);
+       
+		//map._initPathRoot()    
+			
+	  	function getBudget() {
+	  		var http = new XMLHttpRequest();
+		    var url = "http://localhost:5000/score";
+		    console.log(url);
+		    http.open("GET", url, true);
+		    http.setRequestHeader("Content-type", "application/json");
+		    http.onreadystatechange = function() {
+		      if (http.readyState == 4 && http.status == 200) {
+		      	var data = JSON.parse(http.responseText).results;
+		        var arr = [];
+		        for (i in data) {
+		        	arr.push(L.marker([parseFloat(data[i].location[0]), parseFloat(data[i].location[1])]).bindPopup("Big Belly"));
+			        // var circle = L.marker([parseFloat(data[i].location[0]), parseFloat(data[i].location[1])]).addTo(map);
+			        var circle = L.circleMarker([parseFloat(data[i].location[0]), parseFloat(data[i].location[1])], {color: 'green', radius: 2}).bindPopup("Average Fullness: " + data[i].percentage).addTo(map);
+		        }
+		        return arr;
+		      }
+		    }
+		    http.send();
+	  	}	
+
+	  	getBudget();
+
+	</script>
+
+</body>
+</html>
