@@ -51,7 +51,8 @@
     image illustrates:
 ```
 
-![alt text] (http://datamechanics.io/data/BIEL_expected_results.png "Expected Results")
+![alt text] [img]
+[img]: http://datamechanics.io/data/BIEL_expected_results.png "Expected Results"
 
 ```
     The purpose of our project was to gather data on overweight persons in the Boston city area,
