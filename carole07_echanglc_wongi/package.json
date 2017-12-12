@@ -1,0 +1,23 @@
+{
+  "name": "carole07_echanglc_wongi",
+  "version": "1.0.0",
+  "description": "CS591 Project",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ivan Wong",
+  "license": "ISC",
+  "dependencies": {
+    "bson": "^1.0.4",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.16.2",
+    "jade": "^1.11.0",
+    "mongodb": "^1.4.40",
+    "mongoose": "^4.13.6",
+    "morgan": "^1.9.0",
+    "serve-favicon": "^2.4.5",
+    "stylus": "^0.54.5",
+    "update-mongo": "0.0.4"
+  }
+}

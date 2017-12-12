@@ -1,0 +1,82 @@
+body {
+    padding-left: 20%;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+    color: #00b7ff;
+}
+
+#map {
+    height: 50%;
+    width: 60%;
+}
+
+html, body {
+    height: 100%;
+
+
+}
+
+#floating-panel {
+    position: absolute;
+    left: 25%;
+    z-index: 5;
+    padding: 5px;
+    text-align: center;
+    font-family: 'Roboto','sans-serif';
+    line-height: 30px;
+    padding-left: 70px;
+
+}
+
+#legend {
+    background-color: white;
+    border-radius: 0px 15px 15px 0px;
+}
+
+#streetlight_graph , #policeDept_graph , #hospital_graph , #school_graph {
+    width: 800px;
+    height: 600px;
+}
+
+#policeDept_graph , #hospital_graph, #school_graph {
+    display: none;
+}
+
+#hide_data {
+    display: none;
+}
+
+
+#mapid{
+  height: 600px;
+  width: 800px;
+}
+
+.legend {
+  line-height: 18px;
+  color: #555;
+}
+
+.legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 17px;
+    opacity: 0.7;
+}
+
+.info {
+  padding: 6px 8px;
+  font: 14px/16px Arial, Helvetica, sans-serf;
+  background: white;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  border-radius: 5px;
+}
+
+.info h4 {
+  margin: 0 0 5px;
+  color: #777;
+}
