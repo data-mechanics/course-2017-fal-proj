@@ -18,21 +18,24 @@
 
 ###### Methods:
 ```
-    In the analytics portion of our project, we wanted to measure the relationship between income and obesity.
-    In order to do this, we combined data from the following sources:
+    In the analytics portion of our project, we wanted to measure the relationship between income and 
+    obesity. In order to do this, we combined data from the following sources:
 
     (1) Property Values in the Boston Area:
-        The columns we used from this dataset included the total value of the associated property, and the coordinates.
+        The columns we used from this dataset included the total value of the associated property,
+        and the coordinates.
 
     (2) Obesity Data:
         The columns used from this dataset included the coordinates of the associated obese person.
 
-    With the above information, we we're able to associate each obese person to one or multiple properties based on
-    proximity.  The resulting transformation was of the form: (Property Value: Number of obese people within close proximity).
+    With the above information, we we're able to associate each obese person to one or multiple properties
+    based on proximity.  The resulting transformation was of the form: (Property Value: Number of obese 
+    people within close proximity).
     
-    The next transformation effectively "binned" each property value into a range of property values (i.e values 
-    ranging from $100,000.00 - $110,000.00), and aggregate the associated number of obese people as the value.
-    More specifically, the transformation took the following form: (Value Range: Number of obese people associated with range).
+    The next transformation effectively "binned" each property value into a range of property values
+    (i.e values ranging from $100,000.00 - $110,000.00), and aggregate the associated number of obese
+    people as the value. More specifically, the transformation took the following form:
+        (Value Range: Number of obese people associated with range)
     
     
 ```
