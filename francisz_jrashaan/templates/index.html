@@ -529,6 +529,7 @@
             map._initPathRoot()    
 
             function getScore(x) {
+                console.log(x);
                 var http = new XMLHttpRequest();
                 var url = "http://localhost:3000/budgets";
                 console.log(url);
@@ -555,7 +556,6 @@
                 }
                 http.send();
             };
-            getScore(100000);
   	(function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
@@ -873,7 +873,7 @@ return function module() {
       }
     };
 
-    console.log(alignValue);
+  (getScore(alignValue));
 
 
     return alignValue;
