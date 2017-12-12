@@ -20,7 +20,7 @@ class propValue(dml.Algorithm):
         repo = client.repo
         repo.authenticate('carole07_echanglc_wongi', 'carole07_echanglc_wongi')
 
-        url = 'https://data.boston.gov/export/cec/df0/cecdf003-9348-4ddb-94e1-673b63940bb8.json'
+        url = 'https://data.boston.gov/api/3/action/datastore_search?resource_id=cecdf003-9348-4ddb-94e1-673b63940bb8&limit=20000'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
