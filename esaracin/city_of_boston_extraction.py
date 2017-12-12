@@ -25,17 +25,17 @@ class city_of_boston_extraction(dml.Algorithm):
         repo.authenticate('esaracin', 'esaracin')
 
         # Where we have to request and parse our dataset.
-        url = 'https://data.cityofboston.gov/api/views/w4k7-yvrq/rows.csv?accessType=DOWNLOAD'
-        dataset = pd.read_csv(url)
-        json_set = dataset.to_json(orient='records')
-        r = json.loads(json_set)
+#        url = 'https://data.cityofboston.gov/api/views/w4k7-yvrq/rows.csv?accessType=DOWNLOAD'
+#        dataset = pd.read_csv(url)
+#        json_set = dataset.to_json(orient='records')
+#        r = json.loads(json_set)
 
 
         # Add a collection to store our data, and store it.
-        repo.dropCollection("boston_shootings")
-        repo.createCollection("boston_shootings")
-        repo['esaracin.boston_shootings'].insert_many(r)
-        repo['esaracin.boston_shootings'].metadata({'complete':True})
+#        repo.dropCollection("boston_shootings")
+#        repo.createCollection("boston_shootings")
+#        repo['esaracin.boston_shootings'].insert_many(r)
+#        repo['esaracin.boston_shootings'].metadata({'complete':True})
 
 
         repo.logout()

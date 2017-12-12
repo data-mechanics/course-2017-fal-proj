@@ -86,7 +86,6 @@ class race_linear_analysis(dml.Algorithm):
         df_race.columns = new_columns
 
 
-        print(df_race.head())
 
         # Normalize crime count and FIO count by population of district.
         for index, row in df_race.iterrows():
@@ -99,7 +98,6 @@ class race_linear_analysis(dml.Algorithm):
             df_race.ix[index, 'hispanic'] /= 100
             df_race.ix[index, 'asian'] /= 100
             df_race.ix[index, 'other'] /= 100
-        print(df_race)
 
 
         # Now drop the categorical data before the regression

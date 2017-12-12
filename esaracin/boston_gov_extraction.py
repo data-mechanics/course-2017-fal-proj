@@ -40,7 +40,7 @@ class boston_gov_extraction(dml.Algorithm):
 
 
         # Do the same as above for our gun dataset
-        url = 'https://data.boston.gov/dataset/3937b427-6aa4-4515-b30d-c76771313feb/resource/474f5374-15fe-4768-b31c-18b819cfa145/download/boston-police-department-firearms-recovery-counts.csv'
+        url ='https://data.boston.gov/dataset/3937b427-6aa4-4515-b30d-c76771313feb/resource/a3d2260f-8a41-4e95-9134-d14711b0f954/download/bpdfirearmrecoverycounts20171205.csv'
         dataset = pd.read_csv(url)
         json_set = dataset.to_json(orient='records')
         r = json.loads(json_set)
