@@ -44,6 +44,16 @@
 
 ###### Expected Results:
 ```
+    The results of the analytics phase we're meant to play a role in the optimization problem we wanted
+    to solve.  For example, if there we're much higher correlations coefficients in certain neighborhoods,
+    we would be able to create solutions that prioritized those areas. We expected to find a positive 
+    correlation between lower valued areas and the number of obese people in the area, like the following
+    image illustrates:
+```
+![image of expected results]
+(./expected_results.png)
+
+```
     The purpose of our project was to gather data on overweight persons in the Boston city area,
     and calculate whether or not there exists a correlation between income/property values and 
     the number of overweight people in then vicinity. Furthermore, we gathered data on the 
