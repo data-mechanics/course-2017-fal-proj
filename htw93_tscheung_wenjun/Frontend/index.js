@@ -91,7 +91,7 @@ function sendData() {
     numOfResults = getNum(document.querySelector('input[name="numResult"]:checked').id);
     console.log(numOfResults);
     $.ajax({
-        url : 'http://155.41.118.36:8080/request/',
+        url : 'http://155.41.28.222:8080/request/',
         type: 'POST',
         data:JSON.stringify({data:finalOrder}),
         success : handleData

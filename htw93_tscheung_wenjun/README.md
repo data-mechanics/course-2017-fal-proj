@@ -4,7 +4,7 @@
 
 ## Project Narrative
 
-As one of the most famous city all over the world, Boston is a popular city for people to travel. People might use website like booking or tripdavisor to find out the suitable hotel from them. However, most of the grades and comments concentrates on the hotels themselve, like the quality of service, cleaningness, etc. Obviously, those grades and comments ignore the surroundings, like crime rates, transportations. Hence we try to evaluate the hotels of Boston by some other factors, like crime rate, transportation information, foods and gardens. Based on the evaluation, we aimed to find a new protential coordinate to build new hotel with high score. Besides that, we also set up an interactive web-based visualization. In the website, users can sort the factors with their own preference. Our backend will send the recommended hotels for users, pointed on a map.
+As one of the most famous city all over the world, Boston is a popular city for people to travel. People might use website like booking or tripdavisor to find out the suitable hotel from them. However, most of the grades and comments concentrates on the hotels themselve, like the quality of service, cleaningness, etc. Obviously, those grades and comments ignore the surroundings, like crime rates, transportations. Hence we try to evaluate the hotels of Boston by some other factors, like crime rate, transportation information, foods and gardens. Based on the evaluation, we aimed to find a new protential coordinate to build new hotel with high score, and we can also recommend hotels to customers based on their preferences. Besides that, we also set up an interactive web-based visualization. In the website, users can sort the factors with their own preference. Our backend will send the recommended hotels for users, pointed on a map.
 
 
 ## Datasets
@@ -42,18 +42,20 @@ In our new scoring system, we calculate the number of gardens, crimes, MBTA stop
 ## Correlation Coefficient
 **Formula:**
 
+
 <img src="https://i.imgur.com/YipOLbT.png" style="width:200px">
 
-For each factor, we calculate the correlation coefficient. below is the result:
+Calculate the correlation coefficient between each factor and custom score of each hotel using the formula above.
 
- | Coefficient| p value
+ | Coefficient | p_value
 ---- | ---| ---
 Crime | -0.09448652255976357 | 0.3984638884028119
 MBTA Stops | 0.5511472545817303 | 8.065664653031119e-8
 Gardens | 0.8712154440427992 | 1.9353053027735632e-26
 Foods | 0.6383325374109514 | 1.1093179778057194e-10
 
-
+## Result
+We find out that the coefficient between crime and custom hotel score is extremely close to zero, and the p-value is relatively large when comparing to other factors. Thus, we conclude the crime factor is not significant and no longer consider crime as a factor at next step.
 
 ## Potential Best place to build a hotel
 
@@ -91,7 +93,7 @@ Besides the investigation of the potential best place to build a hotel in Boston
 
 ### Application Architecture
 
-#### Backend
+#### Backend(Django)
 
 For backend, we use Django framework. Django is a free and open-source web framework, written in Python, which follows the model-view-template (MVT) architectural pattern. We use Django to receive the request from the frontend and interect with MongoDB to retreive the data. Then we send the data back to frontend with JsonResponse.
 
@@ -102,3 +104,17 @@ For frontend, we use html and javascript. We let use choose the order of the fac
 ### Visualization
 
 <img src="https://i.imgur.com/JXb7C4L.jpg" style="width:700px">
+
+## Conclusion
+
+Using the custom score system and K-means clustering, we successfully find out the best potential place to build a new hotel in Boston and make recommendation to users with different preference.
+
+### Future Work
+
+* Since food establishment licenses dataset contains many small cafeterias and our project targets hotel customers, we can filter those cafeterias and make the food dataset more target specified.
+
+* We can include more factors such as nearby attractions in the score system to make the score reflect the hotel’s quality more accurately.
+
+* When we visualize the result hotel, we only display the hotel name and the a pinned location on the map. we can show more information about the information including photos and external links to book the hotel. 
+
+

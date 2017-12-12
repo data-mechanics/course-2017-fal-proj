@@ -70,7 +70,7 @@ class transformation5(dml.Algorithm):
             norm_food.append([h['norm_food']])
 
             combine_rate_crime.append((h['norm_rate']+h['norm_mbta']+h['norm_garden']+h['norm_food'])/4)
-            res.append([coordinates[count][0],coordinates[count][1],(h['norm_rate']*origin +h['norm_mbta']*mbta +h['norm_garden']*garden +h['norm_food']*food)])
+            res.append([coordinates[count][0],coordinates[count][1],(h['norm_rate']*(origin+1) +h['norm_mbta']*(mbta+1) +h['norm_garden']*(garden+1) +h['norm_food']*(food+1))])
             count+=1
         hotel_score.rewind()
         
@@ -107,25 +107,29 @@ class transformation5(dml.Algorithm):
         #fig = plt.figure(figsize=(16,12))
         #colors = ['red','blue','green','pink','yellow','cyan','black','orange','lightblue','lightgreen']
         cluster=[]
-        for i in range(len(kmeans.cluster_centers_)):
-            label = scores[i]
-            x = kmeans.cluster_centers_[i][0]
-            y = kmeans.cluster_centers_[i][1]
-            #plt.annotate(label, xy=(x,y), xytext=(x, y))
-        for i in range(10):
-            indexs = Clusts(i,kmeans.labels_)
-            #x = []
-            #y = []
-            #print(indexs)
-            tmp = []
-            for entry in indexs:
-                x = []
-                x.append([hotel_lists[entry]])
-                #print(x)
-                y = coordinate[entry]
-                x.append(y)
-                tmp.append(x)
-            cluster.append(tmp)
+        max_ids = ids[scores.index(max(scores))]
+        for i in range(len(max_ids)):
+            cluster.append({'hotel':hotel_lists[max_ids[i]],'lat':coordinate[max_ids[i]][0],'long':coordinate[max_ids[i]][1],'score':res[max_ids[i]][2]})
+
+        # for i in range(len(kmeans.cluster_centers_)):
+        #     label = scores[i]
+        #     x = kmeans.cluster_centers_[i][0]
+        #     y = kmeans.cluster_centers_[i][1]
+        #     #plt.annotate(label, xy=(x,y), xytext=(x, y))
+        # for i in range(10):
+        #     indexs = Clusts(i,kmeans.labels_)
+        #     #x = []
+        #     #y = []
+        #     #print(indexs)
+        #     tmp = []
+        #     for entry in indexs:
+        #         x = []
+        #         x.append([hotel_lists[entry]])
+        #         #print(x)
+        #         y = coordinate[entry]
+        #         x.append(y)
+        #         tmp.append(x)
+        #     cluster.append(tmp)
         
         coorx_sum = 0
         coory_sum = 0
@@ -155,7 +159,7 @@ class transformation5(dml.Algorithm):
         repo.dropCollection("BostonHotelPotentialPermutation")
         repo.createCollection("BostonHotelPotentialPermutation")
 
-        permutation_list = list(itertools.permutations([1, 2, 3, 4]))
+        permutation_list = list(itertools.permutations([0, 1, 2, 3]))
 
         for entry in permutation_list:
             origin = entry[0]
