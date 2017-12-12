@@ -226,10 +226,10 @@ class Budgets(dml.Algorithm):
         
         doc.usage(compute_Budgets, presetneighborhoodScores, startTime, None, {prov.model.PROV_TYPE:'ont:Used for Computation'})
         
-        Budgets = doc.entity('dat:francisz_jrashaan#Budgets', {'prov:label':'Budgets', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'Dataset'})
-        doc.wasAttributedTo(Budgets, this_script)
-        doc.wasGeneratedBy(Budgets, compute_Budgets, endTime)
-        doc.wasDerivedFrom(Budgets, presetneighborhoodScores, compute_Budgets, compute_Budgets, compute_Budgets)
+        budgets = doc.entity('dat:francisz_jrashaan#budgets', {'prov:label':'Budgets', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'Dataset'})
+        doc.wasAttributedTo(budgets, this_script)
+        doc.wasGeneratedBy(budgets, compute_Budgets, endTime)
+        doc.wasDerivedFrom(budgets, presetneighborhoodScores, compute_Budgets, compute_Budgets, compute_Budgets)
         
         repo.logout()
         
