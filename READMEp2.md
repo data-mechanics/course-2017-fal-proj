@@ -1,4 +1,4 @@
-###### Tackling Obesity in Boston
+###### Tackling Obesity in Boston - Max Biel & James Otis
 
 ## Introduction: 
 ```
@@ -7,9 +7,24 @@
     nutritious food options.  Our goal throughout the semester was to use publicly available data to make
     healthy options more accessible to those who are considered obese under the Massachusetts medical standards.
     At a high level, there we're two portions of our project: 
+
     (1) Analytics 
     (2) A solution to an optimization problem.
     
+```
+## Analytics:
+```
+    In the analytics portion of our project, we wanted to measure the relationship between income and obesity.
+    In order to do this, we combined data from the following sources:
+
+    (1) Property Values in the Boston Area:
+        The columns we used from this dataset included the total value of the associated property, and the coordinates.
+
+    (2) Obesity Data:
+        The columns used from this dataset included the coordinates of the associated obese person.
+
+    With the above information, we we're able to associate each obese person to one or multiple properties based on
+    proximity.  The 
 ```
 ```
     The purpose of our project was to gather data on overweight persons in the Boston city area,
