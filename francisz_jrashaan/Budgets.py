@@ -138,6 +138,7 @@ class Budgets(dml.Algorithm):
                     bikeNetworks.append(X[x3])
                     openspace.append(X[x4])
                     new_score = 0
+                    
                     tuple = ( str(chargingStations[i]), str(hubwayStations[i]), str(bikeNetworks[i]), str(openspace[i]))
                         #averages[0] += int(str(tuple[1])) + scoreArray[j][0]
                         #averages[1] += int(str(tuple[2])) + scoreArray[j][1]
@@ -167,7 +168,18 @@ class Budgets(dml.Algorithm):
                         new_score += averages[z] + diff*(.2) + scoreArray[i][3]
                     else:
                         new_score += int(str(tuple[3])) * 1 + scoreArray[i][3]
-                    results.append({"Neighborhood":tuple[0],"Budget": budget, "New Score": (new_score/10) , "Originial Score":scoreArray[i][5], "Green Facilities": tuple})
+                    
+                    print(new_score)
+                    if new_score > 1000:
+                        x = new_score / 100 + new_score / 100
+                        if x > 100:
+                            x = 100
+                    else:
+                        x =new_score / 10
+
+
+
+                    results.append({"Neighborhood":Neighborhoods[i],"Budget": budget, "New Score": (x) , "Originial Score":scoreArray[i][5], "Green Facilities": tuple})
                     
                             #if(score/10 > 100):
                             #flag += 1
