@@ -1,6 +1,6 @@
 ###### Tackling Obesity in Boston
 
-##Introduction: 
+## Introduction: 
 ```
     Obesity is one of the United States largest health problems.  Several subproblems have been attributed
     to the rise of obesity - many of which point to a root cause, which is inaccessability to healthy and
