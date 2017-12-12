@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Greeen Score Simulator</title>
+  <title>Green Score Simulator</title>
      <link 
         rel="stylesheet" 
         href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css"
@@ -32,7 +32,7 @@
     }
 
     .wrapper > div {
-      margin: 35px 0;
+      margin: 20px 0;
     }
 
     .d3-slider {
@@ -123,7 +123,6 @@
   </div>
 
   <script src="http://d3js.org/d3.v3.min.js"></script>
-  <script src="d3.slider.js"></script>
   <script>
 
   			    var map = L.map('map').setView([42.333233,  -71.10251], 13);
@@ -507,7 +506,7 @@
                 }
             };
             L.geoJson(harborislands).addTo(map);
-            var jamaicaislands = {
+            var jamaicaiplain = {
                 "type": "Feature",
                 "properties": {
                     "name": "Back Bay ",
@@ -521,7 +520,7 @@
                     "coordinates": [-71.118910, 42.312894]
                 }
             };
-            L.geoJson(jamaicaislands).addTo(map);
+            L.geoJson(jamaicaiplain).addTo(map);
 
             L.tileLayer('http://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png	', {
                 attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -529,27 +528,34 @@
 
             map._initPathRoot()    
 
-            function getCorrelation() {
+            function getScore(x) {
                 var http = new XMLHttpRequest();
-                var url = "http://localhost:3000/score";
+                var url = "http://localhost:3000/budgets";
                 console.log(url);
                 http.open("GET", url, true);
                 http.setRequestHeader("Content-type", "application/json");
                 http.onreadystatechange = function() {
                   if (http.readyState == 4 && http.status == 200) {
                     var data = JSON.parse(http.responseText).results;
-                    console.log(data);
+                    console.log(data[0]["Budget"] == x);
                     var arr = [];
-                    //for (i in data) {
+                    for (i in data) {
+                        if (data[i]["Budget"] == x){
+                            arr.push(data[i])
+
+                    }
                     //	arr.push(L.marker([parseFloat(data[i].location[0]), parseFloat(data[i].location[1])]).bindPopup("Big Belly"));
                         // var circle = L.marker([parseFloat(data[i].location[0]), parseFloat(data[i].location[1])]).addTo(map);
                       //  var circle = L.circleMarker([parseFloat(data[i].location[0]), parseFloat(data[i].location[1])], {color: 'green', radius: 2}).bindPopup("Average Fullness: " + data[i].percentage).addTo(map);
-                    //}
+                    }
+                    console.log(arr);
+
                     return arr;
                   }
                 }
                 http.send();
             };
+            getScore(100000);
   	(function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
@@ -868,6 +874,7 @@ return function module() {
     };
 
     console.log(alignValue);
+
 
     return alignValue;
 
