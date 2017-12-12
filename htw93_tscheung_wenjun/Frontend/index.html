@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="indexStyle.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="container">
+    <div style="text-align:center"><h5>Sort your preferences from left to right:</h5> </div>
+    <div class="btn-group-wrap text-center">
+        <div class="sortChoice">
+            <ul id="choiceList" class="btn-group">
+                <li data-id="0" class="btn" style="color:white">Original Rating</li>
+                <li data-id="1" class="btn" style="color:white">Garden</li>
+                <li data-id="2" class="btn" style="color:white">Food</li>
+                <li data-id="3" class="btn" style="color:white">MBTA</li>
+            </ul>
+        </div>
+        <p>
+            Number of results:
+            <input name="numResult" type="radio" id="num5" checked>
+            <label for="num5">5</label>
+
+            <input name="numResult" type="radio" id="num10">
+            <label for="num10">10</label>
+
+            <input name="numResult" type="radio" id="num15">
+            <label for="num15">15</label>
+
+            <input name="numResult" type="radio" id="numAll">
+            <label for="numAll">All</label>
+        </p>
+    </div>
+    <div style="text-align: center;">
+        <button class = "btn waves-effect waves-light red" type = "submit" onclick="sendData()">Submit</button>
+    </div>
+</div>
+    <div class="row"></div>
+    <div class="mapContainer">
+        <div id="map"></div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxxDuA2gM8DBtbf07sAzfWrhBVlxYS_Qw&callback=initMap">
+</script>
+<script src="//rubaxa.github.io/Sortable/Sortable.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+<script src="index.js"></script>
+</body>
+</html>
