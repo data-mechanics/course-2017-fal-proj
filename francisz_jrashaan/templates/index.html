@@ -130,397 +130,47 @@
             var color = d3.scale.linear()
               .domain([0, 9])  
               .range(["blue", "green"]);
+
+        
+              
             
-            var allston = {
-                "type": "Feature",
-                "properties": {
-                    "name": "Allston", 
-                    budget: "", 
-                    new_score: "", 
-                    old_score: "", 
-                    Items:""
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [-71.133675, 42.354584]
+
+            function renderMap(x) {
+            
+                points = [[42.344822,-71.100733],[42.317269,-71.006198],[42.374938, -71.0358883],[42.357218,-71.056699], [42.354584, -71.133675],[42.259365, -71.123670], [ 42.286293,-71.127619 ], [42.380463,-71.061298],[ 42.350164, -71.080427], [42.341072, -71.076683],  [42.357218, -71.056699], [ 42.306059, -71.065738], [42.3529344675747, -71.04346595564307], [ 42.283245, -71.162981], [42.343783, -71.110424],  [42.332361, -71.107154], [42.317771, -71.091435], [42.360137, -71.067295],  [ 42.280343, -71.091313], [42.317269, -71.006198], [42.349966, -71.162057], [42.335978,-71.048999], [ 42.363986, -71.066469], [42.344822, -71.100733], [ 42.350996, -71.061400] , [ 42.312894, -71.118910]];
+
+                for (i in x) {
+                    
+                     var list = "<dl><dt>Neighborhood</dt>"
+                       + "<dd>" + x[i]["Neighborhood"] + "</dd>"
+                       + "<dt>Budget</dt>"
+                       + "<dd>" + x[i]["Budget"] + "</dd>"
+                       + "<dt>Score</dt>"
+                       + "<dd>" + Math.round(x[i]["New Score"]) + "</dd>"
+                       + "<dt>Charging Station </dt>"
+                       + "<dd>" +x[i]["Green Facilities"][0] + "</dd>"
+                       + "<dt>Hubway Stations </dt>" 
+                       + "<dd>" +x[i]["Green Facilities"][1] + "</dd>"
+                       + "<dt>Bike Network Points </dt>"
+                       + "<dd>" +x[i]["Green Facilities"][2] + "</dd>"
+                       + "<dt>Open Space Points </dt>"
+                       + "<dd>" +x[i]["Green Facilities"][3] + "</dd>";
+
+                    L.marker(points[i]).addTo(map)
+                    .bindPopup(list, {
+
+                         maxHeight:1000,  maxWidth : 10000
+                    });
+
                 }
-            };
-            L.geoJson(allston).addTo(map);
-            var backbay = {
-                "type": "Feature",
-                "properties": {
-                    "name": "Back Bay ",
-                    budget: "", 
-                    new_score: "", 
-                    old_score: "", 
-                    Items:""
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [-71.080427, 42.350164]
-                }
-            };
-            L.geoJson(backbay).addTo(map);
-            var southend = {
-                "type": "Feature",
-                "properties": {
-                    "name": "Back Bay ",
-                    budget: "", 
-                    new_score: "", 
-                    old_score: "", 
-                    Items:""
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [-71.076683, 42.341072,]
-                }
-            };
-            L.geoJson(southend).addTo(map);
-            var westend = {
-                "type": "Feature",
-                "properties": {
-                    "name": "Back Bay ",
-                    budget: "", 
-                    new_score: "", 
-                    old_score: "", 
-                    Items:""
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [-71.066469, 42.363986,]
-                }
-            };
-            L.geoJson(westend).addTo(map);
-            var northend = {
-                "type": "Feature",
-                "properties": {
-                    "name": "Back Bay ",
-                    budget: "", 
-                    new_score: "", 
-                    old_score: "", 
-                    Items:""
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [-71.056599, 42.365152, ]
-                }
-            };
-            L.geoJson(northend).addTo(map);
-            var fenway = {
-                "type": "Feature",
-                "properties": {
-                    "name": "Back Bay ",
-                    budget: "", 
-                    new_score: "", 
-                    old_score: "", 
-                    Items:""
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [-71.100733, 42.344822]
-                }
-            };
-            L.geoJson(fenway).addTo(map);
-            var chinatown = {
-                "type": "Feature",
-                "properties": {
-                    "name": "Back Bay ",
-                    budget: "", 
-                    new_score: "", 
-                    old_score: "", 
-                    Items:""
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [-71.061400, 42.350996]
-                }
-            };
-            L.geoJson(chinatown).addTo(map);
-            var beaconhill = {
-                "type": "Feature",
-                "properties": {
-                    "name": "Back Bay ",
-                    budget: "", 
-                    new_score: "", 
-                    old_score: "", 
-                    Items:""
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [-71.067295, 42.360137]
-                }
-            };
-            L.geoJson(beaconhill).addTo(map);
-            var leatherdistrict = {
-                "type": "Feature",
-                "properties": {
-                    "name": "Back Bay ",
-                    budget: "", 
-                    new_score: "", 
-                    old_score: "", 
-                    Items:""
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [ -71.057240, 42.351695]
-                }
-            };
-            L.geoJson(leatherdistrict).addTo(map);
-            var downtown = {
-                "type": "Feature",
-                "properties": {
-                    "name": "Back Bay ",
-                    budget: "", 
-                    new_score: "", 
-                    old_score: "", 
-                    Items:""
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [ -71.056699,  42.357218]
-                }
-            };
-            L.geoJson(downtown).addTo(map);
-            var charlestown = {
-                "type": "Feature",
-                "properties": {
-                    "name": "Back Bay ",
-                    budget: "", 
-                    new_score: "", 
-                    old_score: "", 
-                    Items:""
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [-71.061298,  42.380463]
-                }
-            };
-            L.geoJson(charlestown).addTo(map);
-            var eastboston = {
-                "type": "Feature",
-                "properties": {
-                    "name": "Back Bay ",
-                    budget: "", 
-                    new_score: "", 
-                    old_score: "", 
-                    Items:""
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [ -71.0358883, 42.374938]
-                }
-            };
-            L.geoJson(eastboston).addTo(map);
-            var seaport = {
-                "type": "Feature",
-                "properties": {
-                    "name": "Back Bay ",
-                    budget: "", 
-                    new_score: "", 
-                    old_score: "", 
-                    Items:""
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [-71.041274, 42.348285]
-                }
-            };
-            L.geoJson(seaport).addTo(map);
-            var southboston = {
-                "type": "Feature",
-                "properties": {
-                    "name": "Back Bay ",
-                    budget: "", 
-                    new_score: "", 
-                    old_score: "", 
-                    Items:""
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [ -71.048999, 42.335978]
-                }
-            };
-            L.geoJson(southboston).addTo(map);
-            var dorchester = {
-                "type": "Feature",
-                "properties": {
-                    "name": "Back Bay ",
-                    budget: "", 
-                    new_score: "", 
-                    old_score: "", 
-                    Items:""
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [-71.065738, 42.306059]
-                }
-            };
-            L.geoJson(dorchester).addTo(map);
-            var brighton = {
-                "type": "Feature",
-                "properties": {
-                    "name": "Back Bay ",
-                    budget: "", 
-                    new_score: "", 
-                    old_score: "", 
-                    Items:""
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [ -71.162057, 42.349966]
-                }
-            };
-            L.geoJson(brighton).addTo(map);
-            var westroxbury = {
-                "type": "Feature",
-                "properties": {
-                    "name": "Back Bay ",
-                    budget: "", 
-                    new_score: "", 
-                    old_score: "", 
-                    Items:""
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [-71.162981, 42.283245]
-                }
-            };
-            L.geoJson(westroxbury).addTo(map);
-            var hydepark = {
-                "type": "Feature",
-                "properties": {
-                    "name": "Back Bay ",
-                    budget: "", 
-                    new_score: "", 
-                    old_score: "", 
-                    Items:""
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [ -71.123670, 42.259365]
-                }
-            };
-            L.geoJson(hydepark).addTo(map);
-            var rosindale = {
-                "type": "Feature",
-                "properties": {
-                    "name": "Back Bay ",
-                    budget: "", 
-                    new_score: "", 
-                    old_score: "", 
-                    Items:""
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [ -71.127619, 42.286293]
-                }
-            };
-            L.geoJson(rosindale).addTo(map);
-            var roxbury = {
-                "type": "Feature",
-                "properties": {
-                    "name": "Back Bay ",
-                    budget: "", 
-                    new_score: "", 
-                    old_score: "", 
-                    Items:""
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [ -71.091435, 42.317771]
-                }
-            };
-            L.geoJson(roxbury).addTo(map);
-            var missionhill = {
-                "type": "Feature",
-                "properties": {
-                    "name": "Back Bay ",
-                    budget: "", 
-                    new_score: "", 
-                    old_score: "", 
-                    Items:""
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [ -71.107154, 42.332361]
-                }
-            };
-            L.geoJson(missionhill).addTo(map);
-            var mattapan = {
-                "type": "Feature",
-                "properties": {
-                    "name": "Back Bay ",
-                    budget: "", 
-                    new_score: "", 
-                    old_score: "", 
-                    Items:""
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [-71.091313, 42.280343]
-                }
-            };
-            L.geoJson(mattapan).addTo(map);
-            var longwood = {
-                "type": "Feature",
-                "properties": {
-                    "name": "Back Bay ",
-                    budget: "", 
-                    new_score: "", 
-                    old_score: "", 
-                    Items:""
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [-71.110424, 42.343783]
-                }
-            };
-            L.geoJson(longwood).addTo(map);
-            var bayvillage = {
-                "type": "Feature",
-                "properties": {
-                    "name": "Back Bay ",
-                    budget: "", 
-                    new_score: "", 
-                    old_score: "", 
-                    Items:""
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [-71.069779, 42.349196]
-                }
-            };
-            L.geoJson(bayvillage).addTo(map);
-            var harborislands = {
-                "type": "Feature",
-                "properties": {
-                    "name": "Back Bay ",
-                    budget: "", 
-                    new_score: "", 
-                    old_score: "", 
-                    Items:""
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [-71.006198, 42.317269]
-                }
-            };
-            L.geoJson(harborislands).addTo(map);
-            var jamaicaiplain = {
-                "type": "Feature",
-                "properties": {
-                    "name": "Back Bay ",
-                    budget: "", 
-                    new_score: "", 
-                    old_score: "", 
-                    Items:""
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [-71.118910, 42.312894]
-                }
-            };
-            L.geoJson(jamaicaiplain).addTo(map);
+            
+               
+               
+
+
+            }
+
+          
 
             L.tileLayer('http://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png	', {
                 attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -550,12 +200,14 @@
                       //  var circle = L.circleMarker([parseFloat(data[i].location[0]), parseFloat(data[i].location[1])], {color: 'green', radius: 2}).bindPopup("Average Fullness: " + data[i].percentage).addTo(map);
                     }
                     console.log(arr);
-
+                    renderMap(arr);
                     return arr;
                   }
                 }
                 http.send();
             };
+    getScore(100000);
+    // ADAPTED CODE FROM D3JS SLIDER EXAMPLE https://github.com/MasterMaps/d3-slider 
   	(function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
@@ -873,7 +525,9 @@ return function module() {
       }
     };
 
+
   (getScore(alignValue));
+
 
 
     return alignValue;
@@ -977,7 +631,7 @@ return function module() {
 
     
 
-    d3.select('#slider7').call(d3.slider().axis(true).min(200000).max(2500000).step(100000));
+    d3.select('#slider7').call(d3.slider().axis(true).min(200000).max(2400000).step(100000));
 
     
 
