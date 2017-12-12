@@ -76,7 +76,7 @@ We created a visualization to display our findings using Leaflet, a JavaScript l
 
 ![alt_text](https://github.com/rfballesteros/course-2017-fal-proj/blob/master/jtbloom_rfballes_medinad/visualization2.PNG)
 
-![alt_text](https://github.com/rfballesteros/course-2017-fal-proj/blob/master/jtbloom_rfballes_medinad/visualization3.PNG)
+![alt_text](https://github.com/rfballesteros/course-2017-fal-proj/blob/master/jtbloom_rfballes_medinad/visualization3.png)
 
 
 #### Future Work
