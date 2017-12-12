@@ -4,6 +4,7 @@ from flask import Flask, Response, request, render_template, redirect, url_for
 from flask_pymongo import PyMongo
 from flask_table import Table, Col
 import json
+import numpy
 
 app = Flask(__name__)
 app.config['MONGO_DBNAME']='repo'
@@ -34,6 +35,12 @@ def get_zipinfo(zipcode):
 # # or just {{ table }} from within a Jinja template
 #     return table
 
+def get_zips():
+    info = list(mongo.db.raykatz_nedg_gaudiosi.zipcode_info.find({}).sort([("zipcode", 1)]))
+    zips = []
+    for zipcode in info:
+        zips.append(zipcode["zipcode"])
+    return zips
 
 def get_map_data():
     return list(mongo.db.raykatz_nedg_gaudiosi.zipcode_info.find({}))
@@ -50,9 +57,73 @@ def get_standardized():
 def welcome():
     return render_template('index.html')
 
-@app.route('/corrfinder', methods=['GET'])
+@app.route('/corrfinder', methods=['GET', 'POST'])
 def corrfinder():
-    return render_template('corrfinder.html')    
+    if request.method == 'GET':
+        return render_template('corrfinder.html', zipcodes=get_zips())
+
+    elif request.method == 'POST':
+        zips = request.form.getlist("chosen")
+        data = []
+        for zipcode in zips:
+            data.append( list(mongo.db.raykatz_nedg_gaudiosi.zipcode_info.find({"zipcode":zipcode}))[0] )
+        
+        median_income = []
+        percent_transit = []
+        median_rent = []
+        percent_homes_occupied = []
+        percent_homes_before_1939 = []
+        percent_white = []
+        percent_black = []
+        percent_hispanic = []
+        percent_asian = []
+        percent_married = []
+        percent_unemployed = []
+        percent_50_rent = []
+        percent_poverty = []
+        bus_stops = []
+        subway_stops = []
+        
+        for i in range(len(data)):
+            median_income.append(float(data[i]['median_income']))
+            percent_transit.append(float(data[i]['percent_public_transit']))
+            median_rent.append(float(data[i]['median_rent']))
+            percent_homes_occupied.append(float(data[i]['percent_homes_occupied']))
+            percent_homes_before_1939.append(float(data[i]['percent_homes_built_before_1939']))
+            percent_white.append(float(data[i]['percent_white']))
+            percent_black.append(float(data[i]['percent_black']))
+            percent_hispanic.append(float(data[i]['percent_hispanic']))
+            percent_asian.append(float(data[i]['percent_asian']))
+            percent_married.append(float(data[i]['percent_married_households']))
+            percent_unemployed.append(float(data[i]['percent_unemployed']))
+            percent_50_rent.append(float(data[i]['percent_spending_50_rent']))
+            percent_poverty.append(float(data[i]['percent_poverty']))
+            bus_stops.append(float(data[i]['bus_stops']))
+            subway_stops.append(float(data[i]['subway_stops']))
+        
+        corrs = []
+        corrs.append(("Median income/median rent", numpy.corrcoef(median_income, median_rent)[0, 1]))
+        
+        corrs.append(("Median income/percent taking public transit", numpy.corrcoef(median_income, percent_transit)[0, 1]))
+        corrs.append(("Median income/unemployed", numpy.corrcoef(median_income,percent_unemployed)[0, 1]))
+        corrs.append(("Median income/percent homes occupied", numpy.corrcoef(median_income, percent_homes_occupied)[0, 1]))
+        corrs.append(("Median income/percent homes built before 1939", numpy.corrcoef(median_income, percent_homes_before_1939)[0, 1]))
+        corrs.append(("Median income/percent white", numpy.corrcoef(median_income, percent_white)[0, 1]))
+        corrs.append(("Median income/percent black", numpy.corrcoef(median_income, percent_black)[0, 1]))
+        corrs.append(("Median income/percent hispanic", numpy.corrcoef(median_income, percent_hispanic)[0, 1]))
+        corrs.append(("Median income/percent asian", numpy.corrcoef(median_income, percent_asian)[0, 1]))
+        corrs.append(("Median income/percent married", numpy.corrcoef(median_income,percent_married)[0, 1]))
+
+        corrs.append(("Median rent/percent taking public transit", numpy.corrcoef(median_rent, percent_transit)[0, 1]))
+        corrs.append(("Median rent/unemployed", numpy.corrcoef(median_rent,percent_unemployed)[0, 1]))
+        corrs.append(("Median rent/percent spending 50% income on rent", numpy.corrcoef(median_rent,percent_50_rent)[0, 1]))
+        corrs.append(("Median rent/percent homes built before 1939", numpy.corrcoef(median_rent,percent_homes_before_1939)[0, 1]))
+        corrs.append(("Median rent/poverty rate", numpy.corrcoef(median_rent,percent_poverty)[0, 1]))
+        corrs.append(("Median rent/bus stops", numpy.corrcoef(median_rent,bus_stops)[0, 1]))
+        corrs.append(("Median rent/subway stops", numpy.corrcoef(median_rent,subway_stops)[0, 1]))
+        corrs.append(("Median rent/percent married", numpy.corrcoef(median_rent,percent_married)[0, 1] ))
+        
+        return render_template('corrfinder.html', zipcodes=get_zips(), correlations = corrs)
 
 @app.route("/map", methods=['GET', 'POST'])
 def map():
