@@ -141,10 +141,10 @@ class Correlation(dml.Algorithm):
         doc.usage(compute_correlation, neighborhoodscores, startTime, None, {prov.model.PROV_TYPE:'ont:Used for Computation'})
      
                   
-        Correlation = doc.entity('dat:francisz_jrashaan#Correlation', {prov.model.PROV_LABEL:'Correlation Score', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(Correlation, this_script)
-        doc.wasGeneratedBy(Correlation, compute_correlation, endTime)
-        doc.wasDerivedFrom(Correlation, neighborhoodscores, compute_correlation, compute_correlation, compute_correlation)
+        correlationScore = doc.entity('dat:francisz_jrashaan#correlationScore', {prov.model.PROV_LABEL:'Correlation Score', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(correlationScore, this_script)
+        doc.wasGeneratedBy(correlationScore, compute_correlation, endTime)
+        doc.wasDerivedFrom(correlationScore, neighborhoodscores, compute_correlation, compute_correlation, compute_correlation)
                   
         repo.logout()
                   
