@@ -54,7 +54,7 @@ MBTA Stops | 0.5511472545817303 | 8.065664653031119e-8
 Gardens | 0.8712154440427992 | 1.9353053027735632e-26
 Foods | 0.6383325374109514 | 1.1093179778057194e-10
 
-## Result
+### Result
 We find out that the coefficient between crime and custom hotel score is extremely close to zero, and the p-value is relatively large when comparing to other factors. Thus, we conclude the crime factor is not significant and no longer consider crime as a factor at next step.
 
 ## Potential Best place to build a hotel
