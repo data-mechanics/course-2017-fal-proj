@@ -1,4 +1,4 @@
-# Project Report
+# Evaluation of Boston Hotels
 ## Members
 **Haotian Wu**, **Desheng Zhang**, **Wenjun Shen**
 
