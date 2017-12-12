@@ -51,7 +51,7 @@
     image illustrates:
 ```
 ![image of expected results]
-(http://datamechanics.io/data/BIEL_expected_results.png)
+(https://github.com/jmbiel/course-2017-fal-proj/blob/master/BIEL_expected_results.png)
 
 ```
     The purpose of our project was to gather data on overweight persons in the Boston city area,
