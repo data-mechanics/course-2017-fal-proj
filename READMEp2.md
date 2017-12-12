@@ -51,7 +51,7 @@
     image illustrates:
 ```
 
-![alt text] [img]
+![Alt text] [img]
 [img]: http://datamechanics.io/data/BIEL_expected_results.png "Expected Results"
 
 ```
