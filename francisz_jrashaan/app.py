@@ -18,6 +18,10 @@ auth = HTTPBasicAuth()
 def index():
     return render_template('index.html')
 
+app.route('/')
+def send_js(path):
+    return send_from_directory('templates', path)
+
 @app.route('/score', methods=["GET"])
 def get_correlation():
     client = dml.pymongo.MongoClient()
