@@ -111,7 +111,7 @@
         update(+this.value);
     });   
     // Initial starting budget 
-    update(100000);    
+    //update(100000);    
 
     </script>
 	<script type="text/javascript">
@@ -506,19 +506,20 @@
 			
 	  	function getBudget() {
 	  		var http = new XMLHttpRequest();
-		    var url = "http://localhost:5000/score";
+		    var url = "http://localhost:3000/score";
 		    console.log(url);
 		    http.open("GET", url, true);
 		    http.setRequestHeader("Content-type", "application/json");
 		    http.onreadystatechange = function() {
 		      if (http.readyState == 4 && http.status == 200) {
 		      	var data = JSON.parse(http.responseText).results;
+		      	console.log(data);
 		        var arr = [];
-		        for (i in data) {
-		        	arr.push(L.marker([parseFloat(data[i].location[0]), parseFloat(data[i].location[1])]).bindPopup("Big Belly"));
+		        //for (i in data) {
+		        //	arr.push(L.marker([parseFloat(data[i].location[0]), parseFloat(data[i].location[1])]).bindPopup("Big Belly"));
 			        // var circle = L.marker([parseFloat(data[i].location[0]), parseFloat(data[i].location[1])]).addTo(map);
-			        var circle = L.circleMarker([parseFloat(data[i].location[0]), parseFloat(data[i].location[1])], {color: 'green', radius: 2}).bindPopup("Average Fullness: " + data[i].percentage).addTo(map);
-		        }
+			      //  var circle = L.circleMarker([parseFloat(data[i].location[0]), parseFloat(data[i].location[1])], {color: 'green', radius: 2}).bindPopup("Average Fullness: " + data[i].percentage).addTo(map);
+		        //}
 		        return arr;
 		      }
 		    }
