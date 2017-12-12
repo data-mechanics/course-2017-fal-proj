@@ -71,7 +71,8 @@
         margin = {right: 50, left: 50},
         width = +svg.attr("width") - margin.left - margin.right,
         height = +svg.attr("height");
-
+        
+        var budgets = [100000, 200000, 300000, 400000, 500000, 600000, 700000, 800000, 900000, 1000000, 1100000, 1200000, 1300000, 1400000, 1500000, 1600000, 1700000, 1800000, 1900000, 2000000, 2100000, 2200000, 2300000, 2400000, 2500000];
         var x = d3.scaleLinear()
             .domain([100000, 2500000])
             .range([0, width])
@@ -91,7 +92,7 @@
             .attr("class", "track-overlay")
             .call(d3.drag()
                 .on("start.interrupt", function() { slider.interrupt(); })
-                .on("start drag", function() { hue(x.invert(d3.event.x)); }));
+                .on("start drag", function() { budget(x.invert(d3.event.x)); }));
 
         slider.insert("g", ".track-overlay")
             .attr("class", "ticks")
@@ -106,27 +107,31 @@
         var handle = slider.insert("circle", ".track-overlay")
             .attr("class", "handle")
             .attr("r", 9);
-        slider.transition() // Gratuitous intro!
+        slider.transition()
         .duration(750)
-        .tween("hue", function() {
-          var i = d3.interpolate(0, 70);
-          return function(t) { hue(i(t)); };
+        .tween("budget", function() {
+          return function(t) { budget(+this.value); };
         });
 
-        function hue(h) {
-          handle.attr("cx", x(h));
+        function budget(h) {
+          document.getElementById("range").innerHTML=budgets[value];
         }
     </script>    
 	   <script type="text/javascript">
-		  var map = L.map('map').setView([42.333233,  -71.10251], 13);
-			mapLink = '<a href="http://maps.wikimedia.org/</a>';
-		
-        
+		    var map = L.map('map').setView([42.333233,  -71.10251], 13);
+			   mapLink = '<a href="http://maps.wikimedia.org/</a>';
+            var color = d3.scale.linear()
+              .domain([0, 9])  
+              .range(["blue", "green"]);
+            
             var allston = {
                 "type": "Feature",
                 "properties": {
-                    "name": "Allston",
-
+                    "name": "Allston", 
+                    budget: "", 
+                    new_score: "", 
+                    old_score: "", 
+                    Items:""
                 },
                 "geometry": {
                     "type": "Point",
@@ -138,6 +143,10 @@
                 "type": "Feature",
                 "properties": {
                     "name": "Back Bay ",
+                    budget: "", 
+                    new_score: "", 
+                    old_score: "", 
+                    Items:""
                 },
                 "geometry": {
                     "type": "Point",
@@ -149,6 +158,10 @@
                 "type": "Feature",
                 "properties": {
                     "name": "Back Bay ",
+                    budget: "", 
+                    new_score: "", 
+                    old_score: "", 
+                    Items:""
                 },
                 "geometry": {
                     "type": "Point",
@@ -160,6 +173,10 @@
                 "type": "Feature",
                 "properties": {
                     "name": "Back Bay ",
+                    budget: "", 
+                    new_score: "", 
+                    old_score: "", 
+                    Items:""
                 },
                 "geometry": {
                     "type": "Point",
@@ -171,6 +188,10 @@
                 "type": "Feature",
                 "properties": {
                     "name": "Back Bay ",
+                    budget: "", 
+                    new_score: "", 
+                    old_score: "", 
+                    Items:""
                 },
                 "geometry": {
                     "type": "Point",
@@ -182,6 +203,10 @@
                 "type": "Feature",
                 "properties": {
                     "name": "Back Bay ",
+                    budget: "", 
+                    new_score: "", 
+                    old_score: "", 
+                    Items:""
                 },
                 "geometry": {
                     "type": "Point",
@@ -193,6 +218,10 @@
                 "type": "Feature",
                 "properties": {
                     "name": "Back Bay ",
+                    budget: "", 
+                    new_score: "", 
+                    old_score: "", 
+                    Items:""
                 },
                 "geometry": {
                     "type": "Point",
@@ -204,6 +233,10 @@
                 "type": "Feature",
                 "properties": {
                     "name": "Back Bay ",
+                    budget: "", 
+                    new_score: "", 
+                    old_score: "", 
+                    Items:""
                 },
                 "geometry": {
                     "type": "Point",
@@ -215,6 +248,10 @@
                 "type": "Feature",
                 "properties": {
                     "name": "Back Bay ",
+                    budget: "", 
+                    new_score: "", 
+                    old_score: "", 
+                    Items:""
                 },
                 "geometry": {
                     "type": "Point",
@@ -226,6 +263,10 @@
                 "type": "Feature",
                 "properties": {
                     "name": "Back Bay ",
+                    budget: "", 
+                    new_score: "", 
+                    old_score: "", 
+                    Items:""
                 },
                 "geometry": {
                     "type": "Point",
@@ -237,6 +278,10 @@
                 "type": "Feature",
                 "properties": {
                     "name": "Back Bay ",
+                    budget: "", 
+                    new_score: "", 
+                    old_score: "", 
+                    Items:""
                 },
                 "geometry": {
                     "type": "Point",
@@ -248,6 +293,10 @@
                 "type": "Feature",
                 "properties": {
                     "name": "Back Bay ",
+                    budget: "", 
+                    new_score: "", 
+                    old_score: "", 
+                    Items:""
                 },
                 "geometry": {
                     "type": "Point",
@@ -259,6 +308,10 @@
                 "type": "Feature",
                 "properties": {
                     "name": "Back Bay ",
+                    budget: "", 
+                    new_score: "", 
+                    old_score: "", 
+                    Items:""
                 },
                 "geometry": {
                     "type": "Point",
@@ -270,6 +323,10 @@
                 "type": "Feature",
                 "properties": {
                     "name": "Back Bay ",
+                    budget: "", 
+                    new_score: "", 
+                    old_score: "", 
+                    Items:""
                 },
                 "geometry": {
                     "type": "Point",
@@ -281,6 +338,10 @@
                 "type": "Feature",
                 "properties": {
                     "name": "Back Bay ",
+                    budget: "", 
+                    new_score: "", 
+                    old_score: "", 
+                    Items:""
                 },
                 "geometry": {
                     "type": "Point",
@@ -292,6 +353,10 @@
                 "type": "Feature",
                 "properties": {
                     "name": "Back Bay ",
+                    budget: "", 
+                    new_score: "", 
+                    old_score: "", 
+                    Items:""
                 },
                 "geometry": {
                     "type": "Point",
@@ -303,6 +368,10 @@
                 "type": "Feature",
                 "properties": {
                     "name": "Back Bay ",
+                    budget: "", 
+                    new_score: "", 
+                    old_score: "", 
+                    Items:""
                 },
                 "geometry": {
                     "type": "Point",
@@ -314,6 +383,10 @@
                 "type": "Feature",
                 "properties": {
                     "name": "Back Bay ",
+                    budget: "", 
+                    new_score: "", 
+                    old_score: "", 
+                    Items:""
                 },
                 "geometry": {
                     "type": "Point",
@@ -325,6 +398,10 @@
                 "type": "Feature",
                 "properties": {
                     "name": "Back Bay ",
+                    budget: "", 
+                    new_score: "", 
+                    old_score: "", 
+                    Items:""
                 },
                 "geometry": {
                     "type": "Point",
@@ -336,6 +413,10 @@
                 "type": "Feature",
                 "properties": {
                     "name": "Back Bay ",
+                    budget: "", 
+                    new_score: "", 
+                    old_score: "", 
+                    Items:""
                 },
                 "geometry": {
                     "type": "Point",
@@ -347,6 +428,10 @@
                 "type": "Feature",
                 "properties": {
                     "name": "Back Bay ",
+                    budget: "", 
+                    new_score: "", 
+                    old_score: "", 
+                    Items:""
                 },
                 "geometry": {
                     "type": "Point",
@@ -358,6 +443,10 @@
                 "type": "Feature",
                 "properties": {
                     "name": "Back Bay ",
+                    budget: "", 
+                    new_score: "", 
+                    old_score: "", 
+                    Items:""
                 },
                 "geometry": {
                     "type": "Point",
@@ -369,6 +458,10 @@
                 "type": "Feature",
                 "properties": {
                     "name": "Back Bay ",
+                    budget: "", 
+                    new_score: "", 
+                    old_score: "", 
+                    Items:""
                 },
                 "geometry": {
                     "type": "Point",
@@ -380,6 +473,10 @@
                 "type": "Feature",
                 "properties": {
                     "name": "Back Bay ",
+                    budget: "", 
+                    new_score: "", 
+                    old_score: "", 
+                    Items:""
                 },
                 "geometry": {
                     "type": "Point",
@@ -391,6 +488,10 @@
                 "type": "Feature",
                 "properties": {
                     "name": "Back Bay ",
+                    budget: "", 
+                    new_score: "", 
+                    old_score: "", 
+                    Items:""
                 },
                 "geometry": {
                     "type": "Point",
@@ -402,6 +503,10 @@
                 "type": "Feature",
                 "properties": {
                     "name": "Back Bay ",
+                    budget: "", 
+                    new_score: "", 
+                    old_score: "", 
+                    Items:""
                 },
                 "geometry": {
                     "type": "Point",
@@ -436,7 +541,7 @@
                   }
                 }
                 http.send();
-            }
+            };
             function getBudget() {
                 var http = new XMLHttpRequest();
                 var url = "http://localhost:3000/budgets";
@@ -457,9 +562,24 @@
                   }
                 }
                 http.send();
-            }		
+            };		
             getCorrelation();
             getBudget();
+            function getData(){
+                var http = new XMLHttpRequest();
+                var url = "http://localhost:3000/budgets";
+                http.open("GET", url, true);
+                http.onload = function () {
+                    // begin accessing JSON data here
+                    var data = JSON.parse(this.response);
+
+                    for (var i = 0; i < data.length; i++) {
+                        console.log(data[i].name + ' is a ' + data[i].race + '.');
+                    }
+                }
+
+                http.send();
+            };
 	</script>
 
 </body>
