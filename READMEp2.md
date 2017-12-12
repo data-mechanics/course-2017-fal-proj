@@ -5,7 +5,9 @@
     Obesity is one of the United States largest health problems.  Several subproblems have been attributed
     to the rise of obesity - many of which point to a root cause, which is inaccessability to healthy and
     nutritious food options.  Our goal throughout the semester was to use publicly available data to make
-    healthy options more accessible to those who are considered obese under the Massachusetts medical standards.
+    healthy options more accessible to those who are considered obese under the Massachusetts medical
+    standards.
+    
     At a high level, there we're two portions of our project: 
 
     (1) Analytics 
@@ -13,6 +15,8 @@
     
 ```
 ## Analytics:
+
+###### Methods:
 ```
     In the analytics portion of our project, we wanted to measure the relationship between income and obesity.
     In order to do this, we combined data from the following sources:
@@ -24,7 +28,13 @@
         The columns used from this dataset included the coordinates of the associated obese person.
 
     With the above information, we we're able to associate each obese person to one or multiple properties based on
-    proximity.  The 
+    proximity.  The resulting transformation was of the form: (Property Value: Number of obese people within close proximity).
+    
+    The next transformation effectively "binned" each property value into a range of property values (i.e values 
+    ranging from $100,000.00 - $110,000.00), and aggregate the associated number of obese people as the value.
+    More specifically, the transformation took the following form: (Value Range: Number of obese people associated with range).
+    
+    
 ```
 ```
     The purpose of our project was to gather data on overweight persons in the Boston city area,
