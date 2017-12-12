@@ -134,9 +134,10 @@
         
               
             
+             var markers = new L.LayerGroup();
 
             function renderMap(x) {
-            
+            	markers.clearLayers();
                 points = [[42.344822,-71.100733],[42.317269,-71.006198],[42.374938, -71.0358883],[42.357218,-71.056699], [42.354584, -71.133675],[42.259365, -71.123670], [ 42.286293,-71.127619 ], [42.380463,-71.061298],[ 42.350164, -71.080427], [42.341072, -71.076683],  [42.357218, -71.056699], [ 42.306059, -71.065738], [42.3529344675747, -71.04346595564307], [ 42.283245, -71.162981], [42.343783, -71.110424],  [42.332361, -71.107154], [42.317771, -71.091435], [42.360137, -71.067295],  [ 42.280343, -71.091313], [42.317269, -71.006198], [42.349966, -71.162057], [42.335978,-71.048999], [ 42.363986, -71.066469], [42.344822, -71.100733], [ 42.350996, -71.061400] , [ 42.312894, -71.118910]];
 
                 for (i in x) {
@@ -156,13 +157,16 @@
                        + "<dt>Open Space Points </dt>"
                        + "<dd>" +x[i]["Green Facilities"][3] + "</dd>";
 
-                    L.marker(points[i]).addTo(map)
+                   var  marker =  L.marker(points[i]);
+                   marker.addTo(map)
                     .bindPopup(list, {
 
                          maxHeight:1000,  maxWidth : 10000
                     });
+                    markers.addLayer(marker)
 
                 }
+                map.addLayer(markers);
             
                
                
@@ -195,9 +199,7 @@
                             arr.push(data[i])
 
                     }
-                    //	arr.push(L.marker([parseFloat(data[i].location[0]), parseFloat(data[i].location[1])]).bindPopup("Big Belly"));
-                        // var circle = L.marker([parseFloat(data[i].location[0]), parseFloat(data[i].location[1])]).addTo(map);
-                      //  var circle = L.circleMarker([parseFloat(data[i].location[0]), parseFloat(data[i].location[1])], {color: 'green', radius: 2}).bindPopup("Average Fullness: " + data[i].percentage).addTo(map);
+               
                     }
                     console.log(arr);
                     renderMap(arr);
@@ -206,7 +208,7 @@
                 }
                 http.send();
             };
-    getScore(100000);
+    getScore(200000);
     // ADAPTED CODE FROM D3JS SLIDER EXAMPLE https://github.com/MasterMaps/d3-slider 
   	(function (root, factory) {
   if (typeof define === 'function' && define.amd) {
@@ -458,6 +460,8 @@ return function module() {
 
   // Move slider handle on click/drag
   function moveHandle(newValue) {
+  	getScore(newValue);
+
     var currentValue = toType(value) == "array"  && value.length == 2 ? value[active - 1]: value,
         oldPos = formatPercent(scale(stepValue(currentValue))),
         newPos = formatPercent(scale(stepValue(newValue))),
@@ -524,11 +528,6 @@ return function module() {
         alignValue += (valModStep > 0) ? step : -step;
       }
     };
-
-
-  (getScore(alignValue));
-
-
 
     return alignValue;
 
@@ -601,11 +600,14 @@ return function module() {
   };
 
   slider.value = function(_) {
+
     if (!arguments.length) return value;
     if (value) {
       moveHandle(stepValue(_));
+
     };
     value = _;
+
     return slider;
   };
 
