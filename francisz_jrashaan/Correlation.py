@@ -16,7 +16,7 @@ from math import sqrt
 class Correlation(dml.Algorithm):
     contributor = 'francisz_jrashaan'
     
-    reads = ['francisz_jrashaan.neighborhoodScores']
+    reads = ['francisz_jrashaan.neighborhoodscores']
     
     writes = ['francisz_jrashaan.correlationScore']
     
@@ -29,16 +29,14 @@ class Correlation(dml.Algorithm):
         repo.authenticate('francisz_jrashaan','francisz_jrashaan')
         repo.dropCollection("correlationScore")
         repo.createCollection("correlationScore")
-        #scores =  repo.francisz_jrashaan.neighborhoodScores.find()
+        scores =  repo.francisz_jrashaan.neighborhoodscores.find()
         
-        #scoreArray = []
-        #for x in scores:
-        #    scoreArray.append(x)
+        scoreArray = []
+        for x in scores:
+           scoreArray.append(x)
 
 
         #print(scoreArray[1]['Charging Station'])
-        print("TESTING")
-        scores = [('North End', [0, 3, 236, 240]), ('Bay Village', [0, 0, 24, 42]), ('East Boston', [0, 19, 222, 3544]), ('Leather District', [8, 8, 34, 43]), ('Allston', [0, 1, 1888, 1994]), ('Hyde Park', [0, 0, 569, 1163]), ('Roslindale', [0, 0, 450, 608]), ('Charlestown', [0, 7, 189, 455]), ('Back Bay', [4, 17, 432, 817]), ('South End', [0, 0, 116, 150]), ('Downtown', [4, 33, 160, 420]), ('Dorchester', [0, 7, 1382, 3710]), ('South Boston Waterfront', [15, 7, 102, 222]), ('West Roxbury', [0, 0, 559, 708]), ('Longwood Medical Area', [0, 11, 136, 154]), ('Mission Hill', [0, 11, 135, 161]), ('Roxbury', [0, 7, 315, 525]), ('Beacon Hill', [1, 16, 149, 391]), ('Mattapan', [0, 0, 348, 627]), ('Harbor Islands', [0, 0, 0, 155]), ('Brighton', [0, 0, 983, 1466]), ('South Boston', [0, 1, 410, 1061]), ('West End', [0, 5, 387, 549]), ('Fenway', [4, 21, 893, 1034]), ('Chinatown', [11, 21, 74, 112]), ('Jamaica Plain', [0, 0, 356, 919])]
         relationdata1 = []
         relationdata2 = []
         relationdata3 = []
@@ -133,20 +131,20 @@ class Correlation(dml.Algorithm):
         
         
         this_script = doc.agent('alg:francisz_jrashaan#Correlation', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource_neighborhoodscores = doc.entity('dat:francisz_jrashaan#neighborhoodScores', {'prov:label':'Neighborhood Scores', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'BSON'})
+        neighborhoodscores = doc.entity('dat:francisz_jrashaan#neighborhoodscores', {'prov:label':'Neighborhood Scores', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'BSON'})
         
         compute_correlation = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         
 
         doc.wasAssociatedWith(compute_correlation, this_script)
        
-        doc.usage(compute_correlation, resource_neighborhoodscores, startTime, None, {prov.model.PROV_TYPE:'ont:Used for Computation'})
+        doc.usage(compute_correlation, neighborhoodscores, startTime, None, {prov.model.PROV_TYPE:'ont:Used for Computation'})
      
                   
         Correlation = doc.entity('dat:francisz_jrashaan#Correlation', {prov.model.PROV_LABEL:'Correlation Score', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(Correlation, this_script)
         doc.wasGeneratedBy(Correlation, compute_correlation, endTime)
-        doc.wasDerivedFrom(Correlation, resource_neighborhoodscores, compute_correlation, compute_correlation, compute_correlation)
+        doc.wasDerivedFrom(Correlation, neighborhoodscores, compute_correlation, compute_correlation, compute_correlation)
                   
         repo.logout()
                   

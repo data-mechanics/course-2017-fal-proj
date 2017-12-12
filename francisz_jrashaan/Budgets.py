@@ -22,7 +22,7 @@ class Budgets(dml.Algorithm):
     
     reads = ['francisz_jrashaan.presetneighborhoodScores']
     
-    writes = ['francisz_jrashaan.optimalScore', 'francisz_jrashaan.budgets']
+    writes = ['francisz_jrashaan.budgets']
     
     
     @staticmethod
@@ -216,19 +216,20 @@ class Budgets(dml.Algorithm):
         doc.add_namespace('bdp', 'http://bostonopendata-boston.opendata.arcgis.com/')
         
         this_script = doc.agent('alg:francisz_jrashaan#Budgets', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource_Budgets = doc.entity('dat:francisz_jrashaan#Budgets', {'prov:label':'Budgets', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'BSON'})
+        presetneighborhoodScores = doc.entity('dat:francisz_jrashaan#presetneighborhoodScores', {'prov:label':'Neighborhood Scores', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'BSON'})
+
         
         compute_Budgets = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
         
         
         doc.wasAssociatedWith(compute_Budgets, this_script)
         
-        doc.usage(compute_Budgets, resource_Budgets, startTime, None, {prov.model.PROV_TYPE:'ont:Used for Computation'})
+        doc.usage(compute_Budgets, presetneighborhoodScores, startTime, None, {prov.model.PROV_TYPE:'ont:Used for Computation'})
         
-        optimalscores = doc.entity('dat:francisz_jrashaan#optimalscores', {prov.model.PROV_LABEL:'optimalscores', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(optimalscores, this_script)
-        doc.wasGeneratedBy(optimalscores, compute_Budgets, endTime)
-        doc.wasDerivedFrom(optimalscores, resource_Budgets, compute_Budgets, compute_Budgets, compute_Budgets)
+        Budgets = doc.entity('dat:francisz_jrashaan#Budgets', {'prov:label':'Budgets', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'Dataset'})
+        doc.wasAttributedTo(Budgets, this_script)
+        doc.wasGeneratedBy(Budgets, compute_Budgets, endTime)
+        doc.wasDerivedFrom(Budgets, presetneighborhoodScores, compute_Budgets, compute_Budgets, compute_Budgets)
         
         repo.logout()
         

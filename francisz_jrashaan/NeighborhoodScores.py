@@ -268,19 +268,19 @@ class NeighborhoodScores(dml.Algorithm):
                       )
                       for key in keys]
 
-
+        agg1 = []
         for x in aggregate:
              #print(x)
              y = lambda t: ({"Neighborhood":t[0],'Charging Station':t[1][0],'Hubway Stations':t[1][1],'Bike Networks':t[1][2],'Open Space':t[1][3]})
              z = y(x)
-             agg.append(z)
+             agg1.append(z)
         repo.dropCollection("neighborhoodscores")
         repo.createCollection("neighborhoodscores")
-        repo['francisz_jrashaan.neighborhoodscores'].insert_many(agg)
+        repo['francisz_jrashaan.neighborhoodscores'].insert_many(agg1)
         repo['francisz_jrashaan.neighborhoodscores'].metadata({'complete':True})
 
         
-        agg = []
+        agg2 = []
         #print(aggregate)
         neighborhoodDict = [{'North End': [0, 3, 236, 240]}, {'Bay Village': [0, 0, 24, 42]}, {'East Boston': [0, 19, 222, 3544]}, {'Leather District': [8, 8, 34, 43]}, {'Allston': [0, 1, 1888, 1994]}, {'Hyde Park': [0, 0, 569, 1163]}, {'Roslindale': [0, 0, 450, 608]}, {'Charlestown': [0, 7, 189, 455]}, {'Back Bay': [4, 17, 432, 817]}, {'South End': [0, 0, 116, 150]}, {'Downtown': [4, 33, 160, 420]}, {'Dorchester': [0, 7, 1382, 3710]}, {'South Boston Waterfront': [15, 7, 102, 222]}, {'West Roxbury': [0, 0, 559, 708]}, {'Longwood Medical Area':[0, 11, 136, 154]}, {'Mission Hill': [0, 11, 135, 161]}, {'Roxbury': [0, 7, 315, 525]}, {'Beacon Hill': [1, 16, 149, 391]}, {'Mattapan': [0, 0, 348, 627]}, {'Harbor Islands':[0, 0, 0, 155]}, {'Brighton': [0, 0, 983, 1466]}, {'South Boston':[0, 1, 410, 1061]}, {'West End': [0, 5, 387, 549]}, {'Fenway': [4, 21, 893, 1034]}, {'Chinatown': [11, 21, 74, 112]}, {'Jamaica Plain': [0, 0, 356, 919]}]
         for x in neighborhoodDict:
@@ -288,13 +288,13 @@ class NeighborhoodScores(dml.Algorithm):
                 lst = list(x.values())[0]
                 #print(x)
                 z= {"Neighborhood":name,'Charging Station':lst[0],'Hubway Stations':lst[1],'Bike Networks':lst[2],'Open Space':lst[3]}
-                agg.append(z)
+                agg2.append(z)
         
         repo.dropCollection("presetneighborhoodScores")
         repo.createCollection("presetneighborhoodScores")
 
 
-        repo['francisz_jrashaan.presetneighborhoodScores'].insert_many(agg)
+        repo['francisz_jrashaan.presetneighborhoodScores'].insert_many(agg2)
         repo['francisz_jrashaan.presetneighborhoodScores'].metadata({'complete':True})
 
 
