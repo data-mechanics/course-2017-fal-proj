@@ -25,6 +25,7 @@ Hotels in Boston, Boston Crime Data, MBTA Data,Restaurants in Boston, Gardens of
 BostonHotelData |  Apply our custom algorithm to give a new score to each hotel | BostonHotelCustomScore
 BostonHotelCustomScore| Apply Correlation coefficient to figure out the most related factor to our custom score system | BostonHotelCorrelation
 BostonHotelCustomScore, BostonHotel | Use K-means to cluster hotels based on new custom score and select best coordinates to build a new protential hotel | BostonHotelProtential
+BostonHotelCustomScore, BostonHotel | run K-means on every possible permutation, then caculate the score and ranking to form a new dataset | BostonHotelPotentialPermutation
 
 
 
