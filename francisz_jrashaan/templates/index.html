@@ -15,6 +15,8 @@
 
     </script>
   <style>
+ 	<!--CSS adapted from  https://github.com/MasterMaps/d3-slider  -->
+
 
     body {
       font-family: Verdana,Arial,sans-serif;
@@ -186,16 +188,16 @@
             map._initPathRoot()    
 
             function getScore(x) {
-                console.log(x);
+           
                 var http = new XMLHttpRequest();
                 var url = "http://localhost:3000/budgets";
-                console.log(url);
+             
                 http.open("GET", url, true);
                 http.setRequestHeader("Content-type", "application/json");
                 http.onreadystatechange = function() {
                   if (http.readyState == 4 && http.status == 200) {
                     var data = JSON.parse(http.responseText).results;
-                    console.log(data[0]["Budget"] == x);
+               
                     var arr = [];
                     for (i in data) {
                         if (data[i]["Budget"] == x){
