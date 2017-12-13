@@ -136,3 +136,24 @@
     NOTE: Our solution DID NOT include the Cambridge area.  Only neighborhoods that we're included
     in the Boston Zoning shapefile.
 ```
+
+## Future Work:
+
+###### Expanding the Context:
+```
+    This solution can be expanded & used in many different contexts.  For example, the same general
+    principles can be used to optimally place gyms.  With a different dataset containing points relating
+    to ill persons, the algorithm can be used to optimally place hospitals.
+```
+
+###### Placeholder:
+
+###### Tackling the Economical Component:
+```
+    Obviously optimally placing health-markets is only a partial solution to making nutritious food
+    more accessible.  The other part of the solution is the ability to make this food affordable,
+    which is a much more business/economic problem to solve.  Our solution could be expanded to provide
+    optimal pricing of health-foods based whole-sale prices, and the average supply chain cost of a large
+    scale produce (such as Amazon or Target).  I specifically mention large scale supplier because they
+    generally have a greater capability to innovate their supply chain & profitibility models. 
+```
