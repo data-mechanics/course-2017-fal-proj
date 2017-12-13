@@ -14,6 +14,9 @@
     (2) A solution to an optimization problem.
     
 ```
+<p align="center">
+    <img src="https://github.com/jmbiel/course-2017-fal-proj/blob/master/heatmap.PNG?raw=true">
+</p>
 ## Analytics:
 
 ###### Methods:
@@ -114,6 +117,11 @@
     The final output would have the locations of all the health-food stores, with all the constraints
     satisfied. 
 ```
+
+###### Output Picture:
+<p align="center">
+    <img src="https://github.com/jmbiel/course-2017-fal-proj/blob/master/k-means-ouptut.PNG?raw=true">
+</p>
 ```
     The purpose of our project was to gather data on overweight persons in the Boston city area,
     and calculate whether or not there exists a correlation between income/property values and 
