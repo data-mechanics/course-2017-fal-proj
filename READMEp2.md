@@ -123,6 +123,10 @@
     <img src="https://github.com/jmbiel/course-2017-fal-proj/blob/master/k-means-ouptut.PNG?raw=true">
 </p>
 ```
+    NOTE: Our solution DID NOT include the Cambridge area.  Only neighborhoods that we're included
+    in the Boston Zoning shapefile.
+```
+```
     The purpose of our project was to gather data on overweight persons in the Boston city area,
     and calculate whether or not there exists a correlation between income/property values and 
     the number of overweight people in then vicinity. Furthermore, we gathered data on the 
