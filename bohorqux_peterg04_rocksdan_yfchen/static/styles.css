@@ -1,0 +1,57 @@
+#backgroundimg {
+	background-image: url('/static/happyhour.jpg');
+	background-attachment: scroll;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+h1 {
+	text-align: center;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+#introbox {
+	margin-left: 10%;
+	margin-right: 10%;
+}
+
+#intro {
+	text-align: center;
+	font-size: 1em;
+}
+
+th, td {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+th, td, table {
+	border: 1px solid black;
+	margin: auto;
+}
+
+#map {
+	height: 450px;
+	width: 100%;
+}
+
+.outer {
+	margin: auto;
+	height: 450px;
+	width: 40%;
+	border: 1px solid black;
+}
+
+.divform {
+	width: 70%;
+	margin: auto;
+	position: relative;
+	border:1px solid black
+}
+
+.innerforms {
+	width: 100%;
+	position: relative;
+	display: inline-block;
+	border: 1px solid black;
+}
