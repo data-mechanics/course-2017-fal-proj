@@ -44,6 +44,9 @@ In safetyCorrelation.py we found a significant and very high positive correlatio
 
 In newStations.py, using our police stations data and the locations of universities with bottom half safety scores (score < 0.5), we use the k-means algorithm to find optimal placement for new police stations in order to improve safety scores for the lowest scoring universities. You can change the number of means run in our algorithm (i.e. number of new police station locations) by changing the NUM_CLUSTERS variable at the top of the file. We found 3 to work well.
 
+### Web Service and Visualization
+Details of our web service and visualization can be found in our Project Report [here](ProjectReport.pdf)
+
 ### Required Python Libraries
 ###### gpxpy - https://pypi.python.org/pypi/gpxpy
 ###### dml -   https://pypi.python.org/pypi/dml
