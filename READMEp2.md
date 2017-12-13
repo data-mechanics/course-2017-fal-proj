@@ -53,8 +53,9 @@
     correlation between lower valued areas and the number of obese people in the area, like the following
     image illustrates:
 ```
-
-<img src="https://github.com/jmbiel/course-2017-fal-proj/blob/master/BIEL_expected_results.png">
+<p align="center">
+    <img src="https://github.com/jmbiel/course-2017-fal-proj/blob/master/BIEL_expected_results.png">
+</p>
 
 
 ###### Actual Results:
