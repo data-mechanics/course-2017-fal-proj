@@ -139,10 +139,18 @@
 
 ###### Conclusion:
 ```
-    PLACEHOLDER
+    We believe that our project was successful in optimally placing health-food markets around the
+    Boston area using data centered around obese persons. There are several expansions that could
+    be made (covered in next section) to create an all-encompasing solution with a much higher
+    potential for impact.
 ```
 
 ## Future Work:
+
+###### Incorperating More Data:
+```
+    PLACEHOLDER
+```
 
 ###### Expanding the Context:
 ```
@@ -151,7 +159,7 @@
     to ill persons, the algorithm can be used to optimally place hospitals.
 ```
 
-###### Placeholder:
+
 
 ###### Tackling the Economical Component:
 ```
