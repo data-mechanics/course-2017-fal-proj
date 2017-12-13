@@ -20,13 +20,10 @@ def run_kmeans():
             results=kmeanFinder.execute(toggle = True)
         else:
             results = kmeanFinder.execute(toggle=False)
-
-
+        return render_template('results.html', results=results, type=toggle, distance=distance,total = len(results))
     else:
         return render_template('index.html')
 
-
-    return render_template('results.html',results = results,type = toggle,distance = distance)
 if __name__ == "__main__":
     app.run()
     

@@ -8,7 +8,7 @@
 
 
 </head>
-<body >
+<body>
 
 <div class="wrapper">
 <h2>{{ msg }}</h2>
@@ -18,18 +18,17 @@
       <input type="radio" name="option" value = "average" required> Average Distance
     <input type="radio" name="option"  value="max"> Max Distance<br><br>
       <input type="submit" value="Enter" class="button" onsubmit="showLoader()">
-      <div id="loading" class="loader" style="display: none;z-index: 10000;  top: 30%;
-    left: 47%;"></div>
+      <div id="loading" class="loader" style="display: none;z-index: 10000;  top: 30%;left: 47%;"></div>
   </form>
 </div>
 
 </body>
 <script type="text/javascript">
 	function showLoader() {
-		console.log('show loader')
-		console.log(document.getElementById("loading").style.display)
+		console.log('show loader');
+		console.log(document.getElementById("loading").style.display);
     	document.getElementById("loading").style.display = "block";
-    	console.log(document.getElementById("loading").style.display)
+    	console.log(document.getElementById("loading").style.display);
 	};
 	function hideLoader() {
     	document.getElementById("loading").style.display= "none";

@@ -29,10 +29,10 @@
 </style>
 <script type="text/javascript">
     function showLoader() {
-        console.log('show loader')
-        console.log(document.getElementById("loading").style.display)
+        console.log('show loader');
+        console.log(document.getElementById("loading").style.display);
         document.getElementById("loading").style.display = "block";
-        console.log(document.getElementById("loading").style.display)
+        console.log(document.getElementById("loading").style.display);
     };
     function hideLoader() {
         document.getElementById("loading").style.display= "none";
@@ -53,8 +53,7 @@
     <input type="radio" name="option"  value="max"> Max Distance<br><br>
       <input type="submit" value="Enter" class="button" onsubmit="showLoader()">
   </form>
-<p>Optimal locations for response centers with {{ type }} distance of {{ distance }} miles </p>
-
+    <p>{{total}} results for locations with {{ type }} distance of {{ distance }} miles to vehicle accidents. </p>
 </div>
       <div id="loading" class="loader" style="display: none;z-index: 10000;  top: 30%;
     left: 47%;"></div>
