@@ -62,6 +62,18 @@
     specialize our solutions for each variant of the problem.
 ```
 ###### Actual Results:
+
+```
+    The correlation coefficients per neighborhood seemed to show no statistical correlation between
+    income/property value and obesity.  In some neighborhoods, we saw correlation coefficients close
+    to 0, and in others we saw corrleation coefficient closer to -0.5 with a high p-value, indicating
+    that we could not be confident in accuracy of the analysis performed. These can be potentially 
+    attributed to a lack of obesity neighborhood in each neighborhood.  This analysis would certainly
+    be more accurate if we also had data about the number of healthy people in each neighborhood.
+    Then, we could cross-reference our results with another analysis which correlates income/property value with the number of healthy people in each neighborhood.
+
+    Regardless, with a lack of statistically significant evidence to support our hypothesis, we decided to proceed with a general solution to an Obesity problem for all of Boston based on our obesity dataset.
+```
 ```
     The purpose of our project was to gather data on overweight persons in the Boston city area,
     and calculate whether or not there exists a correlation between income/property values and 
