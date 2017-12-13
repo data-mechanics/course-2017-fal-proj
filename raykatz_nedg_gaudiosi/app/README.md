@@ -94,6 +94,6 @@ Our analysis shows that parts of south Boston appear to have the greatest risk o
 
 
 ## To run Web App:
-Make sure you run the transformations first. From there, you can run the web app via:
+Make sure you run the transformations first. From there, go to the app directory and run:
+
 `python app.py`
-From the app/ directory.
