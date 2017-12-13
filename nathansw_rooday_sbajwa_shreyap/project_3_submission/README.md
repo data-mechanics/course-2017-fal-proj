@@ -1,6 +1,6 @@
 # CS591 Project 3
 
-* This is the Visualization component of the Trickling Effect completed as part pf project 2
+* This is the Visualization component of the Trickling Effect completed as part of project 2
 * The heatmaps are drawn using [leaflet.js](http://leafletjs.com/)
 * The visualization is also deployed online on [Github](https://shreyapandit.github.io/data-science-boston/) at https://shreyapandit.github.io/data-science-boston/
 
