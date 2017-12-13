@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+* {
+  box-sizing: border-box;
+}
+
+#myInput {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 12px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#myUL {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#myUL li a {
+  border: 1px solid #ddd;
+  margin-top: -1px; /* Prevent double borders */
+  background-color: #f6f6f6;
+  padding: 12px;
+  text-decoration: none;
+  font-size: 18px;
+  color: black;
+  display: block
+}
+
+#myUL li a:hover:not(.header) {
+  background-color: #eee;
+}
+</style>
+</head>
+<body>
+
+<h2>Search Your School</h2>
+
+
+<div class = "wrap">
+<div class= "search">
+<form action="/ChooseK/" method="POST">  
+
+<input type="text" name= "searchValue" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+
+<ul id="myUL">
+  <li><a href="#">Massachusetts General Hospital Dietetic Internship</a></li>
+  <li><a href="#">Suffolk University</a></li>
+  <li><a href="#">Benjamin Franklin Institute of Technology</a></li>
+  <li><a href="#">Bunker Hill Community College</a></li>
+  <li><a href="#">MGH Institute of Health Professions</a></li>
+  <li><a href="#">Emmanuel College</a></li>
+  <li><a href="#">School of the Museum of Fine Arts-Boston</a></li>
+  <li><a href="#">Simmons</a></li>
+  <li><a href="#">Boston University</a></li>
+  <li><a href="#">The Boston Conservatory</a></li>
+  <li><a href="#">Wheelock College</a></li>
+  <li><a href="#">Roxbury Community College</a></li>
+  <li><a href="#">University of Massachusetts-Boston</a></li>
+  <li><a href="#">Boston University Research</a></li>
+  <li><a href="#">Boston University School of Law</a></li>
+  <li><a href="#">Boston University Sargent College</a></li>
+  <li><a href="#">Boston University School of Management</a></li>
+  <li><a href="#">Boston University Admissions</a></li>
+  <li><a href="#">Boston University Rental Office</a></li>
+  <li><a href="#">Boston University Trustees</a></li>
+  <li><a href="#">Boston University School of Medicine</a></li>
+  <li><a href="#">Boston University Public Health</a></li>
+  <li><a href="#">Boston College</a></li>
+  <li><a href="#">Simmons College</a></li>
+  <li><a href="#">Harvard Medical School</a></li>
+  <li><a href="#">Tufts University School of Medicine</a></li>
+  <li><a href="#">MASCO Colleges of the Fenway</a></li>
+  <li><a href="#">Harvard University Sailing</a></li>
+  <li><a href="#">Harvard Business School</a></li>
+  <li><a href="#">New England College of Business and Finance</a></li>
+  <li><a href="#">North Bennet Street School</a></li>
+  <li><a href="#">Empire Beauty School-Boston</a></li>
+  <li><a href="#">Urban College of Boston</a></li>
+  <li><a href="#">Bay State College</a></li>
+  <li><a href="#">Butera School Of Art</a></li>
+  <li><a href="#">Emerson College</a></li>
+  <li><a href="#">Fisher College</a></li>
+  <li><a href="#">Sanford-Brown College-Boston</a></li>
+  <li><a href="#">New England School of Law</a></li>
+  <li><a href="#">Kaplan Career Institute (Closed)</a></li>
+  <li><a href="#">Boston Architectural College</a></li>
+  <li><a href="#">Massachusetts College of Art and Design</a></li>
+  <li><a href="#">MCPHS University</a></li>
+  <li><a href="#">New England College of Optometry</a></li>
+  <li><a href="#">Northeastern University</a></li>
+  <li><a href="#">The New England Conservatory of Music</a></li>
+  <li><a href="#">Wentworth Institute of Technology</a></li>
+  <li><a href="#">Berklee College of Music</a></li>
+  <li><a href="#">Kaplan Career Institute (Closed)</a></li>
+  <li><a href="#">New England School of Photography</a></li>
+  <li><a href="#">Art Institute of Boston at Lesley University</a></li>
+  <li><a href="#">Laboure College</a></li>
+  <li><a href="#">Everest Institute-Brighton</a></li>
+  <li><a href="#">Saint John's Seminary</a></li>
+  <li><a href="#">Pine Manor College</a></li>
+  <li><a href="#">Massachusetts School of Professional Psychology</a></li>
+  <li><a href="#">Boston Baptist College</a></li>
+  <li><a href="#">Blaine The Beauty Career School-Boston</a></li>
+  <li><a href="#">Rets Technical Center</a></li>
+  <li><a href="#">Harvard University of Public Health</a></li>
+</ul>
+          
+</form>
+</div>
+</div>
+    
+    
+<script>
+function myFunction() {
+    var input, filter, ul, li, a, i;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    ul = document.getElementById("myUL");
+    li = ul.getElementsByTagName("li");
+    for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("a")[0];
+        if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+
+        }
+    }
+}
+</script>
+
+</body>
+</html>
+
