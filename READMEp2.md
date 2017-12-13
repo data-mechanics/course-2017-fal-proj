@@ -33,7 +33,7 @@
         The columns used from this dataset included the coordinates of the associated obese person.
 
     (3) Boston Zoning GeoJson:
-        This is a shapefile used to determine if a coordinate falls within a partiular neighborhood.
+        This is a shapefile used to determine if a coordinate falls within a particular neighborhood.
 
     With the above information, we we're able to associate each obese person to one or multiple properties
     based on proximity.  The resulting transformation was of the form: (Property Value: Number of obese 
