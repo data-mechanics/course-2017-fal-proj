@@ -51,7 +51,7 @@
     image illustrates:
 ```
 
-    ![alt text] (http://datamechanics.io/data/BIEL_expected_results.png "Expected Results")
+![alt text] (http://datamechanics.io/data/BIEL_expected_results.png "Expected Results")
 
 ```
     The purpose of our project was to gather data on overweight persons in the Boston city area,
@@ -85,3 +85,4 @@
     Neighborhood, Government Center and Central Artery had no major correlation between
     obesity and property value, while Charleston, and the South End districs had a significant,
     measurable correlation between the two metrics.
+```
