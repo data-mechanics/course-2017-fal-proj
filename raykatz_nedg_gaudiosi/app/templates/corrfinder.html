@@ -36,57 +36,25 @@
                 <li><a href="/">Back</a></li>
                 <div id="lavalamp"></div>
             </ul>
-
-        <form action="/action_page.php">
-        <style>
-        p {
-            color: green
-        }
-        </style>
-          <p>select 1 here:</p>
-          <input type="radio" name="district1" value="Downtown&Charlestown" checked> Downtown&Charlestown<br>
-          <input type="radio" name="district1" value="East Boston"> East Boston<br>
-          <input type="radio" name="district1" value="Roxbury"> Roxbury<br>
-          <input type="radio" name="district1" value="Mattapan"> Mattapan<br>
-          <input type="radio" name="district1" value="Roxbury"> Roxbury<br>
-          <input type="radio" name="district1" value="South Boston"> South Boston<br>
-          <input type="radio" name="district1" value="Dorchester"> Dorchester<br>
-          <input type="radio" name="district1" value="South End"> South End<br>
-          <input type="radio" name="district1" value="Brighton/Allston"> Brighton/Allston<br>
-          <input type="radio" name="district1" value="West Roxbury"> West Roxbury<br>
-          <input type="radio" name="district1" value="Jamaica Plain"> Jamaica Plain<br>
-          <input type="radio" name="district1" value="Hyde Park"> Hyde Park<br>
-          <p>select another here</p>
-          <input type="radio" name="district2" value="Downtown&Charlestown" checked> Downtown&Charlestown<br>
-          <input type="radio" name="district2" value="East Boston"> East Boston<br>
-          <input type="radio" name="district2" value="Roxbury"> Roxbury<br>
-          <input type="radio" name="district2" value="Mattapan"> Mattapan<br>
-          <input type="radio" name="district2" value="Roxbury"> Roxbury<br>
-          <input type="radio" name="district2" value="South Boston"> South Boston<br>
-          <input type="radio" name="district2" value="Dorchester"> Dorchester<br>
-          <input type="radio" name="district2" value="South End"> South End<br>
-          <input type="radio" name="district2" value="Brighton/Allston"> Brighton/Allston<br>
-          <input type="radio" name="district2" value="West Roxbury"> West Roxbury<br>
-          <input type="radio" name="district2" value="Jamaica Plain"> Jamaica Plain<br>
-          <input type="radio" name="district2" value="Hyde Park"> Hyde Park<br>
-          <input type="submit" value="Submit">
+            <p>See how variables correlate differently depending on what zipcode you choose! Check the boxes you wish to see and press submit.</p>
+        <form method="post" action="{{ url_for('corrfinder') }}"> 
+            {% for zip in zipcodes %}
+            
+            <label for="chosen">{{zip}}</label>
+            <input name="chosen" type="checkbox" value="{{zip}}"> <br>
+            
+            {% endfor %}
+            <input type="submit" value="Submit">
         </form>
-        <div class="select-style">
-          <select>
-            <option value="Downtown&Charlestown">Downtown&Charlestown</option>
-            <option value="East Boston">East Boston</option>
-            <option value="Roxbury">Roxbury</option>
-            <option value="Mattapan">Mattapan</option>
-            <option value="South Boston">South Boston</option>
-            <option value="Dorchester">Dorchester</option>
-            <option value="South End">South End</option>
-            <option value="Brighton/Allston">Brighton/Allston</option>
-            <option value="West Roxbury">West Roxbury</option>
-            <option value="Jamaica Plain">Jamaica Plain</option>
-            <option value="Hyde Park">Hyde Park</option>
-          </select>
-        </div>
 
-        </div>        
+        {% if correlations %}
+        <ul>
+            {% for corr in correlations %}
+            <li>{{ corr[0] }}: {{ corr[1] }} </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        
+       </div>        
     </body>
 </html>
