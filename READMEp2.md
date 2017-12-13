@@ -90,6 +90,27 @@
 <p align="center">
     <img src="https://github.com/jmbiel/course-2017-fal-proj/blob/master/optimazation_prob.PNG?raw=true">
 </p>
+
+###### Methods:
+```
+    We knew that we wanted to use K-Means to place health-food stores in an optimal manner.
+    The obesity dataset was our primary stream of data for the points to place means around.
+    However, we added a couple of constraints that would change the raw output of k-means.
+
+    First, we added the constraint that the AVERAGE distance of an obese person to a health-
+    food store must be less than one mile.  The second constraint we added stated that health-
+    food stores must be realistically placed in Boston (i.e. not under a bridge/in the water).
+    Lastly, we wanted to minimize the number of means needed to satisfy the above constraints.
+
+    We solved this problem by running k-means in a loop, starting with one mean and incrementing
+    the number of means with each iteration until the constraints we're satisfied. Each time
+    k-means executed, we would replace the means according to the Boston Zoning shapefile which
+    would ensure that the means we're placed realistically.  The shapefile contained the
+    appropriate borders which would satisfy our constraint.  If a mean fell outside of the
+    shapefile, we would place it to the closest point on the shapefile.  After this, we calculated
+    all the distances of obese persons to the means.  If the average was greater than one mile,
+    we incremented the number of means and re-ran K-Means. 
+```
 ```
     The purpose of our project was to gather data on overweight persons in the Boston city area,
     and calculate whether or not there exists a correlation between income/property values and 
