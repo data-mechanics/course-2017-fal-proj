@@ -109,7 +109,10 @@
     appropriate borders which would satisfy our constraint.  If a mean fell outside of the
     shapefile, we would place it to the closest point on the shapefile.  After this, we calculated
     all the distances of obese persons to the means.  If the average was greater than one mile,
-    we incremented the number of means and re-ran K-Means. 
+    we incremented the number of means and re-ran K-Means.
+
+    The final output would have the locations of all the health-food stores, with all the constraints
+    satisfied. 
 ```
 ```
     The purpose of our project was to gather data on overweight persons in the Boston city area,
