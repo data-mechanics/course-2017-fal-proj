@@ -62,14 +62,9 @@ class make_graph(dml.Algorithm):
                 return geo_json
 
             placements_geojson = df_to_geojson(df_geo, properties="")
-<<<<<<< HEAD
             filename = "./templates/placements"+str(threadID)+".html"
             with open(filename, 'w') as output:
                 output.write(our_geoleaflet.html(placements_geojson)) # Create visualization.
-=======
-            with open('./adsouza_bmroach_mcaloonj_mcsmocha/placements.html', 'w') as output:
-                output.write(geoleaflet.html(placements_geojson)) # Create visualization.
->>>>>>> master
 
 
             repo.logout()

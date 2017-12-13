@@ -1,7 +1,7 @@
 """
 Filename: get_accident_clusters.py
 
-Last edited by: BMR 11/12/17
+Last edited by: BMR 11/28/17
 
 Boston University CS591 Data Mechanics Fall 2017 - Project 2
 Team Members:
@@ -36,17 +36,14 @@ class get_accident_clusters(dml.Algorithm):
         writes = ['adsouza_bmroach_mcaloonj_mcsmocha.accident_clusters']
 
         @staticmethod
-        def execute(trial=False, logging=True):
+        def execute(trial=False, logging=True, cluster_divisor=15):
+            """
+            Parameters:
+            divide accident count by cluster_divisor, and there's that many clusters
+            Ex 200 accidents divided by cluster_divisor of 10 is 20 clusters, or means
+            """
+
             startTime = datetime.datetime.now()
-
-            #__________________________
-            #Parameters
-            cluster_divisor = 15
-            # ^ meaning divides accident count by this, and there's that many clusters
-            # Ex 200 accidents divided by cluster_divisor of 10 is 20 clusters, or means
-
-            #End Parameters
-            #__________________________
 
             if logging:
                 print("in get_accident_clusters.py")
