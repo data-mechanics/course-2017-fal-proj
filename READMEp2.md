@@ -54,7 +54,7 @@
     image illustrates:
 ```
 
-![alt text] (http://datamechanics.io/data/BIEL_expected_results.png?raw=true "Expected Results")
+![alt text] (https://github.com/jmbiel/course-2017-fal-proj/blob/master/BIEL_expected_results.png?raw=true "Expected Results")
 
 
 ###### Actual Results:
