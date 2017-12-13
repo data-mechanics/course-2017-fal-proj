@@ -30,7 +30,7 @@ class fetch_open_space(dml.Algorithm):
     writes = ['adsouza_bmroach_mcaloonj_mcsmocha.open_space']
 
     @staticmethod
-    def execute(trial = False, logging=True):
+    def execute(trial = False, logging=True, read_cache=True):
         startTime = datetime.datetime.now()
 
         if logging:
@@ -40,8 +40,12 @@ class fetch_open_space(dml.Algorithm):
         repo = client.repo
         repo.authenticate('adsouza_bmroach_mcaloonj_mcsmocha', 'adsouza_bmroach_mcaloonj_mcsmocha')
 
-        url = "http://bostonopendata-boston.opendata.arcgis.com/datasets/2868d370c55d4d458d4ae2224ef8cddd_7.geojson" #ArcGIS Open Data
-        response = urllib.request.urlopen(url).read().decode("utf-8")
+        if read_cache:
+            with open('./cached_datasets/Open_Space.geojson', 'r') as gjf:
+                response = gjf.read()
+        else:
+            url = "http://bostonopendata-boston.opendata.arcgis.com/datasets/2868d370c55d4d458d4ae2224ef8cddd_7.geojson" #ArcGIS Open Data
+            response = urllib.request.urlopen(url).read().decode("utf-8")
 
         r = json.loads(response)
 

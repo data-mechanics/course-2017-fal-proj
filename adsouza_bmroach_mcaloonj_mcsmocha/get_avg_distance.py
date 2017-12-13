@@ -31,7 +31,7 @@ class get_avg_distance(dml.Algorithm):
     writes = ['adsouza_bmroach_mcaloonj_mcsmocha.avg_distance']
 
     @staticmethod
-    def execute(trial=False, logging=True):
+    def execute(trial=False, logging=True, web=False):
         startTime = datetime.datetime.now()
 
         if logging:
@@ -77,16 +77,17 @@ class get_avg_distance(dml.Algorithm):
         best_k = cluster_list[best_k_ind]
 
         # graph all the averages on the same graph
-        plt.plot(cluster_list, avg_school_dist, 'b', label='Schools')
-        plt.plot(cluster_list, avg_hosp_dist, 'r', label='Hospitals')
-        plt.plot(cluster_list, avg_park_dist, 'g', label='Parks')
-        plt.plot(cluster_list, avg_acc_dist, 'm', label='Accidents')
-        plt.plot(cluster_list, average_dist, 'k', linewidth=3, label='Overall Average')
-        plt.title('Average Distances from Triggers')
-        plt.xlabel('Number of Clusters')
-        plt.ylabel('Average Distance in Miles')
-        plt.legend()
-        plt.show()
+        if not web:
+            plt.plot(cluster_list, avg_school_dist, 'b', label='Schools')
+            plt.plot(cluster_list, avg_hosp_dist, 'r', label='Hospitals')
+            plt.plot(cluster_list, avg_park_dist, 'g', label='Parks')
+            plt.plot(cluster_list, avg_acc_dist, 'm', label='Accidents')
+            plt.plot(cluster_list, average_dist, 'k', linewidth=3, label='Overall Average')
+            plt.title('Average Distances from Triggers')
+            plt.xlabel('Number of Clusters')
+            plt.ylabel('Average Distance in Miles')
+            plt.legend()
+            plt.show()
 
         # create list of dictionaries for output
         output_ldict = []

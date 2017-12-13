@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Placeholder</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var refresh_id = setInterval(function() {
+                var tID = '{{tID}}';
+                $.get(
+                    "{{ url_for('.thread_status', a=tID) }}",
+                    function(data) {
+                        console.log(data);
+                        if (data.status == 'finished') {
+                            window.location.replace("{{ url_for('.result', a=tID) }}");
+                        }
+                    }
+                )
+            }, 4000);
+        });
+    </script>
+</head>
+
+<body style="background-color: black; font-family:Helvetica">
+    <div style='color: white; text-align: center'>Thinking about it...</div>
+    <div style="display: flex; justify-content: center;">        
+        <img src="https://i.pinimg.com/originals/aa/24/04/aa2404e3bb5e5f7e6850a597c00c4ced.gif">
+    </div>
+</body>
+
+</html>
