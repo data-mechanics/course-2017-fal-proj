@@ -1,0 +1,132 @@
+<html>
+<head>
+  <title>Boston Socio Economic trickling</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"/>
+
+  <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  <style>
+    #map {
+      height: 80%;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="page-header">
+    <h1>Socio Economic Trickling in Boston</h1>
+  </div>
+  <p>Visualization for CS 591 Data Mechanics</p>
+  <div class="dropdown">
+
+    <select id="metric">
+      <option value="poverty_trickling_effect">Poverty</option>
+      <option value="median_income_effect">Median Income</option>
+      <option value="bike_commute_effect">Bike Commute</option>
+      <option value="car_commute_effect">Car Commute</option>
+      <option value="bus_commute_effect">Bus Commute</option>
+      <option selected value="walk_commute_effect">Walk Commute</option>
+    </select>
+    <br><br>
+
+    <div id="outermap">
+      <div id="map"></div>
+
+    </div>
+
+  </div>
+
+</div>
+<script>
+
+  var map = L.map("map", {zoomControl: false}).setView([42.35, -71.08], 13);
+
+  // load a tile layer
+  L.tileLayer("https://tiles.mapc.org/basemap/{z}/{x}/{y}.png",
+    {
+      attribution: "CS 591 Data Mechanics",
+      maxZoom: 17,
+      minZoom: 9
+    }).addTo(map);
+
+
+  $("select")
+    .change(function () {
+
+      document.getElementById('outermap').innerHTML = '<div id="map"></div>';
+
+      var map = L.map("map", {zoomControl: true}).setView([42.35, -71.08], 13);
+
+      // load a tile layer
+      L.tileLayer("https://tiles.mapc.org/basemap/{z}/{x}/{y}.png",
+        {
+          attribution: "CS 591 Data Mechanics",
+          maxZoom: 20,
+          minZoom: 1
+        }).addTo(map);
+
+
+      var metricToReload = $('#metric :selected')[0].value;
+      var metricText = $('#metric :selected').text();
+
+      $.getJSON("neighborhoods_leaflet_new.geojson", function (hoodData) {
+        console.log(hoodData);
+
+        L.geoJson(hoodData, {
+
+          style: function (feature) {
+            var fillColor,
+              density = feature.properties[metricToReload];
+            console.log("density, metricToReload", density, metricToReload);
+
+            red_value = Math.round((parseFloat(density) + 1) * 50);
+            red_value = Math.round(Math.log((parseFloat(density) + 100)) * 100);
+            red_value = Math.round((parseFloat(density) * 175) + 50);
+
+
+            hex_value = rgb2hex("rgba( " + "0" + "," + "0" + "," + red_value + ", 1)");
+
+            // console.log(hex_value)
+            // console.log("hexvalue",hex_value , "*");
+
+            fillColor = hex_value;
+
+            return {color: "#999", weight: 1, fillColor: fillColor, fillOpacity: .6};
+          },
+          onEachFeature: function (feature, layer) {
+            layer.bindPopup("<strong>" + feature.properties.Name + "</strong><br/>" + metricText + " trickling effect: " + feature.properties[metricToReload]);
+          }
+        }).addTo(map);
+      });
+
+
+    })
+    .change();
+</script>
+
+<script>
+
+  // initialize the map
+
+  //Function to convert hex format to a rgb color
+  function rgb2hex(rgb) {
+    rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+    return (rgb && rgb.length === 4) ? "#" +
+    ("0" + parseInt(rgb[1], 10).toString(16)).slice(-2) +
+    ("0" + parseInt(rgb[2], 10).toString(16)).slice(-2) +
+    ("0" + parseInt(rgb[3], 10).toString(16)).slice(-2) : "";
+  }
+
+  $("button").click(function () {
+    var hex = rgb2hex($("input").val());
+    $(".result").html(hex);
+  });
+
+
+</script>
+</body>
+</html>
