@@ -86,11 +86,10 @@
     optimally place healthy food stores around Boston to make healthy food more accessible. 
 ```
 
-###### Problem Statement:
-```
-    
-```
-
+###### Problem to Solve:
+<p align="center">
+    <img src="https://github.com/jmbiel/course-2017-fal-proj/blob/master/optimazation_prob.PNG?raw=true">
+</p>
 ```
     The purpose of our project was to gather data on overweight persons in the Boston city area,
     and calculate whether or not there exists a correlation between income/property values and 
