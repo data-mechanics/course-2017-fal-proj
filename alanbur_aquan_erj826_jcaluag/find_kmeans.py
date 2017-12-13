@@ -105,7 +105,7 @@ class FindKMeans():
         if(avgOrMaxDistToggle):
             metric = self.getAvgDistance(kmeans,coordinates)
         else:
-            print('test')
+
             metric = self.getMaxDistance(kmeans,coordinates)
         clusters = 2
 

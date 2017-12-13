@@ -48,10 +48,10 @@
 
 <h1> Generate Response Center Locations </h1>
   <form method="POST" action="/kmeans">
-      <input type="number" name = "distance" placeholder="Distance" min="0" class="input"><br><br>
-      <input type="radio" name="option" value = "average" > Average Distance
+      <input type="number" name = "distance" placeholder="Distance" min="1" class="input" required><br><br>
+      <input type="radio" name="option" value = "average" required> Average Distance
     <input type="radio" name="option"  value="max"> Max Distance<br><br>
-      <input type="submit" value="Enter" class="button" onclick="showLoader()">
+      <input type="submit" value="Enter" class="button" onsubmit="showLoader()">
   </form>
 <p>Optimal locations for response centers with {{ type }} distance of {{ distance }} miles </p>
 
