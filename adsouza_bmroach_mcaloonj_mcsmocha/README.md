@@ -45,6 +45,9 @@ There were 23,200 total accidents in our accident dataset. According to the grap
 * Open Spaces (Boston Open Data - opendata.arcgis.com)
 * Schools (boston.opendatasoft.com)
 
+## Known issue
+It appears that there's an issue with one of our resources that gives us an http error when we run the project. This error did not exist when we submitted our project. For some reason, we can't access the open_spaces resource on the first try. If you get the error when running our project, please try running it again a couple of times, because we've found that the error goes away after running it 2-4 times. 
+
 ## Scripts
 * *fetch_accidents.py* 
 * *fetch_hospitals.py*
@@ -63,6 +66,7 @@ There were 23,200 total accidents in our accident dataset. According to the grap
 * *make_graph.py* - Plots the determined locations for speed feedback sign placements.
 
 $$ - denotes a script with variable parameters for experimental outputs
+<<<<<<< HEAD
 ## Usage
 * To run the project, run server.py and head to localhost:5000.
 <br/><br/>
@@ -70,6 +74,13 @@ $$ - denotes a script with variable parameters for experimental outputs
 <br/><br/>
 * This set of scripts is no longer designed to be run via execute in the parent directory. To enable this functionality, one would need to remove the logic.py and server.py files. Instead, we modified execute and made it functional in logic.py so that our web server, server.py, can run our entire algorithm with variable inputs. Additionally, Mongod must still be running, as it would be for the Part II of the project. 
 * No authentication necessary for accessing datasets or executing transformations.
+=======
+
+
+## Notes
+* No Authentication for Datasets
+* No Authentication for Transformations
+>>>>>>> master
 * The resource libspacialindex is required to run this set of scripts. On macOS, it can be installed with Homebrew: brew install spatialindex. 
 
 ### Python modules in use not typically included in standard Python distributions 
