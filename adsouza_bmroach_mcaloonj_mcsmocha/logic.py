@@ -66,15 +66,15 @@ def algo(parameters, requestCount, threadID, trialRun=False, doProv=False):
 
     for algorithm in ordered:
         algo_name = str(algorithm)
-        
+
         #skip algorithms which fetch and have already been called, but check again every 10 requests
         if 'fetch' in algo_name and \
         'node' not in algo_name and \
         requestCount > 2 and \
         requestCount % 10 != 0:
             continue
-
-        completed = False        
+            
+        completed = False
         while not completed:
             try:                
                 if 'fetch_nodes' in algo_name:
@@ -104,7 +104,7 @@ def algo(parameters, requestCount, threadID, trialRun=False, doProv=False):
                     provenance = algorithm.provenance(provenance)
                 
                 completed = True
-            
+                
             except:
                 print("There was an error in", algo_name, "\nAttempting again...")
 
