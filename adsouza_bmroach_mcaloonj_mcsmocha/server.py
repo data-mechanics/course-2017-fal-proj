@@ -21,7 +21,6 @@ from flask import Flask, render_template, request, url_for, jsonify
 from threading import Thread
 from logic import algo
 
-remote_server = True
 finished = {}
 
 app = Flask(__name__)
@@ -74,27 +73,16 @@ def getmap():
 
         finished[this_call] = [False, params]    
 
-
-    if not cache_hit: 
-        global th
-        worker_params = params
-        th = Thread(target=worker, args=[this_call, worker_params])
-        th.start()                        
-    return render_template('loading.html', tID=str(this_call))        
-
-
-    # try:
-    #     if not cache_hit: 
-    #         global th
-    #         worker_params = params
-    #         th = Thread(target=worker, args=[this_call, worker_params])
-    #         th.start()                        
-    #     return render_template('loading.html', tID=str(this_call))        
-
-    # except:        
-    #     return render_template('error.html')
-
-
+    try:
+        if not cache_hit: 
+            global th
+            worker_params = params
+            th = Thread(target=worker, args=[this_call, worker_params])
+            th.start()                        
+        return render_template('loading.html', tID=str(this_call))
+    except: 
+        return render_template('error.html')
+        
 
 def worker(*args):
     this_call = args[0]
@@ -116,7 +104,4 @@ def result(a):
 
 
 if __name__ == '__main__':
-    if remote_server:
-        app.run(threaded=True, host='0.0.0.0', port='80')
-    else:
-        app.run()
+    app.run()

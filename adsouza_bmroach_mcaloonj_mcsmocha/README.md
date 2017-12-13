@@ -66,7 +66,9 @@ $$ - denotes a script with variable parameters for experimental outputs
 ## Usage
 * To run the project, run server.py and head to localhost:5000.
 <br/><br/>
-* This set of scripts is no longer designed to be run via execute in the parent directory. To enable this functionality, one would need to remove the logic.py and server.py files. Instead, we modified execute and made it functional in logic.py so that our web server, server.py, can run our entire algorithm with variable inputs. Additionally, Mongo must still be running, as it would be for the Part II of the project. 
+* For deployment on a remote server, we use [Gunicorn](http://gunicorn.org).
+<br/><br/>
+* This set of scripts is no longer designed to be run via execute in the parent directory. To enable this functionality, one would need to remove the logic.py and server.py files. Instead, we modified execute and made it functional in logic.py so that our web server, server.py, can run our entire algorithm with variable inputs. Additionally, Mongod must still be running, as it would be for the Part II of the project. 
 * No authentication necessary for accessing datasets or executing transformations.
 * The resource libspacialindex is required to run this set of scripts. On macOS, it can be installed with Homebrew: brew install spatialindex. 
 
