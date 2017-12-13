@@ -57,7 +57,10 @@
     <img src="https://github.com/jmbiel/course-2017-fal-proj/blob/master/BIEL_expected_results.png">
 </p>
 
-
+```
+    Given these results, we would have the ability to further segment our obesity data and potentially
+    specialize our solutions for each variant of the problem.
+```
 ###### Actual Results:
 ```
     The purpose of our project was to gather data on overweight persons in the Boston city area,
