@@ -19,7 +19,7 @@ class NeighborhoodScores(dml.Algorithm):
     
     @staticmethod
     def execute(trial=True):
-        print("RUNNING")
+        print("Please allow a few minutes for the algorithm to run")
         '''Retrieve some data sets (not using the API here for the sake of simplicity).'''
         startTime = datetime.datetime.now()
         # Set up the database connection.

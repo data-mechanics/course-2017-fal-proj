@@ -170,12 +170,15 @@ class Budgets(dml.Algorithm):
                         new_score += int(str(tuple[3])) * 1 + scoreArray[i][3]
                     
                     print(new_score)
-                    if new_score > 1000:
-                        x = new_score / 100 + new_score / 100
+                    if new_score > 1000: 
+                        x = new_score / 100 * 3
                         if x > 100:
                             x = 100
                     else:
-                        x =new_score / 10
+                        x =new_score / 10 * 3
+                        if x > 100: 
+                            x = 100
+
 
 
 
