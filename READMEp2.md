@@ -53,6 +53,8 @@
 
 ![alt text] (http://datamechanics.io/data/BIEL_expected_results.png "Expected Results")
 
+
+###### Actual Results:
 ```
     The purpose of our project was to gather data on overweight persons in the Boston city area,
     and calculate whether or not there exists a correlation between income/property values and 
