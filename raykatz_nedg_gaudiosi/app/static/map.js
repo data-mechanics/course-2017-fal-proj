@@ -253,7 +253,7 @@ function infoBox(d) {
         percent_poverty.transition()
             .duration(750)
             .attr("opacity", 1)
-            .text("Percent Poverty: " + (zipinfo[d.properties.ZIP5]["percent_povery"]*100).toFixed(0) + "%");
+            .text("Percent Poverty: " + (zipinfo[d.properties.ZIP5]["percent_poverty"]*100).toFixed(0) + "%");
         
         percent_old.transition()
             .duration(750)
