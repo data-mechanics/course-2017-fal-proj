@@ -70,9 +70,11 @@
     that we could not be confident in accuracy of the analysis performed. These can be potentially 
     attributed to a lack of obesity neighborhood in each neighborhood.  This analysis would certainly
     be more accurate if we also had data about the number of healthy people in each neighborhood.
-    Then, we could cross-reference our results with another analysis which correlates income/property value with the number of healthy people in each neighborhood.
+    Then, we could cross-reference our results with another analysis which correlates income/property value with the
+     number of healthy people in each neighborhood.
 
-    Regardless, with a lack of statistically significant evidence to support our hypothesis, we decided to proceed with a general solution to an Obesity problem for all of Boston based on our obesity dataset.
+    Regardless, with a lack of statistically significant evidence to support our hypothesis, we decided
+     to proceed with a general solution to an Obesity problem for all of Boston based on our obesity dataset.
 ```
 ```
     The purpose of our project was to gather data on overweight persons in the Boston city area,
