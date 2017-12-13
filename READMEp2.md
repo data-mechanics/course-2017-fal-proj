@@ -17,6 +17,7 @@
 <p align="center">
     <img src="https://github.com/jmbiel/course-2017-fal-proj/blob/master/heatmap.PNG?raw=true">
 </p>
+
 ## Analytics:
 
 ###### Methods:
