@@ -19,9 +19,9 @@ h2{color:#e50000}
 .input {
     background-color: white;
     width: 130px;
-    font-size: 16px;
+    font-size: 14px;
     border-radius: none;
-    padding: 5px;
+    padding: 10px 15px;
     border: solid 1px #707070;
 
 }

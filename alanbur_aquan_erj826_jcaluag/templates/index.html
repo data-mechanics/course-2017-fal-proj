@@ -14,7 +14,7 @@
 <h2>{{ msg }}</h2>
 <h1> Generate Response Center Locations </h1>
   <form method="POST" action="/kmeans">
-      <input type="number" name = "distance" placeholder="Distance" min="1" step="0.01" class="input" required><br><br>
+      <input type="number" name = "distance" placeholder="Distance (miles)" min="1" step="0.01" class="input" required><br><br>
       <input type="radio" name="option" value = "average" required> Average Distance
     <input type="radio" name="option"  value="max"> Max Distance<br><br>
       <input type="submit" value="Enter" class="button" onsubmit="showLoader()">
