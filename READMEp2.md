@@ -28,6 +28,9 @@
     (2) Obesity Data:
         The columns used from this dataset included the coordinates of the associated obese person.
 
+    (3) Boston Zoning GeoJson:
+        This is a shapefile used to determine if a coordinate falls within a partiular neighborhood.
+
     With the above information, we we're able to associate each obese person to one or multiple properties
     based on proximity.  The resulting transformation was of the form: (Property Value: Number of obese 
     people within close proximity).
@@ -51,7 +54,7 @@
     image illustrates:
 ```
 
-![alt text] (http://datamechanics.io/data/BIEL_expected_results.png "Expected Results")
+![alt text] (http://datamechanics.io/data/BIEL_expected_results.png?raw=true "Expected Results")
 
 
 ###### Actual Results:
