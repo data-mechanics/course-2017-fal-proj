@@ -40,7 +40,7 @@
     people as the value. More specifically, the transformation took the following form:
         (Value Range: Number of obese people associated with range)
 
-    After the above transformation was run for each neighborhood, as well as for the entire Boston
+    The above transformation was run for each neighborhood, as well as for the entire Boston
     area.  At this point, we we're ready to compute the correlation coefficient for each neighborhood
     in Boston, as well as the entire area.
 ```
@@ -54,7 +54,7 @@
     image illustrates:
 ```
 
-![alt text] (https://github.com/jmbiel/course-2017-fal-proj/blob/master/BIEL_expected_results.png?raw=true)
+<img src="https://github.com/jmbiel/course-2017-fal-proj/blob/master/BIEL_expected_results.png">
 
 
 ###### Actual Results:
