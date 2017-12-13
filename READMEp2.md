@@ -122,6 +122,7 @@
 <p align="center">
     <img src="https://github.com/jmbiel/course-2017-fal-proj/blob/master/k-means-ouptut.PNG?raw=true">
 </p>
+
 ```
     NOTE: Our solution DID NOT include the Cambridge area.  Only neighborhoods that we're included
     in the Boston Zoning shapefile.
