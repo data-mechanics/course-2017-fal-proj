@@ -3,12 +3,41 @@
 <head>
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="static/style.css">
+<script src="jquery-3.2.1.min.js"></script>
 
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-    <title> Response Center Placements </title>
-    <script src="http://maps.google.com/maps/api/js?key=AIzaSyDYnen8R0esOoB-X2WRA3mn9FNMey0EdQc"
-            type="text/javascript"></script>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+<title> Response Center Placements </title>
+<script src="http://maps.google.com/maps/api/js?key=AIzaSyDYnen8R0esOoB-X2WRA3mn9FNMey0EdQc"
+        type="text/javascript"></script>
 
+<style type="text/css">
+    .loader {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
+<script type="text/javascript">
+    function showLoader() {
+        console.log('show loader')
+        console.log(document.getElementById("loading").style.display)
+        document.getElementById("loading").style.display = "block";
+        console.log(document.getElementById("loading").style.display)
+    };
+    function hideLoader() {
+        document.getElementById("loading").style.display= "none";
+    };
+</script>
 </head>
 <body>
 
@@ -19,19 +48,21 @@
 
 <h1> Generate Response Center Locations </h1>
   <form method="POST" action="/kmeans">
-      <input type="number" name = "distance" placeholder="Distance" min="1" class="input"><br><br>
+      <input type="number" name = "distance" placeholder="Distance" min="0" class="input"><br><br>
       <input type="radio" name="option" value = "average" > Average Distance
     <input type="radio" name="option"  value="max"> Max Distance<br><br>
-      <input type="submit" value="Enter" class="button">
+      <input type="submit" value="Enter" class="button" onclick="showLoader()">
   </form>
 <p>Optimal locations for response centers with {{ type }} distance of {{ distance }} miles </p>
 
 </div>
-
+      <div id="loading" class="loader" style="display: none;z-index: 10000;  top: 30%;
+    left: 47%;"></div>
 <div id="map" style="width: 500px; height: 400px;" class = "map"></div>
 
-<script type="text/javascript">
 
+<script type="text/javascript">
+    
     var locations ={{results|tojson}};
 
 
