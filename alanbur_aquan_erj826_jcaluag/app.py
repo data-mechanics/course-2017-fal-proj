@@ -10,15 +10,18 @@ app = Flask(__name__)
 def main():
     return render_template('index.html')
 
-@app.route('/kmeans', methods=["POST"])
+@app.route('/kmeans', methods=["GET","POST"])
 def run_kmeans():
-    distance=float(request.form['distance'])
-    kmeanFinder=find_kmeans.FindKMeans(distance)
-    toggle = request.form['option']
-    if toggle == 'average':
-        results=kmeanFinder.execute(toggle = True)
+    if request.method == "POST":
+        distance=float(request.form['distance'])
+        kmeanFinder=find_kmeans.FindKMeans(distance)
+        toggle = request.form['option']
+        if toggle == 'average':
+            results=kmeanFinder.execute(toggle = True)
+        else:
+            results = kmeanFinder.execute(toggle=False)
     else:
-        results = kmeanFinder.execute(toggle=False)
+        return render_template('index.html')
 
 
     return render_template('results.html',results = results,type = toggle,distance = distance)
