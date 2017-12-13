@@ -1,0 +1,26 @@
+body{font-family: 'Source Sans Pro', sans-serif;
+padding-bottom:30px;}
+.button {
+    border: 1px solid black;
+    background-color: black;
+    color:white;
+    padding: 8px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.wrapper{text-align:center;padding:30px;}
+.input {
+    background-color: white;
+    width: 130px;
+    font-size: 16px;
+    border-radius: none;
+    padding: 5px;
+    border: solid 1px #707070;
+
+}
+.map{width: 500px; height: 400px;text-align:center;margin:auto}

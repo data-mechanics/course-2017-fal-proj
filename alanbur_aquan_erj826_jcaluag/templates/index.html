@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">    <title> Response Center Placements </title>
+
+    <link rel="stylesheet" type="text/css" href="static/style.css">
+</head>
+<body >
+
+<div class="wrapper">
+
+<h1> Generate Response Center Locations </h1>
+  <form method="POST" action="/kmeans">
+      <input type="number" name = "distance" placeholder="Distance" min="0" class="input"><br><br>
+      <input type="radio" name="option" value = "average" > Average Distance
+    <input type="radio" name="option"  value="max"> Max Distance<br><br>
+      <input type="submit" value="Enter" class="button">
+  </form>
+</div>
+
+</body>
+
+</html>
