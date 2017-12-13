@@ -115,6 +115,14 @@
     all the distances of obese persons to the means.  If the average was greater than one mile,
     we incremented the number of means and re-ran K-Means.
 
+    The run-time of this algorithm is not impossibly slow.  The amount of points we are using yields
+    a run-time with an acceptable termination time.  It takes roughly 3-4 seconds to calculate the
+    means that satisfy the constraints.  However, with many more points, this algorithm would become
+    very slow.  Something to consider for future is a way to make this scalable -- for example
+    potentially distributing the distance calculations and the replacement of each mean.  With this
+    being said, the bottle-neck is most certainly K-Means.  The solution for now is to run this algorithm
+    in a relatively small area such that the run-time is acceptable.
+
     The final output would have the locations of all the health-food stores, with all the constraints
     satisfied. 
 ```
@@ -127,4 +135,4 @@
 ```
     NOTE: Our solution DID NOT include the Cambridge area.  Only neighborhoods that we're included
     in the Boston Zoning shapefile.
-```
+```1
