@@ -76,6 +76,19 @@
     Regardless, with a lack of statistically significant evidence to support our hypothesis, we decided
     to proceed with a general solution to an Obesity problem for all of Boston based on our obesity dataset.
 ```
+## Optimization Problem:
+
+###### Overview:
+```
+    Given the statistical analysis, we decided to create a general solution to the problem of
+    obesity in Boston.  We concluded that the part of the larger issue at hand is the 
+    inaccessability of health food to people accross Boston.  We wanted find a way to 
+    optimally place healthy food stores around Boston to make healthy food more accessible. 
+```
+
+###### Problem Statement:
+
+
 ```
     The purpose of our project was to gather data on overweight persons in the Boston city area,
     and calculate whether or not there exists a correlation between income/property values and 
