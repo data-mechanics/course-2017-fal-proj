@@ -41,8 +41,96 @@
                         color: aliceblue
                 }
                 </style>
-                    <p class="lead">Using our interactive Gentrification tracker, users can explore various regions in Boston and examine a live map of the data! </p>
-        </div>
+                    <h1>Analyzing Risk of Gentrification in Boston</h1>
+
+                    <p>By Ben Gaudiosi, Ned Geeslin, Ray Katz</p><br>
+
+                    <h3>Introduction</h3>
+
+                    <p>In urban areas, gentrification is one of the most significant problems affecting low income communities. New buildings are put up, rent increases, and all of a sudden, the residents can no longer afford the rent to live in the place they call home. This has been a recurring throughout the neighborhoods of Boston in the past few decades and continues happening to this day. Our project analyzes the risk of this phenomenon in many of Boston’s neighborhoods by investigating various demographic, income, public transit, and housing statistics and developing a scoring system that ranks each zip code accordingly. Hopefully, with this ‘early warning’ system we are developing, communities will have the opportunity to measure the risk of this happening, and a chance to prevent it.</p><br>
+
+                    <p>We collected our primary data sets from a variety of reliable sources. We used the 2010 U.S. Census  to pull information about racial makeup, married households, unemployed people, people in the labor force, and people taking public transit. Furthermore, the 2015 American Community Survey provided useful data pertaining to occupied and vacant housing, structures built before 1939, renter occupied homes, median income, median rent, and people in poverty. WIth the City of Boston’s ArcGIS map data, and the MBTA (routes and stops) we were able to get spatial data to use for out map. Using these, we turned many of these statistics into percentages for each district, with the exception of median income, median rent, and MBTA stops. To find the location of each MBTA stop, we had to take the coordinates of where each MBTA route stopped, and match that to a zip code. Furthermore, we compiled each set statistic into one table in MongoDB which could be identified by its zip code. Finally, with all this we were then able to create our analysis of the risk of gentrification in Boston.</p><br>
+
+                    <h3> Analysis Techniques </h3>
+
+                    <p>Gentrification is a process that happens over time, so we looked for correlations between factors in each neighborhood and quantify these factors. We performed two analyses - the first was developing a scoring algorithm for gentrification risk, and second was finding how specific statistics correlated in each neighborhood. In order to develop a way to score each neighborhood, we referred to a method used to create a warning system for gentrification in Berkeley, as seen in [1]. This paper identified several positives and negative indicators gentrification. We included some of our in our scoring algorithm which we also thought were relevant. For example, median income, unemployment, and access to public transportation were all used as indicators of Gentrification.</p><br>
+
+                    <p>Using the statistics for each neighborhood we gathered earlier, we calculated the mean and standard deviation of each variable, and used that information to normalize our statistics. With these now normalized statistics, we summed their values, multiplying by negative one for negative indicators. We did not do any additional weighing on each variable, as we could not find any way to quantify how much each factor determined whether a neighborhood was gentrifying. This sum, done on each zip code, represents our score that respective neighborhood. The biggest flaw in this scoring system is of course the lack of weighing for each variable. When attempted, we followed Berkerlee’s ranking to scale each factor, but the resulting scores were negligible. However, until further research is done, we did not feel as though we had sufficient information to make a judgment here.</p><br>
+
+                    <p>The second analysis we performed was to find multiple interrelated correlations. Specifically, we wanted to see how median income and median rent correlated with each other, and then each of them with percent taking public transportation, unemployment, home occupancy, percent of old home, percent married, and racial makeup. We did this by finding the correlation coefficient between two variables. If that value was near zero, the two variables are likely uncorrelated, and if that value is closer to negative one or one, then those two values are negatively or positively correlated, respectively.</p><br>
+
+                    <h3>Results</h3>
+                    <p>Figure 1: A table of scores for each neighborhood</p>
+                    <table>
+                        <tr><td>Zipcode</td><td>Score</td></tr>
+                        <tr><td>02110</td><td>-14.146108925066075</td></tr>
+                        <tr><td>02210</td><td>-12.090844969379752</td></tr>
+                        <tr><td>02132</td><td>-10.400958692661938</td></tr>
+                        <tr><td>02109</td><td>-9.623041479069807</td></tr>
+                        <tr><td>02199</td><td>-9.623011226284417</td></tr>
+                        <tr><td>02108</td><td>-6.123622178385251</td></tr>
+                        <tr><td>02113</td><td>-3.8977823124454027</td></tr>
+                        <tr><td>02116</td><td>-3.859269679643327</td></tr>
+                        <tr><td>02163</td><td>-3.4688718961758953</td></tr>
+                        <tr><td>02136</td><td>-2.567168276932776</td></tr>
+                        <tr><td>02111</td><td>-2.0250181672324192</td></tr>
+                        <tr><td>02129</td><td>-1.9818617760810455</td></tr>
+                        <tr><td>02114</td><td>-1.5432085488819267</td></tr>
+                        <tr><td>02131</td><td>-0.20682763065774168</td></tr>
+                        <tr><td>02118</td><td>0.3293921498407694</td></tr>
+                        <tr><td>02130</td><td>2.1077355688807575</td></tr>
+                        <tr><td>02127</td><td>2.3227624166295566</td></tr>
+                        <tr><td>02135</td><td>2.5411136855667102</td></tr>
+                        <tr><td>02126</td><td>4.314800141581246</td></tr>
+                        <tr><td>02125</td><td>4.644592913027217</td></tr>
+                        <tr><td>02215</td><td>4.729251781889973</td></tr>
+                        <tr><td>02134</td><td>4.963802931344546</td></tr>
+                        <tr><td>02122</td><td>5.801403417237771</td></tr>
+                        <tr><td>02128</td><td>5.888221417811069</td></tr>
+                        <tr><td>02115</td><td>6.002357483931471</td></tr>
+                        <tr><td>02124</td><td>6.916832487931011</td></tr>
+                        <tr><td>02120</td><td>8.95440785975162</td></tr>
+                        <tr><td>02119</td><td>9.023774328771601</td></tr>
+                        <tr><td>02121</td><td>13.01714717470246</td></tr>
+                    </table>
+                    <br>
+                    <p>Figure 2: A heat map of Boston. Red means an area is more gentrified, while yellow means and area is less gentrified.</p>
+                    <img src="static/map.png" alt="Heat map of boston">
+                    <br>
+                    <p>From the above results, we can see that zipcodes 02119 (Roxbury) , 02120 (Roxbury Crossing), and 02121 (Dorchester) are at the highest risk of gentrification, while 02110 (Boston Harbor), 02210 (Children’s Museum area), and 02132 (West Roxbury) are at the least risk according to our scoring method.</p><br>
+
+                    <p>Figure 3: A table of correlations we calculated</p>
+                    <table>
+                        <tr><td>Correlation</td><td>Correlation Coefficient</td></tr>
+                        <tr><td>Median income/median rent</td><td>0.46839512347485085</td></tr>
+                        <tr><td>Median income/percent taking public transit</td><td>-0.6454624318082117</td></tr>
+                        <tr><td>Median income/unemployed</td><td>-0.6982417162909252</td></tr>
+                        <tr><td>Median income/percent homes occupied</td><td>-0.37042916575139995</td></tr>
+                        <tr><td>Median income/percent homes built before 1939</td><td>-0.1369701760459735</td></tr>
+                        <tr><td>Median income/percent white</td><td>0.7316812909047178</td></tr>
+                        <tr><td>Median income/percent black</td><td>-0.519794059870776</td></tr>
+                        <tr><td>Median income/percent hispanic</td><td>-0.5223562724199077</td></tr>
+                        <tr><td>Median income/percent asian</td><td>-0.2244097883005071</td></tr>
+                        <tr><td>Median income/percent married</td><td>0.42025015853534775</td></tr>
+                        <tr><td>Median rent/percent taking public transit</td><td>-0.3691003721240825</td></tr>
+                        <tr><td>Median rent/unemployed</td><td>-0.41922610137538596</td></tr>
+                        <tr><td>Median rent/percent spending 50% income on rent</td><td>0.029052532399016718</td></tr>
+                        <tr><td>Median rent/percent homes built before 1939</td><td>-0.38728512866326253</td></tr>
+                        <tr><td>Median rent/poverty rate</td><td>-0.6360178987098067</td></tr>
+                        <tr><td>Median rent/bus stops</td><td>-0.4371816233590174</td></tr>
+                        <tr><td>Median rent/subway stops</td><td>0.10017178581177948</td></tr>
+                        <tr><td>Median rent/percent married</td><td>0.012707094739366659</td></tr>
+                    <table><br>
+
+                    <p>A few obvious correlations exist - median income and unemployment or median rent and poverty rate, for example. A few variables are also noticeably not correlated, such as the median rent and percent of people spending greater than 50% of their income on rent, or the median rent and percentage of married households. Unfortunately, it’s hard to draw conclusions from this data beyond the raw numbers, as we can’t infer what these correlations (or lack there of) actually mean without more research.</p><br>
+
+                    <h3>Conclusions</h3>
+                    <p>Our analysis shows that parts of south Boston appear to have the greatest risk of being gentrified. Community leaders should look for solutions in regards to rent control so residents are not displaced. Looking ahead, it’s clear that more research needs to be done on how significantly each of the factors we used affects a neighborhoods gentrification risk so as to render a more accurate scale. Regardless, we believe our analysis provides an imperfect but reasonable picture of how gentrification is occurring in Boston, and hope this research will enable people to act before permanent damage is done.</p><br>
+
+                    <h3>References</h3>
+                    <p>[1] Chapple, Karen. Mapping Susceptibility to Gentrification: The Early Warning Toolkit. UC Berkeley Center for Community Innovation, 2009.</p>
+ 
+       </div>
 
     </body>
 </html>
