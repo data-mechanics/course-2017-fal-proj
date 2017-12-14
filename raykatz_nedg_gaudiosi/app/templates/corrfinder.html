@@ -36,6 +36,13 @@
                 <li><a href="/">Back</a></li>
                 <div id="lavalamp"></div>
             </ul>
+            <style>
+                li{color: aliceblue}
+                label{color: aliceblue}
+                p {
+                        color: aliceblue
+                }
+            </style>
             <p>See how variables correlate differently depending on what zipcode you choose! Check the boxes you wish to see and press submit.</p>
         <form method="post" action="{{ url_for('corrfinder') }}"> 
             {% for zip in zipcodes %}

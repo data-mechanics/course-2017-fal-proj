@@ -36,12 +36,15 @@
                 <li><a href="/">Back</a></li>
                 <div id="lavalamp"></div>
             </ul>
+
                 <style>
+                label{color: aliceblue}
                 p {
                         color: aliceblue
                 }
                 </style>
                     <p class="lead">Using our interactive Gentrification tracker, users can explore various regions in Boston and examine a live map of the data! </p>
+                    <img src="static/spectrum.png"  width="960" height="100" alt="spectrum">
              <center><svg></svg></center>
              <p>Alter the weights of different variables and see how the gentrification score changes!</p>
             <form method="post" action="{{ url_for('map') }}">
@@ -93,6 +96,5 @@
     <script> var scores = {{ scores|safe }}; var zipinfo = {{zipinfo|safe}};</script>
 
         <script src="static/map.js"></script>
-        <img src="/spectrum.png" alt="spectrum" style="width:500px;height:600px;">
     </body>
 </html>
