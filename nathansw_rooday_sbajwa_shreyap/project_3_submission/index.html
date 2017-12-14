@@ -1,132 +1,106 @@
-<html>
-<head>
-  <title>Boston Socio Economic trickling</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"/>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Relation of Boston Neighborhoods to MBTA Reliability and the Demographics of Surrounding Neighborhoods</title>
 
-  <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
-  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="//unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//code.getmdl.io/1.3.0/material.min.js"></script>
+    <script src="trickling.js"></script>
+    <script src="regression.js"></script>
 
-  <style>
-    #map {
-      height: 80%;
-    }
-  </style>
-</head>
-<body>
-<div class="container">
-  <div class="page-header">
-    <h1>Socio Economic Trickling in Boston</h1>
-  </div>
-  <p>Visualization for CS 591 Data Mechanics</p>
-  <div class="dropdown">
+    <link rel="stylesheet" href="//unpkg.com/leaflet@1.2.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+    <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="//code.getmdl.io/1.3.0/material.deep_purple-pink.min.css">
+    <link rel="stylesheet" href="styles.css">
 
-    <select id="metric">
-      <option value="poverty_trickling_effect">Poverty</option>
-      <option value="median_income_effect">Median Income</option>
-      <option value="bike_commute_effect">Bike Commute</option>
-      <option value="car_commute_effect">Car Commute</option>
-      <option value="bus_commute_effect">Bus Commute</option>
-      <option selected value="walk_commute_effect">Walk Commute</option>
-    </select>
-    <br><br>
-
-    <div id="outermap">
-      <div id="map"></div>
-
+    <style>
+      #map, #map2 {
+        height: 100%;
+        border-radius: 10px;
+      }
+      .dropdown {
+        width: 100%;
+      }
+      #outermap, #outermap2 {
+        height: 500px;
+        border-radius: 10px;
+      }
+      .mdl-demo section.section--center {
+        padding: 15px;
+        border-radius: 5px;
+        display: flex;
+        flex-direction: column;
+      }
+    </style>
+  </head>
+  <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+      <header class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary">
+        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
+        </div>
+        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
+          <h3>Relation of Boston Neighborhoods <br> to MBTA Reliability and the Demographics <br> of Surrounding Neighborhoods</h3>
+        </div>
+        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
+        </div>
+        <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
+          <a href="#trickling" class="mdl-layout__tab is-active">Socioeconomic Trickling</a>
+          <a href="#regression" class="mdl-layout__tab">Neighborhood Reliability Regression</a>
+        </div>
+      </header>
+      <main class="mdl-layout__content">
+        <div class="mdl-layout__tab-panel is-active" id="trickling">
+          <section class="section--center mdl-grid mdl-shadow--4dp">
+            <h1>Socioeconomic Trickling</h1>
+            <p>
+              Shows how neighborhoods influence each other over different metrics.
+            </p>
+            <div class="dropdown">
+              <select id="metric">
+                <option value="poverty_trickling_effect">Poverty</option>
+                <option value="median_income_effect">Median Income</option>
+                <option value="bike_commute_effect">Bike Commute</option>
+                <option value="car_commute_effect">Car Commute</option>
+                <option value="bus_commute_effect">Bus Commute</option>
+                <option selected value="walk_commute_effect">Walk Commute</option>
+              </select>
+              <br><br>
+              <div id="outermap">
+                <div id="map"></div>
+              </div>
+            </div>
+          </section>
+        </div>
+        <div class="mdl-layout__tab-panel" id="regression">
+          <section class="section--center mdl-grid mdl-shadow--4dp">
+            <h1>Neighborhood Reliability Regression</h1>
+            <p>
+              Scaled from -1 to 1.
+            </p>
+            <div class="dropdown">
+              <div id="outermap2">
+                <div id="map2"></div>
+              </div>
+            </div>
+            <h4>Selected Neighborhoods: <span id="selected"></span></h4>
+            <h2>Reliability: <span id="reliability">0.0</span></h2>
+          </section>
+        </div>
+        <footer class="mdl-mini-footer">
+          <div class="mdl-mini-footer__left-section">
+            <div class="mdl-logo">Created By: Sameena Bajwa, Shreya Pandit, Rudhra Raveendran, &amp; Nathan Weinberg</div>
+          </div>
+        </footer>
+      </main>
     </div>
-
-  </div>
-
-</div>
-<script>
-
-  var map = L.map("map", {zoomControl: false}).setView([42.35, -71.08], 13);
-
-  // load a tile layer
-  L.tileLayer("https://tiles.mapc.org/basemap/{z}/{x}/{y}.png",
-    {
-      attribution: "CS 591 Data Mechanics",
-      maxZoom: 17,
-      minZoom: 9
-    }).addTo(map);
-
-
-  $("select")
-    .change(function () {
-
-      document.getElementById('outermap').innerHTML = '<div id="map"></div>';
-
-      var map = L.map("map", {zoomControl: true}).setView([42.35, -71.08], 13);
-
-      // load a tile layer
-      L.tileLayer("https://tiles.mapc.org/basemap/{z}/{x}/{y}.png",
-        {
-          attribution: "CS 591 Data Mechanics",
-          maxZoom: 20,
-          minZoom: 1
-        }).addTo(map);
-
-
-      var metricToReload = $('#metric :selected')[0].value;
-      var metricText = $('#metric :selected').text();
-
-      $.getJSON("neighborhoods_leaflet_new.geojson", function (hoodData) {
-        console.log(hoodData);
-
-        L.geoJson(hoodData, {
-
-          style: function (feature) {
-            var fillColor,
-              density = feature.properties[metricToReload];
-            console.log("density, metricToReload", density, metricToReload);
-
-            red_value = Math.round((parseFloat(density) + 1) * 50);
-            red_value = Math.round(Math.log((parseFloat(density) + 100)) * 100);
-            red_value = Math.round((parseFloat(density) * 175) + 50);
-
-
-            hex_value = rgb2hex("rgba( " + "0" + "," + "0" + "," + red_value + ", 1)");
-
-            // console.log(hex_value)
-            // console.log("hexvalue",hex_value , "*");
-
-            fillColor = hex_value;
-
-            return {color: "#999", weight: 1, fillColor: fillColor, fillOpacity: .6};
-          },
-          onEachFeature: function (feature, layer) {
-            layer.bindPopup("<strong>" + feature.properties.Name + "</strong><br/>" + metricText + " trickling effect: " + feature.properties[metricToReload]);
-          }
-        }).addTo(map);
-      });
-
-
-    })
-    .change();
-</script>
-
-<script>
-
-  // initialize the map
-
-  //Function to convert hex format to a rgb color
-  function rgb2hex(rgb) {
-    rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
-    return (rgb && rgb.length === 4) ? "#" +
-    ("0" + parseInt(rgb[1], 10).toString(16)).slice(-2) +
-    ("0" + parseInt(rgb[2], 10).toString(16)).slice(-2) +
-    ("0" + parseInt(rgb[3], 10).toString(16)).slice(-2) : "";
-  }
-
-  $("button").click(function () {
-    var hex = rgb2hex($("input").val());
-    $(".result").html(hex);
-  });
-
-
-</script>
-</body>
+    <script>
+      $(document).ready(function(){
+        $("#loading").css("display", "none");
+      })
+    </script>
+  </body>
 </html>
