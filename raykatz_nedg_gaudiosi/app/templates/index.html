@@ -41,17 +41,17 @@
                         color: aliceblue
                 }
                 </style>
-                    <h1>Analyzing Risk of Gentrification in Boston</h1>
+                    <h1 style="color:white">Analyzing Risk of Gentrification in Boston</h1>
 
                     <p>By Ben Gaudiosi, Ned Geeslin, Ray Katz</p><br>
 
-                    <h3>Introduction</h3>
+                    <h3 style="color:white">Introduction</h3>
 
                     <p>In urban areas, gentrification is one of the most significant problems affecting low income communities. New buildings are put up, rent increases, and all of a sudden, the residents can no longer afford the rent to live in the place they call home. This has been a recurring throughout the neighborhoods of Boston in the past few decades and continues happening to this day. Our project analyzes the risk of this phenomenon in many of Boston’s neighborhoods by investigating various demographic, income, public transit, and housing statistics and developing a scoring system that ranks each zip code accordingly. Hopefully, with this ‘early warning’ system we are developing, communities will have the opportunity to measure the risk of this happening, and a chance to prevent it.</p><br>
 
                     <p>We collected our primary data sets from a variety of reliable sources. We used the 2010 U.S. Census  to pull information about racial makeup, married households, unemployed people, people in the labor force, and people taking public transit. Furthermore, the 2015 American Community Survey provided useful data pertaining to occupied and vacant housing, structures built before 1939, renter occupied homes, median income, median rent, and people in poverty. WIth the City of Boston’s ArcGIS map data, and the MBTA (routes and stops) we were able to get spatial data to use for out map. Using these, we turned many of these statistics into percentages for each district, with the exception of median income, median rent, and MBTA stops. To find the location of each MBTA stop, we had to take the coordinates of where each MBTA route stopped, and match that to a zip code. Furthermore, we compiled each set statistic into one table in MongoDB which could be identified by its zip code. Finally, with all this we were then able to create our analysis of the risk of gentrification in Boston.</p><br>
 
-                    <h3> Analysis Techniques </h3>
+                    <h3 style="color:white"> Analysis Techniques </h3>
 
                     <p>Gentrification is a process that happens over time, so we looked for correlations between factors in each neighborhood and quantify these factors. We performed two analyses - the first was developing a scoring algorithm for gentrification risk, and second was finding how specific statistics correlated in each neighborhood. In order to develop a way to score each neighborhood, we referred to a method used to create a warning system for gentrification in Berkeley, as seen in [1]. This paper identified several positives and negative indicators gentrification. We included some of our in our scoring algorithm which we also thought were relevant. For example, median income, unemployment, and access to public transportation were all used as indicators of Gentrification.</p><br>
 
@@ -59,9 +59,9 @@
 
                     <p>The second analysis we performed was to find multiple interrelated correlations. Specifically, we wanted to see how median income and median rent correlated with each other, and then each of them with percent taking public transportation, unemployment, home occupancy, percent of old home, percent married, and racial makeup. We did this by finding the correlation coefficient between two variables. If that value was near zero, the two variables are likely uncorrelated, and if that value is closer to negative one or one, then those two values are negatively or positively correlated, respectively.</p><br>
 
-                    <h3>Results</h3>
+                    <h3 style="color:white">Results</h3>
                     <p>Figure 1: A table of scores for each neighborhood</p>
-                    <table>
+                    <table style="color:white">
                         <tr><td>Zipcode</td><td>Score</td></tr>
                         <tr><td>02110</td><td>-14.146108925066075</td></tr>
                         <tr><td>02210</td><td>-12.090844969379752</td></tr>
@@ -100,7 +100,7 @@
                     <p>From the above results, we can see that zipcodes 02119 (Roxbury) , 02120 (Roxbury Crossing), and 02121 (Dorchester) are at the highest risk of gentrification, while 02110 (Boston Harbor), 02210 (Children’s Museum area), and 02132 (West Roxbury) are at the least risk according to our scoring method.</p><br>
 
                     <p>Figure 3: A table of correlations we calculated</p>
-                    <table>
+                    <table style="color:white">
                         <tr><td>Correlation</td><td>Correlation Coefficient</td></tr>
                         <tr><td>Median income/median rent</td><td>0.46839512347485085</td></tr>
                         <tr><td>Median income/percent taking public transit</td><td>-0.6454624318082117</td></tr>
@@ -124,10 +124,10 @@
 
                     <p>A few obvious correlations exist - median income and unemployment or median rent and poverty rate, for example. A few variables are also noticeably not correlated, such as the median rent and percent of people spending greater than 50% of their income on rent, or the median rent and percentage of married households. Unfortunately, it’s hard to draw conclusions from this data beyond the raw numbers, as we can’t infer what these correlations (or lack there of) actually mean without more research.</p><br>
 
-                    <h3>Conclusions</h3>
+                    <h3 style="color:white">Conclusions</h3>
                     <p>Our analysis shows that parts of south Boston appear to have the greatest risk of being gentrified. Community leaders should look for solutions in regards to rent control so residents are not displaced. Looking ahead, it’s clear that more research needs to be done on how significantly each of the factors we used affects a neighborhoods gentrification risk so as to render a more accurate scale. Regardless, we believe our analysis provides an imperfect but reasonable picture of how gentrification is occurring in Boston, and hope this research will enable people to act before permanent damage is done.</p><br>
 
-                    <h3>References</h3>
+                    <h3 style="color:white">References</h3>
                     <p>[1] Chapple, Karen. Mapping Susceptibility to Gentrification: The Early Warning Toolkit. UC Berkeley Center for Community Innovation, 2009.</p>
  
        </div>
