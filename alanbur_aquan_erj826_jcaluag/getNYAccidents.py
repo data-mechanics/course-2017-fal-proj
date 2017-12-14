@@ -103,6 +103,6 @@ class getNYAccidents(dml.Algorithm):
                   
         return doc
 
-getNYAccidents.execute()
+# getNYAccidents.execute()
 ## eof
 
