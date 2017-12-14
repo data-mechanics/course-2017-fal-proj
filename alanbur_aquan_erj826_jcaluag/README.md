@@ -7,24 +7,24 @@ jcaluag: jcaluag<br />
 
 Execution Instructions on Terminal:<br />
 Run Mongo server<br />
-    mongod<br />
-    mongo setup.js<br />
+-mongod<br />
+-mongo setup.js<br />
 (in directory alanbur_aquan_erj826_jcaluag)<br />
 Collect the data (If not already in mongo)<br />
-    python getNYAccidents.py<br />
-    python parseNYAccidents.py<br />
+-python getNYAccidents.py<br />
+-python parseNYAccidents.py<br />
 run<br />
-    app.py <br />
+-app.py <br />
 
 File Locations<br />
 Poster: <br />
-    Poster.pdf<br />
+-Poster.pdf<br />
 Report: <br />
-    Report.pdf<br />
+-Report.pdf<br />
 FrontEnd Files: <br />
-    static/style.css<br />
-    templates/index.html<br />
-    templates/results.html<br />
+-static/style.css<br />
+-templates/index.html<br />
+-templates/results.html<br />
 Controller Files:<br />
-    app.py (executable)<br />
-    find_kmeans.py (Calculations and getting data)<br />
+-app.py (executable)<br />
+-find_kmeans.py (Calculations and getting data)<br />
