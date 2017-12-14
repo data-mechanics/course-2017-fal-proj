@@ -5,26 +5,26 @@ aquan6: aquan<br />
 erj826: erj826<br />
 jcaluag: jcaluag<br />
 
-Execution Instructions on Terminal:
-Run Mongo server
-	mongod
-	mongo setup.js
-(in directory alanbur_aquan_erj826_jcaluag)
-Collect the data (If not already in mongo)
+Execution Instructions on Terminal:<br />
+Run Mongo server<br />
+	mongod<br />
+	mongo setup.js<br />
+(in directory alanbur_aquan_erj826_jcaluag)<br />
+Collect the data (If not already in mongo)<br />
 	python getNYAccidents.py<br />
 	python parseNYAccidents.py<br />
-run
-	app.py 
+run<br />
+	app.py <br />
 
-File Locations
-Poster: 
-	Poster.pdf
-Report: 
-	Report.pdf
-FrontEnd Files: 
-	static/style.css
-	templates/index.html
-	templates/results.html
-Controller Files:
-	app.py (executable)
-	find_kmeans.py (Calculations and getting data)
+File Locations<br />
+Poster: <br />
+	Poster.pdf<br />
+Report: <br />
+	Report.pdf<br />
+FrontEnd Files: <br />
+	static/style.css<br />
+	templates/index.html<br />
+	templates/results.html<br />
+Controller Files:<br />
+	app.py (executable)<br />
+	find_kmeans.py (Calculations and getting data)<br />
