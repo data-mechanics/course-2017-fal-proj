@@ -140,4 +140,15 @@ This repository pertains to CS591 - Fall 2017 taught by Andrei lapets.
         - prov (pip install prov)
 ```
 
+## Visualization install:
+```
+    - Node.Js is required to run the webserver for the visualization, You can download
+    the node.js installer at https://nodejs.org/en/
+    - Once node.js is installed navigate to the visualization directory and run the 
+    command "npm install" to restore the dependencies
+    - To run the webserver from this folder you can run ./bin/www.
+    - In order to get the data for this project for the visualization you
+    must run "python<version> execute.py biel_otis to populate mongoDB
+```
+
 #### James Otis and Max Biel (2017)
