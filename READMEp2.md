@@ -250,3 +250,36 @@
     Constraints are also applied from a shapeFile that is limited to the Boston
     Area landmass.
 ```
+
+###### Running Instructions (Visualization):
+```
+    -  In order to run the code:
+        - run mongodb via the "mongod" command (May need SuperUser Permissions)
+        - run "mongo reset.js" and "mongo setup.js"
+        - run "python3 execute.py biel_otis" to execute the code
+        - The code may take up to 10 minutes to run and produce a provenance diagram
+```
+
+###### Requirements:
+```
+    - Multiple Python libraries are required for this project:
+        - geopy (pip install geopy)
+        - shapely (pip install shapely)
+        - sklearn (pip install sklearn)
+        - scipy (pip install scipy)
+        - dml (pip install dml)
+        - prov (pip install prov)
+```
+
+###### Visualization install:
+```
+    - Node.Js is required to run the webserver for the visualization, You can download
+    the node.js installer at https://nodejs.org/en/
+    - Once node.js is installed navigate to the visualization directory and run the 
+    command "npm install" to restore the dependencies
+    - To run the webserver from this folder you can run ./bin/www.
+    - In order to get the data for this project for the visualization you
+    must run "python<version> execute.py biel_otis to populate mongoDB
+```
+
+#### James Otis and Max Biel (2017)
