@@ -16,7 +16,7 @@ a {
   margin: auto;
   margin-left: 8vw;
   margin-top: 5vh;
-  height: 75vh;
+  height: 88vh;
   width: 60vw;
   background: none;
   box-shadow: lightslategrey -4px 2px 10px 5px;
@@ -46,7 +46,7 @@ a.navbar-brand:hover{
   top: 5vh;
   border: 2px solid lightslategray;
   margin-left: 70vw;
-  height: 75vh;
+  height: 88vh;
   width: 28vw;
   background: none;
   box-shadow: #a6d5ec 1px 2px 22px 1px;
@@ -61,16 +61,17 @@ a.navbar-brand:hover{
   margin-top: 4px;
   color: #a6d5ec;
   padding: 2px;
-  font-size: 18px;
+  font-size: 1.4vw;
   line-height: 2vw;
 }
 
 .btn-primary{
-  margin-top: 15px !important;
+  margin-top: 2px !important;
   margin-left: 10px !important;
   color: #5cb3fd !important;
   background-color: darkslategray  !important;
   border: #0275d8 2px solid !important;
+    text-overflow: ellipsis;
 }
 
 .btn-primary:hover{
