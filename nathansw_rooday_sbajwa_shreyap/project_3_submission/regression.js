@@ -96,7 +96,7 @@ $(document).ready(function(){
           coeffTotal += parseFloat(map2._layers[ml].feature.properties.regression);
         }
     });
-    var finalCoeff = (sigmoid(coeffTotal/100) - 0.5) * 2
+    var finalCoeff = Math.round((sigmoid(coeffTotal/100))*100,2)+"%"
     $('#selected').text( selectedFeatureName.join(", ") );
     $('#reliability').text(finalCoeff);
   };
