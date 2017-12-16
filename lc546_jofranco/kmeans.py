@@ -47,7 +47,6 @@ class kmeans(dml.Algorithm):
         r = requests.get('https://data.boston.gov/export/cec/df0/cecdf003-9348-4ddb-94e1-673b63940bb8.json')
         t = r.text.replace("\n],\n", ",\n")
         p = json.loads('{"data":'+t+']}')
-        print("RRRRRRrRRRRRrrrRR")
         #(p['data']))
         latitude = []
         longitude = []
@@ -125,6 +124,15 @@ class kmeans(dml.Algorithm):
         #    plt.savefig("kmeans.png")
         #    print("plot has been created. please look for it within the directory")
         #    print(centers)
+        try:
+            t = np.random.rand(20)
+            plt.scatter(x,y, c=t)
+            plt.xlabel('Latitude')
+            plt.ylabel('Longitude')
+
+
+            plt.savefig("kmeans.png")
+            print("plot has been created. please look for it within the directory")
         #    plt.show()
     #    except ValueError:
     #        print("You have exited out of the plot. Continuing on! :D")
