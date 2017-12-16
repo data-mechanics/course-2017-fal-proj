@@ -14,4 +14,6 @@ python -m flask run
 Then navigate to
 
 http://<flask address>/ml?ci=500&ei=250&eu=55&gdp=1000&hdi=10&pop=100000
+  
+  
 http://<flask address>/stats?ci=500&ei=250&eu=55&gdp=1000&hdi=10&pop=100000
