@@ -1,4 +1,5 @@
 import urllib.request
+import requests
 import json
 import dml
 import prov.model
@@ -20,21 +21,35 @@ class findhubwaysRestaurants(dml.Algorithm):
         '''Find list of restaurants that are near the hubway stations'''
         hubs = repo.lc546_jofranco.hubway
 
+        r = requests.get('https://data.boston.gov'+\
+                   '/export/f1e/137/'+\
+                   'f1e13724-284d-478c-b8bc-ef042aa5b70b.json')
+        t = r.text.replace("\n],\n", ",\n")
+        p = json.loads('{"data":'+t+']}')
+        #print(p)
+        newfile = []
+        pid = 0
+        for i in p["data"]:
+            newfile.append('{ "' +str(pid) + '"'+ ": " + '""' + str(i["Location"]) + '"')
+            pid += 1
+        #print(newfile)
     #    url = 'https://data.cityofboston.gov/resource/fdxy-gydq.json'
     #    url = 'https://data.boston.gov/export/f1e/137/f1e13724-284d-478c-b8bc-ef042aa5b70b.json'
         #response = urllib.request.urlopen(url).read().decode("utf-8")
-        response = open('/Users/Jesus/Desktop/project1/course-2017-fal-proj/lc546_jofranco/fixedpermits.txt').read()
-        #r = json.loads(response)
+        #response = open('/Users/Jesus/Desktop/project1/course-2017-fal-proj/lc546_jofranco/fixedpermits.txt').read()
+        print('{"data":' + str(newfile) + '}')
+        r = json.loads('{"data":' + str(newfile) + '}')
         #print(response)
-        df = pd.read_json(response)
-        print(df)
+        #df = pd.read_json(p['data'])
+        #print(df)
 
-        zip = df['food']
-        zip.columns = ['Location']
-        r = json.loads(zip.to_json(orient='records'))
+        #zip = p
+        #for i in p['data']:
+        #    zip.columns = i['Location']
+        #r = json.loads(zip.to_json(orient='records'))
         foodlocale = list()
 
-        s = json.dumps(r, sort_keys = True, indent = 2)
+        s = json.dumps(newfile, sort_keys = True, indent = 2)
         repo.dropCollection("permitgeodata")
         repo.createCollection("permitgeodata")
         repo["lc546_jofranco.permitgeodata"].ensure_index([("Location", dml.pymongo.GEOSPHERE)])
