@@ -11,6 +11,8 @@ import matplotlib.pyplot as plt
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
 from sklearn.metrics import r2_score
+from sklearn.externals import joblib
+
 
 class statsmodel(dml.Algorithm):
     contributor = 'angelay_maulikjs'
@@ -80,6 +82,10 @@ class statsmodel(dml.Algorithm):
         print('\nR-squared value went up to 0.995. Now adding Energy Intensity.\n')
         model = smf.ols(formula='CO2Emissions ~ Population * EnergyUse * CarbonIntensity * GDPperCapita * HDI * EnergyIntensity', data=df)
         results = model.fit()
+
+        filename = 'angelay_maulikjs/api/statsmodel.sav'
+        joblib.dump(model, open(filename, 'wb'))
+        
         print('\nCO2Emissions vs Population * EnergyUse * CarbonIntensity * GDPperCapita * HDI * EnergyIntensity\n')
         print(results.summary())
         #print(results.params)
@@ -131,6 +137,8 @@ class statsmodel(dml.Algorithm):
         df4 = pd.DataFrame(D4, columns = ['CarbonIntensity', 'CO2Emissions', 'EnergyIntensity', 'EnergyUse', 'GDPperCapita', 'HDI', 'Population'])
         # Testing the model on all 2013 data
         pred = model.fit().predict(df4)
+
+
         R2 = r2_score(df4.CO2Emissions, pred)
         print('\nResults on All 2013 Data\n')
         fig, ax = plt.subplots()
