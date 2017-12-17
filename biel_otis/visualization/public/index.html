@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="main">
+<head>
+    <meta charset="UTF-8">
+    <title>Visualization</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"
+          integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ=="
+          crossorigin=""/>
+    <link rel="stylesheet" href="stylesheets/style.css">
+    <script type="text/javascript" src="javascripts/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="javascripts/angular.min.js"></script>
+    <script type="text/javascript" src="javascripts/tether.min.js"></script>
+    <script type="text/javascript" src="javascripts/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="stylesheets/bootstrap.min.css">
+</head>
+<body ng-controller="mainController">
+<nav class="navbar navbar-inverse bg-inverse">
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="/">&copy; James Otis & Max Biel, 2017</a>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link " href="http://cs-people.bu.edu/lapets/591/">Cs591 Lapets</a>
+            <a class="nav-item nav-link" href="https://github.com/jmbiel/course-2017-fal-proj/tree/master/biel_otis">This Repo</a>
+        </div>
+    </div>
+</nav>
+<div class="visual" id="v1">
+    <div id="mapid"><div class="loader" ng-show="loader"></div></div>
+    <div class="legend">
+        <h3>About This Visualization</h3>
+        <p>Each red dot indicates the location of an individual who qualifies as "obese" due to the Massachusetts standards.
+            This data is pulled daily from data.cityofboston.gov and is rendered on the map to the left. The button below when clicked
+            runs the K-Means algorithm under constraints to place the optimal locations for healthy food stores (Represented by blue points).
+            Feel free to drag the individuals around and run the simulation again! The data will be cleared and reset per each
+            click of the button. You can also enter your address into the search field.  If the address you entered is within the Boston,
+            city limits, we will display some information about your area. Have fun!
+        </p>
+        <button ng-click="calcKMeans()" class="btn btn-primary">Click me to Calculate K-means</button>
+        <div>
+        <input class="input_style" ng-model="address" placeholder="Enter your address">
+        <button class="btn btn-primary" ng-click="plot()">Submit!</button>
+        </div>
+    </div>
+    <div id="content">
+        <p ng-show="stats">{{property}}&nbsp;&nbsp; {{individuals}}&nbsp;&nbsp; {{correlation}}</p>
+        <p ng-show="err">{{errorText}}</p>
+    </div>
+</div>
+</body>
+        <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"
+        integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log=="
+        crossorigin=""></script>
+        <script type="text/javascript" src="javascripts/mainController.js"></script>
+
+
+
+</html>

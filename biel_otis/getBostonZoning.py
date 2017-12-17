@@ -9,7 +9,6 @@ import ssl
 
 
 class getBostonZoning(dml.Algorithm):
-    print('getBostonZoning')
     contributor = 'biel_otis'
     reads = []
     writes = ['biel_otis.BostonZoning']
