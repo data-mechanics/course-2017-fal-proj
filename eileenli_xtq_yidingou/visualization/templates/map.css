@@ -1,0 +1,146 @@
+* { 
+  margin: 0; padding: 0; 
+}
+body {
+  font-family: Helvetica, Arial, Sans-Serif;
+  background: #2c2c2c url(../images/bg.jpg) top center no-repeat; 
+}
+
+p, label { 
+  font-family: Helvetica, serif;
+  font-style: italic;
+  font-size: 18px; 
+  margin: 4px 0;
+} 
+
+
+h2{
+  font-family: 'Montserrat', sans-serif;
+  text-align: center;
+  color: white;
+}
+
+
+#panel{
+  width: 960px;
+  margin: 40px auto;
+  overflow: hidden;
+}
+
+fieldset {
+  width: 280px; 
+  padding: 15px; 
+  float: left; 
+  border: none;
+  margin: 0 10px 0 0; 
+  }
+  fieldset#step_1 { 
+  background: #b2e7ca; 
+  }
+  fieldset#step_2 { 
+    background: #b2d9e7; 
+  }
+  fieldset#step_3 { 
+    background: #e7c7b2; 
+  }
+
+
+#panel select{
+  display: block;
+  font-size: 15px;
+  width: 200px;
+  height: 30px;
+}
+
+
+
+legend { 
+  font-weight: bold; 
+  font-size: 20px; 
+  background: white;
+  -moz-border-radius: 10px; 
+  -webkit-border-radius: 10px;
+  padding: 5px 10px; 
+  letter-spacing: -1px;
+}
+option { 
+  padding: 0 5px; 
+}
+
+svg {
+        width: 50%;
+        height: 50%;
+        float:left;
+        margin-left: 80px;
+        padding: 25px 10px 10px 10px;
+    }
+
+.toolTip {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        position: absolute;
+        display: none;
+        width: auto;
+        height: auto;
+        background: none repeat scroll 0 0 white;
+        border: 0 none;
+        border-radius: 8px 8px 8px 8px;
+        box-shadow: -3px 3px 15px #888888;
+        color: black;
+        font: 12px sans-serif;
+        padding: 5px;
+        text-align: center;
+    }
+
+text {
+        font: 10px sans-serif;
+        color: white;
+    }
+
+text.value {
+        font-size: 120%;
+        fill: white;
+    }
+
+.axisHorizontal path{
+        fill: none;
+    }
+
+.axisHorizontal .tick line {
+        stroke-width: 1;
+        stroke: rgba(0, 0, 0, 0.2);
+    }
+
+.bar {
+        fill: steelblue;
+        fill-opacity: .9;
+    }
+
+#map {
+  height: 650px;
+  width: 550px;
+  display: inline-block;
+  position: relative;
+  margin-right: 80px;
+}
+
+
+
+
+#sbtn{
+  padding-left: 0;
+  margin-left: 32%;
+  margin-top: 0px;
+  height:40px;
+  width: 350px;
+  color: white;
+  background: #003366;
+  font-size: 16px;
+}
+#sbtn:hover{
+  cursor: pointer;
+}
+
+#sbtn:focus{
+  outline: none;
+}
+

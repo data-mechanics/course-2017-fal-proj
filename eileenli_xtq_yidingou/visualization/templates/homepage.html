@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<title>Boston University Location Analysis</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<style>
+body{background: #2c2c2c url(../images/bg.jpg) top center no-repeat;}
+body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+b {color:white;}
+b1 {color:black;}
+</style>
+<body class="background">
+
+
+<div class="w3-content" style="max-width:1400px">
+
+<!-- Header -->
+<header class="w3-container w3-center w3-padding-32"> 
+  <h1><b>Boston Colleges Location Rating and Analysis
+</b></h1>
+  <p><b>Lin Li, Yiding Ou, Tianqi Xu</b></p>
+</header>
+
+<!-- Grid -->
+<div class="w3-row">
+
+<!-- Blog entries -->
+<div class="w3-col l8 s12">
+  <!-- Blog entry -->
+  <div class="w3-card-4 w3-margin" style="background:#b2e7ca">
+    <img src="/w3images/woods.jpg" style="width:100%">
+    <div class="w3-container">
+      <h3><b1>Custom Ranking of Unversities</b1></h3>
+
+    </div>
+
+    <div class="w3-container">
+      <p>You can custimize your preferene by changing the score mechanism : choose weights from 1 to 3 for each component. Then you will see the top 50 universities on map on the left side and also in the list on the right side. </p>
+      <div class="w3-row">
+        <div class="w3-col m8 s12">
+          <p><button onclick = "location.href = 'map.html';" class = "w3-button w3-padding-large w3-white w3-border"><b1>Custom Ranking »</b1></button></p>
+        </div>
+        <div class="w3-col m4 w3-hide-small">
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr>
+
+  <!-- Blog entry -->
+  <div class="w3-card-4 w3-margin" style="background:#b2d9e7">
+  <img src="/w3images/bridge.jpg" style="width:100%">
+    <div class="w3-container">
+      <h3><b1>Charts Visualizations</b1></h3>
+    </div>
+
+    <div class="w3-container">
+      <p>We use e-chart library to show users multiple ways of visualization to compare the dataset of those colleges, including: bubble chart(safety rating vs convenience rating among schools) and bar chart (top 10 colleges' comparison). </p>
+      <div class="w3-row">
+        <div class="w3-col m8 s12">
+          <p><button onclick = "location.href = 'bubble.html';" class="w3-button w3-padding-large w3-white w3-border"><b1>Bubble Chart »</b1></button>
+          <button onclick = "location.href = 'bar.html';" class="w3-button w3-padding-large w3-white w3-border"><b1>Bar Chart »</b1></button></p>
+        </div>
+        <div class="w3-col m4 w3-hide-small">
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- END BLOG ENTRIES -->
+</div>
+
+<!-- Introduction menu -->
+<div class="w3-col l4">
+  <!-- About Card -->
+  <div class="w3-card w3-margin w3-margin-top">
+    <div class="w3-container" style="background:#e7c7b2">
+      <h4><b1>Introduction</b1></h4>
+      <p>We are exploring the rating of living around the schools in Boston by calculating the safety rate, the comfort rate, and the convenience rate. Another objective of us is to use echart to visualize the data in barchart and bubble chart for the user to better compare the difference between datas. Our safety rate will incluede data from crime, hospitals and crash. Our comfort rate will include data from entertainment and restaurants. Our convenience rate will include data from crash, hubway, traffic signals and MBTA.</p>
+    </div>
+  </div><hr>
+  
+  <!-- Posts -->
+  <div class="w3-card w3-margin">
+    <div class="w3-container w3-padding" style="background:#edb1df">
+      <h4>Factors included</h4>
+    </div>
+    <ul class="w3-ul w3-hoverable" style="background:#edbde2">
+      <li class="w3-padding-16">
+        <span class="w3-large">Convinience Rating Factor</span><br>
+        <span>MBTA, Crash, Jam, Hubway</span>
+      </li>
+      <li class="w3-padding-16">
+        <span class="w3-large">Safety Rating Factor</span><br>
+        <span>Crime, Hospital, Crash</span>
+      </li> 
+      <li class="w3-padding-16">
+        <span class="w3-large">Comfort Rating Factor</span><br>
+        <span>Entertainment, Restaurant</span>
+      </li>   
+    </ul>
+  </div>
+  <hr> 
+ 
+  
+<!-- END Introduction Menu -->
+</div>
+
+<!-- END GRID -->
+</div><br>
+
+<!-- END w3-content -->
+</div>
+
+
+</body>
+</html>

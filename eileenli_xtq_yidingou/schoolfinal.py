@@ -8,8 +8,6 @@ import math
 from collections import defaultdict
 
 
-
-
 class schoolfinal(dml.Algorithm):
     contributor = 'eileenli_xtq_yidingou'
     reads = ['eileenli_xtq_yidingou.schools', 'eileenli_xtq_yidingou.comfort', 'eileenli_xtq_yidingou.safety', 'eileenli_xtq_yidingou.traffic']
@@ -111,9 +109,9 @@ class schoolfinal(dml.Algorithm):
         SF = repo['eileenli_xtq_yidingou.safety'].find()
         TR = repo['eileenli_xtq_yidingou.traffic'].find()
 
-
         final = []
         score = []
+        ukubuka = []
         school_hospital = []
 
         for i in SC:
@@ -195,53 +193,78 @@ class schoolfinal(dml.Algorithm):
 
             final.append({
                 "school": i["properties"]["Name"],
-                "properties": [
-                {"coordinates": i["geometry"]["coordinates"]},
-                {"safety": safety},
-                {"comfort": comfort},
-                {"traffic": traffic}]
-                })
+                "coordinates": i["geometry"]["coordinates"],
+                "safety": safety,
+                "comfort": comfort,
+                "traffic": traffic
+            })
+
+            safetyIndex = (hospital / 2 + (10 - crime / 65) + (10 - crash / 120)) / 3
+            comfortIndex = (restaurant / 45 + entertainment / 120) / 2
+            trafficIndex = (MBTA / 10 + hubway / 11 + (10 - signal / 56) + (10 - crash / 120)) / 4
 
             score.append({
                 "school": i["properties"]["Name"],
-                "properties": [
-                {"hospital": hospital},
-                {"crime": crime},
-                {"crash": crash},
-                {"restaurant": restaurant},
-                {"entertainment": entertainment},
-                {"hubway": hubway},
-                {"traffic signal": signal},
-                {"MBTA": MBTA},
-                {"safety": (1000 + hospital * 100 - crime - crash) / 100},
-                {"comfort": (restaurant + entertainment) / 100},
-                {"traffic": (1500 + MBTA + hubway - signal - crash * 2) / 100}
-                ]
+                "coordinates": i["geometry"]["coordinates"],
+                "hospital": hospital,
+                "crime": crime,
+                "crash": crash,
+                "restaurant": restaurant,
+                "entertainment": entertainment,
+                "hubway": hubway,
+                "traffic signal": signal,
+                "MBTA": MBTA,
+                "safety": safetyIndex,
+                "comfort": comfortIndex,
+                "traffic": trafficIndex,
+                "total": safetyIndex + comfortIndex + trafficIndex
                 })
 
-        two_school_hospital = schoolfinal.select(schoolfinal.product(school_hospital, school_hospital), lambda t: t[0][0] != t[1][0])
+            # ukubuka.append({
+            #     "school": i["properties"]["Name"],
+            #     "safety": [
+            #         {"hospital": hospital / 2},
+            #         {"crime": 10 - crime / 65,},
+            #         {"crash": 10 - crash / 120}],
+            #     "comfort": [
+            #         {"restaurant": restaurant / 45},
+            #         {"entertainment": entertainment / 120}],
+            #     "traffic": [
+            #         {"MBTA": MBTA / 10},
+            #         {"hubway": hubway / 11},
+            #         {"signal": 10 - signal / 56},
+            #         {"crash": 10 - crash / 120}]
+            #     })
 
-        for i in two_school_hospital:
-            two_school_hospital.remove((i[1], i[0]))
+        # with open ('schoolscore.json', 'w') as outfile:
+        #     json.dump(score, outfile)
 
-        sum_num = schoolfinal.project(two_school_hospital, lambda t: ((t[0][0], t[0][1], t[1][0], t[1][1], t[0][2] + t[1][2])))
+        # with open ('schoolfinal.json', 'w') as outfile:
+        #     json.dump(final, outfile)
 
-        target = ()
-        sum_num = schoolfinal.select(sum_num, lambda t: t[4] < 10 and schoolfinal.distance(t[1], t[3]) < 4)
+        # with open ('ukubuka.json', 'w') as outfile:
+        #     json.dump(ukubuka, outfile)
+
+        # two_school_hospital = schoolfinal.select(schoolfinal.product(school_hospital, school_hospital), lambda t: t[0][0] != t[1][0])
+
+        # for i in two_school_hospital:
+        #     two_school_hospital.remove((i[1], i[0]))
+
+        # sum_num = schoolfinal.project(two_school_hospital, lambda t: ((t[0][0], t[0][1], t[1][0], t[1][1], t[0][2] + t[1][2])))
+
+        # target = ()
+        # sum_num = schoolfinal.select(sum_num, lambda t: t[4] < 10 and schoolfinal.distance(t[1], t[3]) < 4)
 
 
-        if len(sum_num) == 0:
-            print("there is no place that can build hospital and benefits 2 or more schools that need hospital")
-        else:   
-            min_num = 10000
-            for i in sum_num:
-                if i[4] < min_num:
-                    min_num = i[4]
-                    target = i
-            location = [(target[1][0] + target[3][0]) / 2, (target[1][1] + target[3][1]) / 2]
-            print("The best place to build a hospital next is between " + target[0] + " and " + target[2] + " at " + str(location))
-            
-
+        # if len(sum_num) == 0:
+        #     print("there is no place that can build hospital and benefits 2 or more schools that need hospital")
+        # else:   
+        #     min_num = 10000
+        #     for i in sum_num:
+        #         if i[4] < min_num:
+        #             min_num = i[4]
+        #             target = i
+        #     location = [(target[1][0] + target[3][0]) / 2, (target[1][1] + target[3][1]) / 2]
 
 
 
