@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>
+    Polling Location Optimization with Mass Transit
+  </title>
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ==" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js" integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log==" crossorigin=""></script>
+  <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+
+<body>
+  <!-- Navbar (sit on top) -->
+  <div class="w3-top">
+    <div class="w3-bar w3-white w3-wide w3-padding w3-card">
+      <a href="http://127.0.0.1:5000/" class="w3-bar-item w3-button"><b>CS</b>591</a>
+    </div>
+  </div>
+  <!-- Contact Section -->
+  <div class="w3-container w3-padding-32" id="contact">
+    <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16">Please choose one of options.</h3>
+    <form method="post" action="map">
+      <select name="dropdown">
+        <option value="Original">Original Polling Location</option>
+      	<option value="MBTA">Optimized by MBTA</option>
+      	<option value="BUS">Optimized by bus stop</option>
+      	<option value="Transit">Optimized by public transportation</option>
+      </select>
+      <select name="ward">
+        <option value = "All">
+          All
+        </option>
+        <option value = "1">
+          Ward 1
+        </option>
+        <option value = "2">
+          Ward 2
+        </option>
+        <option value = "3">
+          Ward 3
+        </option>
+        <option value = "4">
+          Ward 4
+        </option>
+        <option value = "5">
+          Ward 5
+        </option>
+        <option value = "6">
+          Ward 6
+        </option>
+        <option value = "7">
+          Ward 7
+        </option>
+        <option value = "8">
+          Ward 8
+        </option>
+        <option value = "9">
+          Ward 9
+        </option>
+        <option value = "10">
+          Ward 10
+        </option>
+        <option value = "11">
+          Ward 11
+        </option>
+        <option value = "12">
+          Ward 12
+        </option>
+        <option value = "13">
+          Ward 13
+        </option>
+        <option value = "14">
+          Ward 14
+        </option>
+        <option value = "15">
+          Ward 15
+        </option>
+        <option value = "16">
+          Ward 16
+        </option>
+        <option value = "17">
+          Ward 17
+        </option>
+        <option value = "18">
+          Ward 18
+        </option>
+        <option value = "19">
+          Ward 19
+        </option>
+        <option value = "20">
+          Ward 20
+        </option>
+        <option value = "21">
+          Ward 21
+        </option>
+        <option value = "22">
+          Ward 22
+        </option>
+      </select>
+
+      <button class="w3-button w3-black w3-section" type="submit">
+        <i class="fa fa-paper-plane"></i> SUBMIT
+      </button>
+      <a href="http://127.0.0.1:5000/score" class="w3-btn w3-black">Scoring Table</a>
+    </form>
+  </div>
+  <!-- End page content -->
+
+  <!-- leaflet map -->
+  <div id="map" class="w3-grayscale" style="width:50%;height:750px;"></div>
+  <script>
+    var map = L.map('map', {
+      center: [42.3250, -71.0800],
+      zoom: 12
+    });
+    // var map = L.map('map').setView([42.3601, -71.0589], 13);
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+      attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+      maxZoom: 18,
+      id: 'mapbox.streets',
+      accessToken: 'your.mapbox.access.token'
+    }).addTo(map);
+  </script>
+
+  <!-- Footer -->
+  <footer class="w3-center w3-black w3-padding-16">
+    <p>CS591 Project </p>
+  </footer>
+
+</body>
+
+
+</html>
