@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Home - Signs</title>
+    <style>
+        table#authors {
+            display: inline-block
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Optimal Placements of Speed Feedback Signs Throughout Boston</h1>
+
+    <h3>Enter parameters and click submit to see the resulting map</h3>
+
+    <form action="{{url_for('getmap')}}" method='post' target="mapFrame">
+
+        <table cellpadding='4px' style="max-width:1000px">
+            <tr>
+                <td>Mean Skew</td>
+                <td><input type="range" name="Mean Skew" id="msInputID" min=".5" max="2" step=".1" value="1.0" oninput="msOutputID.value = msInputID.value"></td>
+                <td> <output name="msOutput" id="msOutputID">1</output></td>
+                <td bgcolor="#6699ff">We filter intersections by being below the mean distance to closest accident cluster or not, so skewing this value allows a greater or smaller number of intersections to be considered as candidates. Above 1 equates to fewer candidates,
+                    below 1 equates to more candidates.</td>
+            </tr>
+
+            <tr>
+                <td>Radius</td>
+                <td><input type="range" name="Radius" id="rInputID" min=".5" max="4.0" step=".25" value="2.0" oninput="rOutputID.value = rInputID.value"></td>
+                <td><output name="rOutput" id="rOutputID">2.0</output></td>
+                <td>The radius in miles from the Boston Common where we will consider placing speed feedback signs.</td>
+            </tr>
+
+            <tr>
+                <td>Cluster Divisors</td>
+                <td><input type="range" name="Cluster Divisors" id="cdInputID" min="10" max="20" step="1" value="15" oninput="cdOutputID.value = cdInputID.value"></td>
+                <td><output name="cdOutput" id="cdOutputID">15</output></td>
+                <td bgcolor="#6699ff">When clustering accidents, the cluster count is determined by dividing the total number of accidents by this value.</td>
+            </tr>
+
+            <tr>
+                <td>Sign Count</td>
+                <td><input type="range" name="Sign Count" id=scInputID min="5" max="50" step="5" value="30" oninput="scOutputID.value = scInputID.value"></td>
+                <td><output name="scOutput" id="scOutputID">30</output></td>
+                <td>The number of speed feedback signs to be placed by the algorith. Note: not all centroids will be able to be mapped to candidate intersections, resulting in a sign placement, if the buffer size is too large.</td>
+            </tr>
+
+            <tr>
+                <td>Buffer Size</td>
+                <td><input type="range" name="Buffer Size" id="bsInputID" min=".1" max="1" step=".1" value=".5" oninput="bsOutputID.value = bsInputID.value"></td>
+                <td><output name="bsOutput" id="bsOutputID">.5</output></td>
+                <td bgcolor="#6699ff">The radius around a placed speed feedback sign in which another speed feedback sign cannot be placed.</td>
+            </tr>
+        </table>
+
+        <input type="submit">
+        <input type="reset">
+
+
+    </form>
+
+    <p>Requests will take about 90 seconds on average for a never-before-seen set of parameters, but seen requests will be returned in approximately 10 seconds.<br/> Invalid responses from our datasets may require individual scripts to repeat, taking additional
+        time. </p>
+
+    <iframe name="mapFrame" id="mapFrame" style="border:2px light-blue;" src="{{url_for('placeholder')}}" height='500px' width='100%'></iframe>
+
+    <table style='font-size: 20px' id="authors">
+        <th>Team</th>
+        <tr>
+            <td>Adriana D'Souza</td>
+        </tr>
+        <tr>
+            <td>Brian Roach</td>
+        </tr>
+        <tr>
+            <td>Jessica McAloon</td>
+        </tr>
+        <tr>
+            <td>Monica Chiu</td>
+        </tr>
+    </table>
+
+    <img src='https://www.boston.gov/sites/default/files/speed-limit-3.jpg' height='140' width='auto'>
+    <img src="http://www.cs.bu.edu/lib/logo/csdeptlogo0.gif" height='140' width='auto'>
+
+    <p>Boston University CS591 - Data Mechanics for Pervasive Systems and Urban Applications</p>
+    <a href="https://github.com/jmcaloon/course-2017-fal-proj/tree/master/adsouza_bmroach_mcaloonj_mcsmocha">Source</a>
+
+</body>
+
+</html>

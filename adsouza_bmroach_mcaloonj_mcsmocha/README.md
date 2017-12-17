@@ -31,7 +31,6 @@ An optimal value for *a* is one that helps in minimizing the distance of a sign 
 
 #### Technical Details
 * Each unique portion of our process is its own extension of the dml library's algorithm class, and intermediate data is stored using MongoDB.
-* --trial flag decreases radius of possible intersections for placement
 
 ## Statistical Findings
 There were 23,200 total accidents in our accident dataset. According to the graph shown below, the value of *a* is one that minimizes the average overall distance, which is *a* = 212, or *c* = 110. The average distances of signs to other triggers is also shown on the graph to show the overall average's relation to the triggers: the average hospital distances increases the average slightly, but the similarities of the other three triggers allow the overall average to be an accurate measure of the overall distances of the signs. As a result, 212 clusters to cluster accident hotspots ends up being an optimal value of *a*.
@@ -44,9 +43,6 @@ There were 23,200 total accidents in our accident dataset. According to the grap
 * Street Intersections (Boston Open Data - opendata.arcgis.com)
 * Open Spaces (Boston Open Data - opendata.arcgis.com)
 * Schools (boston.opendatasoft.com)
-
-## Known issue
-It appears that there's an issue with one of our resources that gives us an http error when we run the project. This error did not exist when we submitted our project. For some reason, we can't access the open_spaces resource on the first try. If you get the error when running our project, please try running it again a couple of times, because we've found that the error goes away after running it 2-4 times. 
 
 ## Scripts
 * *fetch_accidents.py* 
@@ -66,19 +62,27 @@ It appears that there's an issue with one of our resources that gives us an http
 * *make_graph.py* - Plots the determined locations for speed feedback sign placements.
 
 $$ - denotes a script with variable parameters for experimental outputs
-
-
-## Notes
-* No Authentication for Datasets
-* No Authentication for Transformations
+## Usage
+* To run the project, run server.py and head to localhost:5000.
+<br/><br/>
+* For deployment on a remote server, we use [Gunicorn](http://gunicorn.org).
+<br/><br/>
+* This set of scripts is no longer designed to be run via execute in the parent directory. To enable this functionality, one would need to remove the logic.py and server.py files. Instead, we modified execute and made it functional in logic.py so that our web server, server.py, can run our entire algorithm with variable inputs. Additionally, Mongod must still be running, as it would be for the Part II of the project. 
+<br/><br/>
+* No authentication necessary for accessing datasets or executing transformations.
+<br/><br/>
 * The resource libspacialindex is required to run this set of scripts. On macOS, it can be installed with Homebrew: brew install spatialindex. 
 
 ### Python modules in use not typically included in standard Python distributions 
 * dml
+* flask
 * geojson
+* geoleaflet
 * geoql
+* matplotlib
 * numpy
 * pandas
+* protoql
 * prov
 * scipy
 * sklearn 
@@ -92,3 +96,6 @@ conda env create -f environment.yml
 * Brian Roach ................. bmroach@bu.edu
 * Jessica McAloon ......... mcaloonj@bu.edu
 * Monica Chiu ................ mcsmocha@bu.edu
+
+### The Web Interface:
+<img src="web_interface.png">
