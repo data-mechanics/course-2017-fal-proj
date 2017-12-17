@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" >
+    <head>
+        <meta charset="utf-8" />
+        <title>corrfinder</title>
+        <link href="static/layout.css" rel="stylesheet" type="text/css" />
+        <link href="static/menu.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+        <header>
+            <h2>CS591 Gentrification Ben G, Ray K, Ned G</h2>
+            <a href="https://github.com/rekfish/course-2017-fal-proj/tree/master/raykatz_nedg_gaudiosi" class="stuts">Link to the repo on<span>Github</span></a>
+        </header>
+       <div class="container">
+
+
+            <ul id="nav">
+                <li><a href="/">Home</a></li>
+                <li><a class="hsubs" href="/">StatTrack</a>
+                    <ul class="subs">
+                        <li><a href="{{url_for ('stattrack',zip="02129")}}">Downtown&Charlestown</a></li>
+                        <li><a href="{{url_for ('stattrack',zip="02128")}}">East Boston</a></li>
+                        <li><a href="{{url_for ('stattrack',zip="02119")}}">Roxbury</a></li>
+                        <li><a href="{{url_for ('stattrack',zip="02126")}}">Mattapan</a></li>
+                        <li><a href="{{url_for ('stattrack',zip="02127")}}">South Boston</a></li>
+                        <li><a href="{{url_for ('stattrack',zip="02121")}}">Dorchester</a></li>
+                        <li><a href="{{url_for ('stattrack',zip="02118")}}">South End</a></li>
+                        <li><a href="{{url_for ('stattrack',zip="02134")}}">Brighton/Allston</a></li>
+                        <li><a href="{{url_for ('stattrack',zip="02132")}}">West Roxbury</a></li>
+                        <li><a href="{{url_for ('stattrack',zip="02130")}}">Jamaica Plain</a></li>
+                        <li><a href="{{url_for ('stattrack',zip="02136")}}">Hyde Park</a></li>
+                    </ul>
+                </li>
+                <li><a href="/map">LiveMap</a></li>
+                <li><a href="/corrfinder">Correlation Finder</a></li>
+                <li><a href="/">Back</a></li>
+                <div id="lavalamp"></div>
+            </ul>
+            <style>
+                li{color: aliceblue}
+                label{color: aliceblue}
+                p {
+                        color: aliceblue
+                }
+            </style>
+            <p>See how variables correlate differently depending on what zipcode you choose! Check the boxes you wish to see and press submit.</p>
+        <form method="post" action="{{ url_for('corrfinder') }}"> 
+            {% for zip in zipcodes %}
+            
+            <label for="chosen">{{zip}}</label>
+            <input name="chosen" type="checkbox" value="{{zip}}"> <br>
+            
+            {% endfor %}
+            <input type="submit" value="Submit">
+        </form>
+
+        {% if correlations %}
+        <ul>
+            {% for corr in correlations %}
+            <li>{{ corr[0] }}: {{ corr[1] }} </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        
+       </div>        
+    </body>
+</html>
