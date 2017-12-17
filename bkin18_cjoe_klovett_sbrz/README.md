@@ -1,5 +1,8 @@
 ## Justification
-Boston is a city notorious for extreme winter weather. With snowstorms potentially causing problems ranging from minor inconveniences like traffic backup to more serious concerns like roads to hospitals being blocked, it's important to clear snow from roads as efficiently as possible. To assist in efficient snow removal efforts, we classify the effectiveness of plowing a particular road in two ways: "road priority" and "connections". Road priority gauges how much plowing a particular road would benefit traversal throughout the city. At this stage of the project we are gauging this based on emergency snow routes. We will define a "high priority set" as a subset of Boston's emergency snow routes in which all other streets have access to at least one emergency route. We optimize this by finding the high priority set with the fewest emergency routes possible. "Connections" gauges how plowing a particular road would benefit access to nearby buildings of importance, and is optimized via a run of the K-means algorithm, wherein clusters to be closed in on by K-means are defined by the coordinates of these buildings of importance. We then perform analysis of the K-means result to return the distance to the nearest centroid for each point of importance. The results of this optimization can be viewed in the "closest_buildings_to_centroids" collection.
+Boston is a city notorious for extreme winter weather. With snowstorms potentially causing problems ranging from minor inconveniences like traffic backup to more serious concerns like roads to hospitals being blocked, it's important to clear snow from roads as efficiently as possible. To assist in efficient snow removal efforts, we classify the effectiveness of plowing a particular road in two ways: "road priority" and "connections". Road priority gauges how much plowing a particular road would benefit traversal throughout the city. At this stage of the project we are gauging this based on emergency snow routes. We will define a "high priority set" as a subset of Boston's emergency snow routes in which all other streets have access to at least one emergency route. We optimize this by finding the high priority set with the fewest emergency routes possible. "Connections" gauges how plowing a particular road would benefit access to nearby buildings of importance, and is optimized via a run of the K-means algorithm, wherein clusters to be closed in on by K-means are defined by the coordinates of these buildings of importance. We then perform analysis of the K-means result to return the distance to the nearest centroid for each point of importance.
+In our visualization, the K-means result is displayed alongside the constraint satisfaction result. Roads to be prioritized by the city to plow first, are those with the smallest distance between them, and the nearest centroid.
+
+Our report is located within the "presentation" subdirectory.
 
 ## Requirements
 * Our code was designed and tested to run with Python 3.6
@@ -8,6 +11,7 @@ Boston is a city notorious for extreme winter weather. With snowstorms potential
     * scipy
     * sklearn
     * z3-solver
+    * Flask
 
 To install the z3 library properly please visit the github page and follow the instructions for python installation.
 
@@ -15,10 +19,18 @@ github link:
 
 https://github.com/Z3Prover/z3
 
+Everything else should be included with python's standard libraries.
+
+
 ## Notes and Running
 * Within the repository there is a folder entitled "extra_files". The files in this directory do not, and should not, run upon execution. They are files which are not used in the context of the current project, but may prove useful in project 3.
-* No API keys or login credentials are required.
-To run:
+* A Google Maps API key is required. One call will be made to generate a map. This key is pulled from an auth.json file into server.py using the indices ```['services']['googleportal']['key']```. Please generate a free key from the link below, and create an auth.json file in the appropriate format described above. Google Maps' free API keys allow for 2,500 calls per day.
+
+Google Maps api keys can be generated here:
+
+https://developers.google.com/maps/documentation/javascript/get-api-key
+
+* To run:
 
 ```
 mongod --dbpath "<DATABASE PATH HERE>"
@@ -28,14 +40,25 @@ mongod --dbpath "<DATABASE PATH HERE>"
 mongo repo -u bkin18_cjoe_klovett_sbrz -p bkin18_cjoe_klovett_sbrz --authenticationDatabase repo
 ```
 
+* In the base directory "course-2017-fal-proj",
 For trial mode:
 ```
 python3 execute.py bkin18_cjoe_klovett_sbrz --trial
 ```
-Else:
+* Else:
 ```
 python3 execute.py bkin18_cjoe_klovett_sbrz
 ```
+
+* cd into the "visualization/" directory.
+```
+python server.py
+```
+
+Enter in a number of means to be used as a value for k in the k-means algorithm. Our implementation allows for 1-21 means.
+Enter in a number of routes to be used as the number of routes returned by the z3-solver. This problem is satisfiable between 112 and 144 routes.
+If either of these parameters are not met, they are set to their defaults, 1 mean and 112 routes.
+Click "submit."
 
 # course-2017-fal-proj
 Joint repository for the collection of student course projects in the Fall 2017 iteration of the Data Mechanics course at Boston University.

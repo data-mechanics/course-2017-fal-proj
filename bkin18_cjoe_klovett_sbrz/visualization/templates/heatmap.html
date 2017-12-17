@@ -1,0 +1,190 @@
+<html>
+	<head>
+		<title>Heat Map</title>
+        <style>
+            #map {
+                height: 100%;
+            }
+
+            html, body {
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            #buttons {
+                position: absolute;
+                text-align: center;
+                z-index: 5;
+                top: 45px;
+                left: 1%;
+                background-color: #fff;
+            }
+        </style>
+	</head>
+	<body>
+		<div id="map">
+            <script src="https://maps.googleapis.com/maps/api/js?key={{key}}&libraries=visualization,places"></script>
+
+	    	<script>
+                routes = {{routesData}}
+                kMeansData = {{kMeansData}}
+                placeId = {{placeId}}
+
+                test = []
+
+
+                // Initializes all data for our map
+                initMap();
+                function initMap() {
+                    let map = new google.maps.Map(document.getElementById('map'), {
+                        zoom: 15,
+                        center: {lat: 42.3601, lng: -71.0589},
+                        mapTypeId: 'roadmap'
+                    });
+
+                    let heatmap = new google.maps.visualization.HeatmapLayer({
+                        data: createKMeans(),
+                        map: map
+                    });
+
+                    addClosestRoads(map, plotRoadPoints);
+
+                    generateRoads(map, createRoads, setRoads);
+
+                    initHeatMap(heatmap);
+                }
+
+
+                // checks distance between all roads and kmeans
+                // plots the cloest road to each kmean
+                function addClosestRoads(map, callback){
+                    let cloesestRoads = [];
+                    let minInfo = [];
+                    let dist = 0;
+                    let minRoad = Number.MAX_VALUE;
+
+                    for (var i = 0; i < kMeansData.length; i++){
+                        for (var j = 0; j < placeId.length; j++){
+                            dist = findDistance(kMeansData[i], placeId[j][0]);
+                            if (dist < minRoad){
+                                minRoad = dist;
+                                minInfo = placeId[j]
+                            }        
+                        }
+                        cloesestRoads.push(minInfo);
+                        minInfo = []
+                        minRoad = Number.MAX_VALUE;
+                    }
+
+                    callback(map, cloesestRoads);
+                }
+
+                // Takes input array of road coordinates and adds them to our map
+                function plotRoadPoints(map, roads){
+                    for (var i = 0; i < roads.length; i++){
+                        let coordinate = {
+                            lat: roads[i][0][0],
+                            lng: roads[i][0][1]
+                        }
+
+                        var result = findClosestCentroid(roads[i][0][0], roads[i][0][1]);
+
+                        new google.maps.Marker({
+                            map: map,
+                            label:  "(" + String(result) + ")",
+                            place: {
+                                placeId: roads[i][1][0],
+                                location: coordinate 
+                            }
+                        });                    
+                    }
+                }
+
+                // Simple distance formula for two coordinates on our map
+                function findDistance(point1, point2) {
+                    var distance = Math.sqrt(Math.pow((point1[0] - point2[0]), 2) 
+                        + Math.pow((point1[1] - point2[1]), 2))
+
+                    return distance
+                }
+
+                // Finds the coordinates of the centroid nearest to the current point.
+                function findClosestCentroid(lat1, lon1) {
+                    var min = Number.MAX_SAFE_INTEGER;
+                    var centroids = kMeansData;
+    
+                    for (var i = 0; i < centroids.length; i++) {
+                        var nextDist = findDistance([lat1, lon1], [centroids[i][0], centroids[i][1]]);
+                        if (nextDist < min) {
+                            min = nextDist;
+                        }
+                    }
+                    return min;
+                }
+                
+
+                // First, creates polyLines for our routes @createRoads()
+                // Next, adds the roads to our map @drawRoads()
+                function generateRoads(map, callback1, callback2){
+                    callback2(map, callback1(map));
+                }
+
+
+                // Takes our inut road coordinates and converts them into polylines
+                function createRoads() {
+                    let roads = []
+                    for (var i = 0; i < routes.length; i++) {
+                        for (var j = 0; j < routes[i].length; j++) {
+                        roads.push(new google.maps.Polyline({
+                          path: routes[i][j],
+                          strokeColor: '#FF0000',
+                          strokeOpacity: 25.0,
+                          strokeWeight: 5}));
+                        }
+                    }
+                    return roads;
+                }
+
+
+                // Takes polylines and adds them to our map
+                function setRoads(map, road_objects){
+                    for (var i = 0; i < road_objects.length; i++) {
+                        road_objects[i].setMap(map);
+                    }
+                }
+
+
+                // Takes input kmeans coordinates and converts them into a Google
+                // Maps readable form 
+                function createKMeans(){
+                    var centroidObjects = []
+
+                    for (var i = 0; i < kMeansData.length; i++){
+                        centroidObjects.push(new google.maps.LatLng(kMeansData[i][0],kMeansData[i][1]));
+                    }
+
+                    return centroidObjects;
+                }
+
+                // Settings for our heatmap
+                function initHeatMap(heatmap) {
+                    heatmap.set('radius', 200);
+                    var gradient = [
+                        'rgba(0, 255, 255, 0)',
+                        'rgba(15, 235, 235, 1)',
+                        'rgba(55, 205, 205, 1)',
+                        'rgba(95, 185, 205, 1)',
+                        'rgba(215, 215, 235, 1)',
+                        'rgba(195, 195, 215, 1)',
+                        'rgba(185, 185, 205, 1)',
+                        'rgba(125, 125, 135, 1)'
+                    ]
+
+                    heatmap.set('gradient',gradient);
+                }
+
+            </script>
+		</div>
+	</body>
+</html>
