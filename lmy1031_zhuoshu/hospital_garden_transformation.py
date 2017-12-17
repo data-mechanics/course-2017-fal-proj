@@ -44,7 +44,7 @@ class hospital_garden_transformation(dml.Algorithm):
         result_garden = dict(Counter(zipcode_garden))
         result_hospital = dict(Counter(zipcode_hospital))
         result={}
-        #print(result_garden)
+        print(result_hospital)
         #find the number of hospitals and gardens
         for key in (result_garden.keys()):
             if key in result_hospital:

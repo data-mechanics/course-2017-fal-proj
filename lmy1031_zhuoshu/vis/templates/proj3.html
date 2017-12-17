@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      #map {
+        width: 100%;
+        height: 400px;
+        background-color: grey;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>location for new hospital</h3>
+    <div id="map"></div>
+    <div id="show"></div>
+
+    {% if message%}
+    <meta id="my-data" data-name="{{message}}">{{message}}</meta>
+
+    {% endif %}
+
+
+    <script>
+      function initMap() {
+
+
+        var a="{{message}}";
+
+        a = a.split('[').join('')
+        a = a.split(']').join('')
+        a = a.split(' ').join('')
+        a = a.split(',')
+        a=Object.values(a);
+        console.log(typeof(a));
+        var list=[]
+        for(i=0;i<a.length;i++){
+          list[i]=parseFloat(a[i])
+        }
+        console.log(list);
+        var infowindow = new google.maps.InfoWindow();
+        var uluru = {lat: 42.3, lng: -71};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 10,
+          center: uluru
+        });
+        for (i=0;i<list.length;i++){
+          if (i%2==0){
+            var la=list[i]
+          }
+          else {
+            var lo=list[i]
+            var location={lat:la, lng:lo}
+            var marker = new google.maps.Marker({
+              position: location,
+              map: map
+            });
+            marker.addListener(map, "click", function (e) {
+              infowindow.setContent('<div>'+'llll'+'</div>');
+              infowindow.open(map, marker);
+
+    //lat and lng is available in e object
+
+
+          });
+          }
+          // var la=a[i]
+          // var lo=a[i][1]
+          //
+          // var location={lat:la, lng:lo}
+          // var marker = new google.maps.Marker({
+          //   position: location,
+          //   map: map
+          // });
+
+        }
+
+
+
+      }
+      // function myFunction() {
+      //   var x = document.getElementById("qqq")[0].textContent;
+      //   document.getElementById("show").innerHTML = x;
+      // }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCtBK0uhpTu4BGjLFfEM_t1FU2Or7krKKA&callback=initMap">
+    </script>
+    <form action="http://127.0.0.1:5000/map">
+    <input type="submit" value="See the location" />
+  </form>
+  </body>
+</html>
