@@ -11,13 +11,10 @@ class newStations(dml.Algorithm):
     reads = ['jdbrawn_jliang24_slarbi_tpotye.safetyScore', 'jdbrawn_jliang24_slarbi_tpotye.colleges']
     writes = ['jdbrawn_jliang24_slarbi_tpotye.newStations']
 
-    def __init__(self, means):
-        self.means = means
-
     @staticmethod
-    def execute(self, trial=False):
-        # mytest = newStations()
-        NUM_CLUSTERS = self.means
+    def execute(trial=False):
+
+        NUM_CLUSTERS = 3
 
         startTime = datetime.datetime.now()
         client = dml.pymongo.MongoClient()
@@ -64,7 +61,7 @@ class newStations(dml.Algorithm):
         repo.logout()
         endTime = datetime.datetime.now()
 
-        return M.tolist()
+        return {"start": startTime, "end": endTime}
 
     @staticmethod
     def provenance(doc=prov.model.ProvDocument(), startTime=None, endTime=None):

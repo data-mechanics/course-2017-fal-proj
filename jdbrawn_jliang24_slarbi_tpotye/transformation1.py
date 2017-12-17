@@ -61,15 +61,15 @@ class transformation1(dml.Algorithm):
 
         # clean food data to just include id number and lat/long
         for entry in foodLoc.find():
-            if 'Location' in entry and entry['Location'] != "NULL":
-                lat_long = make_tuple(entry['Location'])
-                foodLocations.append((1, float(lat_long[0]), float(lat_long[1])))
+            if 'location' in entry:
+                foodLocations.append((1, float(entry['location']['coordinates'][1]), float(entry['location']['coordinates'][0])))
 
         # clean entertainment data to just include id number and lat/long
         for entry in entertainmentLoc.find():
-            if 'Location' in entry and entry['Location'] != "NULL":
-                lat_long = make_tuple(entry['Location'])
-                entertainmentLocations.append((1, float(lat_long[0]), float(lat_long[1])))
+            if 'location' in entry and entry['location'] != "NULL":
+                lat_long = make_tuple(entry['location'])
+                entertainmentLocations.append(
+                    (1, float(lat_long[0]), float(lat_long[1])))
 
         # find all food within a mile of each school
         school_and_food = []

@@ -38,7 +38,8 @@ class policeAnalysis(dml.Algorithm):
 
         # clean property data to just include police station location
         for entry in police.find():
-            policeLocations.append((float(entry['Y']), float(entry['X'])))
+            if 'location' in entry and entry['location']['coordinates'] != '':
+                policeLocations.append((entry['location']['coordinates'][1], entry['location']['coordinates'][0]))
 
 
         # find all police stations within a mile of each school
