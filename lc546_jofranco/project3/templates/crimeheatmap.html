@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leaflet.heat demo</title>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+    <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+    <link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js" integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log==" crossorigin=""></script>
+    <style>
+        #map { width: 800px; height: 600px; }
+        body { font: 16px/1.4 "Helvetica Neue", Arial, sans-serif; }
+        .ghbtns { position: relative; top: 4px; margin-left: 5px; }
+        a { color: #0077ff; }
+    </style>
+    <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+  <!-- Navbar -->
+<nav class="navbar navbar-default">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="/">Home</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/crimes">Crimes</a></li>
+        <li><a href="/kmeans">Kmeans</a></li>
+        <li><a href="#">Poster</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+</nav>
+<div class="container-fluid bg-1 text-center">
+<h3>Click anywhere within the Boston Area to find the amount of crime within 500 meters of the areal clicked.</h3>
+</div>
+
+<div id="map" class="container-fluid bg-2 text-center">></div>
+<footer class="container-fluid bg-4 text-center">
+  <p>By <a href="https://github.com/jesusfranco1">Jesus Franco</a></p> 
+  <p>By <a href="https://github.com/LiryChen">Lin Chen</a></p>
+</footer>
+
+<script>
+/*
+ (c) 2014, Vladimir Agafonkin
+ simpleheat, a tiny JavaScript library for drawing heatmaps with Canvas
+ https://github.com/mourner/simpleheat
+*/
+!function(){"use strict";function t(i){return this instanceof t?(this._canvas=i="string"==typeof i?document.getElementById(i):i,this._ctx=i.getContext("2d"),this._width=i.width,this._height=i.height,this._max=1,void this.clear()):new t(i)}t.prototype={defaultRadius:25,defaultGradient:{.4:"blue",.6:"cyan",.7:"lime",.8:"yellow",1:"red"},data:function(t,i){return this._data=t,this},max:function(t){return this._max=t,this},add:function(t){return this._data.push(t),this},clear:function(){return this._data=[],this},radius:function(t,i){i=i||15;var a=this._circle=document.createElement("canvas"),s=a.getContext("2d"),e=this._r=t+i;return a.width=a.height=2*e,s.shadowOffsetX=s.shadowOffsetY=200,s.shadowBlur=i,s.shadowColor="black",s.beginPath(),s.arc(e-200,e-200,t,0,2*Math.PI,!0),s.closePath(),s.fill(),this},gradient:function(t){var i=document.createElement("canvas"),a=i.getContext("2d"),s=a.createLinearGradient(0,0,0,256);i.width=1,i.height=256;for(var e in t)s.addColorStop(e,t[e]);return a.fillStyle=s,a.fillRect(0,0,1,256),this._grad=a.getImageData(0,0,1,256).data,this},draw:function(t){this._circle||this.radius(this.defaultRadius),this._grad||this.gradient(this.defaultGradient);var i=this._ctx;i.clearRect(0,0,this._width,this._height);for(var a,s=0,e=this._data.length;e>s;s++)a=this._data[s],i.globalAlpha=Math.max(a[2]/this._max,t||.05),i.drawImage(this._circle,a[0]-this._r,a[1]-this._r);var n=i.getImageData(0,0,this._width,this._height);return this._colorize(n.data,this._grad),i.putImageData(n,0,0),this},_colorize:function(t,i){for(var a,s=3,e=t.length;e>s;s+=4)a=4*t[s],a&&(t[s-3]=i[a],t[s-2]=i[a+1],t[s-1]=i[a+2])}},window.simpleheat=t}(),/*
+ (c) 2014, Vladimir Agafonkin
+ Leaflet.heat, a tiny and fast heatmap plugin for Leaflet.
+ https://github.com/Leaflet/Leaflet.heat
+*/
+L.HeatLayer=(L.Layer?L.Layer:L.Class).extend({initialize:function(t,i){this._latlngs=t,L.setOptions(this,i)},setLatLngs:function(t){return this._latlngs=t,this.redraw()},addLatLng:function(t){return this._latlngs.push(t),this.redraw()},setOptions:function(t){return L.setOptions(this,t),this._heat&&this._updateOptions(),this.redraw()},redraw:function(){return!this._heat||this._frame||this._map._animating||(this._frame=L.Util.requestAnimFrame(this._redraw,this)),this},onAdd:function(t){this._map=t,this._canvas||this._initCanvas(),t._panes.overlayPane.appendChild(this._canvas),t.on("moveend",this._reset,this),t.options.zoomAnimation&&L.Browser.any3d&&t.on("zoomanim",this._animateZoom,this),this._reset()},onRemove:function(t){t.getPanes().overlayPane.removeChild(this._canvas),t.off("moveend",this._reset,this),t.options.zoomAnimation&&t.off("zoomanim",this._animateZoom,this)},addTo:function(t){return t.addLayer(this),this},_initCanvas:function(){var t=this._canvas=L.DomUtil.create("canvas","leaflet-heatmap-layer leaflet-layer"),i=L.DomUtil.testProp(["transformOrigin","WebkitTransformOrigin","msTransformOrigin"]);t.style[i]="50% 50%";var a=this._map.getSize();t.width=a.x,t.height=a.y;var s=this._map.options.zoomAnimation&&L.Browser.any3d;L.DomUtil.addClass(t,"leaflet-zoom-"+(s?"animated":"hide")),this._heat=simpleheat(t),this._updateOptions()},_updateOptions:function(){this._heat.radius(this.options.radius||this._heat.defaultRadius,this.options.blur),this.options.gradient&&this._heat.gradient(this.options.gradient),this.options.max&&this._heat.max(this.options.max)},_reset:function(){var t=this._map.containerPointToLayerPoint([0,0]);L.DomUtil.setPosition(this._canvas,t);var i=this._map.getSize();this._heat._width!==i.x&&(this._canvas.width=this._heat._width=i.x),this._heat._height!==i.y&&(this._canvas.height=this._heat._height=i.y),this._redraw()},_redraw:function(){var t,i,a,s,e,n,h,o,r,d=[],_=this._heat._r,l=this._map.getSize(),m=new L.Bounds(L.point([-_,-_]),l.add([_,_])),c=void 0===this.options.max?1:this.options.max,u=void 0===this.options.maxZoom?this._map.getMaxZoom():this.options.maxZoom,f=1/Math.pow(2,Math.max(0,Math.min(u-this._map.getZoom(),12))),g=_/2,p=[],v=this._map._getMapPanePos(),w=v.x%g,y=v.y%g;for(t=0,i=this._latlngs.length;i>t;t++)if(a=this._map.latLngToContainerPoint(this._latlngs[t]),m.contains(a)){e=Math.floor((a.x-w)/g)+2,n=Math.floor((a.y-y)/g)+2;var x=void 0!==this._latlngs[t].alt?this._latlngs[t].alt:void 0!==this._latlngs[t][2]?+this._latlngs[t][2]:1;r=x*f,p[n]=p[n]||[],s=p[n][e],s?(s[0]=(s[0]*s[2]+a.x*r)/(s[2]+r),s[1]=(s[1]*s[2]+a.y*r)/(s[2]+r),s[2]+=r):p[n][e]=[a.x,a.y,r]}for(t=0,i=p.length;i>t;t++)if(p[t])for(h=0,o=p[t].length;o>h;h++)s=p[t][h],s&&d.push([Math.round(s[0]),Math.round(s[1]),Math.min(s[2],c)]);this._heat.data(d).draw(this.options.minOpacity),this._frame=null},_animateZoom:function(t){var i=this._map.getZoomScale(t.zoom),a=this._map._getCenterOffset(t.center)._multiplyBy(-i).subtract(this._map._getMapPanePos());L.DomUtil.setTransform?L.DomUtil.setTransform(this._canvas,a,i):this._canvas.style[L.DomUtil.TRANSFORM]=L.DomUtil.getTranslateString(a)+" scale("+i+")"}}),L.heatLayer=function(t,i){return new L.HeatLayer(t,i)};
+</script>
+
+<script src="http://leaflet.github.io/Leaflet.markercluster/example/realworld.10000.js"></script>
+<script>
+
+  var map = L.map('map').setView([42.30, -71.09], 12);
+
+  var tiles = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+  }).addTo(map);
+  addressPoints = [[42.30964232 , -71.07164922,"32"],[42.31653833 ,-71.06249662,"18"],[42.31696650 ,-71.08254058,"29"],[42.35095909 ,-71.07412780,"26"],[42.35014612 ,-71.13607618,"9"],[42.34221544 ,-71.08577075,"24"],[42.37679597 ,-71.03789722,"15"],[42.36402978 ,-71.12863340,"2"],[42.34466728 ,-71.07632778,"28"],[42.31650496 ,-71.05803929,"14"],[42.33363925 ,-71.10589317,"10"],[42.36318394 ,-71.05665246,"26"],[42.36318394 ,-71.05665246,"26"],[42.34868544 ,-71.06608848,"29"],[42.26884949 ,-71.12690978,"2"],[42.32597067 ,-71.10134303,"15"],[42.29491782 ,-71.05943678,"25"],[42.31108590 ,-71.12121893,"6"],[42.34507026 ,-71.08960466,"17"],[42.27137581 ,-71.07361075,"6"],[42.28575222 ,-71.06430857,"18"],[42.31043400 ,-71.06134010,"26"],[42.28477931 ,-71.06223825,"14"],[42.28888647 ,-71.04944044,"9"],[42.31371714 ,-71.09819051,"15"],[42.30370925 ,-71.08313459,"27"],[42.27222808 ,-71.07006149,"4"],[42.33695500 ,-71.07747000,"26"],[42.35079907 ,-71.06500775,"33"],[42.30443502 ,-71.06862907,"35"],[42.27348112 ,-71.07475974,"6"],[42.28709355 ,-71.14822128,"1"],[42.27141482 ,-71.08014338,"8"],[42.33506554 ,-71.07879088,"29"],[42.28960433 ,-71.06833775,"22"],[42.28960433 ,-71.06833775,"22"],[42.31224532 ,-71.07317861,"32"],[42.30028348 ,-71.07766845,"30"],[42.30263978 ,-71.06038376,"22"],[42.33643056 ,-71.03961349,"7"],[42.26857609 ,-71.09574826,"8"],[42.29491105 ,-71.08791979,"15"],[42.38415612 ,-71.07257288,"3"],[42.28074237 ,-71.05491141,"7"],[42.36646326 ,-71.06067801,"22"],[42.33210843 ,-71.07014395,"18"],[42.33210843 ,-71.07014395,"18"],[42.33210843 ,-71.07014395,"18"],[42.35094628 ,-71.06685604,"33"],[42.35653193 ,-71.13784034,"10"],[42.32458564 ,-71.08580979,"24"],[42.32458564 ,-71.08580979,"24"],[42.33920737 ,-71.10778506,"9"],[42.32126855 ,-71.06697280,"17"],[42.31446650 ,-71.09661461,"15"],[42.36339723 ,-71.07022378,"14"],[42.32773335 ,-71.07742977,"32"],[42.31922047 ,-71.08375913,"26"],[42.27693086 ,-71.08631706,"15"],[42.34980175 ,-71.07840978,"25"],[42.31281719 ,-71.11612890,"9"],[42.31354886 ,-71.11045500,"15"],[42.33126474 ,-71.04680751,"12"],[42.35288500 ,-71.05633700,"27"],[42.34880604 ,-71.06285447,"26"],[42.33048169 ,-71.08166730,"23"],[42.33048169 ,-71.08166730,"23"],[42.26660916 ,-71.11421209,"4"],[42.35501985 ,-71.05642713,"33"],[42.25332979 ,-71.12467152,"5"],[42.28314714 ,-71.11374152,"3"],[42.35272948 ,-71.06256291,"32"],[42.35988372 ,-71.06016189,"35"],[42.36497550 ,-71.06204400,"26"],[42.38117064 ,-71.07213904,"5"],[42.30648026 ,-71.06675783,"32"],[42.31635508 ,-71.06593853,"25"],[42.25990140 ,-71.11536339,"5"],[42.31461444 ,-71.07882605,"31"],[42.36943145 ,-71.03917179,"12"],[42.29019621 ,-71.07159012,"22"],[42.29524005 ,-71.06253383,"27"],[42.33606304 ,-71.10782832,"9"],[42.30497366 ,-71.06134412,"23"],[42.31897920 ,-71.07964653,"32"],[42.32198656 ,-71.06280666,"16"],[42.38135785 ,-71.03768163,"11"],[42.35059717 ,-71.07881031,"25"],[42.33586257 ,-71.05566936,"11"],[42.28446743 ,-71.11183089,"4"],[42.37167264 ,-71.06326413,"19"],[42.31408519 ,-71.09998685,"16"],[42.31397418 ,-71.09858375,"16"],[42.31030262 ,-71.11729257,"10"],[42.31915263 ,-71.07189822,"25"],[42.35240571 ,-71.06227809,"32"],[42.27193751 ,-71.09213540,"10"],[42.29056142 ,-71.08926028,"16"],[42.38549647 ,-71.01681644,"2"],[42.27586847 ,-71.08852892,"16"],[42.26803620 ,-71.09484348,"8"],[42.29025219 ,-71.06304942,"16"],[42.30158188 ,-71.07047706,"32"],[42.38048207 ,-71.06087725,"8"],[42.35528211 ,-71.14566136,"13"],[42.29623685 ,-71.04853645,"8"],[42.33606304 ,-71.10782832,"9"],[42.31661750 ,-71.06407827,"21"],[42.34868917 ,-71.07257992,"26"],[42.36643546 ,-71.06135413,"22"],[42.36038173 ,-71.06285769,"36"],[42.36038173 ,-71.06285769,"36"],[42.37620267 ,-71.03979926,"15"],[42.33152148 ,-71.07085307,"18"],[42.36071669 ,-71.14290976,"8"],[42.25197460 ,-71.12873600,"3"],[42.28523643 ,-71.09047894,"18"],[42.26025277 ,-71.14559883,"2"],[42.26025277 ,-71.14559883,"2"],[42.30469190 ,-71.11040643,"10"],[42.31510937 ,-71.10833779,"16"],[42.29623685 ,-71.04853645,"8"],[42.37864106 ,-71.03919594,"14"],[42.34252336 ,-71.15124869,"10"],[42.29673351 ,-71.07618648,"26"],[42.35059717 ,-71.07881031,"25"],[42.33204540 ,-71.08478299,"24"],[42.30497366 ,-71.06134412,"23"],[42.30854728 ,-71.05821219,"23"],[42.36067984 ,-71.05482325,"28"],[42.29512281 ,-71.08798020,"15"],[42.31506898 ,-71.09746579,"15"],[42.29792661 ,-71.08689609,"17"],[42.37408488 ,-71.05887633,"12"],[42.32865900 ,-71.08399900,"27"],[42.32257337 ,-71.07282803,"23"],[42.28828038 ,-71.07652688,"21"],[42.30809328 ,-71.11715706,"11"],[42.29085881 ,-71.04906172,"8"],[42.29085881 ,-71.04906172,"8"],[42.30888774 ,-71.04841538,"6"],[42.30888774 ,-71.04841538,"6"],[42.32639915 ,-71.10021824,"17"],[42.30876959 ,-71.07460717,"34"],[42.34362416 ,-71.14268401,"11"],[42.31668068 ,-71.09638886,"18"],[42.29702742 ,-71.07576538,"28"],[42.30918536 ,-71.07396750,"37"],[42.35594239 ,-71.06258333,"40"],[42.34252336 ,-71.15124869,"10"],[42.30938437 ,-71.08262277,"26"],[42.27665388 ,-71.09121606,"13"],[42.36339723 ,-71.07022378,"14"],[42.32648859 ,-71.07117436,"25"],[42.35426247 ,-71.05883334,"33"],[42.34813531 ,-71.13721261,"9"],[42.36165196 ,-71.05630529,"28"],[42.29202737 ,-71.06796635,"26"],[42.35602373 ,-71.06177615,"38"],[42.30814528 ,-71.07838794,"31"],[42.34941613 ,-71.04996488,"8"],[42.31275380 ,-71.10129675,"17"],[42.30470399 ,-71.05908258,"22"],[42.30470399 ,-71.05908258,"22"],[42.34827698 ,-71.07038932,"29"],[42.27611848 ,-71.09748268,"10"],[42.35115433 ,-71.06547895,"33"],[42.27582805 ,-71.12405976,"3"],[42.30980642 ,-71.05102626,"11"],[42.34284919 ,-71.08502585,"27"],[42.31623580 ,-71.11387466,"12"],[42.27974378 ,-71.08248818,"17"],[42.33506218 ,-71.09316781,"17"],[42.32971183 ,-71.05268388,"13"],[42.30796665 ,-71.06209798,"27"],[42.30260670 ,-71.12560937,"5"],[42.30838705 ,-71.10055413,"16"],[42.31190268 ,-71.08073292,"27"],[42.32790482 ,-71.05305583,"13"],[42.34591175 ,-71.13842377,"8"],[42.32573038 ,-71.07796428,"33"],[42.35335717 ,-71.08017703,"21"],[42.32206077 ,-71.05680459,"15"],[42.36394509 ,-71.05942841,"26"],[42.37811572 ,-71.05611385,"8"],[42.37811572 ,-71.05611385,"8"],[42.37811572 ,-71.05611385,"8"],[42.34793886 ,-71.15229604,"11"],[42.37846079 ,-71.03345662,"14"],[42.30581531 ,-71.10962700,"12"],[42.33395125 ,-71.07538939,"25"],[42.28457983 ,-71.08083310,"16"],[42.35162789 ,-71.06866410,"31"],[42.27921860 ,-71.07386433,"13"],[42.31685456 ,-71.07457617,"31"],[42.30066139 ,-71.08328208,"23"],[42.34980175 ,-71.07840978,"25"],[42.25843926 ,-71.11761172,"5"],[42.28688203 ,-71.12766290,"2"],[42.30859903 ,-71.10539197,"17"],[42.37524516 ,-71.03674311,"15"],[42.33093363 ,-71.10956443,"12"],[42.35892279 ,-71.05835354,"34"],[42.29708400 ,-71.13395822,"2"],[42.28906502 ,-71.06703817,"20"],[42.29268770 ,-71.06556673,"21"],[42.29896518 ,-71.04944203,"13"],[42.30396336 ,-71.05924636,"22"],[42.34946444 ,-71.14270449,"14"],[42.32178241 ,-71.08534158,"24"],[42.29603943 ,-71.07717023,"26"],[42.32872589 ,-71.08382217,"27"],[42.33395125 ,-71.07538939,"25"],[42.33395125 ,-71.07538939,"25"],[42.33087019 ,-71.08115673,"23"],[42.28547182 ,-71.08041280,"17"],[42.30269797 ,-71.06601480,"32"],[42.30269797 ,-71.06601480,"32"],[42.30783120 ,-71.06529544,"32"],[42.29928541 ,-71.11397269,"7"],[42.24077498 ,-71.13536804,"4"],[42.24077498 ,-71.13536804,"4"],[42.24077498 ,-71.13536804,"4"],[42.28102494 ,-71.08682082,"19"],[42.34710196 ,-71.08841746,"18"],[42.34710196 ,-71.08841746,"18"],[42.35115526 ,-71.06130589,"29"],[42.30254239 ,-71.05956690,"23"],[42.31342215 ,-71.09348975,"16"],[42.28803351 ,-71.08241673,"22"],[42.32696647 ,-71.06198607,"17"],[42.33204540 ,-71.08478299,"24"],[42.30855179 ,-71.08480199,"22"],[42.37128837 ,-71.03716557,"12"],[42.37695059 ,-71.03646476,"15"],[42.30040780 ,-71.07647974,"30"],[42.34465686 ,-71.15329318,"8"],[42.36127607 ,-71.14345725,"8"],[42.32874988 ,-71.07776044,"32"],[42.34285014 ,-71.06516235,"21"],[42.27757964 ,-71.16274799,"2"],[42.38229155 ,-71.04036424,"11"],[42.32692112 ,-71.05841861,"12"],[42.32692112 ,-71.05841861,"12"],[42.34834270 ,-71.07222530,"28"],[42.33724956 ,-71.03961174,"7"],[42.32952692 ,-71.03520118,"6"],[42.31089986 ,-71.08007661,"30"],[42.33268278 ,-71.10057946,"14"],[42.30114533 ,-71.05991447,"24"],[42.23727444 ,-71.12624263,"4"],[42.32772610 ,-71.05600435,"12"],[42.31694189 ,-71.10394558,"19"],[42.31694189 ,-71.10394558,"19"],[42.29581572 ,-71.08488254,"21"],[42.35164054 ,-71.15192725,"12"],[42.28737505 ,-71.04221006,"7"],[42.28198740 ,-71.09623655,"13"],[42.28198740 ,-71.09623655,"13"],[42.35037870 ,-71.07626098,"25"],[42.32547536 ,-71.10253482,"13"],[42.35487365 ,-71.05861218,"32"],[42.35487365 ,-71.05861218,"32"],[42.36339154 ,-71.05488123,"25"],[42.37644380 ,-71.03474021,"15"],[42.29926303 ,-71.07626513,"32"],[42.27647393 ,-71.09361248,"12"],[42.34862382 ,-71.08277637,"22"],[42.29417346 ,-71.07193797,"28"],[42.35054532 ,-71.17441429,"2"],[42.33561661 ,-71.03641895,"6"],[42.29255618 ,-71.11974225,"6"],[42.29435407 ,-71.07306715,"25"],[42.34923356 ,-71.07328090,"26"],[42.35545896 ,-71.06052398,"38"],[42.35047411 ,-71.10189482,"5"],[42.30816592 ,-71.08519069,"21"],[42.30443502 ,-71.06862907,"35"],[42.30876798 ,-71.07046720,"32"],[42.30876798 ,-71.07046720,"32"],[42.31743922 ,-71.07547845,"34"],[42.34314406 ,-71.09589305,"11"],[42.35143483 ,-71.06969334,"32"],[42.31141864 ,-71.07964760,"29"],[42.32320895 ,-71.08432965,"26"],[42.34091586 ,-71.08771531,"24"],[42.35657707 ,-71.14883784,"10"],[42.31496145 ,-71.08952210,"25"],[42.31496145 ,-71.08952210,"25"],[42.31985444 ,-71.07972518,"29"],[42.30097791 ,-71.07077333,"31"],[42.38594590 ,-71.00902371,"2"],[42.34624311 ,-71.08568046,"22"],[42.38073116 ,-71.06263357,"10"],[42.28941633 ,-71.07830473,"22"],[42.35027686 ,-71.06024470,"25"],[42.25189440 ,-71.12535310,"5"],[42.33546813 ,-71.04489149,"11"],[42.33682538 ,-71.14880441,"6"],[42.32263156 ,-71.06979845,"22"],[42.34189304 ,-71.07408312,"33"],[42.27724055 ,-71.16780065,"2"],[42.32266030 ,-71.10550489,"19"],[42.35666827 ,-71.06179049,"40"],[42.28965805 ,-71.08634397,"20"],[42.36139413 ,-71.05768690,"28"],[42.33185952 ,-71.05076294,"12"],[42.29076615 ,-71.09161537,"15"],[42.34126852 ,-71.15750565,"7"],[42.36841589 ,-71.03773472,"10"],[42.35379408 ,-71.13905967,"11"],[42.33698202 ,-71.08458699,"26"],[42.32309351 ,-71.10966113,"14"],[42.38229155 ,-71.04036424,"11"],[42.34416701 ,-71.10359107,"8"],[42.31206146 ,-71.07512473,"34"],[42.37716674 ,-71.03077947,"15"],[42.30775024 ,-71.08273084,"26"],[42.29293284 ,-71.05032319,"12"],[42.26184927 ,-71.16524598,"2"],[42.34936718 ,-71.16554188,"4"],[42.34414434 ,-71.08277075,"25"],[42.36058947 ,-71.06510340,"34"],[42.29392745 ,-71.11429310,"4"],[42.29581572 ,-71.08488254,"21"],[42.34055884 ,-71.07022771,"23"],[42.35188271 ,-71.15647760,"8"],[42.31089170 ,-71.08322396,"23"],[42.35235362 ,-71.05815283,"29"],[42.32692266 ,-71.08313475,"26"],[42.28795236 ,-71.05984036,"15"],[42.30576686 ,-71.08097517,"29"],[42.33298734 ,-71.04282382,"10"],[42.36492400 ,-71.05331772,"23"],[42.33367922 ,-71.09187755,"19"],[42.33004105 ,-71.09146075,"19"],[42.37123385 ,-71.03473272,"12"],[42.28519774 ,-71.06775110,"17"],[42.34746241 ,-71.09826597,"9"],[42.34601613 ,-71.09381210,"13"],[42.25851870 ,-71.16030347,"2"],[42.35128604 ,-71.13926811,"12"],[42.35216801 ,-71.12457096,"1"],[42.33258958 ,-71.10031377,"15"],[42.30870401 ,-71.06844484,"35"],[42.29056093 ,-71.06296494,"16"],[42.29071406 ,-71.09234897,"15"],[42.37196094 ,-71.06217021,"19"],[42.33032684 ,-71.04982159,"12"],[42.34999733 ,-71.08103440,"24"],[42.34999733 ,-71.08103440,"24"],[42.34999733 ,-71.08103440,"24"]]
+
+  var heat = L.heatLayer(addressPoints).addTo(map);
+  var pointclicked = 0;
+  var coord = 0;
+  function onMapClick(e){
+    pointclicked = e.latlng;
+    for (i = 0; i < addressPoints.length; i++) {
+      point = "[" +addressPoints[i] + "]"
+      var long = point.substring(point.indexOf("[") + 1,point.indexOf(",") -1);
+      var lat = point.substring(point.indexOf("-"),25);
+      var lat1 = lat.replace(",", "");
+    }
+    alert("You clicked the map at " + e.latlng);
+    var circle = L.circle(e.latlng, 500, {
+    	color: 'red',
+    	fillColor: '#f03',
+    	fillOpacity: 0.5
+    }).addTo(map).bindPopup("I am a circle.");
+    var radius = circle.getRadius(); //in meters
+    var circleCenterPoint = circle.getLatLng(); //gets the circle's center latlng
+    for (i = 0; i < addressPoints.length; i++) {
+      point = "[" +addressPoints[i] + "]"
+      var long = point.substring(point.indexOf("[") + 1,point.indexOf(",") -1);
+      var lat = point.substring(point.indexOf("-"),25);
+      var lat1 = lat.replace(",", "");
+      var crime = point.substring(26,29)
+      var point = [parseFloat(long), parseFloat(lat1)]
+      var isInCircleRadius = circleCenterPoint.distanceTo(point);
+      if (isInCircleRadius <= radius) {
+        coord = coord + parseInt(crime)
+      }
+      else {
+        coord = coord + 0
+      }
+    }
+    alert("Around a radius of 500 meters, there are a total of :" + coord + " crimes that happened.")
+    coord = 0;
+  }
+  map.on('click', onMapClick);
+
+
+</script>
+</body>
+<style>
+   body {
+      font: 20px Montserrat, sans-serif;
+      line-height: 1.8;
+      color: #f5f6f7;
+  }
+   p {font-size: 16px;}
+  .margin {margin-bottom: 45px;}
+  .bg-1 { 
+      background-color: #2f2f2f; /* Green */
+      color: #ffffff;
+  }
+  .bg-2 { 
+      background-color: #474e5d; /* Dark Blue */
+      color: #ffffff;
+  }
+  .bg-3 { 
+      background-color: #ffffff; /* White */
+      color: #555555;
+  }
+  .bg-4 { 
+      background-color: #2f2f2f; /* Black Gray */
+      color: #fff;
+  }
+  .container-fluid {
+      padding-top: 70px;
+      padding-bottom: 70px;
+  }
+  .navbar {
+      padding-top: 15px;
+      padding-bottom: 15px;
+      border: 0;
+      border-radius: 0;
+      margin-bottom: 0;
+      font-size: 12px;
+      letter-spacing: 5px;
+  }
+  .navbar-nav  li a:hover {
+      color: #1abc9c !important;
+  }
+ /* body{
+    background-color:#e0e0e1;
+  }
+  .content{
+    font-family: sans-serif;
+    height: 70%;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: :10px;
+
+  }
+  h1{
+    margin-left: 30%;
+    color:#5a5a5e;
+    font-weight: lighter;
+  }
+  p{
+    margin-top: 40px;
+    margin-left: 100px;
+    margin-bottom: 40px;
+    color:#5a5a5e;
+    font-weight: lighter;
+  }
+  a{
+    margin-left: 40%;
+    text-decoration: none;
+    background-color: #5a5a5e;
+    padding: 10px 10px 10px 10px;
+    color:white;
+    font-weight: lighter;
+  }*/
+  </style>
+</html>
