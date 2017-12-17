@@ -1,0 +1,648 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Green Score Simulator</title>
+     <link 
+        rel="stylesheet" 
+        href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css"
+    />
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+
+
+    <script src="http://cdn.leafletjs.com/leaflet-0.7/leaflet.js">
+
+
+    </script>
+  <style>
+ 	<!--CSS adapted from  https://github.com/MasterMaps/d3-slider  -->
+
+
+    body {
+      font-family: Verdana,Arial,sans-serif;
+    }
+
+    h2 {
+      font-size: 1.2em;
+      margin: 60px 0 5px 0;
+    }
+
+    .wrapper {
+      width: 800px;
+      margin-left: 20px;
+    }
+
+    .wrapper > div {
+      margin: 20px 0;
+    }
+
+    .d3-slider {
+    position: relative;
+    font-family: Verdana,Arial,sans-serif;
+    font-size: 1.1em;
+    border: 1px solid #aaaaaa;
+    z-index: 2;
+}
+
+.d3-slider-horizontal {
+    height: .8em;
+}  
+
+.d3-slider-range {
+  background:#2980b9;
+  left:0px;
+  right:0px;
+  height: 0.8em;
+  position: absolute;
+}
+
+
+.d3-slider-handle {
+    position: absolute;
+    width: 1.2em;
+    height: 1.2em;
+    border: 1px solid #d3d3d3;
+    border-radius: 4px;
+    background: #eee;
+    background: linear-gradient(to bottom, #eee 0%, #ddd 100%);
+    z-index: 3;
+}
+
+.d3-slider-handle:hover {
+    border: 1px solid #999999;
+}
+
+.d3-slider-horizontal .d3-slider-handle {
+    top: -.3em;
+    margin-left: -.6em;
+}
+
+.d3-slider-axis {
+    position: relative;
+    z-index: 1;    
+}
+
+.d3-slider-axis-bottom {
+    top: .8em;
+}
+
+.d3-slider-axis-right {
+    left: .8em;
+}
+
+.d3-slider-axis path {
+    stroke-width: 0;
+    fill: none;
+}
+
+.d3-slider-axis line {
+    fill: none;
+    stroke: #aaa;
+    shape-rendering: crispEdges;
+}
+
+.d3-slider-axis text {
+    font-size: 11px;
+}
+
+
+
+  </style>
+</head>
+<body>
+<div id="map" style="width: 800px; height: 600px; margin:0px;"> 
+    </div>
+
+   <div id = "text" style ="margin:15px">
+   	<label> Budget </label>
+   </div>
+
+
+  <div class="wrapper">
+
+
+
+    <div id="slider7"></div>
+
+   
+  </div>
+
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script>
+
+  			    var map = L.map('map').setView([42.333233,  -71.10251], 13);
+			   mapLink = '<a href="http://maps.wikimedia.org/</a>';
+            var color = d3.scale.linear()
+              .domain([0, 9])  
+              .range(["blue", "green"]);
+
+        
+              
+            
+             var markers = new L.LayerGroup();
+
+            function renderMap(x) {
+            	markers.clearLayers();
+                points = [[42.344822,-71.100733],[42.317269,-71.006198],[42.374938, -71.0358883],[42.357218,-71.056699], [42.354584, -71.133675],[42.259365, -71.123670], [ 42.286293,-71.127619 ], [42.380463,-71.061298],[ 42.350164, -71.080427], [42.341072, -71.076683],  [42.357218, -71.056699], [ 42.306059, -71.065738], [42.3529344675747, -71.04346595564307], [ 42.283245, -71.162981], [42.343783, -71.110424],  [42.332361, -71.107154], [42.317771, -71.091435], [42.360137, -71.067295],  [ 42.280343, -71.091313], [42.317269, -71.006198], [42.349966, -71.162057], [42.335978,-71.048999], [ 42.363986, -71.066469], [42.344822, -71.100733], [ 42.350996, -71.061400] , [ 42.312894, -71.118910]];
+
+                for (i in x) {
+                    
+                     var list = "<dl><dt>Neighborhood</dt>"
+                       + "<dd>" + x[i]["Neighborhood"] + "</dd>"
+                       + "<dt>Budget</dt>"
+                       + "<dd>" + x[i]["Budget"] + "</dd>"
+                       + "<dt>Score</dt>"
+                       + "<dd>" + Math.round(x[i]["New Score"]) + "</dd>"
+                       + "<dt>Charging Station </dt>"
+                       + "<dd>" +x[i]["Green Facilities"][0] + "</dd>"
+                       + "<dt>Hubway Stations </dt>" 
+                       + "<dd>" +x[i]["Green Facilities"][1] + "</dd>"
+                       + "<dt>Bike Network Points </dt>"
+                       + "<dd>" +x[i]["Green Facilities"][2] + "</dd>"
+                       + "<dt>Open Space Points </dt>"
+                       + "<dd>" +x[i]["Green Facilities"][3] + "</dd>";
+
+                   var  marker =  L.marker(points[i]);
+                   marker.addTo(map)
+                    .bindPopup(list, {
+
+                         maxHeight:1000,  maxWidth : 10000
+                    });
+                    markers.addLayer(marker)
+
+                }
+                map.addLayer(markers);
+            
+               
+               
+
+
+            }
+
+          
+
+            L.tileLayer('http://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png	', {
+                attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            map._initPathRoot()    
+
+            function getScore(x) {
+           
+                var http = new XMLHttpRequest();
+                var url = "http://localhost:3000/budgets";
+             
+                http.open("GET", url, true);
+                http.setRequestHeader("Content-type", "application/json");
+                http.onreadystatechange = function() {
+                  if (http.readyState == 4 && http.status == 200) {
+                    var data = JSON.parse(http.responseText).results;
+               
+                    var arr = [];
+                    for (i in data) {
+                        if (data[i]["Budget"] == x){
+                            arr.push(data[i])
+
+                    }
+               
+                    }
+                    console.log(arr);
+                    renderMap(arr);
+                    return arr;
+                  }
+                }
+                http.send();
+            };
+    getScore(200000);
+    // ADAPTED CODE FROM D3JS SLIDER EXAMPLE https://github.com/MasterMaps/d3-slider 
+  	(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define(['d3'], factory);
+  } else if (typeof exports === 'object') {
+    if (process.browser) {
+      // Browserify. Import css too using cssify.
+      require('./d3.slider.css');
+    }
+    // Node. Does not work with strict CommonJS, but
+    // only CommonJS-like environments that support module.exports,
+    // like Node.
+    module.exports = factory(require('d3'));
+  } else {
+    // Browser globals (root is window)
+    root.d3.slider = factory(root.d3);
+  }
+}(this, function (d3) {
+return function module() {
+  "use strict";
+
+  // Public variables width default settings
+  var min = 0,
+      max = 100,
+      step = 0.01,
+      animate = true,
+      orientation = "horizontal",
+      axis = false,
+      margin = 50,
+      value,
+      active = 1,
+      snap = false,
+      scale;
+
+  // Private variables
+  var axisScale,
+      dispatch = d3.dispatch("slide", "slideend"),
+      formatPercent = d3.format(".2%"),
+      tickFormat = d3.format(".0"),
+      handle1,
+      handle2 = null,
+      divRange,
+      sliderLength;
+
+  function slider(selection) {
+    selection.each(function() {
+
+      // Create scale if not defined by user
+      if (!scale) {
+        scale = d3.scale.linear().domain([min, max]);
+      }
+
+      // Start value
+      value = value || scale.domain()[0];
+
+      // DIV container
+      var div = d3.select(this).classed("d3-slider d3-slider-" + orientation, true);
+      
+      var drag = d3.behavior.drag();
+      drag.on('dragend', function () {
+        dispatch.slideend(d3.event, value);
+      })
+
+      // Slider handle
+      //if range slider, create two
+      // var divRange;
+
+      if (toType(value) == "array" && value.length == 2) {
+        handle1 = div.append("a")
+          .classed("d3-slider-handle", true)
+          .attr("xlink:href", "#")
+          .attr('id', "handle-one")
+          .on("click", stopPropagation)
+          .call(drag);
+        handle2 = div.append("a")
+          .classed("d3-slider-handle", true)
+          .attr('id', "handle-two")
+          .attr("xlink:href", "#")
+          .on("click", stopPropagation)
+          .call(drag);
+      } else {
+        handle1 = div.append("a")
+          .classed("d3-slider-handle", true)
+          .attr("xlink:href", "#")
+          .attr('id', "handle-one")
+          .on("click", stopPropagation)
+          .call(drag);
+      }
+      
+      // Horizontal slider
+      if (orientation === "horizontal") {
+
+        div.on("click", onClickHorizontal);
+        
+        if (toType(value) == "array" && value.length == 2) {
+          divRange = d3.select(this).append('div').classed("d3-slider-range", true);
+
+          handle1.style("left", formatPercent(scale(value[ 0 ])));
+          divRange.style("left", formatPercent(scale(value[ 0 ])));
+          drag.on("drag", onDragHorizontal);
+
+          var width = 100 - parseFloat(formatPercent(scale(value[ 1 ])));
+          handle2.style("left", formatPercent(scale(value[ 1 ])));
+          divRange.style("right", width+"%");
+          drag.on("drag", onDragHorizontal);
+
+        } else {
+          handle1.style("left", formatPercent(scale(value)));
+          drag.on("drag", onDragHorizontal);
+        }
+        
+        sliderLength = parseInt(div.style("width"), 10);
+
+      } else { // Vertical
+
+        div.on("click", onClickVertical);
+        drag.on("drag", onDragVertical);
+        if (toType(value) == "array" && value.length == 2) {
+          divRange = d3.select(this).append('div').classed("d3-slider-range-vertical", true);
+
+          handle1.style("bottom", formatPercent(scale(value[ 0 ])));
+          divRange.style("bottom", formatPercent(scale(value[ 0 ])));
+          drag.on("drag", onDragVertical);
+
+          var top = 100 - parseFloat(formatPercent(scale(value[ 1 ])));
+          handle2.style("bottom", formatPercent(scale(value[ 1 ])));
+          divRange.style("top", top+"%");
+          drag.on("drag", onDragVertical);
+
+        } else {
+          handle1.style("bottom", formatPercent(scale(value)));
+          drag.on("drag", onDragVertical);
+        }
+        
+        sliderLength = parseInt(div.style("height"), 10);
+
+      }
+      
+      if (axis) {
+        createAxis(div);
+      }
+
+
+      function createAxis(dom) {
+
+        // Create axis if not defined by user
+        if (typeof axis === "boolean") {
+
+          axis = d3.svg.axis()
+              .ticks(Math.round(sliderLength / 100))
+              .tickFormat(tickFormat)
+              .orient((orientation === "horizontal") ? "bottom" :  "right");
+
+        }
+
+        // Copy slider scale to move from percentages to pixels
+        axisScale = scale.ticks ? scale.copy().range([0, sliderLength]) : scale.copy().rangePoints([0, sliderLength], 0.5);
+          axis.scale(axisScale);
+
+          // Create SVG axis container
+        var svg = dom.append("svg")
+            .classed("d3-slider-axis d3-slider-axis-" + axis.orient(), true)
+            .on("click", stopPropagation);
+
+        var g = svg.append("g");
+
+        // Horizontal axis
+        if (orientation === "horizontal") {
+
+          svg.style("margin-left", -margin + "px");
+
+          svg.attr({
+            width: sliderLength + margin * 2,
+            height: margin
+          });
+
+          if (axis.orient() === "top") {
+            svg.style("top", -margin + "px");
+            g.attr("transform", "translate(" + margin + "," + margin + ")");
+          } else { // bottom
+            g.attr("transform", "translate(" + margin + ",0)");
+          }
+
+        } else { // Vertical
+
+          svg.style("top", -margin + "px");
+
+          svg.attr({
+            width: margin,
+            height: sliderLength + margin * 2
+          });
+
+          if (axis.orient() === "left") {
+            svg.style("left", -margin + "px");
+            g.attr("transform", "translate(" + margin + "," + margin + ")");
+          } else { // right          
+            g.attr("transform", "translate(" + 0 + "," + margin + ")");
+          }
+
+        }
+
+        g.call(axis);
+
+      }
+
+      function onClickHorizontal() {
+        if (toType(value) != "array") {
+          var pos = Math.max(0, Math.min(sliderLength, d3.event.offsetX || d3.event.layerX));
+          moveHandle(scale.invert ? 
+                      stepValue(scale.invert(pos / sliderLength))
+                    : nearestTick(pos / sliderLength));
+        }
+      }
+
+    
+
+      function onDragHorizontal() {
+        if ( d3.event.sourceEvent.target.id === "handle-one") {
+          active = 1;
+        } else if ( d3.event.sourceEvent.target.id == "handle-two" ) {
+          active = 2;
+        }
+        var pos = Math.max(0, Math.min(sliderLength, d3.event.x));
+        moveHandle(scale.invert ? 
+                    stepValue(scale.invert(pos / sliderLength))
+                  : nearestTick(pos / sliderLength));
+      }
+
+      function onDragVertical() {
+        if ( d3.event.sourceEvent.target.id === "handle-one") {
+          active = 1;
+        } else if ( d3.event.sourceEvent.target.id == "handle-two" ) {
+          active = 2;
+        }
+        var pos = sliderLength - Math.max(0, Math.min(sliderLength, d3.event.y))
+        moveHandle(scale.invert ? 
+                    stepValue(scale.invert(pos / sliderLength))
+                  : nearestTick(pos / sliderLength));
+      }
+
+      function stopPropagation() {
+        d3.event.stopPropagation();
+      }
+
+    });
+
+  }
+
+  // Move slider handle on click/drag
+  function moveHandle(newValue) {
+  	getScore(newValue);
+
+    var currentValue = toType(value) == "array"  && value.length == 2 ? value[active - 1]: value,
+        oldPos = formatPercent(scale(stepValue(currentValue))),
+        newPos = formatPercent(scale(stepValue(newValue))),
+        position = (orientation === "horizontal") ? "left" : "bottom";
+    if (oldPos !== newPos) {
+
+      if (toType(value) == "array" && value.length == 2) {
+        value[ active - 1 ] = newValue;
+        if (d3.event) {
+          dispatch.slide(d3.event, value );
+        };
+      } else {
+        if (d3.event) {
+          dispatch.slide(d3.event.sourceEvent || d3.event, value = newValue);
+        };
+      }
+
+      if ( value[ 0 ] >= value[ 1 ] ) return;
+      if ( active === 1 ) {
+        if (toType(value) == "array" && value.length == 2) {
+          (position === "left") ? divRange.style("left", newPos) : divRange.style("bottom", newPos);
+        }
+
+        if (animate) {
+          handle1.transition()
+              .styleTween(position, function() { return d3.interpolate(oldPos, newPos); })
+              .duration((typeof animate === "number") ? animate : 250);
+        } else {
+          handle1.style(position, newPos);
+        }
+      } else {
+        
+        var width = 100 - parseFloat(newPos);
+        var top = 100 - parseFloat(newPos);
+
+        (position === "left") ? divRange.style("right", width + "%") : divRange.style("top", top + "%");
+        
+        if (animate) {
+          handle2.transition()
+              .styleTween(position, function() { return d3.interpolate(oldPos, newPos); })
+              .duration((typeof animate === "number") ? animate : 250);
+        } else {
+          handle2.style(position, newPos);
+        }
+      }
+    }
+  }
+
+  // Calculate nearest step value
+  function stepValue(val) {
+
+    if (val === scale.domain()[0] || val === scale.domain()[1]) {
+      return val;
+    }
+
+    var alignValue = val;
+    if (snap) {
+      alignValue = nearestTick(scale(val));
+    } else{
+      var valModStep = (val - scale.domain()[0]) % step;
+      alignValue = val - valModStep;
+
+      if (Math.abs(valModStep) * 2 >= step) {
+        alignValue += (valModStep > 0) ? step : -step;
+      }
+    };
+
+    return alignValue;
+
+  }
+
+  // Find the nearest tick
+  function nearestTick(pos) {
+    var ticks = scale.ticks ? scale.ticks() : scale.domain();
+    var dist = ticks.map(function(d) {return pos - scale(d);});
+    var i = -1,
+        index = 0,
+        r = scale.ticks ? scale.range()[1] : scale.rangeExtent()[1];
+    do {
+        i++;
+        if (Math.abs(dist[i]) < r) {
+          r = Math.abs(dist[i]);
+          index = i;
+        };
+    } while (dist[i] > 0 && i < dist.length - 1);
+
+    return ticks[index];
+  };
+
+  // Return the type of an object
+  function toType(v) {
+    return ({}).toString.call(v).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
+  };
+
+  // Getter/setter functions
+  slider.min = function(_) {
+    if (!arguments.length) return min;
+    min = _;
+    return slider;
+  };
+
+  slider.max = function(_) {
+    if (!arguments.length) return max;
+    max = _;
+    return slider;
+  };
+
+  slider.step = function(_) {
+    if (!arguments.length) return step;
+    step = _;
+    return slider;
+  };
+
+  slider.animate = function(_) {
+    if (!arguments.length) return animate;
+    animate = _;
+    return slider;
+  };
+
+  slider.orientation = function(_) {
+    if (!arguments.length) return orientation;
+    orientation = _;
+    return slider;
+  };
+
+  slider.axis = function(_) {
+    if (!arguments.length) return axis;
+    axis = _;
+    return slider;
+  };
+
+  slider.margin = function(_) {
+    if (!arguments.length) return margin;
+    margin = _;
+    return slider;
+  };
+
+  slider.value = function(_) {
+
+    if (!arguments.length) return value;
+    if (value) {
+      moveHandle(stepValue(_));
+
+    };
+    value = _;
+
+    return slider;
+  };
+
+  slider.snap = function(_) {
+    if (!arguments.length) return snap;
+    snap = _;
+    return slider;
+  };
+
+  slider.scale = function(_) {
+    if (!arguments.length) return scale;
+    scale = _;
+    return slider;
+  };
+
+  d3.rebind(slider, dispatch, "on");
+
+  return slider;
+
+}
+}));
+
+
+    
+
+    d3.select('#slider7').call(d3.slider().axis(true).min(200000).max(2400000).step(100000));
+
+    
+
+  </script>
+ 
+</body>
+</html>

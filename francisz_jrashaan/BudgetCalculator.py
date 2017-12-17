@@ -90,7 +90,31 @@ class BudgetCalculator(dml.Algorithm):
             for j in range(len(chargingStations)):
                 tuple = (Neighborhoods[j], chargingStations[j], hubwayStations[j], bikeNetworks[j], openspace[j])
                 y = lambda t: ({"Neighborhood": t[0], 'Charging Station': str(t[1]), 'Hubway Stations': str(t[2]), 'Bike Networks': str(t[3]), 'Open Space': str(t[4])})
-                results.append(y(tuple))
+                if(tuple[1] > 250):
+                    temp = tuple[1]
+                    diff = tuple[1] - 250
+                    score += 250 + diff*(.05)
+                else:
+                    score += tuple[1] * 1
+                if(tuple[2] > 250):
+                    temp = tuple[2]
+                    diff = tuple[2] - 250
+                    score += 250 + diff*(.05)
+                else:
+                    score += tuple[2] * 1
+                if(tuple[3] > 250):
+                    temp = tuple[3]
+                    diff = tuple[3] - 250
+                    score += 250 + diff*(.05)
+                else:
+                    score += tuple[3] * 1
+                if(tuple[4] > 250):
+                    temp = tuple[4]
+                    diff = tuple[4] - 250
+                    score += 250 + diff*(.05)
+                else:
+                    score += tuple[4] * 1
+                results.append(("Budget: " + str(1000000), "Score: " + str(score), y(tuple)))
             
             #print(results)
             repo.dropCollection("optimalScore")
@@ -117,19 +141,19 @@ class BudgetCalculator(dml.Algorithm):
         doc.add_namespace('bdp', 'http://bostonopendata-boston.opendata.arcgis.com/')
             
         this_script = doc.agent('alg:francisz_jrashaan#BudgetCalculator', {prov.model.PROV_TYPE:prov.model.PROV['SoftwareAgent'], 'ont:Extension':'py'})
-        resource_neighborhoodscores = doc.entity('dat:francisz_jrashaan#neighborhoodScores', {'prov:label':'Neighborhood Scores', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'BSON'})
+        neighborhoodscores = doc.entity('dat:francisz_jrashaan#neighborhoodscores', {'prov:label':'Neighborhood Scores', prov.model.PROV_TYPE:'ont:DataResource', 'ont:Extension':'BSON'})
             
         compute_budget = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
             
             
         doc.wasAssociatedWith(compute_budget, this_script)
             
-        doc.usage(compute_budget, resource_neighborhoodscores, startTime, None, {prov.model.PROV_TYPE:'ont:Used for Computation'})
+        doc.usage(compute_budget,neighborhoodscores, startTime, None, {prov.model.PROV_TYPE:'ont:Used for Computation'})
             
-        optimalscore = doc.entity('dat:francisz_jrashaan#optimalScore', {prov.model.PROV_LABEL:'Correlation Score', prov.model.PROV_TYPE:'ont:DataSet'})
-        doc.wasAttributedTo(optimalscore, this_script)
-        doc.wasGeneratedBy(optimalscore, compute_budget, endTime)
-        doc.wasDerivedFrom(optimalscore, resource_neighborhoodscores, compute_budget, compute_budget, compute_budget)
+        optimalScore = doc.entity('dat:francisz_jrashaan#optimalScore', {prov.model.PROV_LABEL:'Correlation Score', prov.model.PROV_TYPE:'ont:DataSet'})
+        doc.wasAttributedTo(optimalScore, this_script)
+        doc.wasGeneratedBy(optimalScore, compute_budget, endTime)
+        doc.wasDerivedFrom(optimalScore, neighborhoodscores, compute_budget, compute_budget, compute_budget)
             
         repo.logout()
 
