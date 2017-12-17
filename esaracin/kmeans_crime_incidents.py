@@ -112,7 +112,7 @@ class kmeans_crime_incidents(dml.Algorithm):
         clustering = doc.activity('log:uuid'+str(uuid.uuid4()), startTime, endTime)
 
         doc.wasAssociatedWith(clustering, this_script)
-        doc.usage(clustering, resource_crimes, startTime, None, {prov.model.PROV_TYPE:'ont:Retrieval'})
+        doc.usage(clustering, resource_crimes, startTime, None, {prov.model.PROV_TYPE:'ont:Transformation'})
 
         clustered = doc.entity('dat:esaracin#crime_incident_centers', {prov.model.PROV_LABEL:'Clustered Set', prov.model.PROV_TYPE:'ont:DataSet'})
         doc.wasAttributedTo(clustered, this_script)
