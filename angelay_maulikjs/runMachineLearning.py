@@ -13,6 +13,7 @@ import numpy as np
 import math as math
 from sklearn.preprocessing import StandardScaler  
 import matplotlib.pyplot as plt
+from sklearn.externals import joblib
 
 
 
@@ -76,7 +77,9 @@ class runMachineLearning(dml.Algorithm):
         # scaler13 = StandardScaler()  
         # scaler13.fit(x13)  
         X_train13 = scaler.transform(x13) 
-
+        
+        scaler_filename = "angelay_maulikjs/api/scaler.save"
+        joblib.dump(scaler, scaler_filename) 
         
         # df.to_csv('test.csv', index=False, header=False)
         # clf = 0
@@ -85,7 +88,8 @@ class runMachineLearning(dml.Algorithm):
         neural_model = clf.fit(X_train,y)
         validation_data_predictions = clf.predict(X_train13)
         r2_error = r2_score(y_true=y13, y_pred=validation_data_predictions)
-
+        filename = 'angelay_maulikjs/api/mlmodel.sav'
+        joblib.dump(clf, open(filename, 'wb'))
 
         fig, ax = plt.subplots()
         x1 = range(len(validation_data_predictions))
