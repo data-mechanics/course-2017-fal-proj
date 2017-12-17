@@ -15,14 +15,22 @@ class crimerate(dml.Algorithm):
         client = dml.pymongo.MongoClient()
         repo = client.repo
         repo.authenticate("lc546_jofranco", "lc546_jofranco")
-        url = 'https://data.cityofboston.gov/resource/crime.json'
-        response = urllib.request.urlopen(url).read().decode("utf-8")
+        #url = 'https://data.boston.gov/export/12c/b38/12cb3883-56f5-47de-afa5-3b1cf61b257b.json'
+        #response = urllib.request.urlopen(url).read().decode("utf-8")
+        response = open('/Users/Jesus/Desktop/project1/course-2017-fal-proj/lc546_jofranco/crimeratetext.txt').read()
+        print('######')
+        #print(response)
+        #response = json.dumps(response)
+        #print(response)
+        #response.replace("", ' ')
+        print(response)
         r = json.loads(response)
         s = json.dumps(r, sort_keys= True, indent = 2)
+        #print(s)
         repo.dropCollection("crimerate")
         repo.createCollection("crimerate")
 
-        repo["lc546_jofranco.crimerate"].insert_many(r)
+        repo["lc546_jofranco.crimerate"].insert_many([r])
         repo["lc546_jofranco.crimerate"].metadata({'complete':True})
         print(repo["lc546_jofranco.crimerate"].metadata())
         repo.logout()

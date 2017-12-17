@@ -1,4 +1,5 @@
 import urllib.request
+import requests
 import json
 import dml
 import prov.model
@@ -20,19 +21,38 @@ class findhubwaysRestaurants(dml.Algorithm):
         '''Find list of restaurants that are near the hubway stations'''
         hubs = repo.lc546_jofranco.hubway
 
-        url = 'https://data.cityofboston.gov/resource/fdxy-gydq.json'
-        response = urllib.request.urlopen(url).read().decode("utf-8")
-        df = pd.read_json(url)
+        r = requests.get('https://data.boston.gov'+\
+                   '/export/f1e/137/'+\
+                   'f1e13724-284d-478c-b8bc-ef042aa5b70b.json')
+        t = r.text.replace("\n],\n", ",\n")
+        p = json.loads('{"data":'+t+']}')
+        #print(p)
+        newfile = []
+        pid = 0
+        for i in p["data"]:
+            newfile.append('{ "' +str(pid) + '"'+ ": " + '""' + str(i["Location"]) + '"')
+            pid += 1
+        #print(newfile)
+    #    url = 'https://data.cityofboston.gov/resource/fdxy-gydq.json'
+    #    url = 'https://data.boston.gov/export/f1e/137/f1e13724-284d-478c-b8bc-ef042aa5b70b.json'
+        #response = urllib.request.urlopen(url).read().decode("utf-8")
+        #response = open('/Users/Jesus/Desktop/project1/course-2017-fal-proj/lc546_jofranco/fixedpermits.txt').read()
+        print('{"data":' + str(newfile) + '}')
+        r = json.loads('{"data":' + str(newfile) + '}')
+        #print(response)
+        #df = pd.read_json(p['data'])
+        #print(df)
 
-        zip = df[['location']]
-        zip.columns = ['location']
-        r = json.loads(zip.to_json(orient='records'))
+        #zip = p
+        #for i in p['data']:
+        #    zip.columns = i['Location']
+        #r = json.loads(zip.to_json(orient='records'))
         foodlocale = list()
 
-        s = json.dumps(r, sort_keys = True, indent = 2)
+        s = json.dumps(newfile, sort_keys = True, indent = 2)
         repo.dropCollection("permitgeodata")
         repo.createCollection("permitgeodata")
-        repo["lc546_jofranco.permitgeodata"].ensure_index([("location", dml.pymongo.GEOSPHERE)])
+        repo["lc546_jofranco.permitgeodata"].ensure_index([("Location", dml.pymongo.GEOSPHERE)])
         repo["lc546_jofranco.permitgeodata"].insert_many(r)
         repo["lc546_jofranco.permitgeodata"].metadata({'complete':True})
 
@@ -40,17 +60,18 @@ class findhubwaysRestaurants(dml.Algorithm):
         for i in hubs.find():
             restaurants = len(repo.command(
             'geoNear','lc546_jofranco.permitgeodata',
-             near = { 'coordinates':[i["lo"], i["la"]]},
+             near = { 'coordinates':[i["la"], i["lo"]]},
              spherical = True,
-             maxDistance= 500)['results'])
+             maxDistance= 5000)['results'])
             food_bike = {}
             food_bike['numberRestaurantsnear'] = restaurants
-            food_bike['location'] = [float(i["lo"]), float(i["la"])]
+            food_bike['location'] = [float(i["la"]), float(i["lo"])]
             restaurants_near_hubway.append(food_bike)
 
         s = json.dumps(restaurants_near_hubway, sort_keys=True, indent = 2)
         repo.dropCollection("HubwayRestaurants")
         repo.createCollection("HubwayRestaurants")
+        print(restaurants_near_hubway)
         repo["lc546_jofranco.HubwayRestaurants"].insert_many(restaurants_near_hubway)
         repo["lc546_jofranco.HubwayRestaurants"].metadata({'complete':True})
         repo.logout()
