@@ -27,9 +27,10 @@ class schoolsAgg(dml.Algorithm):
 
         zipCount= []
         for entry in repo.carole07_echanglc_wongi.schools.find():
-            if "location_zip" in entry:
-                zipcode = entry["location_zip"]
-                zipCount += [(zipcode, 1)]
+            for entry2 in entry["fields"]:
+                if "zipcode" in entry2:
+                    zipcode = entry2["zipcode"]
+                    zipCount += [(zipcode, 1)]
     
         #Aggregate transformation for zipCount
                 
@@ -64,11 +65,12 @@ class schoolsAgg(dml.Algorithm):
         repo.dropPermanent("schoolsAgg")
         repo.createPermanent("schoolsAgg")
         
-        zipCount= []
-        for entry in repo.carole07_echanglc_wongi.schools.find():
-            if "location_zip" in entry:
-                zipcode = entry["location_zip"]
-                zipCount += [(zipcode, 1)]
+        repo.dropPermanent("schoolsAgg")
+        repo.createPermanent("schoolsAgg")
+        
+        schools = repo.carole07_echanglc_wongi.schools.find()
+        zipcodes = [s['fields']['zipcode'] for s in schools]
+        zipCount = [(zip , 1) for zip in zipcodes]
         
         #Aggregate transformation for zipCount
         
@@ -80,14 +82,14 @@ class schoolsAgg(dml.Algorithm):
             final.append({'schoolsZipcode:':entry[0], 'schoolsCount':entry[1]})
                 
         repo['carole07_echanglc_wongi.schoolsAgg'].insert_many(final)
-            
+                    
         for entry in repo.carole07_echanglc_wongi.schoolsAgg.find():
             print(entry)
-                        
-        repo.logout()
                             
-        endTime = datetime.datetime.now()
+        repo.logout()
                                 
+        endTime = datetime.datetime.now()
+                                    
         return {"start":startTime, "end":endTime}
     
     @staticmethod

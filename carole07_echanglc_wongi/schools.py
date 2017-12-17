@@ -20,13 +20,14 @@ class schools(dml.Algorithm):
         repo = client.repo
         repo.authenticate('carole07_echanglc_wongi', 'carole07_echanglc_wongi')
 
-        url = 'https://data.cityofboston.gov/resource/492y-i77g.json'
-        response = urllib.request.urlopen(url).read().decode("utf-8")
+        url = 'https://boston.opendatasoft.com/api/records/1.0/search/?dataset=public-schools&rows=-1'
+
+        response = ("[" + urllib.request.urlopen(url).read() + "]").decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("schools")
         repo.createCollection("schools")
-        repo['carole07_echanglc_wongi.schools'].insert_many(r)
+        repo['carole07_echanglc_wongi.schools'].insert(r["records"])
         print('Load public schools')
         repo.logout()
 
@@ -44,19 +45,21 @@ class schools(dml.Algorithm):
         repo = client.repo
         repo.authenticate('carole07_echanglc_wongi', 'carole07_echanglc_wongi')
         
-        url = 'https://data.cityofboston.gov/resource/492y-i77g.json'
+        url = 'https://boston.opendatasoft.com/api/records/1.0/search/?dataset=public-schools&rows=-1'
+        
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("schools")
         repo.createCollection("schools")
-        repo['carole07_echanglc_wongi.schools'].insert_many(r)
+        repo['carole07_echanglc_wongi.schools'].insert(r["records"])
         print('Load public schools')
         repo.logout()
         
         endTime = datetime.datetime.now()
         
         return {"start":startTime, "end":endTime}
+
     
     @staticmethod
     def provenance(doc = prov.model.ProvDocument(), startTime = None, endTime = None):

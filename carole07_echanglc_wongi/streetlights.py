@@ -44,7 +44,7 @@ class streetlights(dml.Algorithm):
         repo = client.repo
         repo.authenticate('carole07_echanglc_wongi', 'carole07_echanglc_wongi')
         
-        url = 'https://data.boston.gov/datastore/odata3.0/c2fcc1e3-c38f-44ad-a0cf-e5ea2a6585b5?$top=10&$format=json'
+        url = 'https://data.boston.gov/datastore/odata3.0/c2fcc1e3-c38f-44ad-a0cf-e5ea2a6585b5?$top=500&$format=json'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)

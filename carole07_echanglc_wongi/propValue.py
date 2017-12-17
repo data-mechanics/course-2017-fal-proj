@@ -20,16 +20,17 @@ class propValue(dml.Algorithm):
         repo = client.repo
         repo.authenticate('carole07_echanglc_wongi', 'carole07_echanglc_wongi')
 
-        url = 'https://data.cityofboston.gov/resource/g5b5-xrwi.json'
+        url = 'https://data.boston.gov/api/3/action/datastore_search?resource_id=cecdf003-9348-4ddb-94e1-673b63940bb8&limit=20000'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("propValue")
         repo.createCollection("propValue")
         repo['carole07_echanglc_wongi.propValue'].insert_many(r)
+        repo['carole07_echanglc_wongi.propValue'].metadata({'complete':True})
         print('Load property value')
         repo.logout()
-
+        
         endTime = datetime.datetime.now()
 
         return {"start":startTime, "end":endTime}
@@ -45,13 +46,14 @@ class propValue(dml.Algorithm):
         repo = client.repo
         repo.authenticate('carole07_echanglc_wongi', 'carole07_echanglc_wongi')
         
-        url = 'https://data.cityofboston.gov/resource/g5b5-xrwi.json'
+        url = 'https://data.boston.gov/api/3/action/datastore_search?resource_id=cecdf003-9348-4ddb-94e1-673b63940bb8&limit=20000'
         response = urllib.request.urlopen(url).read().decode("utf-8")
         r = json.loads(response)
         s = json.dumps(r, sort_keys=True, indent=2)
         repo.dropCollection("propValue")
         repo.createCollection("propValue")
-        repo['carole07_echanglc_wongi.propValue'].insert_many(r)
+        repo['carole07_echanglc_wongi.propValue'].insert_many(r["result"]["records"])
+        repo['carole07_echanglc_wongi.propValue'].metadata({'complete':True})
         print('Load property value')
         repo.logout()
         

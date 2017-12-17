@@ -29,10 +29,10 @@ class aggpropValue(dml.Algorithm):
         buildingCount= []
         
         for entry in repo.carole07_echanglc_wongi.propValue.find():
-            if "zipcode" and "av_total" in entry:
-                zipCount += [(entry["zipcode"], int(entry["av_total"]))]
-                buildingCount += [(entry["zipcode"], 1)]
-    
+            if "mail_zipcode" and "av_total" in entry:
+                zipCount += [(entry["mail_zipcode"][:-1], int(entry["av_total"]))]
+                buildingCount += [(entry["mail_zipcode"][:-1], 1)]
+            print(entry)
         #Aggregate transformation for zipCount
                 
         keys = {r[0] for r in zipCount}
@@ -92,10 +92,9 @@ class aggpropValue(dml.Algorithm):
         buildingCount= []
         
         for entry in repo.carole07_echanglc_wongi.propValue.find():
-            if "zipcode" and "av_total" in entry:
-                zipCount += [(entry["zipcode"], int(entry["av_total"]))]
-                buildingCount += [(entry["zipcode"], 1)]
-        
+            if "ZIPCODE" and "AV_TOTAL" in entry:
+                zipCount += [(entry["ZIPCODE"][:-1], int(entry["AV_TOTAL"]))]
+                buildingCount += [(entry["ZIPCODE"][:-1], 1)]
         #Aggregate transformation for zipCount
         
         keys = {r[0] for r in zipCount}
@@ -119,13 +118,13 @@ class aggpropValue(dml.Algorithm):
         
         keys3 = {r[0] for r in agg_both}
         aggregate_average= [(key, np.prod([v for (k,v) in agg_both if k == key])) for key in keys3]
-        
+        print(aggregate_average)
         #print("aggregate_average", aggregate_average)
         
         final= []
         for entry in aggregate_average:
             final.append({'propZipcode:':entry[0], 'averagePropertyVal':entry[1]})
-        
+            print("final")
         #print("final", final)
         repo['carole07_echanglc_wongi.aggpropValue'].insert_many(final)
         

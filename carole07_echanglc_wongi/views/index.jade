@@ -1,0 +1,72 @@
+extends layout
+block content
+    h3 #{title}
+    h3 Measuring The Economic Build Factor of Various Neighborhoods in Boston
+
+    div(id='hide_data')
+        div(id='schools') #{schools}
+        div(id='school_coords') #{school_coords}
+        div(id='hospitals') #{hospitals}
+        div(id='hospital_coords') #{hospital_coords}
+        div(id='policeDepts') #{policeDepts}
+        div(id='policeDept_coords') #{policeDept_coords}
+        div(id='neighborhood_scores') #{neighborhood_scores}
+        div(id='streetlight_coords') #{streetlight_coords}
+
+
+    script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyB0BorkgVPNHeYURcPU9GWUV2BpzmcJ1Xk&libraries=visualization')
+    script(src='http://code.jquery.com/jquery-1.11.0.min.js')
+    script(src='https://cdn.plot.ly/plotly-latest.min.js')
+    script(src='https://unpkg.com/leaflet@1.0.2/dist/leaflet.js')
+
+    script(src='/javascripts/map.js')
+
+
+    p(id='origin_address') Marker Address:
+
+    p(id='hospital_name') Hospital Name:
+    p(id='dest_address_hospital') Closest Hospital Address:
+    p(id='distance_hospital') Distance to hospital:
+
+    p(id='school_name') School Name:
+    p(id='dest_address_school') Closest School Address:
+    p(id='distance_school') Distance to school:
+
+    p(id='policeDept_name') Police Department Name:
+    p(id='dest_address_policeDept') Closest Police Department Address:
+    p(id='distance_policeDept') Distance to Police Department:
+
+    p(id='score') Score:
+
+    div(id='floating-panel')
+        button(onclick='initialize()' ) Remove Markers
+        button(onclick='toggle_heatmap_school()') Toggle School Heatmap
+        button(onclick='toggle_heatmap_hospital()') Toggle Hospital Heatmap
+        button(onclick='toggle_heatmap_policeDept()') Toggle Police Dept Heatmap
+
+    div(id='legend') Legend
+        p Red : Hospitals
+        p Green : Schools
+        p Blue : Police Departments
+
+    div(id='map')
+
+    h3 Interactive Graphs of Boston Neighborhoods
+
+    div(id='floating-panel-graph')
+        button(id='streetlight_graph_toggle' onclick='streetlight_graph_toggle' ) Streetlights
+        button(id='school_graph_toggle' onclick='school_graph_toggle' ) School
+        button(id='policeDept_graph_toggle' onclick='policeDept_graph_toggle') Police Departments
+        button(id='hospital_graph_toggle' onclick='hospital_graph_toggle' ) Hospital
+
+    div(id='policeDept_graph')
+    div(id='school_graph')
+    div(id='hospital_graph')
+    div(id='streetlight_graph')
+    script(src='/javascripts/plotly.js')
+
+    h3 Interactive Chloropleth Map of Boston Neighborhood Scores
+
+    div(id='mapid')
+    div(class='info')
+    script(src='/javascripts/chloropleth.js')
