@@ -8,7 +8,8 @@ from random import shuffle
 from math import sqrt
 import math
 import decimal
-
+import matplotlib
+import matplotlib.pyplot as plt
 
 class trips_population_correlation(dml.Algorithm):
 	contributor = 'jtbloom_rfballes_medinad'
@@ -109,6 +110,16 @@ class trips_population_correlation(dml.Algorithm):
 			num_trips = int(item['trips'])
 			trips.append(num_trips)
 
+		fig = plt.figure()
+		fig.suptitle('Neighborhood Population - Trips', fontsize=14, fontweight='bold')
+
+		ax = fig.add_subplot(111)
+		fig.subplots_adjust(top=0.85)
+		
+		ax.set_xlabel('Neighborhood Population')
+		ax.set_ylabel('# of Trips')
+		ax.scatter(population, trips)
+		plt.show()
 		
 
 
@@ -178,4 +189,4 @@ class trips_population_correlation(dml.Algorithm):
 
 		return doc
 
-#trips_income_correlation.execute()
+trips_population_correlation.execute()

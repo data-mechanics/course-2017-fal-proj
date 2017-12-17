@@ -5,6 +5,8 @@ import prov.model
 import datetime
 import uuid
 
+
+
 class neighborhood_station_income_out(dml.Algorithm):
 	contributor = 'jtbloom_rfballes_medinad'
 	reads = ['jtbloom_rfballes_medinad.stationsByneighborhood', 'jtbloom_rfballes_medinad.neighborhood_income_final']
@@ -54,6 +56,7 @@ class neighborhood_station_income_out(dml.Algorithm):
 				if x[0]==y[0]:
 					newincout.append({'trips':x[1], 'income':y[1]})
 
+		
 
 
 		repo['jtbloom_rfballes_medinad.neighborhood_station_income_out'].insert_many(newincout)
@@ -63,11 +66,11 @@ class neighborhood_station_income_out(dml.Algorithm):
 		pass
 
 
-      		# Set up the database connection.
-       		client = dml.pymongo.MongoClient()
+		# Set up the database connection.
+		client = dml.pymongo.MongoClient()
 		repo = client.repo
-       		repo.authenticate('jtbloom_rfballes_medinad', 'jtbloom_rfballes_medinad')
-        	doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
+		repo.authenticate('jtbloom_rfballes_medinad', 'jtbloom_rfballes_medinad')
+		doc.add_namespace('alg', 'http://datamechanics.io/algorithm/') # The scripts are in <folder>#<filename> format.
 		doc.add_namespace('dat', 'http://datamechanics.io/data/') # The data sets are in <user>#<collection> format.
 		doc.add_namespace('ont', 'http://datamechanics.io/ontology#') # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
 		doc.add_namespace('log', 'http://datamechanics.io/log/') # The event log.
@@ -100,4 +103,4 @@ class neighborhood_station_income_out(dml.Algorithm):
 		return doc
 
 
-#neighborhood_station_income_out.execute()
+neighborhood_station_income_out.execute()
