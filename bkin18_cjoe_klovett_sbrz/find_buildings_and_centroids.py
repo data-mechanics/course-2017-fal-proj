@@ -32,7 +32,7 @@ class find_buildings_and_centroids(dml.Algorithm):
         collection = db['bkin18_cjoe_klovett_sbrz.property_assessment_impBuilds']
 
         # This is a constant that we can change if we want to
-        K = 6
+        K = 9
 
         # Set up the lat and long coordinates
         building_list = []
@@ -40,9 +40,9 @@ class find_buildings_and_centroids(dml.Algorithm):
             if building['LATITUDE'] == '#N/A' or building['LONGITUDE'] == '#N/A':
                 pass
             else:
-                building_list.append( (float(building['LATITUDE']), float(building['LONGITUDE']) ) )
+                building_list.append( [float(building['LATITUDE']), float(building['LONGITUDE'])] )
 
-        # Build kmeans 
+        # Build kmeans
         kmeans = KMeans(n_clusters=K)
         kmeans.fit(building_list)
         
@@ -70,11 +70,10 @@ class find_buildings_and_centroids(dml.Algorithm):
 
             this_building = {}
             this_building['_id'] = last_building
-            this_building['NEARBY_CENTROID'] = p2 
+            this_building['NEARBY_CENTROID'] = p1
             this_building["DIST_TO_CENTROID"] = min_dist
             
             closest_buildings_to_centroids.append(this_building)
-
 
         repo.dropCollection('bkin18_cjoe_klovett_sbrz.closest_buildings')
         repo.dropCollection('bkin18_cjoe_klovett_sbrz.closest_buildings_to_centroid')
