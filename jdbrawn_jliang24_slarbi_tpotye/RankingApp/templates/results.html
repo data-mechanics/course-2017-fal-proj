@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body{
+            background-image: url('http://amtrakdowneaster.com/sites/default/files/station-images/stations_boston.jpg');
+            min-height: 100%;
+            background-position: center;
+            background-size: cover;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            }
+            h1{
+            font-family: "Impact", sans-serif;
+            color: black; 
+            font-size: 36px;
+            }
+            h2{
+            font-family: "Raleway", sans-serif;
+            font-size: 16px;
+            color: black
+            }
+            p{
+            font-family: "Raleway", sans-serif;
+            font-size: 10px;
+            color: black
+            }
+        </style>
+    </head>
+<body>
+    <div id= 'ranking' align= 'center'>
+    <h1>{{improvement[0]}}</h1>
+        <h2><b>Original Ranking: </b>{{improvement[2] }}</h2>
+        <p><b>Old Social Weight: </b>{{improvement[6] }}</p>
+        <p><b>Old Transit Weight: </b>{{improvement[7] }}</p>
+        <p><b>Old Safety Weight: </b>{{improvement[8] }}</p>
+        <h2><b>Final Ranking: </b>{{improvement[1] }}</h2>
+        <p><b>New Social Weight: </b>{{improvement[3] }}</p>
+        <p><b>New Transit Weight: </b>{{improvement[4] }}</p>
+        <p><b>New Safety Weight: </b>{{improvement[5] }}</p>
+    </div>
+</body>
+</html>

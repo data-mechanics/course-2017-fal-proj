@@ -5,8 +5,8 @@ import uuid
 from sklearn.cluster import KMeans
 from tqdm import tqdm
 
-class newStations(dml.Algorithm):
 
+class newStations(dml.Algorithm):
     contributor = 'jdbrawn_jliang24_slarbi_tpotye'
     reads = ['jdbrawn_jliang24_slarbi_tpotye.safetyScore', 'jdbrawn_jliang24_slarbi_tpotye.colleges']
     writes = ['jdbrawn_jliang24_slarbi_tpotye.newStations']
@@ -52,7 +52,7 @@ class newStations(dml.Algorithm):
         print(M)
         print()
 
-        #format it for MongoDB
+        # format it for MongoDB
         location_stations = []
         for entry in M:
             location_stations.append({'New Police Location': (entry[0], entry[1])})
@@ -65,6 +65,7 @@ class newStations(dml.Algorithm):
         endTime = datetime.datetime.now()
 
         return M.tolist()
+        # return {"start": startTime, "end": endTime}
 
     @staticmethod
     def provenance(doc=prov.model.ProvDocument(), startTime=None, endTime=None):
@@ -81,17 +82,21 @@ class newStations(dml.Algorithm):
 
         doc.add_namespace('alg', 'http://datamechanics.io/algorithm/')  # The scripts are in <folder>#<filename> format.
         doc.add_namespace('dat', 'http://datamechanics.io/data/')  # The data sets are in <user>#<collection> format.
-        doc.add_namespace('ont', 'http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
+        doc.add_namespace('ont',
+                          'http://datamechanics.io/ontology#')  # 'Extension', 'DataResource', 'DataSet', 'Retrieval', 'Query', or 'Computation'.
         doc.add_namespace('log', 'http://datamechanics.io/log/')  # The event log.
         doc.add_namespace('bdp', 'https://data.boston.gov/api/action/datastore_search?resource_id=')
         doc.add_namespace('591', 'http://datamechanics.io/data/jdbrawn_jliang24_slarbi_tpotye/')
         doc.add_namespace('bdp1', 'https://data.cityofboston.gov/resource/')
 
-        this_script = doc.agent('alg:jdbrawn_jliang24_slarbi_tpotye#newStations', {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
+        this_script = doc.agent('alg:jdbrawn_jliang24_slarbi_tpotye#newStations',
+                                {prov.model.PROV_TYPE: prov.model.PROV['SoftwareAgent'], 'ont:Extension': 'py'})
 
-        resource_safetyScore = doc.entity('dat:jdbrawn_jliang24_slarbi_tpotye#safetyScore', {'prov:label': 'Safety Scores', prov.model.PROV_TYPE: 'ont:DataSet'})
-        resource_colleges = doc.entity('dat:jdbrawn_jliang24_slarbi_tpotye#colleges', {'prov:label': 'Boston Universities and Colleges', prov.model.PROV_TYPE: 'ont:DataSet'})
-
+        resource_safetyScore = doc.entity('dat:jdbrawn_jliang24_slarbi_tpotye#safetyScore',
+                                          {'prov:label': 'Safety Scores', prov.model.PROV_TYPE: 'ont:DataSet'})
+        resource_colleges = doc.entity('dat:jdbrawn_jliang24_slarbi_tpotye#colleges',
+                                       {'prov:label': 'Boston Universities and Colleges',
+                                        prov.model.PROV_TYPE: 'ont:DataSet'})
 
         get_newStations = doc.activity('log:uuid' + str(uuid.uuid4()), startTime, endTime)
 
@@ -100,7 +105,8 @@ class newStations(dml.Algorithm):
         doc.usage(get_newStations, resource_safetyScore, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
         doc.usage(get_newStations, resource_colleges, startTime, None, {prov.model.PROV_TYPE: 'ont:Computation'})
 
-        newLocation = doc.entity('dat:jdbrawn_jliang24_slarbi_tpotye#newStations', {prov.model.PROV_LABEL: 'New Police Stations', prov.model.PROV_TYPE: 'ont:DataSet'})
+        newLocation = doc.entity('dat:jdbrawn_jliang24_slarbi_tpotye#newStations',
+                                 {prov.model.PROV_LABEL: 'New Police Stations', prov.model.PROV_TYPE: 'ont:DataSet'})
 
         doc.wasAttributedTo(newLocation, this_script)
         doc.wasGeneratedBy(newLocation, get_newStations, endTime)
